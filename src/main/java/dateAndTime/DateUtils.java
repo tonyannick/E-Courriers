@@ -24,13 +24,13 @@ public class DateUtils {
             Calendar cal = Calendar.getInstance();
             cal.setTime(d);
             String monthName = new SimpleDateFormat("MMMM").format(cal.getTime());
-            //System.out.println("monthName = " + monthName);
             return monthName;
         }
 
         return null;
 
     }
+
 
     public static String[] recupererTousLesMoisDeLAnnee(){
         String[] frenchMonths = french_dfs.getMonths();
