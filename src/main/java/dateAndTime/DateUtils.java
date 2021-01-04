@@ -15,6 +15,8 @@ public class DateUtils {
     public static String dernierJourDeLaSemaine;
     public static String premierJourDeLaSemaineFormatUS;
     public static String dernierJourDeLaSemaineFormatUS;
+    public static Date premierJourDuMoisAPartirDUneDate;
+    public static Date dernierJourDuMoisAPartirDUneDate;
     public static final DateFormatSymbols french_dfs = new DateFormatSymbols(Locale.FRENCH);
 
 
@@ -31,6 +33,33 @@ public class DateUtils {
 
     }
 
+    public static Date transformerNomDuMoisEnDatePourLAnneeEnCours(String nomDuMois){
+        Date date = null;
+        String currentYear = recupererLAnneeEnCours();
+        String selection = nomDuMois +"-"+ currentYear;
+        try {
+            date = new SimpleDateFormat("MMMM-yyyy").parse(selection);
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        avoirLePremierEtLeDernierJoursDuMoisAPartirDUneDate(date);
+        return date;
+
+    }
+
+    public static void avoirLePremierEtLeDernierJoursDuMoisAPartirDUneDate(Date date){
+        Calendar firstDayOfDate = Calendar.getInstance(Locale.FRANCE);
+        Calendar lastDayOfDate = Calendar.getInstance(Locale.FRANCE);
+        firstDayOfDate.setTime(date);
+        lastDayOfDate.setTime(date);
+        /*Premier jour du mois en cours*/
+        firstDayOfDate.set(Calendar.DAY_OF_MONTH, firstDayOfDate.getActualMinimum(Calendar.DAY_OF_MONTH));
+        /*Dernier jour du mois en cours*/
+        lastDayOfDate.set(Calendar.DAY_OF_MONTH, firstDayOfDate.getActualMaximum(Calendar.DAY_OF_MONTH));
+
+        premierJourDuMoisAPartirDUneDate = firstDayOfDate.getTime();
+        dernierJourDuMoisAPartirDUneDate = lastDayOfDate.getTime();
+    }
 
     public static String[] recupererTousLesMoisDeLAnnee(){
         String[] frenchMonths = french_dfs.getMonths();
