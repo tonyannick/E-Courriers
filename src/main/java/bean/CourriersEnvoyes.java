@@ -13,6 +13,8 @@ import javax.faces.context.FacesContext;
 import javax.inject.Named;
 import javax.servlet.http.HttpSession;
 import java.io.Serializable;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.*;
 
 
@@ -29,6 +31,7 @@ public class CourriersEnvoyes implements Serializable {
     private List<Courrier> courrierSauvegardeList = new ArrayList<>();
     private String datePourRechercheAvancee;
     private String moisPourRechercheAvancee;
+    private boolean isMoisSelectionne = false;
 
     @PostConstruct
     public void initialisation(){
@@ -72,9 +75,8 @@ public class CourriersEnvoyes implements Serializable {
             if(trouve){
                 courrier.getListeDesCouriersEnvoyes().clear();
                 courrier.setListeDesCouriersEnvoyes(courrierTempList);
-                PrimeFaces.current().executeScript("PF('dialogueRechercherCourrierParDate').hide()");
-                PrimeFaces.current().executeScript("afficherBoutonAnnulerRecherche()");
-                setDatePourRechercheAvancee("");
+                setDatePourRechercheAvancee(null);
+                gestionDeLAffichageDesBoutonsDeRecherche();
                 System.out.println("rechercher  = " + courrierSauvegardeList.size());
             }else{
                 FacesContext.getCurrentInstance().addMessage("messagecourrierpardate",new FacesMessage(FacesMessage.SEVERITY_WARN,"Aucun resultat","Pas de courrier pour cette date"));
@@ -90,9 +92,55 @@ public class CourriersEnvoyes implements Serializable {
 
     public void annulerUneRechercheAvancee(){
         courrier.getListeDesCouriersEnvoyes().clear();
-        System.out.println("annuler  = " + courrierSauvegardeList.size());
+        //System.out.println("annuler  = " + courrierSauvegardeList.size());
         courrier.setListeDesCouriersEnvoyes(courrierSauvegardeList);
         PrimeFaces.current().executeScript("afficherBoutonFaireUneRecherche()");
+    }
+
+    private void gestionDeLAffichageDesBoutonsDeRecherche(){
+        PrimeFaces.current().executeScript("PF('dialogueRechercherCourrierParDate').hide()");
+        PrimeFaces.current().executeScript("afficherBoutonAnnulerRecherche()");
+        PrimeFaces.current().executeScript("PF('dialogueRechercherCourrierParMois').hide()");
+    }
+
+    public void avoirDateEnFonctionDuMoisAuClick(){
+        if(moisPourRechercheAvancee != null){
+            DateUtils.transformerNomDuMoisEnDatePourLAnneeEnCours(moisPourRechercheAvancee);
+            isMoisSelectionne = true;
+        }else{
+            isMoisSelectionne = false;
+        }
+    }
+
+    public void faireUneRechercheAvanceeParMois(){
+        boolean trouve = false;
+        if(isMoisSelectionne){
+            courrierTempList.clear();
+            SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy");
+            for (int a = 0; a <  courrier.getListeDesCouriersEnvoyes().size(); a++) {
+                try {
+
+                    Date date = sdf.parse(courrier.getListeDesCouriersEnvoyes().get(a).getDateDEnregistrement());
+                    if (date.after(DateUtils.premierJourDuMoisAPartirDUneDate) && date.before(DateUtils.dernierJourDuMoisAPartirDUneDate)) {
+                        courrierTempList.add(courrier.getListeDesCouriersEnvoyes().get(a));
+                        trouve = true;
+                    }
+                } catch (ParseException e) {
+                    e.printStackTrace();
+                }
+            }
+            if(trouve){
+                courrier.getListeDesCouriersEnvoyes().clear();
+                courrier.setListeDesCouriersEnvoyes(courrierTempList);
+                setMoisPourRechercheAvancee(null);
+                gestionDeLAffichageDesBoutonsDeRecherche();
+            }else{
+                FacesContext.getCurrentInstance().addMessage("messagecourrierparmois",new FacesMessage(FacesMessage.SEVERITY_WARN,"Aucun resultat","Pas de courrier dans ce mois"));
+            }
+        }else{
+            FacesContext.getCurrentInstance().addMessage("messagecourrierparmois",new FacesMessage(FacesMessage.SEVERITY_WARN,"Attention","Vous devez renseigner un mois"));
+        }
+
     }
 
     /***Getter and setter**/

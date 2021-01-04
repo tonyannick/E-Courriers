@@ -193,7 +193,7 @@
                                 <p:commandButton value="valider"
                                                  actionListener="#{courriersEnvoyes.faireUneRechercheAvanceeParDate}"
                                                  style="margin-top: 12px; margin-right: 10px; float: right"
-                                                 update="form:tableCourrierEnvoyes messageParDate"/>
+                                                 update="@form form:tableCourrierEnvoyes messageParDate"/>
                             </h:panelGrid>
                         </h:form>
                     </p:dialog>
@@ -205,21 +205,22 @@
                               modal="true" hideEffect="slide" height="auto"
                               showEffect="slide"  dynamic="true" closable="true">
                         <h:form >
-                            <p:messages  id="messageParMois" showDetail="true" closable="true" for="messagecourrierpardate"/>
+                            <p:messages  id="messageParMois" showDetail="true" closable="true" for="messagecourrierparmois"/>
                             <h:outputText style="font-size: 13px; color: black" value="***Cette recherche concerne les mois de l'année en cours***"/>
                             <h4 style="font-weight:bold;margin-top: 15px; font-size: 13px">Renseignez un mois :  </h4>
                             <p:selectOneMenu effect="slide"
-                                             style="width: 100%;"
+                                             style="width: 100%"
                                              value="#{courriersEnvoyes.moisPourRechercheAvancee}">
                                 <f:selectItem itemLabel="Choisissez un mois"/>
                                 <f:selectItems value="#{courriersEnvoyes.recupererLesMoisDeLAnnee()}"/>
+                                <p:ajax event="valueChange" listener="#{courriersEnvoyes.avoirDateEnFonctionDuMoisAuClick}" />
                             </p:selectOneMenu>
 
                             <h:panelGrid columns="1" style="width: 100%">
                                 <p:commandButton value="valider"
-                                                 actionListener="#{courriersEnvoyes.faireUneRechercheAvanceeParDate}"
+                                                 actionListener="#{courriersEnvoyes.faireUneRechercheAvanceeParMois}"
                                                  style="margin-top: 12px; margin-right: 10px; float: right"
-                                                 update="form:tableCourrierEnvoyes messageParMois"/>
+                                                 update="@form form:tableCourrierEnvoyes messageParMois"/>
                             </h:panelGrid>
                         </h:form>
                     </p:dialog>

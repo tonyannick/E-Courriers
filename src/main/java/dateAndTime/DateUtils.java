@@ -56,7 +56,6 @@ public class DateUtils {
         firstDayOfDate.set(Calendar.DAY_OF_MONTH, firstDayOfDate.getActualMinimum(Calendar.DAY_OF_MONTH));
         /*Dernier jour du mois en cours*/
         lastDayOfDate.set(Calendar.DAY_OF_MONTH, firstDayOfDate.getActualMaximum(Calendar.DAY_OF_MONTH));
-
         premierJourDuMoisAPartirDUneDate = firstDayOfDate.getTime();
         dernierJourDuMoisAPartirDUneDate = lastDayOfDate.getTime();
     }
