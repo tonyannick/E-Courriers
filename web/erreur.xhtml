@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:pt="http://xmlns.jcp.org/jsf/passthrough"
+      xmlns:fn="http://xmlns.jcp.org/jsp/jstl/functions"
+      xmlns:f="http://xmlns.jcp.org/jsf/core">
+<f:view transient="true">
+
+    <h:head>
+        <title>Erreurs</title>
+        <meta http-equiv="Content-Type" content="text/html;charset=UTF8" />
+        <h:outputScript name="bootstrap/js/bootstrap.js" />
+        <h:outputStylesheet name="bootstrap/css/bootstrap.css" />
+        <h:outputStylesheet name="css/erreur.css"/>
+    </h:head>
+    <style>
+
+
+    </style>
+    <h:body id="page">
+        <div class="container-fluid" >
+            <div class="row">
+                <div id="header">
+                    <ui:insert name="header" >
+                        <ui:include src="header.xhtml" />
+                    </ui:insert>
+                 </div>
+                <div id="footer">
+                    <ui:insert name="footer" >
+                        <ui:include src="footer.xhtml" />
+                    </ui:insert>
+                </div>
+                <div class="main-overview" style="margin-bottom: 90px; margin-top: 10px; overflow:hidden ">
+                    <div class="col-sm-9 col-sm-offset-3 col-md-9 col-md-offset-2 main">
+
+                        <div id="clouds">
+                            <div class="cloud x1"></div>
+                            <div class="cloud x1_5"></div>
+                            <div class="cloud x2"></div>
+                            <div class="cloud x3"></div>
+                            <div class="cloud x4"></div>
+                            <div class="cloud x5"></div>
+                        </div>
+                        <div class='c'>
+                            <div class='_404'><h:graphicImage value="./resources/images/error.png" />Erreur !!!</div>
+                            <hr/>
+                            <div class='_1'>Une erreur inattendue s'est produite sur l'application</div>
+                            <p:commandButton type="button"
+                                             onclick="PF('errorDialogue').show()"
+                                             style="margin-top: 25px; font-size: 22px" value="Envoyer le rapport d'erreur à la DCSI"/>
+                        </div>
+
+                        <p:dialog widgetVar="errorDialogue" header="Rapport d'erreur"
+                                  resizable="false"
+                                  width="auto" hideEffect="slide" showEffect="slide">
+
+                            <h:form>
+                                <h:outputText value="Code d'erreur : #{erreur.statusCode}"/>
+                                <br />
+                                <h:outputText value="Description simple: #{erreur.message}"/>
+                                <br />
+                                <h:outputText value="Type d'erreur: #{erreur.exceptionType}"/>
+                                <br />
+                                <h:outputText value="Classe Déclencheuse : #{erreur.exception}"/>
+                                <br />
+                                <h:outputText value="URI : #{erreur.requestURI}"/>
+                                <br />
+                                <h:outputText value="Servlet : #{erreur.servletName}"/>
+                                <p:commandButton value="Envoyer"
+                                                 style="margin-top: 14px; margin-right: 10px; float: right"
+                                                 icon="fa fa-check-square"
+                                                 iconPos="right"/>
+                            </h:form>
+
+
+                        </p:dialog>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </h:body>
+</f:view>
+</html>

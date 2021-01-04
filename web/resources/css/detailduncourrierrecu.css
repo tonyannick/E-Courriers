@@ -1,0 +1,731 @@
+.fa-exclamation-triangle{
+    color: #0D47A1;
+    margin-top: 5px;
+}
+.fa-eye{
+    color: #ffffff;
+}
+.fa-star{
+    color: #ffffff;
+}
+.fa-trash{
+    color: #ffffff;
+}
+.fa-check-circle{
+    color: white
+}
+.fa-pencil{
+ color: #002a72;
+}
+.fa-refresh{
+    color: #f19121;
+}
+.fa-folder-open{
+    color:white;
+}
+.fa-mail-forward{
+    color: white;
+}
+.fa-envelope-open{
+    color: white;
+}
+.fa-sign-in{
+    color: white;
+}
+.fa-exchange{
+    color:white;
+}
+.fa-commenting{
+    color:white;
+}
+.fa-times-circle{
+    color: white;
+}
+.fa-plus-circle{
+    color: white;
+}
+.fa-hand-o-right{
+    color: #0daf00;
+}
+
+.infoetatcourrier{
+    border: 1px solid;
+    border-color: white;
+    margin: 10px 0px;
+    padding:15px 10px;
+}
+
+.infoetatcourrier {
+    background-color: #e7f3fe;
+    font-size: 16px;
+    border-left: 8px solid #2196F3;
+}
+
+.panelInfoCourrier {
+    padding: 0 18px;
+    background-color: white;
+    overflow: hidden;
+    max-height: 0;
+    transition: max-height 0.2s ease-out;
+}
+/**accordion**/
+.accordionDetailCourrier {
+    background-color: #eee;
+    color: #444;
+    cursor: pointer;
+    font-weight: bold;
+    padding: 18px;
+    width: 100%;
+    border-top: none;
+    border-right: none;
+    border-left: none;
+    border-bottom: 1px gray solid;
+    text-align: left;
+    outline: none;
+    font-size: 16px;
+    transition: 0.4s;
+}
+
+.accordionDetailCourrier:hover {
+    background: #428BCA;
+    color: #ffffff;
+}
+.active, .accordionDetailCourrier:hover {
+    background-color: #428BCA;
+    color: #ffffff;
+}
+.panelInfoCourrier {
+    padding: 0 18px;
+    background-color: white;
+    overflow: hidden;
+    max-height: 0;
+    transition: max-height 0.2s ease-out;
+}
+
+.accordionDetailCourrier:after {
+    content: '\02795'; /* Unicode character for "plus" sign (+) */
+    font-size: 13px;
+    color: #ffffff;
+    float: right;
+    margin-left: 5px;
+}
+
+.active accordionDetailCourrier:after {
+    content: "\2796"; /* Unicode character for "minus" sign (-) */
+}
+/**Fin accordion**/
+
+.info {
+    background-color: #ffffcc;
+    border-left: 6px solid #ffeb3b;
+    margin-bottom: 15px;
+    padding: 12px 12px;
+}
+.notice {
+    padding: 10px;
+    background-color: #ffffcc;
+    border-left: 8px solid #ffeb3b;
+    border-bottom: 1px solid #ffeb3b;
+    border-right: 1px solid #ffeb3b;
+    border-top: 1px solid #ffeb3b;
+    margin-bottom: 10px;
+    -webkit-box-shadow: 0 5px 8px -6px rgba(0,0,0,.2);
+    -moz-box-shadow: 0 5px 8px -6px rgba(0,0,0,.2);
+    box-shadow: 0 5px 8px -6px rgba(0,0,0,.2);
+}
+
+.chat_people{
+    overflow:auto;
+    clear:both;
+}
+.chat_list {
+    border-bottom: 2px solid #d1d3c5;
+    margin: 0;
+    padding: 18px 16px 10px;
+    background: white;
+}
+.active_chat{ background:#ebebeb;}
+.inbox_chat { height: 550px; overflow-y: scroll;}
+.chat_img {
+
+    float: left;
+    width: 10%;
+}
+.chat_ib {
+    float: left;
+    padding: 0 0 0 10px;
+    width: 88%;
+    margin-top: 7px;
+}
+
+.chat_ib h5{
+    font-size:12px;
+    font-weight: bold;
+    color: #0D47A1;
+    margin:0 0 8px 0;
+}
+.chat_ib h5 span{
+    font-size:13px;
+    float:right;
+}
+.chat_ib p{
+    font-size:11px;
+    color:#0f0f0f;
+    margin:auto;
+}
+.chat_img {
+    float: left;
+    width: 2%;
+}
+
+/******Chat réponse courrier***/
+.chat_reponsecourrier {
+    border-bottom: 2px solid #d1d3c5;
+    margin: 0;
+    padding: 30px 16px;
+    background: #f5f5f5;
+}
+
+.chat_reponsecourrier_content{
+    overflow:auto;
+    clear:both;
+}
+
+/*****Reponse au courrier***/
+.media-block {
+    margin-top: 20px;
+    overflow:hidden;
+}
+.media-block .media-left {
+    display: block;
+    float: left;
+}
+.img-sm {
+    width: 56px;
+    height: 56px;
+}
+.media-block .media-body {
+    display: block;
+    overflow: auto;
+    width: 100%;
+}
+.pad-hor {
+    padding-left: 15px;
+    padding-right: 15px;
+}
+.speech {
+    position: relative;
+    background: #dedede;
+    color: black;
+    display: inline-block;
+    border-radius: 0;
+    padding: 12px 20px;
+}
+.speech:before {
+    content: "";
+    display: block;
+    position: absolute;
+    width: 0;
+    height: 0;
+    left: 0;
+    top: 0;
+    border-top: 7px solid transparent;
+    border-bottom: 7px solid transparent;
+    border-right: 7px solid #dedede;
+    margin: 15px 0 0 -6px;
+}
+.speech-right>.speech:before {
+    left: auto;
+    right: 0;
+    border-top: 7px solid transparent;
+    border-bottom: 7px solid transparent;
+    border-left: 7px solid #ffdc91;
+    border-right: 0;
+    margin: 15px -6px 0 0;
+}
+.speech .media-heading {
+    font-size: 1.2em;
+    color: #317787;
+    display: block;
+    border-bottom: 1px solid rgba(0,0,0,0.1);
+    margin-bottom: 10px;
+    padding-bottom: 5px;
+    font-weight: 300;
+}
+.speech-time {
+    margin-top: 20px;
+    margin-bottom: 0;
+    font-size: .8em;
+    font-weight: 300;
+}
+
+
+.speech-right {
+    text-align: right;
+}
+.pad-hor {
+    padding-left: 15px;
+    padding-right: 15px;
+}
+.speech-right>.speech {
+    background: #ffda87;
+    color: #a07617;
+    text-align: right;
+}
+.speech-right>.speech .media-heading {
+    color: #a07617;
+}
+
+
+
+
+
+
+
+.formannotationdetail{
+    max-width: 600px;
+    background: #FAFAFA;
+    padding: 20px;
+    margin: 15px auto;
+    box-shadow: 1px 1px 25px rgba(0, 0, 0, 0.35);
+    border-radius: 10px;
+    border: 6px solid #305A72;
+}
+.formannotationdetail ul{
+    padding:0;
+    margin:0;
+    list-style:none;
+}
+.formannotationdetail ul li{
+    display: block;
+    margin-bottom: 10px;
+    min-height: 35px;
+    min-width: 150px;
+}
+.formannotationdetail ul li  .field-style{
+    box-sizing: border-box;
+    -webkit-box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    padding: 8px;
+    outline: none;
+    border: 1px solid #B0CFE0;
+    -webkit-transition: all 0.30s ease-in-out;
+    -moz-transition: all 0.30s ease-in-out;
+    -ms-transition: all 0.30s ease-in-out;
+    -o-transition: all 0.30s ease-in-out;
+
+}.formannotationdetail ul li  .field-style:focus{
+     box-shadow: 0 0 5px #B0CFE0;
+     border:1px solid #B0CFE0;
+ }
+
+.formannotation{
+    max-width: 600px;
+    background: #FAFAFA;
+    padding: 20px;
+    margin: 15px auto;
+    box-shadow: 1px 1px 25px rgba(0, 0, 0, 0.35);
+    border-radius: 10px;
+    border: 6px solid #305A72;
+}
+.formannotation ul{
+    padding:0;
+    margin:0;
+    list-style:none;
+}
+.formannotation ul li{
+    display: block;
+    margin-bottom: 10px;
+    min-height: 35px;
+}
+.formannotation ul li  .field-style{
+    box-sizing: border-box;
+    -webkit-box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    padding: 8px;
+    outline: none;
+    border: 1px solid #B0CFE0;
+    -webkit-transition: all 0.30s ease-in-out;
+    -moz-transition: all 0.30s ease-in-out;
+    -ms-transition: all 0.30s ease-in-out;
+    -o-transition: all 0.30s ease-in-out;
+
+}.formannotation ul li  .field-style:focus{
+     box-shadow: 0 0 5px #B0CFE0;
+     border:1px solid #B0CFE0;
+ }
+
+.panelLogin{
+    border-style: hidden !important;
+    cursor: hand;
+    padding: 10px;
+}
+.panelLogin td {
+    border-style: hidden !important;
+}
+
+.encours {
+    background: #00cc05;
+    color: #ffffff;
+    font-weight: bold;
+}
+.terminee {
+    color: #ffffff !important;
+    font-weight: bold;
+    background-color: #209436 !important;
+}
+.en-retard {
+    color: #ffffff !important;
+    font-weight: bold;
+    background-color: #fc003b !important;
+}
+.en-traitement {
+    color: #ffffff !important;
+    font-weight: bold;
+    background-color: #fe7606 !important;
+}
+.panelgriddossier{
+    border-style: hidden !important;
+    cursor: hand;
+    padding: 10px;
+    width: 100%;
+}
+.panelgriddossier td {
+    border-style: hidden !important;
+}
+/***Autocomplete***/
+.ui-autocomplete .ui-autocomplete-input .ui-inputfield{
+    background-color: #EAF1FB;
+    border-bottom: 2px solid #0077FF;
+    border-top: 1px solid silver;
+    border-left: 1px solid silver;
+    border-right: 1px solid silver;
+}
+
+/*ui-autocomplete-input.ui-inputfield ui-widget*//*
+.ui-autocompletezui-autocomplete-input .ui-inputfield:focus{
+    background-color: #ffd764;
+    border: 2px solid saddlebrown;
+}*/
+.ui-fieldset.ui-fieldset .ui-fieldset-legend{
+    background: #e7e6e8;
+    color: #316386;
+    border-color: #316386;
+    border-width: 1px;
+}
+
+/***Popu gestion des dossier***/
+.popupdossier{
+    display: none; /* Hidden by default */
+    position: fixed; /* Stay in place */
+    z-index: 9;
+    left: 0;
+    margin-bottom: 40px;
+}
+
+.popupdossier-headerFile {
+    padding: 2px 10px;
+    background-color: #dfa574;
+    color: white;
+    width: 100%;
+}
+.popupdossierclosemodal {
+    color: #fbfffb;
+    float: right;
+    font-size: 28px;
+    font-weight: bold;
+}
+
+.popupdossierclosemodal:hover,
+.popupdossierclosemodal:focus {
+    color: #ba0010;
+    text-decoration: none;
+    cursor: pointer;
+}
+.popupdossierbody{
+    position: fixed;
+    bottom: 0;
+    border: 1px #dfa574 solid;
+    background-color: #f1f1f1;
+    width:30%;
+    margin-bottom: 80px;
+    margin-left: 40px;
+    -webkit-animation-name: slideInModal;
+    -webkit-animation-duration: 0.4s;
+    animation-name: slideInModal;
+    animation-duration: 0.4s;
+    overflow: auto;
+}
+
+.popupdossiercontent{
+    padding: 20px 6px;
+    overflow-x: auto;
+    overflow-y: auto;
+}
+
+/***Discussion***/
+.chat-popup {
+    display: none;
+    position: fixed;
+    bottom: 0;
+    margin-bottom: 80px;
+    margin-left: 40px;
+    right: 15px;
+    border: 1px #496ea1 solid;
+    background-color: #f1f1f1;
+    z-index: 9;
+    overflow: auto; /* Enable scroll if needed */
+    -webkit-animation-name: slideInModal; /* Fade in the background */
+    -webkit-animation-duration: 0.4s;
+    animation-name: slideInModal;
+    animation-duration: 0.4s
+}
+.modal-headerFile {
+    padding: 2px 10px;
+    background-color: #496ea1;
+    color: white;
+    width: 100%;
+}
+.closeModal {
+    color: #f1bd2d;
+    float: right;
+    font-size: 28px;
+    font-weight: bold;
+}
+
+.closeModal:hover,
+.closeModal:focus {
+    color: #ba0010;
+    text-decoration: none;
+    cursor: pointer;
+}
+
+.boutoncreerdiscussion{
+    color:#ffffff;
+    font-size: 13px;
+    margin-right:8px;
+    float: right;
+    padding: 5px 8px;
+    margin-bottom:5px;
+}
+
+.boutoncreerdiscussion:hover{
+    background: #f1bd2d;;
+    border: 2px  #496ea1 solid;
+}
+
+.modalheaderreponsecourrier {
+    padding: 2px 10px;
+    background-color: #b2a6ab;
+    color: white;
+    font-weight: bold;
+    width: 100%;
+}
+.closereponsecourrier {
+    color: #6a000c;
+    float: right;
+    font-size: 28px;
+    font-weight: bold;
+}
+
+.closereponsecourrier:hover,
+.closereponsecourrier:focus {
+    color: #fefef4;
+    text-decoration: none;
+    cursor: pointer;
+}
+.modal-bodyFileDiscussion {
+    overflow-x: auto;
+    padding: 6px 6px;
+}
+.messagePatienter{
+    color: #496ea1;
+    font-size: 12px;
+    font-weight: bold;
+    margin-left: 10px;
+    margin-left:5px;
+}
+
+.lignenomdudossier {
+    border-radius: 5px;
+    background-color: #fbfffb;
+    padding: 20px;
+    width: 100%;
+}
+
+.col-25 {
+    float: left;
+    width: 25%;
+    margin-top: 6px;
+}
+
+.col-75 {
+    float: left;
+    width: 75%;
+    margin-top: 6px;
+}
+
+input[type=text], select, textarea {
+    width: 100%;
+    padding: 6px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    resize: vertical;
+}
+
+input[type=text]:focus{
+    border-color:dodgerBlue;
+    box-shadow:0 0 8px 0 dodgerBlue;
+}
+
+textarea:focus {
+    border-color:dodgerBlue;
+    box-shadow:0 0 8px 0 dodgerBlue;
+}
+
+.annexeBouton{
+    display: inline-block;
+    padding: 20px;
+    margin-left: 10px;
+    margin-right: 10px;
+    text-align: center;
+    font-size: 15px;
+    cursor: pointer;
+    color: black;
+}
+/*****Select one menu*****/
+.ui-selectonemenu .ui-selectonemenu-trigger{
+    width: 40px !important;
+    padding-top: 0.2em;
+    background-color:#0062cc;
+}
+
+.ui-selectonemenu{
+    padding-right: 0px !important;
+}
+
+.ui-selectonemenu.ui-state-hover, .ui-selectonemenu.ui-state-focus {
+    background-color: transparent;
+}
+
+.timeline {
+    white-space: nowrap;
+    overflow-x: scroll;
+    padding: 30px 0 10px 0;
+    position: relative;
+}
+/* Style the tab */
+.tab {
+    overflow: hidden;
+    border: 2px solid #ccc;
+    background-color: #f1f1f1;
+}
+
+/* Style the buttons inside the tab */
+.tab button {
+    background-color: inherit;
+    float: left;
+    font-weight: bold;
+    border: none;
+    outline: none;
+    cursor: pointer;
+    padding: 14px 16px;
+    transition: 0.5s;
+    font-size: 17px;
+    border-right: 3px solid white;
+}
+
+/* Change background color of buttons on hover */
+.tab button:hover {
+    background-color: #428BCA;
+    color: #ffffff;
+}
+
+/* Create an active/current tablink class */
+.tab button.active {
+    background-color: #428BCA;
+    color: #ffffff;
+}
+
+/* Style the tab content */
+.tabcontent {
+    display: none;
+    padding: 6px 12px;
+    border: 2px solid #ccc;
+    background-color: #fefef4;
+    border-top: none;
+    -webkit-animation: fadeEffect 1s;
+    animation: fadeEffect 1s;
+    margin-bottom: 80px;
+}
+
+.alertaccusedereception {
+    padding: 10px;
+    border-radius: 3px;
+    background-color: #fe5f33; /* Red */
+    color: white;
+    font-size: 15px;
+    font-weight: bold;
+    margin-bottom: 10px;
+}
+
+
+.alertereferenceinterne {
+    padding: 10px;
+    border-radius: 3px;
+    background-color: #989d7c; /* Red */
+    color: white;
+    font-size: 15px;
+    font-weight: bold;
+    margin-bottom: 10px;
+}
+
+/* The close button */
+.closebtnaccusedereception {
+    margin-left: 15px;
+    color: white;
+    font-weight: bold;
+    float: right;
+    font-size: 22px;
+    line-height: 20px;
+    cursor: pointer;
+    transition: 0.3s;
+}
+
+/* When moving the mouse over the close button */
+.closebtnaccusedereception:hover {
+    color: black;
+}
+
+/***Modal Reponse au courrier***/
+.mymodalreponsecourrier {
+    display: none; /* Hidden by default */
+    position: fixed; /* Stay in place */
+    z-index: 1; /* Sit on top */
+    left: 0;
+    -webkit-animation-name: fadeInModal; /* Fade in the background */
+    -webkit-animation-duration: 0.4s;
+    animation-name: fadeInModal;
+    animation-duration: 0.4s;
+    margin-bottom: 40px;
+}
+
+.modalcontentreponse {
+    position: fixed;
+    bottom: 0;
+    border: 1px #b2a6ab solid;
+    background-color: #f1f1f1;
+    width:25%;
+    margin-bottom: 70px;
+    margin-left: 40px;
+    -webkit-animation-name: slideInModal;
+    -webkit-animation-duration: 0.4s;
+    animation-name: slideInModal;
+    animation-duration: 0.4s;
+    overflow: auto;
+}
+.modalbodyreponse{
+    padding: 10px 6px;
+    overflow-x: auto;
+    overflow-y: auto;
+}

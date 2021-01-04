@@ -1,0 +1,49 @@
+.fa-window-close{
+    color: #ffffff;
+}
+.fa-eye{
+    color: #ffffff;
+}
+.fa-pencil{
+    color: #ffffff;
+}
+.fa-refresh{
+    color: #f19121;
+}
+.fa-check-circle{
+    color: #d30017;
+}
+.columnbouton {
+    float: left;
+    width: 50%;
+    padding: 10px;
+
+}
+input[type=text], select, textarea {
+    width: 100%;
+    padding: 6px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    resize: vertical;
+}
+
+input[type=text]:focus{
+    border-color:dodgerBlue;
+    box-shadow:0 0 8px 0 dodgerBlue;
+}
+.panelgriddossier{
+    border-style: hidden !important;
+    background-color: white;
+    cursor: hand;
+    padding: 10px;
+    width: 100%;
+}
+.panelgriddossier td {
+    border-style: hidden !important;
+}
+.infosuppressiondossier {
+    background-color: #ffffcc;
+    border-left: 6px solid #ffeb3b;
+    margin-bottom: 15px;
+    padding: 12px 12px;
+}

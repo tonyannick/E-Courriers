@@ -1,0 +1,119 @@
+.fa-retweet{
+    color: #ffffff;
+}
+.fa-eye{
+   color:white;
+}
+.columnmenuparametre {
+    float: left;
+    width: 50%;
+    padding: 10px;
+}
+
+.line {margin: 0 -5px;}
+
+/* Clear floats after the columns */
+.line:after {
+    content: "";
+    display: flex;
+    clear: both;
+}
+
+.colonnefullpage{
+    margin-top: 10px;
+    float: left;
+    width: 100%;
+    padding: 0 10px;
+}
+
+.colonnecontent {
+    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
+    padding: 16px;
+    overflow-x: auto;
+    text-align: justify;
+    background-color: rgba(254, 194, 33, 0.73);
+    border: 1px solid #ccc;
+    border-radius: 2px;
+}
+
+.panelgridparametre{
+    border-style: hidden !important;
+    cursor: hand;
+    padding: 10px;
+}
+.panelgridparametre td {
+    border-style: hidden !important;
+}
+.inputtextstyle{
+    background-color: #EAF1FB;
+    border-bottom: 2px solid #0077FF;
+    border-top: 1px solid silver;
+    border-left: 1px solid silver;
+    border-right: 1px solid silver;
+}
+.inputtextstyle:focus{
+    background-color: #ffd764;
+    border: 2px solid saddlebrown;
+}
+
+/**
+ * Tabs
+ */
+.tabs {
+    display: flex;
+    flex-wrap: wrap; // make sure it wraps
+}
+.tabs label {
+    order: 1; // Put the labels first
+display: block;
+    padding: 1rem 2rem;
+    margin-right: 0.5rem;
+    cursor: pointer;
+    background: #90CAF9;
+    font-weight: bold;
+    transition: background ease 0.2s;
+}
+.tabs .tab {
+    order: 99; // Put the tabs last
+flex-grow: 1;
+    width: 100%;
+    display: none;
+    padding: 1rem;
+    background: #fff;
+}
+.tabs input[type="radio"] {
+    display: none;
+}
+.tabs input[type="radio"]:checked + label {
+    background: #fff;
+}
+.tabs input[type="radio"]:checked + label + .tab {
+    display: block;
+}
+
+@media (max-width: 45em) {
+    .tabs .tab,
+    .tabs label {
+        order: initial;
+    }
+    .tabs label {
+        width: 100%;
+        margin-right: 0;
+        margin-top: 0.2rem;
+    }
+}
+
+/*****Select one menu*****/
+.ui-selectonemenu .ui-selectonemenu-trigger{
+    width: 40px !important;
+    padding-top: 0.2em;
+    background-color:#0062cc;
+}
+
+.ui-selectonemenu{
+    padding-right: 0px !important;
+}
+
+.ui-selectonemenu.ui-state-hover, .ui-selectonemenu.ui-state-focus {
+    background-color: transparent;
+}

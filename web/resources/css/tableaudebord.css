@@ -1,0 +1,143 @@
+.fa-eye{
+    color: white;
+}
+.notice {
+    padding: 15px;
+    background-color: #fafafa;
+    border-left: 8px solid #c2c9cd;
+    border-bottom: 1px solid #c2c9cd;
+    border-right: 1px solid #c2c9cd;
+    border-top: 1px solid #c2c9cd;
+    margin: 20px;
+    -webkit-box-shadow: 0 5px 8px -6px rgba(0,0,0,.2);
+    -moz-box-shadow: 0 5px 8px -6px rgba(0,0,0,.2);
+    box-shadow: 0 5px 8px -6px rgba(0,0,0,.2);
+}
+.notice-success {
+    border-color:  #c2c9cd;
+}
+.notice-success>strong {
+    color:  #2575B0;
+}
+
+.column {
+    float: left;
+    width: 50%;
+    padding: 10px;
+
+}
+.stylecourrierdujour {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(265px, 1fr)); /* Where the magic happens */
+    grid-auto-rows: 94px;
+    grid-gap: 20px;
+    margin: 20px;
+}
+.gridbox {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 20px;
+    border-radius: 2px;
+    border: 1px #c2c9cd solid;
+    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.1);
+    background: rgba(226, 226, 226, 0.17);
+}
+.gridbox:hover {
+    opacity: 0.7;
+    font-size: 16px;
+}
+.gridbox_info{
+    font-size: 13px;
+    font-weight: bold;
+}
+.lignechart{
+    margin: 0 -5px;
+}
+.lignechart:after {
+    content: "";
+    display: flex;
+    clear: both;
+}
+.discussionbox{
+    float: left;
+    width: 50%;
+    padding: 0 10px;
+}
+.chartbox{
+    float: left;
+    width: 26%;
+    padding: 0 7px;
+}
+.chartboxdirection{
+    float: left;
+    width: 60%;
+    padding: 0 10px;
+}
+.chartboxtype{
+    float: left;
+    width: 47%;
+    padding: 0 4px;
+}
+.chartboxcontent{
+    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
+    padding: 16px;
+    text-align: center;
+    background-color: rgba(255, 253, 253, 0.43);
+    border: 1px solid #ccc;
+    border-radius: 2px;
+}
+/***Discussion tchat**/
+.chat_people{ overflow:hidden; clear:both;}
+.chat_list {
+    border-bottom: 2px solid #d1d3c5;
+    margin: 0;
+    padding: 18px 16px 10px;
+    background: white;
+}
+.active_chat{ background:#ebebeb;}
+.inbox_chat { height: 550px; overflow-y: scroll;}
+.chat_img {
+
+    float: left;
+    width: 10%;
+}
+.chat_ib {
+    float: left;
+    padding: 0 0 0 10px;
+    width: 88%;
+    margin-top: 7px;
+}
+
+.chat_ib h5{
+    font-size:12px;
+    font-weight: bold;
+    color: #0D47A1;
+    margin:0 0 8px 0;
+}
+.chat_ib h5 span{
+    font-size:13px;
+    float:right;
+}
+.chat_ib p{
+    font-size:11px;
+    color:#0f0f0f;
+    margin:auto;
+}
+.chat_img {
+    float: left;
+    width: 2%;
+}
+
+.logo {
+    width: 5%
+}
+
+.detail {
+    width: 95%;
+    padding-left: 15px;
+}
+
+.detail td {
+    font-size: 24px;
+}

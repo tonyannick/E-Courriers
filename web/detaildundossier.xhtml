@@ -1,0 +1,228 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:fn="http://xmlns.jcp.org/jsp/jstl/functions"
+      xmlns:f="http://xmlns.jcp.org/jsf/core">
+<f:view transient="true">
+    <f:metadata>
+        <f:viewAction action="#{detailDUnDossier.recupererLalisteDesCourriersDansUnDossier}" onPostBack="true"/>
+        <f:viewAction action="#{detailDUnDossier.recupererLesDossiers}" onPostback="true"/>
+    </f:metadata>
+    <h:head>
+        <title>Détails d'un dossier</title>
+        <meta http-equiv="Content-Type" content="text/html;charset=UTF8" />
+        <h:outputScript name="bootstrap/js/bootstrap.js" />
+        <h:outputStylesheet name="bootstrap/css/bootstrap.css" />
+        <h:outputStylesheet name="css/detaildundossier.css" />
+    </h:head>
+    <style>
+        .courrierurgent{
+            background-color: #fca752 !important;
+            color: #fefefe;
+            font-size: 16px;
+            font-weight: bold;
+            text-align: center;
+        }
+        .ui-datatable .ui-datatable-header {
+            text-align: right !important;
+        }
+    </style>
+    <h:body>
+        <div class="container-fluid" >
+            <div class="row">
+                <div id="header">
+                    <ui:insert name="header" >
+                        <ui:include src="header.xhtml" />
+                    </ui:insert>
+                </div>
+                <div id="footer">
+                    <ui:insert name="footer" >
+                        <ui:include src="footer.xhtml" />
+                    </ui:insert>
+                </div>
+                <div class="main-overview" style="margin-bottom: 90px; margin-top: 10px; overflow-y: auto">
+                    <div class="col-sm-9 col-sm-offset-3 col-md-9 col-md-offset-2 main">
+                        <ul class="breadcrumb" style="width:100%;">
+                            <li><h:outputLink value="tableaudebord.xhtml" title="Accueil">Accueil</h:outputLink></li>
+                            <li><h:outputLink value="mesdossiers.xhtml" title="Accueil">Mes dossiers</h:outputLink></li>
+                            <li>Contenu d'un dossier</li>
+                        </ul>
+                        <h3 class="page-header"><h:graphicImage value="./resources/images/folder.png" style="margin-right :10px"/>
+                            <h:outputText id="nomDuDossier" style="font-size: 18px; alignment: center;" value="Nom du dossier : #{detailDUnDossier.nomDossierEnCours}"/>
+                        </h3>
+
+                        <p:toolbar style="margin-bottom: 15px; margin-top: 15px">
+                            <f:facet name="left">
+                                <p:commandButton type="button"
+                                                 style="background: #8b2421; border-color: #8b2421;
+                                                 color: white; font-weight: bold; padding: 3px 4px"
+                                                 onclick="PF('dialogueConfirmationSuppression').show()" iconPos="right"
+                                                 value="Supprimer le dossier" icon="fa fa-close" />
+                                <p:commandButton type="button"
+                                                 style="background: #1c4b74; border-color: #1c4b74;
+                                                 color: white; font-weight: bold; margin-left: 8px; padding: 3px 4px"
+                                                 onclick="PF('dialogueRenommerDossier').show()" iconPos="right"
+                                                 value="Renommer le dossier" icon="fa fa-pencil" />
+                            </f:facet>
+                            <f:facet name="right">
+                                <p:commandButton style=" color: white; padding: 2px 3px; background:#286090; border-color:#286090;"  value="Atualiser la page"  onclick="actualiserLaPageDesCourriers()" type="button" icon="fa fa-refresh"/>
+                            </f:facet>
+
+                        </p:toolbar>
+
+
+                        <h:form id="form">
+                            <p:dataTable tableStyle="table-layout: auto"
+                                         widgetVar="tableCourrierDUnDossier"
+                                         paginatorPosition="top"
+                                         var="courriers" paginator="true"
+                                         paginatorAlwaysVisible="false"
+                                         rows="#{detailDUnDossier.rowsPerPage}"
+                                         first="#{detailDUnDossier.first}"
+                                         rowsPerPageTemplate="15,25,35"
+                                         value="#{detailDUnDossier.courrier.listeDesCourriersDansUnDossier}"
+                                         scrollable="false"
+                                         emptyMessage="Aucun courrier"
+                                         rowIndexVar="index" border="2">
+
+                                <f:facet name="header">
+                                    <p:outputPanel  >
+                                        <h:outputText  value="Recherche globale : " />
+                                        <p:inputText id="globalFilter" onkeyup="PF('tableCourrierDUnDossier').filter()" placeholder="Recherche ..."
+                                                     style="width:350px; background-color: #fff; border-radius: 5px; border: 1px #d3d6d6 solid;" />
+                                    </p:outputPanel>
+                                </f:facet>
+
+                                <p:column >
+                                    <f:facet name="header">N°</f:facet>
+                                    <h:outputText value="#{index + 1}" />
+                                </p:column>
+                                <p:column style="width: 140px; text-align: center"
+                                          filterStyle="background-color: white; width: 100px;
+                                          border-radius: 5px;
+                                          border: 1px #d3d6d6 solid"
+                                          filterBy="#{courriers.dateDeReception}">
+                                    <f:facet name="header" >Date d'envoi </f:facet>
+                                    <h:outputText style="font-size: 13px; alignment: center; " value="#{courriers.dateDeReception}"/>
+                                </p:column>
+                                <p:column style="text-align: center"
+                                          filterStyle="background-color: white; width: 100px;
+                                          border-radius: 5px;
+                                          border: 1px #d3d6d6 solid"
+                                          filterBy="#{courriers.referenceCourrier}">
+                                    <f:facet name="header">Référence</f:facet>
+                                    <h:outputText style="font-size: 13px; alignment: center;" value="#{courriers.referenceCourrier}"/>
+                                </p:column>
+                                <p:column style="text-align: center"
+                                          filterStyle="background-color: white; width: 100px;
+                                          border-radius: 5px;
+                                          border: 1px #d3d6d6 solid"
+                                          filterBy="#{courriers.objetCourrier}">
+                                    <f:facet name="header">Objet</f:facet>
+                                    <h:outputText style="font-size: 13px; alignment: center;" value="#{courriers.objetCourrier}"/>
+                                </p:column>
+                                <p:column
+                                        styleClass="#{courriers.prioriteCourrier eq 'Urgent' ? 'courrierurgent' : null}"
+                                        style="width: 100px; text-align: center"
+                                        filterStyle="background-color: white; width: 100px;
+                                    border-radius: 5px;
+                                    border-color: #f9fffd" filterBy="#{courriers.prioriteCourrier}}">
+                                    <f:facet name="header">Priorité</f:facet>
+                                    <h:outputText style="font-size: 13px; alignment: center;" value="#{courriers.prioriteCourrier}"/>
+                                </p:column>
+
+                                <p:column style="width:32px">
+                                    <p:commandButton
+                                            icon="fa fa-eye"
+                                            ajax="false"
+                                            action="#{detailDUnDossier.voirLesDetailsDuCourrier}"
+                                            style="background: #496ea1; border: 1px #496ea1 solid"
+                                            title="Voir plus">
+                                        <f:param name="alfrescoId" value="#{courriers.idAlfresco}" />
+                                        <f:param name="courrierId" value="#{courriers.idCourrier}" />
+                                    </p:commandButton>
+                                </p:column>
+
+                                <f:facet name="footer">
+                                    Nombre total de courriers dans le dossier :  #{fn:length(detailDUnDossier.courrier.listeDesCourriersDansUnDossier)}
+                                </f:facet>
+                            </p:dataTable>
+
+                        </h:form>
+
+                    </div>
+                    <p:dialog id="confirmationRenommerDossier"
+                              header="Renommer le dossier"
+                              width="450"
+                              widgetVar="dialogueRenommerDossier"
+                              modal="true" hideEffect="clip"
+                              showEffect="clip"
+                              resizable="false">
+                        <h:form>
+                            <p:messages for="messagerenommerdossier" showDetail="true" closable="true"/>
+
+                            <p:panelGrid columns="2" columnClasses="ui-grid-col-2,ui-grid-col-5" styleClass="panelgriddossier" style="margin-top:12px;">
+                                <h:outputLabel style="font-size: 13px;" value="Nouveau nom * " for="nomdossier"/>
+                                <h:inputText type="text" id="nomdossier" value="#{detailDUnDossier.dossier.nomDossier}" style="width: 100%" />
+                            </p:panelGrid>
+                            <p:separator/>
+                            <p:commandButton value="Ok"
+                                             style="margin-top: 14px; margin-right: 10px"
+                                             icon="fa fa-check-square"
+                                             update="@form nomDuDossier"
+                                             iconPos="right"
+                                             actionListener="#{detailDUnDossier.renommerUnDossier}"/>
+                        </h:form>
+                    </p:dialog>
+
+                    <p:dialog id="confirmationSupprimerDossier"
+                              header="Confirmation"
+                              widgetVar="dialogueConfirmationSuppression"
+                              modal="true" hideEffect="clip"
+                              showEffect="clip"
+                              resizable="false">
+
+                        <div class="infosuppressiondossier" id="info">
+                            <p style="font-size: 15px">
+                                <strong>Note : En supprimant le dossier, vous ne supprimé pas les courriers qui resteront disponibles à leur emplacement d'origine !</strong>
+                            </p>
+                        </div>
+                        <p:separator/>
+                        <h:form>
+                            <p:commandButton value="Supprimer"
+                                             style="margin-top: 14px; margin-right: 10px"
+                                             icon="fa fa-check-circle"
+                                             iconPos="right"
+                                             update="@form"
+                                             actionListener="#{detailDUnDossier.supprimerUnDossier}"/>
+                        </h:form>
+                    </p:dialog>
+
+                    <p:dialog id="retourListeDesDossiers"
+                              header="Suppression terminé"
+                              width="auto"
+                              widgetVar="dialogueRetourAuxDossiers"
+                              modal="true" hideEffect="clip"
+                              showEffect="clip"
+                              resizable="false">
+                        <h:form>
+                            <h:outputText value="Le dossier à été Supprimé, vous allez etre redirigé vers la liste de vos dossiers" />
+                            <p:messages for="messagesupprimerdossier" showDetail="true" closable="true"/>
+                            <p:separator/>
+                            <p:commandButton value="Ok"
+                                             style="background: #000e3c; border: 1px #000e3c solid; color: white"
+                                             icon="fa fa-window-close"
+                                             ajax="false"
+                                             action="#{detailDUnDossier.retourALaListeDesDossiers}"/>
+                        </h:form>
+                    </p:dialog>
+                </div>
+            </div>
+        </div>
+        <h:outputScript name="js/mesdossiers.js" />
+    </h:body>
+</f:view>
+</html>

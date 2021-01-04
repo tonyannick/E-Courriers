@@ -1,0 +1,98 @@
+/* Clear floats after the columns */
+.line:after {
+    content: "";
+    display: flex;
+    clear: both;
+}
+
+.colonnefullpage{
+    margin-top: 10px;
+    float: left;
+    width: 100%;
+    padding: 0 10px;
+}
+
+.colonnecontent {
+    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
+    padding: 16px;
+    overflow-x: auto;
+    text-align: justify;
+    background-color: rgba(254, 194, 33, 0.73);
+    border: 1px solid #ccc;
+    border-radius: 2px;
+}
+
+
+.emp-profile{
+    padding: 3%;
+    margin-top: 3%;
+    margin-bottom: 3%;
+    border-radius: 0.5rem;
+    background: #fff;
+}
+
+.profile-img img{
+    width: 70%;
+    height: 100%;
+}
+.profile-head h5{
+    color: #333;
+}
+.profile-head h6{
+    color: #0062cc;
+}
+.profile-edit-btn{
+    border: none;
+    border-radius: 1.5rem;
+    width: 70%;
+    padding: 2%;
+    font-weight: 600;
+    color: #6c757d;
+    cursor: pointer;
+}
+
+.profile-head .nav-tabs{
+    margin-bottom:5%;
+}
+.profile-head .nav-tabs .nav-link{
+    font-weight:600;
+    border: none;
+}
+.profile-head .nav-tabs .nav-link.active{
+    border: none;
+    border-bottom:2px solid #0062cc;
+}
+.profile-work{
+    padding: 4%;
+}
+.profile-work p{
+    font-size: 12px;
+    color: #818182;
+    font-weight: 600;
+}
+.profile-work a{
+    text-decoration: none;
+    color: #495057;
+    font-weight: 600;
+    font-size: 14px;
+}
+.profile-work ul{
+    list-style: none;
+}
+.profile-tab label{
+    font-weight: 600;
+}
+.profile-tab p{
+    font-weight: 600;
+    color: #0062cc;
+}
+
+.panelgrid{
+    border-style: hidden !important;
+    cursor: hand;
+    padding: 10px;
+    width: 100%;
+}
+.panelgrid td {
+    border-style: hidden !important;
+}

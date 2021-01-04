@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://xmlns.jcp.org/jsf/core">
+<f:view>
+    <h:body>
+        <ui:composition>
+            <h:outputStylesheet name="css/header.css" />
+            <h:outputScript name="/sweetalert/js/sweetalert.min.js"/>
+            <h:outputStylesheet name="/sweetalert/css/sweetalert.css"/>
+                   <div class="header">
+                       <h:form>
+                        <h:outputLabel href="#" style="margin-left: 8px; padding-right: 25px; color : dodgerblue; font-size:18px; border-right: 3px solid #2b669a; color: black; font-weight: bold"> E-Courrier</h:outputLabel>
+                           <h:outputLabel style="color: black; font-weight: bold; font-size: 13px; margin-left: 25px">#{headerBean.user.userName}</h:outputLabel>
+                           <div class="header-right">
+                               <h:outputLink value="tableaudebord.xhtml" title="Accueil" styleClass="active">Accueil </h:outputLink>
+                               <p:commandLink styleClass="mescourriers" action="#{tableauDeBord.voirLesCourriersEnregistres}">Courriers enregistrés</p:commandLink>
+                               <h:outputLink  styleClass="mestaches" value="mestaches.xhtml">Mes Taches </h:outputLink>
+                               <p:commandLink styleClass="parametre" action="#{tableauDeBord.accederAuxParametreDeLapplication}" value="Paramètres"></p:commandLink>
+                               <p:commandLink styleClass="quitter" action="#{tableauDeBord.deconnexion}" ajax="false" title="Déconnexion" value="Quitter">
+                                   <p:confirm message="Voulez-vous vraiment vous deconnecter?" header="Deconnexion" icon="fa fa-exclamation-triangle" />
+                               </p:commandLink>
+                           </div>
+                       </h:form>
+                   </div>
+
+
+            <h:form>
+                <p:confirmDialog global="true"  showEffect="slide" hideEffect="fade">
+                    <p:commandButton value="Deconnecter" type="button"  styleClass="ui-confirmdialog-yes" icon="fa fa-close" />
+                    <p:commandButton value="Rester" type="button" styleClass="ui-confirmdialog-no" icon="fa fa-chevron-circle-left" />
+                </p:confirmDialog>
+            </h:form>
+
+        </ui:composition>
+    </h:body>
+</f:view>
+</html>

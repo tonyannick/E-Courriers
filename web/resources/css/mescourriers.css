@@ -1,0 +1,41 @@
+.logo {
+    width: 5%
+}
+
+.detail {
+    width: 95%;
+    padding-left: 15px;
+}
+
+.detail td {
+    font-size: 24px;
+}
+.fa-exclamation-triangle{
+    color: #0D47A1;
+    margin-top: 5px;
+}
+.fa-close{
+    color: red;
+}
+.fa-chevron-circle-left{
+    color: #00772f;
+}
+.ui-separator{
+    height: 0.5px;
+    color: #0D47A1;
+
+}
+.urgent {
+    color: #ba0010;
+    font-weight: bold;
+}
+.ui-datascroller .ui-datascroller-item:hover {
+    background-color: rgba(255, 255, 0, 0.16);
+}
+.ui-datascroller .ui-datascroller-item {
+    margin-top: -10px;
+
+}
+.ui-datascroller .ui-datalist-content{
+    background: white;
+}

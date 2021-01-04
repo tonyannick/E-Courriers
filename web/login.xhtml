@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:pt="http://xmlns.jcp.org/jsf/passthrough">
+
+<f:view transient="true">
+    <f:metadata>
+        <f:viewAction action="#{login.cliquerSurSeSouvenir}" onPostBack="true"/>
+    </f:metadata>
+    <h:head>
+        <title>Login</title>
+        <meta charset="utf-8" />
+        <h:outputScript name="bootstrap/js/bootstrap.js" />
+        <h:outputStylesheet name="bootstrap/css/bootstrap.css" />
+        <h:outputStylesheet name="css/login.css" />
+    </h:head>
+    <h:body>
+        <div class="container-fluid" style="margin-bottom: 50px">
+            <div class="row">
+                <div class="login">
+                    <div class="row">
+                        <h1 class="loginTitle">Connexion</h1>
+                        <h:form id="login-form" >
+                            <h:panelGrid columns="2" style="border:none; width: 100%; margin-bottom:20px; margin-top: 30px; " styleClass="panelLogin">
+                                <h:graphicImage value="./resources/images/login.png"/>
+                                <p:inputText id="userLogin" pt:placeholder="Identifiant" style="width: 80%;margin-left: -30px" value="#{login.user.userlogin}"/>
+                                <h:graphicImage value="./resources/images/motdepasse.png" style="margin-top: 10px;"/>
+                                <p:password id="userPassword" redisplay="true" pt:placeholder="Mot de passe" style="width: 80%;margin-top: 10px; margin-left: -30px" value="#{login.user.userPassword}"/>
+                            </h:panelGrid>
+                            <h:panelGrid columns="2" style="border:none; color: white; margin-left: 5px; cursor: hand; width: 85%" styleClass="panelLogin">
+                                <p:selectBooleanCheckbox itemLabel="Se souvenir de moi"  style="margin-top: 15px; float: left" value="#{login.user.seSouvenir}"/>
+                            </h:panelGrid>
+                            <p:commandButton   value="Valider" ajax="false" style="margin-bottom: 10px; margin-left:70px; margin-top: 20px;
+                                               width: 100px; alignment: center; align-items: center; alignment-baseline: center"
+                                               action="#{login.cliquerSurValider}" />
+                            <p:messages id="messagesLogin" for="messagesLogin" showDetail="true" closable="true"/>
+                            <p:spacer height="7px"/>
+                            <p:separator style="background-color: white; color: white"/>
+                            <h:panelGrid columns="2" style="border:none; color: white; margin-left: 5px; cursor: hand; width: 100%">
+                                <h:outputLink value="#" title="Mot de passe oublié ?" style="color: white; font-weight: bold; font-size: 11px; margin-left: 10px; float: left">Mot de passe oublié ?</h:outputLink>
+                                <h:outputLink value="#" title="Mot de passe oublié ?" style="color: white; font-weight: bold; font-size: 11px; margin-right: 20px; float: right">Créer un compte</h:outputLink>
+                            </h:panelGrid>
+                        </h:form>
+                    </div>
+                </div>
+                <ui:insert name="footer" >
+                    <ui:include src="footer.xhtml" />
+                </ui:insert>
+
+            </div>
+        </div>
+
+    </h:body>
+</f:view>
+</html>

@@ -1,0 +1,111 @@
+.header {
+    overflow: hidden;
+    background-color: #e7f4f6;
+    padding: 10px 10px;
+}
+
+.header a {
+    float: left;
+    color:white;
+    text-align: center;
+    padding: 6px;
+    margin-left: 5px;
+    margin-right: 5px;
+    text-decoration: none;
+    font-size: 14px;
+    line-height: 25px;
+    border-radius: 4px;
+}
+.header p {
+    float: left;
+    color: black;
+    display: block;
+    text-align: center;
+    margin-left: 5px;
+    margin-right: 5px;
+    text-decoration: none;
+    font-size: 14px;
+}
+
+
+.header .logo {
+    font-size: 25px;
+    font-weight: bold;
+}
+
+.header a:hover {
+    background-color: #555;
+    color: white;
+    font-weight: bold;
+}
+
+.header a.active {
+    font-weight: bold;
+    background-color: dodgerblue;
+    color: white;
+}
+
+.header-right {
+    float: right;
+}
+
+@media screen and (max-width: 500px) {
+    .header a {
+        float: none;
+        display: block;
+        text-align: left;
+    }
+    .header p {
+        float: none;
+        font-size: 10px;
+    }
+
+
+    .header-right {
+        float: none;
+    }
+}
+.mescourriers{
+    background: #cdb38a;
+    font-weight:bold;
+    color: #ffffff;
+}
+.mestaches{
+    background: #00a867;
+    font-weight:bold;
+    color: #ffffff;
+}
+.parametre{
+    background: #f1981c;
+    font-weight:bold;
+    color: #ffffff;
+}
+.parametre:hover{
+    background: #c2c9cd;
+    border-width: 2px;
+    border-color: #f1b32a;
+    color: #f1b32a;
+}
+.quitter{
+    background: #f30002;
+    font-weight:bold;
+    color: #ffffff;
+    margin-right: 30px;
+}
+.quitter:hover{
+    background: #c2c9cd;
+    border-width: 2px;
+    border-color:  #f30002;
+    color:  #f30002;
+}
+
+.fa-close{
+    color: red;
+}
+.fa-chevron-circle-left{
+    color: #00772f;
+}
+.fa-exclamation-triangle{
+    color: #0D47A1;
+    margin-top: 5px;
+}

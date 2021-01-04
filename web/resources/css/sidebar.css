@@ -1,0 +1,92 @@
+.sidebarmenu {
+    margin: 0;
+    padding: 0;
+    background-color: #f1f1f1;
+    height: 100%;
+    overflow: auto;
+}
+.sidebarmenu a {
+    display: block;
+    color: black;
+    font-size: 17px;
+    padding: 16px;
+    text-decoration: none;
+}
+.sidebarmenu ul{
+    margin:0;
+    padding:0;
+}
+.sidebarmenu li{
+    list-style-type: none;
+    display: block;
+}
+/**Submenu**/
+.sidebarsubmenu{
+    margin:0;
+    padding:0;
+}
+.sidebarsubmenu li{
+    list-style-type: none;
+    display: block;
+}
+
+.sidebarmenu li:hover .sidebarsubmenu {
+    display: block;
+    max-height: 200px;
+    transition: 1s;
+}
+.sidebarsubmenu a {
+    background-color: #D7EBFA;
+    display: block;
+    padding-top: 10px;
+    padding-bottom: 10px;
+}
+.sidebarmenu a:hover:not(.sidebaractive) {
+    background-color: #499c00;
+    color: white;
+    font-weight: bold;
+}
+.sidebarsubmenu a:hover {
+    text-decoration: none;
+    background-color:  rgba(255, 206, 86, 0.8);
+    font-style: italic;
+    transform: scale(1.02);
+}
+
+.sidebarsubmenu {
+    overflow: hidden;
+    max-height: 0;
+    -webkit-transition: all 0.5s ease-out;
+}
+.sidebarsubmenu li{
+    list-style-type: none;
+    font-size: 13px;
+}
+
+
+.sidebarmenu a.sidebaractive {
+    background-color: #2575B0;
+    color: white;
+}
+
+/*.sidebarmenu a:hover:not(.sidebaractive) {
+    background-color: #555;
+    color: white;
+    font-weight: bold;
+}*/
+@media screen and (max-width: 500px) {
+    .sidebarmenu {
+        width: 100%;
+        height: auto;
+        position: relative;
+    }
+    .sidebarmenu a {float: left;}
+    div.content {margin-left: 0;}
+}
+
+@media screen and (max-width: 400px) {
+    .sidebarmenu a {
+        text-align: center;
+        float: none;
+    }
+}

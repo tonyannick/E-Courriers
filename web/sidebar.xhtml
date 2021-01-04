@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:f="http://xmlns.jcp.org/jsf/core">
+<f:view>
+
+    <h:outputStylesheet name="css/sidebar.css" />
+    <div class="sidebarmenu">
+        <ul>
+            <li><h:outputLink class="sidebaractive" value="tableaudebord.xhtml"><h:graphicImage width="20px" height="20px" value="./resources/images/home.png" style="margin-right: 10px;"/>Accueil</h:outputLink></li>
+            <li><p:commandLink action="#{tableauDeBord.naviguerVersUneListeDesCourriers}">
+                <f:param name="url" value="courriersfavoris.xhtml" />
+                    <h:graphicImage  width="20px" height="20px" value="./resources/images/star.png" style="margin-right: 10px;"/>
+                    Favoris
+                </p:commandLink>
+            </li>
+            <li><p:commandLink action="#{tableauDeBord.afficherPagePourAjouterUnNouveauCourrier}">
+                    <h:graphicImage  width="20px" height="20px" value="./resources/images/nouveaucourrier.png" style="margin-right: 10px;"/>
+                        Nouveau courrier
+                 </p:commandLink>
+            </li>
+            <li><p:commandLink action="#{tableauDeBord.naviguerVersUneListeDesCourriers}">
+                    <f:param name="url" value="courriersenvoyes.xhtml" />
+                    <h:graphicImage  width="20px" height="20px" value="./resources/images/courrierenvoye.png" style="margin-right: 10px; "/>
+                        Courriers envoyés
+                </p:commandLink>
+            </li>
+            <li><p:commandLink action="#{tableauDeBord.naviguerVersUneListeDesCourriers}">
+                <f:param name="url" value="courriersrecus.xhtml" />
+                    <h:graphicImage  width="20px" height="20px" value="./resources/images/courrierrecu.png" style="margin-right: 10px; "/>
+                        Courriers reçus
+                </p:commandLink>
+            </li>
+            <li><p:commandLink action="#{tableauDeBord.naviguerVersUneListeDesCourriers}">
+                <f:param name="url" value="courriersarchives.xhtml" />
+                    <h:graphicImage  width="20px" height="20px" value="./resources/images/archive.png" style="margin-right: 10px; "/>
+                        Archives
+                </p:commandLink>
+            </li>
+            <li><h:outputLink value="mesdossiers.xhtml">
+                    <h:graphicImage  width="20px" height="20px" value="./resources/images/folders.png" style="margin-right: 10px; "/>
+                        Mes dossiers
+                </h:outputLink>
+            </li>
+            <li><h:outputLink value="statistiques.xhtml">
+                    <h:graphicImage  width="20px" height="20px" value="./resources/images/diagram.png" style="margin-right: 10px; "/>
+                        Statistiques
+                </h:outputLink>
+            </li>
+        </ul>
+    </div>
+</f:view>
+</html>

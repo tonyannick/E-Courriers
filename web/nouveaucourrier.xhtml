@@ -1,0 +1,526 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:pt="http://xmlns.jcp.org/jsf/passthrough"
+      xmlns:f="http://xmlns.jcp.org/jsf/core">
+<f:view transient="true">
+    <f:metadata>
+        <f:viewAction action="#{nouveauCourrier.actionAuRechargementDeLaPage}" onPostBack="true"/>
+    </f:metadata>
+   <h:head>
+       <title>Nouveau Courrier</title>
+       <meta http-equiv="Content-Type" content="text/html;charset=UTF8" />
+       <h:outputScript name="bootstrap/js/bootstrap.js" />
+       <h:outputStylesheet name="bootstrap/css/bootstrap.css" />
+       <h:outputStylesheet name="css/nouveaucourrier.css" />
+       <h:outputScript name="/sweetalert/js/sweetalert.min.js"/>
+       <h:outputStylesheet name="/sweetalert/css/sweetalert.css"/>
+       <h:outputStylesheet name="/wickedpicker/css/wickedpicker.min.css"/>
+       <h:outputStylesheet name="/wickedpicker/css/wickedpicker.css"/>
+       <h:outputScript name="wickedpicker/js/wickedpicker.js"/>
+       <h:outputScript name="holdon/js/HoldOn.min.js"/>
+       <h:outputStylesheet name="holdon/css/HoldOn.min.css"/>
+       <h:outputScript name="toast/js/toast.js"/>
+       <h:outputStylesheet name="toast/css/toast.css" />
+   </h:head>
+   <h:body id="page">
+       <div class="container-fluid" >
+            <div class="row">
+                <div id="header">
+                    <ui:insert name="header" >
+                        <ui:include src="header.xhtml" />
+                    </ui:insert>
+                </div>
+                <div id="footer">
+                    <ui:insert name="footer" >
+                        <ui:include src="footer.xhtml" />
+                    </ui:insert>
+                </div>
+                <div class="main-overview" style="margin-bottom: 90px; margin-top: 10px">
+                    <div class="col-sm-9 col-sm-offset-3 col-md-8 col-md-offset-2 main">
+                        <ul class="breadcrumb">
+                            <li><h:outputLink value="tableaudebord.xhtml" title="Accueil">Accueil</h:outputLink></li>
+                            <li>Nouveau courrier</li>
+                        </ul>
+
+                        <h3 class="page-header"><h:graphicImage value="./resources/images/nouveaucourriertitre.png" style="margin-right :10px"/>Formulaire d'enregistrement d'un nouveau courrier</h3>
+
+                        <h:form  class="login-form-1" id="courrierForm" cellspacing="30" cellpadding="30" enctype="multipart/form-data" onkeypress="if (event.keyCode == 13) { return false; }">
+                            <h:inputText value="#{nouveauCourrier.user.userFonction}" id="userFonction" style="display: none;"/>
+                            <p:messages id="messagevalidation" for="messagevalidation" showDetail="true" closable="true"/>
+                            <div class="line" style=" margin-top: 20px">
+                                <div class="colonneDouble">
+                                    <div class="colonnecontent">
+
+                                        <p:growl id="messageconfidentiel" for="messageconfidentiel" showDetail="true" life="4000"/>
+                                        <h4 style="font-weight:bold; font-size: 17px; float: left; margin-right: 10px" >Confidentiel ? *</h4>
+                                        <p:selectOneMenu widgetVar="selectOneMenuConfidentiel"
+                                                         autoWidth="true" effect="slide" onchange="checkIfCourrierIsConfidentiel()"
+                                                         value="#{nouveauCourrier.courrier.confidentiel}"
+                                                         style="margin-left:10px; width: 40%; margin-top: 3px">
+                                            <f:selectItem itemLabel="Choisissez une valeur" itemValue=""/>
+                                            <f:selectItem itemLabel="Oui" itemValue="Oui"/>
+                                            <f:selectItem itemLabel="Non" itemValue="Non"/>
+                                            <p:ajax update="messageconfidentiel" listener="#{nouveauCourrier.voirSiLeCourrierEstConfidentiel}"/>
+                                        </p:selectOneMenu>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="line" style=" margin-top: 20px">
+                                <div class="colonneDouble">
+                                    <div class="colonnecontent">
+                                        <h:panelGrid columns="2"  styleClass="panelLogin" cellspacing="30" cellpadding="30">
+                                            <h4 style="font-weight:bold; margin-right:5px; font-size: 14px" >Date de réception*</h4>
+                                            <p:calendar styleClass="inputtextstyle" value="#{nouveauCourrier.dateTemp}"
+                                                        showOn="focus" pages="1" effect="slide" locale="fr" widgetVar="calendarCourrier" id="dateAjout"/>
+                                            <h4 style="font-weight:bold;  margin-right:8px; font-size: 14px">Heure de réception*</h4>
+                                            <p:inputText styleClass="timepicker" value="#{nouveauCourrier.courrier.heureDeReception}" id="timepicker"/>
+                                        </h:panelGrid>
+
+                                    </div>
+                                </div>
+                            </div>
+
+                            <p class="titresection"><h:graphicImage value="./resources/images/interview.png" style="margin-left:10px"/> Emetteur du courrier</p>
+
+                            <div class="line" style=" margin-top: 20px">
+                                <div class="colonnefullpage">
+                                    <div id="divMessageTypeDemetteur" style="display: none">
+                                        <div class="alertechoixtypeemetteur" style="width: 70%">
+                                            <h:graphicImage value="./resources/images/information.png" style="margin-left:10px"/>
+                                            <span class="closebtnalertaccusedereception"></span>
+                                            Si vous n'etes pas l'emetteur, ce courrier sera directement ajouté la liste de vos courriers reçus
+                                        </div>
+
+                                    </div>
+                                    <div class="colonnecontent" id="divEmetteurComplet">
+                                        <h:panelGrid columns="3"  styleClass="panelLogin">
+                                            <h4  style="font-weight:bold; font-size: 16px">Emetteur *</h4>
+                                            <p:selectOneRadio widgetVar="selectOneRadioEmetteur" onchange="clicSurSelectOneRadioEmmetteur()" style="margin-left:80px"
+                                                              id="choixEmetteurSelectOneRadio" unselectable="true" value="#{nouveauCourrier.emetteur.typeDEmetteur}">
+                                                <f:selectItem id="agentMinistereEmetteur" itemLabel="Agent du Ministère" itemValue="Agent du Ministere" />
+                                                <f:selectItem id="agentAutreMinistereEmetteur" itemLabel="Agent d'un autre Ministère" itemValue="Agent Autre Ministere" itemDisabled="#{nouveauCourrier.isResponsable == 0 }"/>
+                                                <f:selectItem id="entrepriseEmetteur" itemLabel="Entreprise" itemValue="Entreprise" itemDisabled="#{nouveauCourrier.isResponsable == 0 }"/>
+                                                <f:selectItem id="associationEmetteur" itemLabel="Association" itemValue="Association" itemDisabled="#{nouveauCourrier.isResponsable == 0 }"/>
+                                                <f:selectItem id="particulierEmetteur" itemLabel="Particulier" itemValue="Particulier" itemDisabled="#{nouveauCourrier.isResponsable == 0 }"/>
+                                                <p:ajax update="destinataire choixDestinataireSelectOneRadio" listener="#{nouveauCourrier.voirSiLeCourrierEstExterne}"/>
+                                            </p:selectOneRadio>
+                                        </h:panelGrid>
+                                    </div>
+
+                                </div>
+                            </div>
+
+                            <div class="line" style=" margin-top: 20px; display: none" id="divEmetteurAgentDuMinistere">
+                                <div class="colonnefullpage">
+                                    <div class="colonnecontent">
+                                        <h:panelGrid columns="2"  styleClass="panelLogin">
+                                            <h4 style="font-weight:bold; font-size: 16px">Direction *</h4>
+                                            <p:selectOneMenu widgetVar="selectOneMenuDirectionEmetteur"
+                                                             autoWidth="true" effect="slide"
+                                                             id="idSelectOneMenuDirectionEmetteur"
+                                                             value="#{nouveauCourrier.emetteur.direction}"
+                                                             style="margin-left:60px; width: 100%;">
+                                                <f:selectItem itemLabel="Choisissez une direction" itemValue="rien"/>
+                                                <p:ajax update="fonctionEmetteur"/>
+                                                <f:selectItems value="#{nouveauCourrier.direction.listeDirectionEmetteur}"/>
+                                            </p:selectOneMenu>
+                                            <h4 style="font-weight:bold;  font-size: 16px">Fonction *</h4>
+                                            <p:selectOneMenu widgetVar="selectOneMenuFonctionEmetteur" effect="slide" autoWidth="true" style="margin-left:60px;
+                                                 width: 100%;" id="fonctionEmetteur" value="#{nouveauCourrier.emetteur.fonction}">
+                                                <f:selectItem itemLabel="Choisissez une Fonction"/>
+                                                <f:selectItems value="#{nouveauCourrier.recupererListeFonctionsParDirectionDeLEmetteur()}"/>
+                                            </p:selectOneMenu>
+                                        </h:panelGrid>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="line" style=" margin-top: 20px; display: none" id="divEmetteurAgentAutreMinistere">
+                                <div class="colonnefullpage">
+                                    <div class="colonnecontent">
+                                        <h:panelGrid columns="2"  styleClass="panelLogin">
+                                            <h4 style="font-weight:bold; font-size: 16px;" >Nom du Ministère *</h4>
+                                            <p:selectOneMenu widgetVar="selectOneMenuAutreMinistereEmetteur" effect="slide" autoWidth="true" style="margin-left:60px;
+                                                 width: 50%;"  id="selectOneMenuMinistereEmetteur" value="#{nouveauCourrier.emetteur.ministereAutreMinistere}">
+                                                <f:selectItem itemLabel="Choisissez un Ministère" itemValue="rien" />
+                                                <f:selectItems value="#{nouveauCourrier.etablissement.listeEtablissement}"/>
+                                            </p:selectOneMenu>
+                                            <h4 style="font-weight:bold; font-size: 16px">Direction *</h4>
+                                            <h:inputText  size="55" style="margin-left:60px" styleClass="inputtextstyle"
+                                                          id="directionAutreMinistereEmetteur" value="#{nouveauCourrier.emetteur.directionAutreMinistere}"/>
+                                            <h4 style="font-weight:bold;  font-size: 16px">Fonction *</h4>
+                                            <h:inputText  size="55" style="margin-left:60px" styleClass="inputtextstyle"
+                                                          id="fonctionAutreMinistereEmetteur" value = "#{nouveauCourrier.emetteur.fonctionAutreMinistere}"/>
+                                        </h:panelGrid>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="line" style=" margin-top: 20px; display: none" id="divEmetteurParticulier">
+                                <div class="colonnefullpage">
+                                    <div class="colonnecontent">
+                                        <h:panelGrid columns="2" styleClass="panelLogin" cellspacing="30" cellpadding="30">
+                                            <h4 style="font-weight:bold; font-size: 16px" >Nom *</h4>
+                                            <h:inputText size="55" style="margin-left:60px" styleClass="inputtextstyle" id="nomEmetteur"
+                                                         value="#{nouveauCourrier.emetteur.nomParticulier}"/>
+                                            <h4 style="font-weight:bold; font-size: 16px">Prénom *</h4>
+                                            <h:inputText  size="55" style="margin-left:60px" styleClass="inputtextstyle" id="prenomEmetteur"
+                                                          value="#{nouveauCourrier.emetteur.prenomParticulier}"/>
+                                            <h4 style="font-weight:bold; font-size: 16px">Téléphone *</h4>
+                                            <h:inputText  size="55" style="margin-left:60px" styleClass="inputtextstyle" id="telephoneParticulierEmetteur"
+                                                          value="#{nouveauCourrier.emetteur.telephoneParticulier}"/>
+                                            <h4 style="font-weight:bold; font-size: 16px">Email </h4>
+                                            <h:inputText size="55" style="margin-left:60px"  styleClass="inputtextstyle" id="emailParticulierEmetteur"
+                                                         value="#{nouveauCourrier.emetteur.emailParticulier}"/>
+                                        </h:panelGrid>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="line" style=" margin-top: 20px; display: none" id="divEmetteurEntrepriseOuAssociation">
+                                <div class="colonnefullpage">
+                                    <div class="colonnecontent">
+                                        <h:panelGrid columns="2" styleClass="panelLogin" cellspacing="30" cellpadding="30">
+                                            <h4 style="font-weight:bold; font-size: 16px">Raison sociale *</h4>
+                                            <h:inputText size="55" style="margin-left:60px" styleClass="inputtextstyle"
+                                                         id="nomRaisonSocialEmetteur" value="#{nouveauCourrier.emetteur.raisonSocial}"/>
+                                            <h4 style="font-weight:bold; font-size: 16px">Direction *</h4>
+                                            <h:inputText  size="55" style="margin-left:60px" styleClass="inputtextstyle"
+                                                          id="directionEntrepriseEmetteur" value="#{nouveauCourrier.emetteur.directionEntreprise}"/>
+                                            <h4 style="font-weight:bold;  font-size: 16px">Fonction *</h4>
+                                            <h:inputText  size="55" style="margin-left:60px" styleClass="inputtextstyle"
+                                                          id="fonctionEntrepriseEmetteur" value="#{nouveauCourrier.emetteur.fonctionEntreprise}"/>
+                                            <h4 style="font-weight:bold;  font-size: 16px">Téléphone *</h4>
+                                            <h:inputText  size="55" style="margin-left:60px" styleClass="inputtextstyle"
+                                                          id="telephoneEntrepriseEmetteur" value="#{nouveauCourrier.emetteur.telephoneEntreprise}"/>
+                                            <h4 style="font-weight:bold;  font-size: 16px">Email </h4>
+                                            <h:inputText  size="55" style="margin-left:60px" styleClass="inputtextstyle"
+                                                          id="emailEntrepriseEmetteur" value="#{nouveauCourrier.emetteur.emailEntreprise}"/>
+                                            <h4 style="font-weight:bold;  font-size: 16px">Adresse </h4>
+                                            <h:inputText  size="55" style="margin-left:60px" styleClass="inputtextstyle"  value="#{nouveauCourrier.emetteur.adresseEntreprise}"/>
+                                        </h:panelGrid>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <p class="titresection"><h:graphicImage value="./resources/images/receveur.png" style="margin-left:10px"/> Destinataire du courrier</p>
+
+                            <div class="line" style=" margin-top: 20px">
+                                <div class="colonnefullpage">
+                                    <div class="colonnecontent">
+                                        <h:panelGrid columns="3"  styleClass="panelLogin">
+                                            <h4  style="font-weight:bold; font-size: 16px">Destinataire *</h4>
+                                            <p:selectOneRadio widgetVar="selectOneRadioDestinataire" onchange="clicSurSelectOneRadioDestinataire()" style="margin-left:60px"
+                                                              id="choixDestinataireSelectOneRadio" unselectable="true" value="#{nouveauCourrier.destinataire.typeDestinataire}">
+                                                <f:selectItem id="agentMinistereDestinataire" itemLabel="Agent du Ministère" itemValue="Agent du Ministere" />
+                                                <f:selectItem id="agentAutreDestinataire" itemLabel="Agent d'un autre Ministère" itemValue="Agent Autre Ministere" itemDisabled="#{nouveauCourrier.isResponsable == 0 }"/>
+                                                <f:selectItem id="entrepriseDestinataire" itemLabel="Entreprise" itemValue="Entreprise" itemDisabled="#{nouveauCourrier.isResponsable == 0 }"/>
+                                                <f:selectItem id="associationDestinataire" itemLabel="Association" itemValue="Association" itemDisabled="#{nouveauCourrier.isResponsable == 0 }"/>
+                                                <f:selectItem id="particulierDestinataire" itemLabel="Particulier" itemValue="Particulier" itemDisabled="#{nouveauCourrier.isResponsable == 0 }"/>
+                                            </p:selectOneRadio>
+                                        </h:panelGrid>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="line" style=" margin-top: 20px; display: none" id="divDestinataireEntrepriseOuAssociation">
+                                <div class="colonnefullpage">
+                                    <div class="colonnecontent">
+                                        <h:panelGrid columns="2" styleClass="panelLogin" cellspacing="30" cellpadding="30">
+                                            <h4 style="font-weight:bold; font-size: 16px">Raison sociale *</h4>
+                                            <h:inputText size="55" style="margin-left:60px" styleClass="inputtextstyle"
+                                                         id="nomRaisonSocialDestinataire" value="#{nouveauCourrier.destinataire.raisonSocial}"/>
+                                            <h4 style="font-weight:bold; font-size: 16px">Direction *</h4>
+                                            <h:inputText  size="55" style="margin-left:60px" styleClass="inputtextstyle"
+                                                          id="directionEntrepriseDestinataire" value="#{nouveauCourrier.destinataire.directionEntreprise}"/>
+                                            <h4 style="font-weight:bold;  font-size: 16px">Fonction *</h4>
+                                            <h:inputText  size="55" style="margin-left:60px" styleClass="inputtextstyle"
+                                                          id="fonctionEntrepriseDestinataire" value="#{nouveauCourrier.destinataire.fonctionEntreprise}"/>
+                                            <h4 style="font-weight:bold;  font-size: 16px">Téléphone *</h4>
+                                            <h:inputText  size="55" style="margin-left:60px" styleClass="inputtextstyle"
+                                                          id="telephoneEntrepriseDestinataire" value="#{nouveauCourrier.destinataire.telephoneEntreprise}"/>
+                                            <h4 style="font-weight:bold;  font-size: 16px">Email </h4>
+                                            <h:inputText  size="55" style="margin-left:60px" styleClass="inputtextstyle"
+                                                          id="emailEntrepriseDestinataire" value="#{nouveauCourrier.destinataire.emailEntreprise}"/>
+                                            <h4 style="font-weight:bold;  font-size: 16px">Adresse </h4>
+                                            <h:inputText  size="55" style="margin-left:60px" styleClass="inputtextstyle" value="#{nouveauCourrier.destinataire.adresseEntreprise}" />
+                                        </h:panelGrid>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="line" style=" margin-top: 20px; display: none" id="divDestinataireParticulier">
+                                <div class="colonnefullpage">
+                                    <div class="colonnecontent">
+                                        <h:panelGrid columns="2" styleClass="panelLogin" cellspacing="30" cellpadding="30">
+                                            <h4 style="font-weight:bold; font-size: 16px">Nom *</h4>
+                                            <h:inputText size="55" style="margin-left:60px" styleClass="inputtextstyle"
+                                                         id="nomParticulierDestinataire" value="#{nouveauCourrier.destinataire.nomParticulier}"/>
+                                            <h4 style="font-weight:bold; font-size: 16px">Prénom *</h4>
+                                            <h:inputText  size="55" style="margin-left:60px" styleClass="inputtextstyle"
+                                                          id="prenomParticulierDestinataire"  value="#{nouveauCourrier.destinataire.prenomParticulier}"/>
+                                            <h4 style="font-weight:bold; font-size: 16px">Téléphone *</h4>
+                                            <h:inputText size="55" style="margin-left:60px" styleClass="inputtextstyle"
+                                                         id="telephoneParticulierDestinataire"  value="#{nouveauCourrier.destinataire.telephoneParticulier}"/>
+                                            <h4 style="font-weight:bold; font-size: 16px">Email </h4>
+                                            <h:inputText size="55" style="margin-left:60px"  styleClass="inputtextstyle"
+                                                         id="emailParticulierDestinataire"  value="#{nouveauCourrier.destinataire.emailParticulier}"/>
+                                        </h:panelGrid>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="line" style=" margin-top: 20px; display: none" id="divDestinataireAgentDuMinistere">
+                                <div class="colonnefullpage">
+                                    <div class="colonnecontent">
+                                        <h:panelGrid columns="2"  styleClass="panelLogin">
+                                            <h4 style="font-weight:bold; font-size: 16px">Direction *</h4>
+                                            <p:selectOneMenu id="destinataire" widgetVar="selectOneMenuDirectionDestinataire"
+                                                             autoWidth="true" effect="slide"
+                                                             value="#{nouveauCourrier.destinataire.direction}"
+                                                             style="margin-left:60px; width: 100%;">
+                                                <f:selectItem itemLabel="Choisissez une direction"/>
+                                                <p:ajax update="fonctionDestinataire"/>
+                                                <f:selectItems value="#{nouveauCourrier.direction.listeDirectionDestinataire}"/>
+                                            </p:selectOneMenu>
+                                            <h4 style="font-weight:bold;  font-size: 16px">Fonction *</h4>
+                                            <p:selectOneMenu widgetVar="selectOneMenuFonctionDestinataire" effect="slide" autoWidth="true" style="margin-left:60px;
+                                                 width: 100%;" id="fonctionDestinataire" value="#{nouveauCourrier.destinataire.fonction}">
+                                                <f:selectItem itemLabel="Choisissez une Fonction" itemValue="rien" />
+                                                <f:selectItems value="#{nouveauCourrier.recupererListeFonctionsParDirectionDuDestinataire()}"/>
+                                            </p:selectOneMenu>
+                                        </h:panelGrid>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="line" style=" margin-top: 20px; display: none" id="divDestinataireAgentAutreMinistere">
+                                <div class="colonnefullpage">
+                                    <div class="colonnecontent">
+                                        <h:panelGrid columns="2"  styleClass="panelLogin">
+                                            <h4 style="font-weight:bold; font-size: 16px;" id="titreMinistere">Nom du Ministère *</h4>
+                                            <p:selectOneMenu widgetVar="selectOneMenuAutreMinistereDestinataire" effect="slide" autoWidth="true" style="margin-left:60px;
+                                                      width: 50%;"  id="listeMinistere" value="#{nouveauCourrier.destinataire.ministere}">
+                                                <f:selectItem itemLabel="Choisissez un Ministère" itemValue="rien" />
+                                                <f:selectItems value="#{nouveauCourrier.etablissement.listeEtablissement}"/>
+                                            </p:selectOneMenu>
+                                            <h4 style="font-weight:bold; font-size: 16px">Direction *</h4>
+                                            <h:inputText  size="55" style="margin-left:60px" styleClass="inputtextstyle"
+                                                          id="directionAutreMinistereDestinataire" value="#{nouveauCourrier.destinataire.directionAutreMinistere}"/>
+                                            <h4 style="font-weight:bold;  font-size: 16px">Fonction *</h4>
+                                            <h:inputText   size="55" style="margin-left:60px" styleClass="inputtextstyle"
+                                                          id="fonctionAutreMinistereDestinataire" value="#{nouveauCourrier.destinataire.fonctionAutreMinistere}"/>
+                                        </h:panelGrid>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <p class="titresection" ><h:graphicImage value="./resources/images/mail.png" style="margin-left:20px"/> Eléménts du courrier</p>
+                            <div class="line" style=" margin-top: 20px;">
+                                <div class="colonnefullpage">
+                                    <div class="colonnecontent">
+                                        <h:panelGrid columns="2" styleClass="panelLogin" cellspacing="30" cellpadding="30">
+                                            <h4  style="font-weight:bold; font-size: 16px">Type de courrier *</h4>
+                                            <p:selectOneMenu widgetVar="selectOneMenuTypeDeCourrier"
+                                                             autoWidth="true" effect="slide"
+                                                             style="margin-left:35px; width: 50%;"
+                                                             value="#{nouveauCourrier.courrier.typeCourrier}">
+                                                <f:selectItem itemLabel="Choisissez un type de courrier" itemValue="rien"/>
+                                                <f:selectItems value="#{nouveauCourrier.courrier.listeTypeDeCourier}"/>
+                                            </p:selectOneMenu>
+                                            <h4  style="font-weight:bold; font-size: 16px">Référence *</h4>
+                                            <h:inputText  size="50"  style="margin-left:35px" styleClass="inputtextstyle" id="referenceCourrier" value="#{nouveauCourrier.courrier.referenceCourrier}"/>
+                                            <h4  style="font-weight:bold; font-size: 16px">Mots clés </h4>
+                                            <h:panelGrid columns="3">
+                                                <h:inputText  pt:placeholder=""  size="50" id="motsCles"
+                                                              style="margin-left:35px" styleClass="inputtextstyle" value="#{nouveauCourrier.courrier.motsclesCourrier}"/>
+                                                <h:outputLabel styleClass="indicationsaisie" value="*Séparé les mots clés par une virgule"/>
+                                                <p:tooltip id="tooltipMotsCles" for="motsCles" value="Séparé les mots clés par une virgule"
+                                                           showEvent="focus" position="right" hideEffect="slide"  styleClass="qtip-default"/>
+                                            </h:panelGrid>
+                                            <h4  style="font-weight:bold; font-size: 16px">Objet du courrier *</h4>
+                                            <h:inputText size="50" styleClass="inputtextstyle" style="margin-left:35px" id="objetCourrier" value="#{nouveauCourrier.courrier.objetCourrier}"/>
+                                            <h4  style="font-weight:bold; font-size: 16px">Commentaires</h4>
+                                            <h:inputText size="50" style="margin-left:35px" styleClass="inputtextstyle"  id="commentaires" value="#{nouveauCourrier.courrier.commentairesCourrier}"/>
+                                            <h4  style="font-weight:bold; font-size: 16px">Priorité *</h4>
+                                            <h:panelGrid columns="2" style="margin-left:35px" cellpadding="5">
+                                                <p:selectOneRadio id="choixPrioriteSelectOneRadio" onchange="clicSelectOneRadioPrioriteCourrier()"  unselectable="true"
+                                                                   value="#{nouveauCourrier.courrier.prioriteCourrier}">
+                                                    <f:selectItem itemLabel="Normal" itemValue="Normal" />
+                                                    <f:selectItem itemLabel="Urgent" itemValue="Urgent" />
+                                                </p:selectOneRadio>
+                                            </h:panelGrid>
+                                        </h:panelGrid>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <p class="titresection" id="titreSectionFichier"><h:graphicImage value="./resources/images/folder.png" style="margin-left:20px"/> Fichier(s)</p>
+
+                            <div class="line" id="divFichierEtAnnnexe" style=" margin-top: 20px;">
+                                <div class="colonnefullpage">
+                                    <div class="colonnecontent">
+                                        <p:messages id="messageFichierCourrier" for="messageFichierCourrier" showDetail="true" closable="false"/>
+                                        <h:panelGrid columns="3" styleClass="panelLogin" >
+                                            <h4  style="font-weight:bold; font-size: 16px">Fichier du courrier *</h4>
+                                            <p:fileUpload mode="advanced" id="fichierDuCourrier"
+                                                          listener="#{nouveauCourrier.ajoutDuFichierDuCourrier}"
+                                                          accept=".doc,.docx,.pdf,.PDF,.xls,.xlsx,application/msword,application/vnd.openxmlformats-officedocument.wordprocessingml.document,
+                                                                                        application/pdf,application/vnd.ms-excel,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+                                                          invalidSizeMessage="Erreur, le fichier est trop lourd!! 10 MB au plus"
+                                                          invalidFileMessage="Erreur, ce type de fichier n'est pas autorisé. Retirer le fichier : "
+                                                          skinSimple="true"
+                                                          uploadLabel="Valider"
+                                                          cancelLabel="Annuler"
+                                                          fileLimit="1"
+                                                          update="messageFichierCourrier"
+                                                          sizeLimit="10240000"
+                                                          fileLimitMessage="Erreur, vous avez dépassé le nombre de fichier annexe autorisé (1 fichier au plus)"
+                                                          allowTypes="/(\.|\/)(pdf|PDF|doc|docx|xls|xlsx)$/"
+                                                          style="margin-bottom:5px; margin-left:25px" label="Ajouter"/>
+
+                                            <h:outputLabel styleClass="indicationsaisie" value="*fichiers autorisés : word, excel et pdf"/>
+
+                                            <h4  style="font-weight:bold; font-size: 16px">Fichier annexe(s) </h4>
+                                            <p:fileUpload style="margin-left:25px" label="Ajouter"
+                                                          listener="#{nouveauCourrier.ajoutDesFichierAnnexes}"
+                                                          invalidSizeMessage="Erreur, le fichier est trop lourd!! 10 MB au plus"
+                                                          invalidFileMessage="Erreur, ce type de fichier n'est pas autorisé. Retirer le fichier : "
+                                                          uploadLabel="Valider" cancelLabel="Annuler"
+                                                          mode="advanced" dragDropSupport="false"
+                                                          update="messagesAnnexes"
+                                                          fileLimitMessage="Erreur, vous avez dépassé le nombre de fichier annexe autorisé (4 fichiers au plus)"
+                                                          multiple="true" sizeLimit="10240000" fileLimit="4"
+                                                          skinSimple="true" effect="slide" previewWidth="50"
+                                                          allowTypes="/(\.|\/)(pdf|PDF|doc|docx|xls|xlsx|ppt|pptx|jpg|jpeg|png)$/" />
+
+                                            <h:outputLabel styleClass="indicationsaisie" value="*fichiers annexes autorisés : word, excel, pdf, ppt et image (png et jpeg)"/>
+
+                                        </h:panelGrid>
+                                        <p:messages id="messagesAnnexes" for="messagesAnnexes" showDetail="true" closable="true"/>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <p:spacer height="15px"/>
+                            <p:separator/>
+
+                            <div class="line" style=" margin-top: 20px; margin-bottom: 100px">
+                                 <div class="colonnefullpage">
+                                    <div class="colonnecontent">
+                                        <p:messages id="messagesErreur" for="messagesErreur" showDetail="true" closable="true"/>
+                                        <p:commandButton value="Enregistrer"
+                                                         style="float: right"
+                                                         icon="fa fa-check-circle"
+                                                         iconPos="right"
+                                                         onclick="verifierLeFormulaireAvantValidation()"
+                                                         styleClass="boutonValiderInscription"/>
+                                    </div>
+                                 </div>
+                            </div>
+
+                            <p:dialog resizable="false"
+                                      header="Valider votre saisie ? "
+                                      widgetVar="alerteBoxValiderFormulaire" width="350"
+                                      modal="true" hideEffect="clip"
+                                      showEffect="clip"  dynamic="true" closable="true">
+                                    <h:panelGrid columns="2">
+
+                                        <p:commandButton value="Valider"
+                                                         style="margin-top: 14px; margin-right: 10px"
+                                                         icon="fa fa-check"
+                                                         id="boutonEnregistrer"
+                                                         update="@form"
+                                                         oncomplete="PF('dialogieCourrierBienEnvoyer').show()"
+                                                         onclick="PF('alerteBoxValiderFormulaire').hide()"
+                                                         action="#{nouveauCourrier.validerLeFormulaire}"/>
+
+                                        <p:commandButton  value="Annuler"
+                                                          icon="fa fa-close"
+                                                          type="button"
+                                                          onclick="PF('alerteBoxValiderFormulaire').hide()"
+                                                          style="margin-top: 14px; margin-right: 10px"/>
+
+                                    </h:panelGrid>
+                            </p:dialog>
+
+                            <p:blockUI block="page" trigger="boutonEnregistrer" >
+                                <h:graphicImage value="./resources/images/loading.gif" id="loadingcourrier"/>
+                                <h4  style="font-weight:bold; font-size: 16px">Veuillez patienter... </h4>
+                            </p:blockUI>
+
+                            <p:dialog id="courrierBienEnvoyer"
+                                      header="Validation"
+                                      closable="false"
+                                      widgetVar="dialogueCourrierBienEnvoyer"
+                                      modal="true" hideEffect="clip"
+                                      showEffect="clip"
+                                      resizable="false">
+                                <h:outputText value="Le courrier a bien été enregistré" />
+                                <p:separator/>
+
+                                <p:commandButton value="Ok"
+                                                 update="courrierForm"
+                                                 style="margin-top: 14px; margin-right: 10px"
+                                                 icon="fa fa-check-circle"
+                                                 type="button"
+                                                 onclick="rechargerLaPageDuFormulaire()"/>
+
+                            </p:dialog>
+
+                            <p:dialog id="rechargerLaPage"
+                                      header="Attention"
+                                      widgetVar="dialogueAttentionRechargerLaPage"
+                                      modal="true"
+                                      hideEffect="clip"
+                                      showEffect="clip"
+                                      resizable="false">
+                                <h:outputText value="Si vous recharger la page vous allez perdre toutes les informations que vous déja renseignées dans le formulaire !!! " />
+                                <p:separator/>
+                                <h:form>
+                                    <p:commandButton value="Continuer"
+                                                     style="margin-top: 14px; margin-right: 10px; background-color: #feda5a; border: 1px #feda5a solid"
+                                                     icon="fa fa-check-circle"
+                                                     type="button"
+                                                     update="@form"
+                                                     actionListener="#{nouveauCourrier.rechargerLaPage}"/>
+                                </h:form>
+                            </p:dialog>
+
+                        </h:form>
+                    </div>
+                </div>
+            </div>
+       </div>
+        <script>
+
+            var divMessageTypeDemetteur = document.getElementById('divMessageTypeDemetteur');
+            /***Appeleé depuis le bean de la vue***/
+            function afficherMessageEnFonctionDuTypeDEmetteur(){
+                divMessageTypeDemetteur.style.display='block';
+            }
+            function retirerMessageEnFonctionDuTypeDEmetteur(){
+                divMessageTypeDemetteur.style.display='none';
+            }
+            /*******Fin****/
+            /***Rechargement simple de la page ***/
+            function rechargerLaPageDuFormulaire(){
+                setTimeout(function () {
+                    objetCourrierBean.value="";
+                    motClesCourrierBean.value="";
+                    commentairesCourrierBean.value="";
+                    window.location.reload();
+                }, 100);
+            }
+        </script>
+
+       <h:outputScript name="js/nouveaucourrier.js"/>
+       <h:outputScript name="js/frenchcalendar.js"/>
+   </h:body>
+</f:view>
+</html>

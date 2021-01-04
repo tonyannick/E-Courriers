@@ -1,0 +1,86 @@
+.fa-eye{
+    color: white;
+}
+.fa-refresh{
+    color: #f19121;
+}
+.panelgridDossier{
+    border-style: hidden !important;
+    cursor: hand;
+    padding: 10px;
+}
+.panelgridDossier td {
+    border-style: hidden !important;
+}
+.ui-panelgrid td, .ui-panelgrid tr {
+    border-style: none !important
+}
+
+
+/***Popup gestion des dossier***/
+.popupcreerdossier{
+    display: none; /* Hidden by default */
+    position: fixed; /* Stay in place */
+    z-index: 9;
+    left: 0;
+    margin-bottom: 40px;
+}
+
+.popupcreerdossier-headerFile {
+    padding: 2px 10px;
+    background-color: #dfa574;
+    color: white;
+    width: 100%;
+}
+.popupcreerdossierclosemodal {
+    color: #fbfffb;
+    float: right;
+    font-size: 28px;
+    font-weight: bold;
+}
+
+.popupcreerdossierclosemodal:hover,
+.popupcreerdossierclosemodal:focus {
+    color: #ba0010;
+    text-decoration: none;
+    cursor: pointer;
+}
+.popupcreerdossierbody{
+    position: fixed;
+    bottom: 0;
+    border: 1px #dfa574 solid;
+    background-color: #f1f1f1;
+    width:30%;
+    margin-bottom: 80px;
+    margin-left: 40px;
+    -webkit-animation-name: slideInModal;
+    -webkit-animation-duration: 0.4s;
+    animation-name: slideInModal;
+    animation-duration: 0.4s;
+    overflow: auto;
+}
+
+.popupcreerdossiercontent{
+    padding: 20px 6px;
+    overflow-x: auto;
+    overflow-y: auto;
+}
+
+
+input[type=text], select, textarea {
+    width: 100%;
+    padding: 6px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    resize: vertical;
+}
+
+input[type=text]:focus{
+    border-color:dodgerBlue;
+    box-shadow:0 0 8px 0 dodgerBlue;
+}
+
+textarea:focus {
+    border-color:dodgerBlue;
+    box-shadow:0 0 8px 0 dodgerBlue;
+}

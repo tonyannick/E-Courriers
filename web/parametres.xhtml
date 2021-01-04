@@ -1,0 +1,745 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:fn="http://xmlns.jcp.org/jsp/jstl/functions"
+      xmlns:pt="http://xmlns.jcp.org/jsf/passthrough"
+      xmlns:f="http://xmlns.jcp.org/jsf/core">
+<f:view transient="true">
+    <f:metadata>
+        <f:viewAction action="#{parametres.recupererLesInfosDeMonCompte}" onPostBack="true"/>
+        <f:viewAction action="#{parametres.afficherLaListeDesUser}" onPostBack="true"/>
+        <f:viewAction action="#{parametres.voirLahoto}" onPostBack="true"/>
+        <f:viewAction action="#{parametres.checkDuProfilDuUser}" onPostBack="true"/>
+        <f:viewAction action="#{parametres.recupererInfosMinistereDuBudget}" onPostBack="true"/>
+    </f:metadata>
+    <h:head>
+        <title>Paramètres</title>
+        <meta http-equiv="Content-Type" content="text/html;charset=UTF8" />
+        <h:outputScript name="bootstrap/js/bootstrap.js" />
+        <h:outputStylesheet name="bootstrap/css/bootstrap.css" />
+        <h:outputStylesheet name="css/parametres.css" />
+        <h:outputScript name="/sweetalert/js/sweetalert.min.js"/>
+        <h:outputStylesheet name="/sweetalert/css/sweetalert.css"/>
+    </h:head>
+    <style>
+        .userbloque{
+            background-color: #810028;
+            color: white;
+            font-size: 14px;
+            font-weight: bold;
+            text-align: center;
+        }
+        .useractif{
+            background-color: #499c00;
+            color: #fefefe;
+            font-size: 14px;
+            font-weight: bold;
+            text-align: center;
+        }
+        .userenattente{
+            background-color: #b44627;
+            color: #fefefe;
+            font-size: 14px;
+            font-weight: bold;
+            text-align: center;
+        }
+        .ui-datatable .ui-datatable-header {
+            text-align: right !important;
+        }
+        ul.ui-datalist-data {
+            padding-inline-start: 0px;
+        }
+
+
+    </style>
+    <h:body id="page" onload="gestionDuProfilAuChargementDeLaPage()">
+        <div class="container-fluid" >
+            <div class="row">
+                <div id="header">
+                    <ui:insert name="header" >
+                        <ui:include src="header.xhtml" />
+                    </ui:insert>
+                </div>
+                <div id="footer">
+                    <ui:insert name="footer" >
+                        <ui:include src="footer.xhtml" />
+                    </ui:insert>
+                </div>
+                <div class="main-overview" style="margin-bottom: 90px; margin-top: 10px">
+                    <div class="col-sm-9 col-sm-offset-3 col-md-9 col-md-offset-2 main">
+                        <ul class="breadcrumb" style="width:100%;">
+                            <li><h:outputLink value="tableaudebord.xhtml" title="Accueil">Accueil</h:outputLink></li>
+                            <li>Paramètres</li>
+                        </ul>
+
+                        <h3 class="page-header"><h:graphicImage value="./resources/images/lesparametres.png" style="margin-right :10px"/>Paramètres</h3>
+                        <div class="line" style=" margin-top: 20px; margin-bottom: 80px" >
+                            <div class="colonnefullpage">
+                                <div class="colonnecontent">
+                                    <div class="tabs"  style="margin-bottom: 80px">
+                                        <input type="radio" name="tabs" id="tabone" checked="checked"/>
+                                        <label for="tabone">Mon compte</label>
+                                        <div class="tab">
+                                            <div class="row">
+                                                <div class="col-md-2" >
+                                                    <h:panelGrid columns="1" styleClass="panelLogin">
+                                                        <p:graphicImage value="#{parametres.user.userPhoto}"  cache="false" style="width: 170px; height: 180px" />
+                                                        <h:form>
+                                                            <p:commandButton  icon="fa fa-file-image-o"
+                                                                              iconPos="right"
+                                                                              type="button"
+                                                                              onclick="PF('dlgAjouterPhoto').show()"
+                                                                              value="Changer la photo"
+                                                                              style="background: #496ea1; border: 1px #496ea1 solid; margin-top: 10px; cursor: pointer"
+                                                                              title="Changer la photo"/>
+                                                        </h:form>
+                                                    </h:panelGrid>
+                                                </div>
+                                                <div class="col-md-8" style="border-left: 1px #d2d2d2 solid">
+                                                    <h:form id="formMonCompte">
+                                                        <h:panelGrid columns="2" columnClasses="ui-grid-col-3, ui-grid-col-10"
+                                                                     styleClass="panelgridparametre" cellspacing="30" cellpadding="30">
+                                                            <h4 style="font-weight:bold; font-size: 16px" >Nom </h4>
+                                                            <h:inputText size="55" styleClass="inputtextstyle"
+                                                                         value="#{parametres.user.userName}" id="nomUser"/>
+                                                            <h4 style="font-weight:bold; font-size: 16px">Prénom </h4>
+                                                            <h:inputText  size="55" styleClass="inputtextstyle"
+                                                                          value="#{parametres.user.userPrenom}"/>
+                                                            <h4 style="font-weight:bold; font-size: 16px">Téléphone </h4>
+                                                            <h:inputText  size="55" styleClass="inputtextstyle"
+                                                                          value="#{parametres.user.userTel}"/>
+                                                            <h4 style="font-weight:bold; font-size: 16px">Email </h4>
+                                                            <h:inputText size="55"  styleClass="inputtextstyle"
+                                                                         value="#{parametres.user.userMail}"/>
+                                                        </h:panelGrid>
+
+                                                        <p:separator/>
+                                                        <h:panelGrid columns="2" columnClasses="ui-grid-col-3, ui-grid-col-10"
+                                                                     style="margin-top: 20px" styleClass="panelgridparametre" cellspacing="30" cellpadding="30">
+
+                                                            <h4 style="font-weight:bold; font-size: 16px">Pseudo </h4>
+                                                            <h:inputText size="55"  styleClass="inputtextstyle"
+                                                                         value="#{parametres.user.userPseudo}"/>
+                                                            <h4 style="font-weight:bold; font-size: 16px">Mot de passe </h4>
+                                                            <h:panelGrid columns="2">
+                                                                <h:inputSecret size="55" id="motDePasseUser" redisplay="true" styleClass="inputtextstyle"
+                                                                               value="#{parametres.user.userPassword}"/>
+                                                                <p:commandLink style="margin-left: 10px" onclick="voirMotDePasseUser()">
+                                                                    <h:graphicImage  width="20px" height="20px" value="./resources/images/eye.png" style="margin-right: 10px; "/>
+                                                                </p:commandLink>
+                                                            </h:panelGrid>
+                                                        </h:panelGrid>
+
+                                                        <p:separator/>
+                                                        <h:panelGrid columns="2" columnClasses="ui-grid-col-3, ui-grid-col-10"
+                                                                     style="margin-top: 20px" styleClass="panelgridparametre" cellspacing="30" cellpadding="30">
+                                                            <h4 style="font-weight:bold; font-size: 16px">Ministère </h4>
+                                                            <h:inputText size="55"  styleClass="inputtextstyle"
+                                                                         value="#{parametres.user.userEtablissement}" disabled="true"/>
+
+                                                            <h4 style="font-weight:bold; font-size: 16px">Direction </h4>
+                                                            <h:panelGrid columns="2" columnClasses="ui-grid-col-3, ui-grid-col-10">
+                                                                <h:inputText size="55"  styleClass="inputtextstyle"
+                                                                             value="#{parametres.user.userDirection}" style="margin-right: 10px" disabled="true"/>
+                                                                <p:commandLink onclick="PF('dialogueObjetReferenceCommenairesCourrier').show();"
+                                                                               actionListener="#{detailsDUnCourrierEnregistre.recupererElementAModifier}">
+                                                                    <h:graphicImage value="./resources/images/pencil.png"
+                                                                                    styleClass="imageDestinataire"
+                                                                                    style=" margin-right: 10px; color:#0275d8; width: 13px; height: 13px;"/>
+                                                                    <f:param name = "valeurAModifier" value= "commentaires"/>
+                                                                </p:commandLink>
+
+                                                            </h:panelGrid>
+
+
+                                                            <h4 style="font-weight:bold; font-size: 16px">Fonction </h4>
+                                                            <h:panelGrid columns="2" columnClasses="ui-grid-col-3, ui-grid-col-10">
+                                                                <h:inputText size="55" styleClass="inputtextstyle"
+                                                                             value="#{parametres.user.userFonction}" disabled="true" style="margin-right: 10px"/>
+                                                                <p:commandLink onclick="PF('dialogueObjetReferenceCommenairesCourrier').show();"
+                                                                               actionListener="#{detailsDUnCourrierEnregistre.recupererElementAModifier}">
+                                                                    <h:graphicImage value="./resources/images/pencil.png"
+                                                                                    styleClass="imageDestinataire"
+                                                                                    style=" margin-right: 10px; color:#0275d8; width: 13px; height: 13px;"/>
+                                                                    <f:param name = "valeurAModifier" value= "commentaires"/>
+                                                                </p:commandLink>
+                                                            </h:panelGrid>
+
+                                                        </h:panelGrid>
+
+                                                        <p:separator/>
+                                                        <h:panelGrid columns="2" columnClasses="ui-grid-col-3, ui-grid-col-10"
+                                                                     style="margin-top: 20px" styleClass="panelgridparametre" cellspacing="30" cellpadding="30">
+
+                                                            <h4 style="font-weight:bold; font-size: 16px">Profil </h4>
+                                                            <h:inputText size="55"  styleClass="inputtextstyle"
+                                                                         value="#{parametres.user.userProfil}" id="profilUser" disabled="true"/>
+
+                                                            <p:messages id="messagesErreur" for="messagesErreur" showDetail="true" closable="true"/>
+                                                            <p:commandButton value="Valider"
+                                                                             style="float: right; margin-top: 25px"
+                                                                             icon="fa fa-check-circle"
+                                                                             update="@form"
+                                                                             action="#{parametres.mettreAJourMonCompte}"
+                                                                             styleClass="boutonValiderInscription"/>
+                                                        </h:panelGrid>
+
+                                                    </h:form>
+                                                </div>
+
+                                            </div>
+                                        </div>
+                                        <input type="radio" name="tabs" id="tabtwo"/>
+                                        <label for="tabtwo">Liste des Utilisateurs</label>
+                                        <div class="tab">
+                                            <div id="divPasDAccesListeDesUsers" style="display: block">
+                                                <p class="titresection">
+                                                    <h:graphicImage value="./resources/images/fichierconfidentiel.png" style="margin-left:10px"/>
+                                                    <h:outputText value="Votre profil ne vous permets pas d'acceder à ce contenu" style="font-size: 18px; font-weight: bold"/>
+                                                </p>
+                                            </div>
+
+                                            <div id="divListeDesUsers" style="display: none">
+
+                                                <h:outputText value="#{parametres.phraseListeDesUtisateurs}"
+                                                              style="font-size: 18px; font-weight: bold;
+                                                              alignment: center; text-align: center; margin-bottom: 10px"/>
+
+                                                <p:separator/>
+                                                <div id="toolbarUsersActions">
+                                                    <p:toolbar style="margin-bottom: 15px; margin-top: 15px">
+                                                        <f:facet name="left">
+                                                            <p:commandButton type="button"
+                                                                             onclick="PF('dialogueAjouterUnUser').show()"
+                                                                             style="background: #4e78d6; border-color:#4e78d6;
+                                                                             color: white; font-weight: bold; padding: 3px 4px"
+                                                                             iconPos="right" value="Ajouter un utilisateur"
+                                                                             icon="fa fa-plus-circle" />
+                                                        </f:facet>
+                                                    </p:toolbar>
+                                                </div>
+                                                <h:form id="form">
+                                                    <p:dataTable tableStyle="table-layout: auto"
+                                                                 widgetVar="tableauUser"
+                                                                 paginatorPosition="top"
+                                                                 var="user"
+                                                                 id="userList"
+                                                                 paginator="true"
+                                                                 paginatorAlwaysVisible="true"
+                                                                 rows="#{parametres.rows}"
+                                                                 reflow="true"
+                                                                 first="#{parametres.first}"
+                                                                 value="#{parametres.user.userList}"
+                                                                 scrollable="false"
+                                                                 emptyMessage="Aucun utilisateur"
+                                                                 border="2">
+                                                        <f:facet name="header">
+                                                            <p:outputPanel  >
+                                                                <h:outputText  value="Recherche globale : " />
+                                                                <p:inputText id="globalFilter" onkeyup="PF('tableauUser').filter()" placeholder="Recherche ..."
+                                                                             style="width:300px; background-color: #fff; border-radius: 5px; border: 1px #d3d6d6 solid;" />
+                                                            </p:outputPanel>
+                                                        </f:facet>
+
+
+                                                        <p:column style="text-align: center"
+                                                                  filterStyle="background-color: white; width: 50%;
+                                                                  border-radius: 5px;
+                                                                  border: 1px #d3d6d6 solid" filterBy="#{user.userName}">
+                                                            <f:facet name="header" >Nom et Prénom</f:facet>
+                                                            <h:outputText style="font-size: 13px; alignment: center; " value="#{user.userName}"/>
+                                                        </p:column>
+                                                        <p:column
+                                                                style="text-align: center"
+                                                                filterStyle="background-color: white; width: 100px;
+                                                                border-radius: 5px;
+                                                                border: 1px #d3d6d6 solid;"
+                                                                filterBy="#{user.userDirection}">
+                                                            <f:facet name="header">Direction</f:facet>
+                                                            <h:outputText style="font-size: 13px; alignment: center;" value="#{user.userDirection}"/>
+                                                        </p:column>
+                                                        <p:column style="text-align: center"
+                                                                  filterStyle="background-color: white; width: 50%;
+                                                                  border-radius: 5px;
+                                                                  border: 1px #d3d6d6 solid"
+                                                                  filterBy="#{user.userFonction}">
+                                                            <f:facet name="header">Fonction</f:facet>
+                                                            <h:outputText style="font-size: 13px; alignment: center;" value="#{user.userFonction}"/>
+                                                        </p:column>
+                                                        <p:column style="text-align: center"
+                                                                  filterStyle="background-color: white; width: 50%;
+                                                                  border-radius: 5px;
+                                                                  border: 1px #d3d6d6 solid" filterBy="#{user.userlogin}">
+                                                            <f:facet name="header">Pseudo</f:facet>
+                                                            <h:outputText style="font-size: 13px; alignment: center;" value="#{user.userlogin}"/>
+                                                        </p:column>
+                                                        <p:column
+                                                                styleClass="#{(user.userEtat eq 'Bloqué') ? 'userbloque' : (user.userEtat eq 'En attente de validation') ? 'userenattente': 'useractif'}"
+                                                                style="text-align: center"
+                                                                filterStyle="background-color: white; width: 100px;
+                                                                border-radius: 5px;
+                                                                border: 1px #d3d6d6 solid;"
+                                                                filterBy="#{user.userEtat}}">
+                                                            <f:facet name="header">Etat du compte</f:facet>
+                                                            <h:outputText style="font-size: 13px; alignment: center;" value="#{user.userEtat}"/>
+                                                        </p:column>
+
+                                                        <p:column style="width:32px">
+                                                            <p:commandButton  icon="fa fa-search"
+                                                                              update="@form"
+                                                                              oncomplete="PF('dialogueDetailsUser').show()"
+                                                                              actionListener="#{parametres.voirLesDetailsDUnUser}"
+                                                                              style="background: #496ea1; border: 1px #496ea1 solid"
+                                                                              title="Voir plus">
+                                                                <f:param name="userId" value="#{user.userId}" />
+                                                            </p:commandButton>
+                                                        </p:column>
+                                                        <p:column style="width:32px">
+                                                            <p:commandButton  icon="fa fa-retweet"
+                                                                              update="formBloquerCompte:phraseIndicatifEtatCompte"
+                                                                              actionListener="#{parametres.recupererEtatDuCompte}"
+                                                                              onclick="PF('dialogueBloquerUser').show()"
+                                                                              style="background-color: #e79100; border: 1px #e79100 solid">
+                                                                <f:param name="userId" value="#{user.userId}" />
+                                                                <f:param name="etatCompte" value="#{user.userEtat}" />
+                                                            </p:commandButton>
+                                                        </p:column>
+                                                        <f:facet name="footer">
+                                                            Nombre total d'utilisateurs :  #{fn:length(parametres.user.userList)}
+                                                        </f:facet>
+                                                    </p:dataTable>
+                                                    <p:dialog resizable="false"
+                                                              header="Détails d'un utilisateur"
+                                                              widgetVar="dialogueDetailsUser" width="550"
+                                                              modal="true" hideEffect="clip"
+                                                              showEffect="clip"  dynamic="true">
+
+                                                        <h:panelGrid columns="3" styleClass="panelLogin" cellspacing="30" cellpadding="30">
+                                                            <h:graphicImage value="./resources/images/user.png" />
+                                                            <h4 style="margin-left:10px; font-weight:bold; font-size: 16px" >Nom </h4>
+                                                            <h:outputText style="margin-left:30px"
+                                                                          value="#{parametres.userNomTemp}"/>
+                                                            <h:graphicImage value="./resources/images/user.png" />
+                                                            <h4 style="margin-left:10px; font-weight:bold; font-size: 16px">Prénom </h4>
+                                                            <h:outputText  size="55" style="margin-left:30px"
+                                                                           value="#{parametres.userPrenomTemp}"/>
+                                                            <h:graphicImage value="./resources/images/userphone.png" />
+                                                            <h4 style="margin-left:10px; font-weight:bold; font-size: 16px">Téléphone </h4>
+                                                            <h:outputText  size="55" style="margin-left:30px"
+                                                                           value="#{parametres.userTelTemp}"/>
+                                                            <h:graphicImage value="./resources/images/usermail.png" />
+                                                            <h4 style="margin-left:10px; font-weight:bold; font-size: 16px">Email </h4>
+                                                            <h:outputText style="margin-left:30px"
+                                                                          value="#{parametres.userEmailTemp}"/>
+                                                        </h:panelGrid>
+
+                                                        <p:separator/>
+
+                                                        <h:panelGrid columns="3" styleClass="panelLogin" cellspacing="30" cellpadding="30">
+                                                            <h:graphicImage value="./resources/images/desk.png" />
+                                                            <h4 style="margin-left:10px; font-weight:bold; font-size: 16px">Direction</h4>
+                                                            <h:outputText style="margin-left:30px" value="#{parametres.userDirectionTemp}"/>
+
+                                                            <h:graphicImage value="./resources/images/desk.png" />
+                                                            <h4 style="margin-left:10px; font-weight:bold; font-size: 16px">Service</h4>
+                                                            <h:outputText style="margin-left:30px" value="#{parametres.userServiceTemp}"/>
+
+                                                            <h:graphicImage value="./resources/images/interview.png" style="width: 25px; height: 20px"/>
+                                                            <h4 style="margin-left:10px; font-weight:bold; font-size: 16px" >Fonction</h4>
+                                                            <h:outputText style="margin-left:30px" value="#{parametres.userFonctionTemp}"/>
+                                                        </h:panelGrid>
+
+                                                    </p:dialog>
+                                                </h:form>
+                                            </div>
+
+                                        </div>
+
+                                        <input type="radio" name="tabs" id="tabthree"/>
+                                        <label for="tabthree">Parametres généraux</label>
+                                        <div class="tab">
+                                            <div id="pageDesNonAdministrateurs" style="display: block">
+                                                <p class="titresection">
+                                                    <h:graphicImage value="./resources/images/fichierconfidentiel.png" style="margin-left:10px"/>
+                                                    <h:outputText value="Votre profil ne vous permets pas d'acceder à ce contenu" style="font-size: 18px; font-weight: bold"/>
+                                                </p>
+                                            </div>
+
+                                            <div class="row" id="divPageParametresGeneraux" style="display: none">
+                                                <div class="col-md-6">
+                                                    <p:panel header="Information du Ministère" toggleable="true">
+                                                        <h:panelGrid columns="3" columnClasses="ui-grid-col-3, ui-grid-col-8,ui-grid-col-1" styleClass="panelLogin" cellspacing="30" cellpadding="30">
+                                                            <h4 style="margin-left:10px; font-weight:bold; font-size: 16px" >Nom du Ministère</h4>
+                                                            <h:outputText style="margin-left:10px"
+                                                                          value="#{parametres.etablissement.titreEtablissement}"/>
+                                                            <p:commandLink actionListener="#{parametres.recupererElementAModifierAuClick}">
+                                                                <h:graphicImage value="./resources/images/pencil.png" styleClass="imageDestinataire" style=" color:black; width: 13px; height: 13px;"/>
+                                                                <f:param name = "valeurMinistereAModifier" value= "nom"/>
+                                                            </p:commandLink>
+
+                                                            <h4 style="margin-left:10px; font-weight:bold; font-size: 16px">Email </h4>
+                                                            <h:outputText  size="55" style="margin-left:10px"
+                                                                           value="#{parametres.etablissement.mailEtablissement}"/>
+                                                            <p:commandLink actionListener="#{parametres.recupererElementAModifierAuClick}">
+                                                                <h:graphicImage value="./resources/images/pencil.png"
+                                                                                style=" color:black; width: 13px; height: 13px;"/>
+                                                                <f:param name = "valeurMinistereAModifier" value= "email"/>
+                                                            </p:commandLink>
+
+                                                            <h4 style="margin-left:10px; font-weight:bold; font-size: 16px">Téléphone </h4>
+                                                            <h:outputText style="margin-left:10px"
+                                                                          value="#{parametres.etablissement.telEtablissement}"/>
+                                                            <p:commandLink actionListener="#{parametres.recupererElementAModifierAuClick}">
+                                                                <h:graphicImage value="./resources/images/pencil.png"
+                                                                                style=" color:black; width: 13px; height: 13px;"/>
+                                                                <f:param name = "valeurMinistereAModifier" value= "tel"/>
+                                                            </p:commandLink>
+
+                                                            <h4 style="margin-left:10px; font-weight:bold; font-size: 16px">Adresse </h4>
+                                                            <h:outputText style="margin-left:10px"
+                                                                          value="#{parametres.etablissement.adresseEtablissement}"/>
+                                                            <p:commandLink actionListener="#{parametres.recupererElementAModifierAuClick}">
+                                                                <h:graphicImage value="./resources/images/pencil.png"
+                                                                                style=" color:black; width: 13px; height: 13px;"/>
+                                                                <f:param name = "valeurMinistereAModifier" value= "adresse"/>
+                                                            </p:commandLink>
+                                                        </h:panelGrid>
+                                                    </p:panel>
+
+                                                    <p:panel header="Liste des entités du Minitère" toggleable="true" collapsed="true"
+                                                             style=" margin-top: 35px; height: auto;  overflow: auto;" >
+
+                                                        <ui:repeat value="#{parametres.direction.listeObjetsDirection}"  var="direction">
+                                                            <i class="fa fa-certificate" style="font-size:7px"></i>
+                                                            <h:outputText  style="margin-left:10px" value="#{direction.titreDirection}"/>
+
+                                                            <p:separator/>
+                                                        </ui:repeat>
+
+                                                    </p:panel>
+
+
+                                                </div>
+                                                <div class="col-md-6">
+                                                    <p:panel header="Liste des Ministères enregistrés" toggleable="true" collapsed="true"
+                                                             style=" height: auto; overflow: auto" >
+                                                        <ui:repeat value="#{parametres.etablissement.listeDesEtablissements}"  var="etablissement">
+                                                            <ul>
+                                                                <li><h:outputText  style="margin-left:10px" value="#{etablissement.abreviationEtablissement}"/></li>
+                                                            </ul>
+                                                            <p:separator/>
+                                                        </ui:repeat>
+                                                    </p:panel>
+                                                </div>
+
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <p:dialog header="Ajouter une photo"
+                                              resizable="false"
+                                              width="550"
+                                              closable="false"
+                                              widgetVar="dlgAjouterPhoto"
+                                              modal="true" hideEffect="clip"
+                                              showEffect="clip" position="center"
+                                              dynamic="true">
+                                        <h:form>
+                                            <p:messages id="messagegeneral" for="messagegeneral" showDetail="true" closable="false"/>
+                                            <p:panel widgetVar="panelfichier" toggleable="true" closable="true" style="border-color: white; overflow: auto">
+                                                <p:messages id="messagephoto" for="messagephoto" showDetail="true" closable="true"/>
+                                                <p:fileUpload mode="advanced" style="overflow: auto;"
+                                                              allowTypes="/(\.|\/)(jpg|jpeg|png)$/"
+                                                              fileLimitMessage="Erreur, vous avez dépassé le nombre d'image autorisée (1 image au plus)"
+                                                              invalidSizeMessage="Erreur, le fichier est trop lourd!! 10 MB au plus"
+                                                              invalidFileMessage="Erreur, ce type de fichier n'est pas autorisé. Retirer le fichier : "
+                                                              sizeLimit="10240000" fileLimit="1" label = "Ajouter"
+                                                              update="messagephoto"
+                                                              listener="#{parametres.ajouterUnePhoto}"
+                                                              uploadLabel="Valider" cancelLabel="Annuler"/>
+
+                                                <p:commandButton value="Quitter"
+                                                                 onclick="PF('dlgAjouterPhoto').hide()"
+                                                                 style="background-color:#970010; border-color:#970010; margin-top: 14px; margin-right:5px; margin-left:10px; float:left"
+                                                                 icon="fa fa-window-close" iconPos="right"/>
+                                                <p:commandButton value="Confirmer"
+                                                                 action="#{parametres.confirmerAjoutDUnePhoto}"
+                                                                 style="background-color:#00AF66 ;margin-top: 14px; margin-right:5px; margin-left:10px; float: right"
+                                                                 icon="fa fa-check-circle" iconPos="right"
+                                                                 update="@form"/>
+
+                                            </p:panel>
+                                            <p:panel collapsed="true" widgetVar="panelloading" style="border-color: white; background-color: white" toggleable="true" closable="true">
+                                                <h:graphicImage value="./resources/images/loadingdiscussion.gif"/>
+                                                <p:outputLabel value="Veuillez patienter..." styleClass="messagePatienter"/>
+                                            </p:panel>
+                                            <p:panel collapsed="true" style="border-color: white" widgetVar="panelrechargerlapage" toggleable="true" closable="true">
+                                                <p:commandButton value="Ok"
+                                                                 onclick="rechargerLaPage()"
+                                                                 style="margin-top: 14px; margin-right: 5px; float: right"/>
+                                            </p:panel>
+                                        </h:form>
+
+                                    </p:dialog>
+                                    <p:dialog resizable="false"
+                                              header="Bloquer/Débloquer un utilisateur"
+                                              widgetVar="dialogueBloquerUser" width="450"
+                                              modal="true" hideEffect="clip"
+                                              showEffect="clip"  dynamic="true" closable="false">
+
+                                        <h:form id="formBloquerCompte" style="width: 100%" styleClass="">
+                                            <p:messages id="messageetatducompte" for="messageetatducompte" showDetail="true" closable="false"/>
+
+                                            <p:panel widgetVar="panelboutonsetatducompte" toggleable="true" closable="true" style="border-color: white">
+                                                <h:outputText id="phraseIndicatifEtatCompte" value="#{parametres.phraseEtatCompteUser}"
+                                                              style="font-size: 13px; alignment: center; text-align: center; margin-bottom: 20px"/>
+
+                                                <p:commandButton value="Oui"
+                                                                 style="background-color:#00AF66; border-color:#00AF66;
+                                                                 margin-top: 14px; margin-right:5px; margin-left:10px; float: right"
+                                                                 icon="fa fa-check-circle" iconPos="right"
+                                                                 actionListener="#{parametres.bloquerUnCompte}"
+                                                                 update="@form"/>
+                                                <p:commandButton value="Ne rien faire"
+                                                                 type="button"
+                                                                 style="background-color:#af8800; border-color: #af8800;
+                                                                 margin-top: 14px; margin-right: 5px; float: right"
+                                                                 onclick="PF('dialogueBloquerUser').hide()"/>
+                                            </p:panel>
+
+                                            <p:panel style="border-color: white" collapsed="true" widgetVar="panelloadingetatducompte" toggleable="true" closable="true">
+                                                <h:graphicImage value="./resources/images/loadingdiscussion.gif"/>
+                                                <p:outputLabel value="Veuillez patienter..." styleClass="messagePatienter"/>
+                                            </p:panel>
+
+                                            <p:panel collapsed="true" style="border-color: white" widgetVar="panelrechargerlapageetatducompte" toggleable="true" closable="true">
+                                                <p:commandButton value="Ok"
+                                                                 onclick="rechargerLaPage()"
+                                                                 style="margin-top: 14px; margin-right: 5px; float: right"/>
+                                            </p:panel>
+
+                                        </h:form>
+                                    </p:dialog>
+                                    <p:dialog resizable="false"
+                                              header="Détails d'un utilisateur"
+                                              widgetVar="dialogueDetailsUser" width="550"
+                                              modal="true" hideEffect="clip"
+                                              showEffect="clip"  dynamic="true">
+
+                                        <h:panelGrid columns="3" styleClass="panelLogin" cellspacing="30" cellpadding="30">
+                                            <h:graphicImage value="./resources/images/user.png" />
+                                            <h4 style="margin-left:10px; font-weight:bold; font-size: 16px" >Nom </h4>
+                                            <h:outputText style="margin-left:30px"
+                                                          value="#{parametres.userNomTemp}"/>
+                                            <h:graphicImage value="./resources/images/user.png" />
+                                            <h4 style="margin-left:10px; font-weight:bold; font-size: 16px">Prénom </h4>
+                                            <h:outputText  size="55" style="margin-left:30px"
+                                                           value="#{parametres.userPrenomTemp}"/>
+                                            <h:graphicImage value="./resources/images/userphone.png" />
+                                            <h4 style="margin-left:10px; font-weight:bold; font-size: 16px">Téléphone </h4>
+                                            <h:outputText  size="55" style="margin-left:30px"
+                                                           value="#{parametres.userTelTemp}"/>
+                                            <h:graphicImage value="./resources/images/usermail.png" />
+                                            <h4 style="margin-left:10px; font-weight:bold; font-size: 16px">Email </h4>
+                                            <h:outputText style="margin-left:30px"
+                                                          value="#{parametres.userEmailTemp}"/>
+                                        </h:panelGrid>
+
+                                        <p:separator/>
+
+                                        <h:panelGrid columns="3" styleClass="panelLogin" cellspacing="30" cellpadding="30">
+                                            <h:graphicImage value="./resources/images/desk.png" />
+                                            <h4 style="margin-left:10px; font-weight:bold; font-size: 16px">Direction</h4>
+                                            <h:outputText style="margin-left:30px" value="#{parametres.userDirectionTemp}"/>
+
+                                            <h:graphicImage value="./resources/images/desk.png" />
+                                            <h4 style="margin-left:10px; font-weight:bold; font-size: 16px">Service</h4>
+                                            <h:outputText style="margin-left:30px" value="#{parametres.userServiceTemp}"/>
+
+                                            <h:graphicImage value="./resources/images/interview.png" style="width: 30px; height: 20px"/>
+                                            <h4 style="margin-left:10px; font-weight:bold; font-size: 16px" >Fonction</h4>
+                                            <h:outputText style="margin-left:30px" value="#{parametres.userFonctionTemp}"/>
+                                        </h:panelGrid>
+
+                                    </p:dialog>
+                                    <p:dialog header="Ajouter un utilisateur"
+                                              resizable="false"
+                                              widgetVar="dialogueAjouterUnUser" width="580"
+                                              modal="true" hideEffect="slide"
+                                              showEffect="slide"  dynamic="true">
+
+                                        <p:panel widgetVar="panelajoutuser" toggleable="true" closable="true" style="border-color: white">
+                                            <h:form style="width: 95%" styleClass="panelLogin">
+                                                <p:messages for="ajouterDUnUser" showDetail="true" closable="true"/>
+                                                <h:panelGrid columns="3" styleClass="panelLogin" cellspacing="30" cellpadding="30">
+                                                    <h:graphicImage value="./resources/images/user.png" />
+                                                    <h4 style="margin-left:10px; font-weight:bold; font-size: 16px" >Nom </h4>
+                                                    <p:inputText  id="nom" size="55" value="#{parametres.userNomPourAjoutTemp}" style="margin-left:10px;" styleClass="form-control">
+                                                        <p:ajax event="keyup" listener="#{parametres.mettreNomEnMajuscule}" update="@form:nom"/>
+                                                    </p:inputText>
+
+                                                    <h:graphicImage value="./resources/images/user.png" />
+                                                    <h4 style="margin-left:10px; font-weight:bold; font-size: 16px">Prénom </h4>
+                                                    <p:inputText  id="prenom" size="55"  value="#{parametres.userPrenomPourAjoutTemp}" style="margin-left:10px;" styleClass="form-control">
+                                                        <p:ajax event="keyup" update="@form:prenom" listener="#{parametres.mettrePremiereLettreDuPrenomEnMajuscule}"/>
+                                                    </p:inputText>
+
+                                                    <h:graphicImage value="./resources/images/userphone.png" />
+                                                    <h4 style="margin-left:10px; font-weight:bold; font-size: 16px">Téléphone </h4>
+                                                    <p:inputText  size="55"   value="#{parametres.userTelPourAjoutTemp}" style="margin-left:10px;" styleClass="form-control">
+                                                        </p:inputText>
+
+                                                    <h:graphicImage value="./resources/images/usermail.png" />
+                                                    <h4 style="margin-left:10px; font-weight:bold; font-size: 16px">Email </h4>
+                                                    <p:inputText  size="55"  value="#{parametres.userMailPourAjoutTemp}" style="margin-left:10px;" styleClass="form-control"/>
+
+                                                </h:panelGrid>
+
+                                                <p:separator/>
+
+                                                <h:panelGrid columns="3" styleClass="panelLogin" cellspacing="30" cellpadding="30">
+                                                    <h:graphicImage value="./resources/images/desk.png" />
+                                                    <h4 style="margin-left:10px; font-weight:bold; font-size: 16px">Direction</h4>
+                                                    <p:selectOneMenu effect="slide"
+                                                                     value="#{parametres.userDirectionPourAjoutTemp}"
+                                                                     style="margin-left:10px; width: 200px;">
+                                                        <f:selectItem itemLabel="Choisissez votre direction" itemValue="rien"/>
+                                                        <f:selectItems value="#{parametres.direction.listeDirection}"/>
+                                                    </p:selectOneMenu>
+
+                                                    <h:graphicImage value="./resources/images/interview.png" style="width: 30px; height: 20px"/>
+                                                    <h4 style="margin-left:10px; font-weight:bold; font-size: 16px" >Fonction</h4>
+                                                    <p:selectOneMenu id="fonctionUser" effect="slide"
+                                                                     autoWidth="true" style="margin-left:10px;
+                                                                     width: 200px;" value="#{parametres.userFonctionPourAjoutTemp}">
+                                                        <f:selectItem itemLabel="Choisissez une Fonction" />
+                                                        <f:selectItems value="#{parametres.recupererListeFonctionsParDirectionDuDestinataire()}"/>
+                                                    </p:selectOneMenu>
+                                                </h:panelGrid>
+
+                                                <p:separator/>
+
+                                                <p:commandButton value="Ajouter"
+                                                                 update="@form"
+                                                                 actionListener="#{parametres.ajouterUnUser}"
+                                                                 style="float: right"
+                                                                 icon="fa fa-check-circle"
+                                                                 iconPos="right"/>
+                                            </h:form>
+                                        </p:panel>
+
+                                        <p:panel collapsed="true" widgetVar="paneluserloading" style="border-color: white; background-color: white" toggleable="true" closable="true">
+                                            <h:graphicImage value="./resources/images/loadingdiscussion.gif"/>
+                                            <p:outputLabel value="Veuillez patienter..." styleClass="messagePatienter"/>
+                                        </p:panel>
+
+                                        <p:panel collapsed="true" style="border-color: white" widgetVar="paneluserrechargerlapage" toggleable="true" closable="true">
+                                            <p:outputLabel value="Utilisateur bien ajouté." styleClass="messagePatienter"/>
+                                            <p:commandButton value="Ok"
+                                                             onclick="rechargerLaPage()"
+                                                             style="margin-top: 14px; margin-right: 5px; float: right"/>
+                                        </p:panel>
+
+                                    </p:dialog>
+                                    <p:dialog id="dialogueMiseAJour"
+                                              resizable="false"
+                                              header="Modification"
+                                              widgetVar="dialogueMettreAJourInfosDuMinistere" width="auto"
+                                              modal="true" hideEffect="clip"
+                                              showEffect="clip"  dynamic="true" closable="true">
+
+                                        <p:panel widgetVar="panelmodifinfosministere" toggleable="true" closable="true" style="border-color: white">
+                                            <h:form >
+                                                <p:messages  showDetail="true" closable="true" for="messagesInfosMinistere"/>
+                                                <h:panelGrid style="width: 100%" columns="2" styleClass="panelLogin" cellspacing="30" cellpadding="30">
+                                                    <h4 style="font-weight:bold; font-size: 13px">Nouvelle valeur :  </h4>
+                                                    <p:inputText style="margin-left: 10px;" size="45" value="#{parametres.infosMinistereAModifier}"/>
+                                                </h:panelGrid>
+
+                                                <p:commandButton value="valider"
+                                                                 style="margin-top: 12px; margin-right: 10px"
+                                                                 update="@form"
+                                                                 action="#{parametres.miseAJourDesInfosDuMinistere}"/>
+                                            </h:form>
+                                        </p:panel>
+                                        <p:panel collapsed="true" widgetVar="panelinfosministereloading" style="border-color: white; background-color: white" toggleable="true" closable="true">
+                                            <h:graphicImage value="./resources/images/loadingdiscussion.gif"/>
+                                            <p:outputLabel value="Veuillez patienter..." styleClass="messagePatienter"/>
+                                        </p:panel>
+                                        <p:panel collapsed="true" style="margin-top:10px; border-color: white"
+                                                 widgetVar="panelinfosministererechargerlapage" toggleable="true" closable="true">
+                                            <p:outputLabel value="Modification validée." styleClass="messagePatienter"/>
+                                            <p:commandButton value="Ok"
+                                                             onclick="rechargerLaPage()"
+                                                             style="margin-top: 20px; margin-right: 5px; float: right"/>
+                                        </p:panel>
+
+                                    </p:dialog>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <script>
+            var profilUser = '#{parametres.user.userProfil}';
+            var divPAsDAccesListeDesUsers = document.getElementById('divPasDAccesListeDesUsers');
+            var divListeDesUsers = document.getElementById('divListeDesUsers');
+            var divPageDesNonAdministrateurs = document.getElementById('pageDesNonAdministrateurs');
+            var divPageParametresGeneraux = document.getElementById('divPageParametresGeneraux');
+            var admin = false;
+            var simpleUser = false;
+            var superUser = false;
+            var superAdmin = false;
+            var technicien = false;
+
+            function afficherTabAutoriseParProfil(){
+                divPAsDAccesListeDesUsers.style.display='none';
+                divListeDesUsers.style.display='block';
+                divPageDesNonAdministrateurs.style.display='none';
+                divPageParametresGeneraux.style.display='block';
+            }
+
+
+            function gestionDuProfilAuChargementDeLaPage(){
+                switch(profilUser) {
+                    case "Super Administrateur":
+                        superAdmin = true;
+                        break;
+                    case "Administrateur":
+                        admin = true;
+                        break;
+                    case "Technicien":
+                        technicien = true;
+                        break;
+                    case "Utilisateur":
+                        simpleUser = true;
+                        break;
+                    case "Observateur":
+                        text = "How you like them apples?";
+                        break;
+                    case "Super Utilisateur":
+                       superUser = true;
+                        break;
+                    default:
+                        simpleUser = true;
+                }
+
+                console.log(profilUser)
+            }
+
+            /***Rechargement simple de la page ***/
+            function rechargerLaPage(){
+                window.location.reload();
+            }
+
+        </script>
+        <h:outputScript name="/js/parametres.js"/>
+    </h:body>
+</f:view>
+</html>

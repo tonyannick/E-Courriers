@@ -1,0 +1,637 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:fn="http://xmlns.jcp.org/jsp/jstl/functions"
+      xmlns:pt="http://xmlns.jcp.org/jsf/passthrough"
+      xmlns:f="http://xmlns.jcp.org/jsf/core">
+<f:view transient="true">
+    <f:metadata>
+        <f:viewAction action="#{repondreAUneTache.actualisationDesDetailsDuCourrierAuChargementDeLaPage}" onPostBack="true"/>
+        <f:viewAction action="#{repondreAUneTache.gestionDesAnnexesAuChargementDeLaPage}" onPostBack="true"/>
+        <f:viewAction action="#{repondreAUneTache.recupererToutesLesInfosDuCourrier}" onPostback="true"/>
+        <f:viewAction action="#{repondreAUneTache.recupererHistoriqueDuCourrier}" onPostback="true"/>
+        <f:viewAction action="#{repondreAUneTache.recupererLesDestinatairesDuCourrier}" onPostback="true"/>
+        <f:viewAction action="#{repondreAUneTache.recupererLesTachesAffescteesAUnAgent}" onPostback="true"/>
+        <f:viewAction action="#{repondreAUneTache.recupererLesAnnotationsDUnCourrier}" onPostback="true"/>
+    </f:metadata>
+    <h:head>
+        <title>Répondre à une tache</title>
+        <meta http-equiv="Content-Type" content="text/html;charset=UTF8" />
+        <h:outputScript name="bootstrap/js/bootstrap.js" />
+        <h:outputStylesheet name="bootstrap/css/bootstrap.css" />
+        <h:outputStylesheet name="css/repondreaunetache.css" />
+        <h:outputScript name="/sweetalert/js/sweetalert.min.js"/>
+        <h:outputStylesheet name="/sweetalert/css/sweetalert.css"/>
+        <h:outputScript name="toast/js/toast.js"/>
+        <h:outputStylesheet name="toast/css/toast.css" />
+    </h:head>
+    <h:body id="page">
+        <style>
+            .cellulevide{
+                background-color: gray;
+                color: gray;
+            }
+            .gridcol2{
+                background-color: #dedede;
+            }
+        </style>
+        <div class="container-fluid" >
+            <div class="row">
+                <div id="header">
+                    <ui:insert name="header" >
+                        <ui:include src="header.xhtml" />
+                    </ui:insert>
+                </div>
+                <div id="footer">
+                    <ui:insert name="footer" >
+                        <ui:include src="footer.xhtml" />
+                    </ui:insert>
+                 </div>
+                <div class="main-overview" style="margin-bottom: 90px; margin-top: 10px">
+                    <div class="col-sm-9 col-md-12 main" id="detailCourrier">
+                        <ul class="breadcrumb" style="width:65%;">
+                            <li><h:outputLink value="tableaudebord.xhtml" title="Accueil">Accueil</h:outputLink></li>
+                            <li><h:outputLink value="mestaches.xhtml" title="Mes courriers">Mes taches</h:outputLink></li>
+                            <li>Details d'un courrier</li>
+                        </ul>
+                        <div class="columnactioncourrier" style="background-color:#f5f5f5; width:65%; margin-right: 10px; margin-bottom: 80px">
+                            <div class="tab">
+                                <button class="tablinks" onclick="openTab(event, 'Fichier')" id="defaultOpen">Fichier courrier</button>
+                                <button class="tablinks" onclick="openTab(event, 'Annexe')">Annexe(s) du courrier</button>
+                                <button class="tablinks" onclick="openTab(event, 'Historique')">Historiques et Annotations</button>
+                                <button class="tablinks" onclick="openTab(event, 'Destinataires')">Destinataires</button>
+                                <button class="tablinks" onclick="openTab(event, 'Tache')">Taches du courrier</button>
+                            </div>
+
+                            <div id="Fichier" class="tabcontent">
+                                <div class="notice" id="telechargerledocument" style="margin-top: 10px; display: none;">
+                                    <i class="fa fa-exclamation-triangle" style="color:  #428BCA;" aria-hidden="true"></i>
+                                    <strong>Ce document ne peut pas s'afficher, cliquer sur le bouton pour le telecharger  : </strong>
+                                    <p:commandButton value="télécharger" icon="fa fa-download"/>
+                                </div>
+                                <div  id="fichierPdfDuCourrier" style="margin-top: 10px;">
+                                     <p:media value="#{repondreAUneTache.courrier.streamedContentAlfresco}" cache="false" width="100%" player="pdf"  height="800"/>
+                                </div>
+                            </div>
+
+                            <div id="Annexe" class="tabcontent">
+
+                                <h:panelGrid columns="4" id="gridAnnexe" style="border:none; display: none;" styleClass="panelLogin">
+                                    <p:commandButton id="annexe1" styleClass="columnAnnexeBouton" value="Annexe 1" update="message" actionListener="#{repondreAUneTache.voirAnnexe}">
+                                        <f:param name="annexeACliquer" value="annexeUn"/>
+                                    </p:commandButton>
+                                    <p:commandButton id="annexe2" styleClass="columnAnnexeBouton" value="Annexe 2" update="message" actionListener="#{repondreAUneTache.voirAnnexe}">
+                                        <f:param name="annexeACliquer" value="annexeDeux"/>
+                                    </p:commandButton>
+                                    <p:commandButton id="annexe3" styleClass="columnAnnexeBouton" value="Annexe 3" update="message" actionListener="#{repondreAUneTache.voirAnnexe}">
+                                        <f:param name="annexeACliquer" value="annexeTrois"/>
+                                    </p:commandButton>
+                                    <p:commandButton id="annexe4" styleClass="columnAnnexeBouton" value="Annexe 4" update="message" actionListener="#{repondreAUneTache.voirAnnexe}">
+                                        <f:param name="annexeACliquer" value="annexeQuatre"/>
+                                    </p:commandButton>
+                                </h:panelGrid>
+                                <p:messages id="message" for="message" showDetail="true" closable="true"/>
+                                <div id="mediaAnnexeUn"  style="display: none;">
+                                    <p:media id="annexeun" value="#{repondreAUneTache.annexe.streamAnnexeUn}" cache="false" width="100%" player="pdf"  height="800"/>
+                                </div>
+
+                                <div id="mediaAnnexeDeux" style="display: none">
+                                    <p:media id="annexedeux" value="#{repondreAUneTache.annexe.streamAnnexeDeux}"  cache="false" width="100%" player="pdf"  height="800"/>
+                                </div>
+
+                                <div id="mediaAnnexeTrois" style="display: none">
+                                    <p:media id="annexetrois" value="#{repondreAUneTache.annexe.streamAnnexeTrois}"  cache="false" width="100%" player="pdf"  height="800"/>
+                                </div>
+
+                                <div id="mediaAnnexeQuatre" style="display: none">
+                                    <p:media id="annexequatre" value="#{repondreAUneTache.annexe.streamAnnexeQuatre}"  cache="false" width="100%" player="pdf"  height="800"/>
+                                </div>
+
+                                <div class="info" id="info">
+                                    <p style="font-size: 15px"><strong>Ce courrier n'a pas d'annexe(s)!</strong></p>
+                                </div>
+
+                            </div>
+
+                            <div id="Historique" class="tabcontent" style="padding-top: 25px">
+
+                                <p:fieldset legend="Historique du courrier"
+                                            stylegend="Historique des actions sur le courrier"
+                                            style="margin-bottom: 20px"
+                                            collapsed="true" toggleable="true" toggleSpeed="500">
+                                    <h:form>
+                                        <p:dataTable tableStyle="table-layout: auto" scrollable="true"
+                                                     var="etape" paginator="true" rows="15"
+                                                     emptyMessage="Aucun historique"
+                                                     paginatorAlwaysVisible="false"
+                                                     value="#{repondreAUneTache.etape.listeHistoriques}"
+                                                     paginatorPosition="top" style="margin-top: 5px; margin-bottom: 15px"
+                                                     rowIndexVar="rowIndex" border="2">
+
+                                            <p:column style="width:130px">
+                                                <f:facet name="header">Date</f:facet>
+                                                <h:outputText style="font-size: 12px" value="#{etape.date_debut}"/>
+                                            </p:column>
+                                            <p:column style="width:180px">
+                                                <f:facet name="header">Effectué par </f:facet>
+                                                <h:outputText value="#{etape.acteur}"/>
+                                            </p:column>
+                                            <p:column style="text-align: center">
+                                                <f:facet name="header">Action</f:facet>
+                                                <h:outputText value="#{etape.titre}"/>
+                                            </p:column>
+                                            <p:column styleClass="#{etape.message eq null ? 'cellulevide' : null}">
+                                                <f:facet name="header">Detail</f:facet>
+                                                <h:outputText value="#{etape.message}" escape="false"/>
+                                            </p:column>
+                                        </p:dataTable>
+                                    </h:form>
+                                </p:fieldset>
+
+                                <p:fieldset legend="Annotations du courrier"
+                                            collapsed="true" toggleable="true" toggleSpeed="500">
+                                    <p:scrollPanel mode="native" style="height:210px; margin-bottom: 20px">
+                                        <ui:repeat value="#{repondreAUneTache.annotation.listeDesAnnotations}" var="annotation">
+                                            <div class="chat_list">
+                                                <div class="chat_people">
+                                                    <div class="chat_img" style="margin-right: 10px">  <h:graphicImage style="width: 20px; height: 20px" value="./resources/images/comment.png"/> </div>
+                                                    <div >
+                                                        <span class="chat_date">
+                                                            <h:outputText value="#{annotation.messageNote}" escape="false" style="font-size: 15px; color: #0f0f0f"/>
+                                                        </span>
+                                                        <p>
+                                                            <h:outputText style="font-size: 11px; color: #777777; margin-right: 20px; float: left" value="#{annotation.dateNote}"/>
+                                                            <h:outputText style="font-size: 11px; color: #777777; float: left" value="#{annotation.heureNote}"/>
+                                                        </p>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </ui:repeat>
+                                    </p:scrollPanel>
+                                </p:fieldset>
+                            </div>
+
+                            <div id="Destinataires" class="tabcontent">
+
+                                <h:panelGrid columns="2" style="border:none; margin-bottom:10px; margin-top: 10px " styleClass="panelLogin">
+                                    <h:outputLabel value ="Nombre de destinataire : " style="font-weight: bold;font-size: 14px; color:#000000;" />
+                                    <h:outputLabel style="font-size: 13px; margin-left: 10px" value="#{repondreAUneTache.destinataire.nombreDeDestinataire}"/>
+                                </h:panelGrid>
+
+                                <h:form>
+                                    <p:dataTable tableStyle="table-layout: auto"
+                                                 var="destinataires"
+                                                 paginator="true" rows="15"
+                                                 emptyMessage="Aucun destinataire"
+                                                 value="#{repondreAUneTache.destinataire.listeDestinataire}"
+                                                 paginatorAlwaysVisible="false"
+                                                 paginatorPosition="top" style="margin-top: 5px; margin-bottom: 15px"
+                                                 rowIndexVar="rowIndex" border="2">
+
+                                        <p:column style="width: 130px; text-align: center" styleClass="#{destinataires.typeDestinataire eq 'Aucun' ? 'aucun' : null}">
+                                            <f:facet name="header">Type de destinataire </f:facet>
+                                            <h:outputText value="#{destinataires.typeDestinataire}" />
+                                        </p:column>
+                                        <p:column style="text-align: center"  styleClass="#{destinataires.ministere eq 'Aucun' ? 'cellulevide' : null}">
+                                            <f:facet name="header">Etablissement </f:facet>
+                                            <h:outputText style = "font-size: 12px;" value="#{destinataires.ministere}" />
+                                        </p:column>
+                                        <p:column  style="text-align: center" styleClass="#{destinataires.direction eq 'Aucun' ? 'cellulevide' : null}">
+                                            <f:facet name="header">Direction </f:facet>
+                                            <h:outputText value="#{destinataires.direction}" />
+                                        </p:column>
+                                        <p:column style="text-align: center" styleClass="#{destinataires.fonction eq 'Aucun' ? 'cellulevide' : null}">
+                                            <f:facet name="header">Fonction </f:facet>
+                                            <h:outputText  value="#{destinataires.fonction}" />
+                                        </p:column>
+                                        <p:column style="text-align: center">
+                                            <p:commandButton  icon="fa fa-eye"
+                                                              update="@form"
+                                                              actionListener="#{repondreAUneTache.afficherLesDetailsDuDestinataireDUnCourrier}"
+                                                              style="background: #496ea1; border: 1px #496ea1 solid"
+                                                              title="details">
+                                                <f:param name="destinataireId" value="#{destinataires.idDestinataire}" />
+                                                <f:param name="typeDestinataireId" value="#{destinataires.typeDestinataire}" />
+                                            </p:commandButton>
+                                        </p:column>
+                                    </p:dataTable>
+                                    <p:dialog id="dialogueDetailParticulier"
+                                              resizable="false"
+                                              header="Détails d'un destinataire"
+                                              widgetVar="detailsDestinataireParticulier" width="550"
+                                              modal="true" hideEffect="clip"
+                                              showEffect="clip"  dynamic="true" closable="true">
+                                        <h:panelGrid columns="2" styleClass="panelLogin" cellspacing="30" cellpadding="30">
+                                            <h4 style="font-weight:bold; font-size: 13px">Nom :</h4>
+                                            <p:outputLabel style="margin-left:15px"
+                                                           value="#{repondreAUneTache.destinataire.nomParticulier}"/>
+                                            <h4 style="font-weight:bold; font-size: 13px">Prénom :</h4>
+                                            <p:outputLabel  style="margin-left:15px"
+                                                            value="#{repondreAUneTache.destinataire.prenomParticulier}"/>
+                                            <h4 style="font-weight:bold; font-size: 13px">Téléphone :</h4>
+                                            <p:outputLabel style="margin-left:15px"
+                                                           value="#{repondreAUneTache.destinataire.telephoneParticulier}"/>
+                                            <h4 style="font-weight:bold; font-size: 13px">Email :</h4>
+                                            <p:outputLabel  style="margin-left:15px"
+                                                            value="#{repondreAUneTache.destinataire.emailParticulier}"/>
+                                        </h:panelGrid>
+                                    </p:dialog>
+                                    <p:dialog id="dialogueDetailDestinataireAgentAutreMinistere"
+                                              resizable="false"
+                                              header="Détails d'un destinataire"
+                                              widgetVar="detailsDestinataireAutreMinistere" width="auto"
+                                              modal="true" hideEffect="clip"
+                                              showEffect="clip" dynamic="true" closable="true">
+
+                                        <h:form  style="width: 95%" styleClass="">
+                                            <h:panelGrid columns="2">
+                                                <h4 style="font-weight:bold;  font-size: 13px;" >Ministère : </h4>
+                                                <p:outputLabel value="#{repondreAUneTache.destinataire.ministereAutreMinistere}" style="margin-left:15px"/>
+                                                <h4 style="font-weight:bold;  font-size: 13px">Direction  : </h4>
+                                                <p:outputLabel value="#{repondreAUneTache.destinataire.directionAutreMinistere}" style="margin-left:15px"/>
+                                                <h4 style="font-weight:bold; font-size: 13px">Fonction : </h4>
+                                                <p:outputLabel value="#{repondreAUneTache.destinataire.fonctionAutreMinistere}" style="margin-left:15px"/>
+                                            </h:panelGrid>
+                                        </h:form>
+                                    </p:dialog>
+                                    <p:dialog id="dialogueDetailDestinataireEntreprise"
+                                              resizable="false"
+                                              header="Détails d'un destinataire"
+                                              widgetVar="detailsDestinataireEntreprise" width="auto"
+                                              modal="true" hideEffect="clip"
+                                              showEffect="clip" dynamic="true" closable="true">
+
+                                        <h:form  style="width: 95%" styleClass="">
+                                            <h:panelGrid columns="2">
+                                                <h4 style="font-weight:bold;  font-size: 13px;" >Raison sociale : </h4>
+                                                <p:outputLabel value="#{repondreAUneTache.destinataire.raisonSocial}" style="margin-left:15px"/>
+                                                <h4 style="font-weight:bold;  font-size: 13px">Direction  : </h4>
+                                                <p:outputLabel value="#{repondreAUneTache.destinataire.directionEntreprise}" style="margin-left:15px"/>
+                                                <h4 style="font-weight:bold; font-size: 13px">Fonction : </h4>
+                                                <p:outputLabel value="#{repondreAUneTache.destinataire.fonctionEntreprise}" style="margin-left:15px"/>
+                                                <h4 style="font-weight:bold; font-size: 13px">Téléphone : </h4>
+                                                <p:outputLabel value="#{repondreAUneTache.destinataire.telephoneEntreprise}" style="margin-left:15px"/>
+                                                <h4 style="font-weight:bold; font-size: 13px">Email : </h4>
+                                                <p:outputLabel value="#{repondreAUneTache.destinataire.emailEntreprise}" style="margin-left:15px"/>
+                                                <h4 style="font-weight:bold; font-size: 13px">Adresse : </h4>
+                                                <p:outputLabel value="#{repondreAUneTache.destinataire.adresseEntreprise}" style="margin-left:15px"/>
+                                            </h:panelGrid>
+                                        </h:form>
+                                    </p:dialog>
+                                    <p:dialog id="dialogueDetailDestinataireAgentMinistere"
+                                              resizable="false"
+                                              header="Détails d'un destinataire"
+                                              widgetVar="detailsDestinataireMinistere" width="auto"
+                                              modal="true" hideEffect="clip"
+                                              showEffect="clip" dynamic="true" closable="true">
+
+                                        <h:form  style="width: 95%" styleClass="">
+                                            <h:panelGrid columns="2">
+                                                <h4 style="font-weight:bold;  font-size: 13px">Direction : </h4>
+                                                <p:outputLabel value="#{repondreAUneTache.destinataire.direction}" style="margin-left:15px"/>
+                                                <h4 style="font-weight:bold; font-size: 13px">Fonction : </h4>
+                                                <p:outputLabel value="#{repondreAUneTache.destinataire.fonction}" style="margin-left:15px"/>
+                                            </h:panelGrid>
+                                        </h:form>
+                                    </p:dialog>
+                                </h:form>
+
+                            </div>
+
+                            <div id="Tache" class="tabcontent">
+
+                                <p:messages for="messagetraitementducourrier" showDetail="true" closable="true"/>
+
+                                <h:panelGrid columns="2" style="border:none; margin-bottom:10px; margin-top: 10px " styleClass="panelLogin">
+                                    <h:outputLabel value ="Nombre de taches : " style="font-weight: bold;font-size: 14px; color:#000000;" />
+                                    <h:outputLabel style="font-size: 13px; margin-left: 10px" value="#{repondreAUneTache.etape.nombreDeTacheDUnAgent}"/>
+                                </h:panelGrid>
+
+                                <p:messages for="messagetraitementducourrier" showDetail="true" closable="true"/>
+                                <h:form id="form">
+                                    <p:dataTable id="tableauDesActions"
+                                                 tableStyle="table-layout: auto; "
+                                                 var="etape" paginator="true" rows="15"
+                                                 paginatorPosition="top"
+                                                 value="#{repondreAUneTache.etape.listeDeMesTaches}"
+                                                 paginatorAlwaysVisible="false"
+                                                 emptyMessage="Aucune tache en cours"
+                                                 rowIndexVar="rowIndex" border="2">
+
+                                        <p:ajax event="rowToggle" listener="#{repondreAUneTache.clickExpansionToggleEtape}">
+                                            <f:param name="etapeId" value="#{etape.id}" />
+                                        </p:ajax>
+
+                                        <p:column style="width:16px">
+                                            <p:rowToggler />
+                                        </p:column>
+                                        <p:column >
+                                            <f:facet name="header">Date de création</f:facet>
+                                            <h:outputText style="font-size: 12px" value="#{etape.date_debut}"/>
+                                        </p:column>
+                                        <p:column styleClass="#{etape.message eq 'Aucun' ? 'aucun' : null}">
+                                            <f:facet name="header">Message</f:facet>
+                                            <h:outputText style="font-size: 13px" value="#{etape.message}" escape="false"/>
+                                        </p:column>
+                                        <p:column  styleClass="#{etape.date_fin eq 'Aucun' ? 'cellulevide' : null}">
+                                            <f:facet name="header" style="text-align: center">Date butoir</f:facet>
+                                            <h:outputText style="font-size: 12px" value="#{etape.date_fin}"/>
+                                        </p:column>
+
+                                        <p:column styleClass="#{(etape.etat eq 'En retard') ? 'en-retard' : (etape.etat eq 'En traitement') ? 'en-traitement' : (etape.etat eq 'Terminé') ? 'terminee' : 'null'}" style="width:140px;">
+                                            <f:facet name="header">Etat</f:facet>
+                                            <h:outputText  value="#{etape.etat}"/>
+                                        </p:column>
+                                        <p:column style="text-align: center">
+                                            <p:commandButton  icon="fa fa-eye"
+                                                              update="form:detailEtape"
+                                                              actionListener="#{repondreAUneTache.recupererLeCreateurDUneTache}"
+                                                              style="background: #496ea1; border: 1px white solid"
+                                                              title="Détails">
+                                                <f:param name="etapeId" value="#{etape.id}" />
+                                            </p:commandButton>
+                                        </p:column>
+                                        <p:column style="text-align: center">
+                                            <p:commandButton  icon="fa fa-commenting"
+                                                              actionListener="#{repondreAUneTache.voirEtatDeLaDiscussion}"
+                                                              style="background:#f1d002; border:1px white solid"
+                                                              title="Répondre">
+                                                <f:param name="etapeId" value="#{etape.id}" />
+                                            </p:commandButton>
+                                        </p:column>
+                                        <p:rowExpansion>
+                                            <p:panel widgetVar="panelloadingdiscussion" toggleable="true" style="margin-top: 15px; width: 100%">
+                                                <h:graphicImage value="./resources/images/loadingdiscussion.gif" width="30px; height:30px"/>
+                                                <p:outputLabel value="Veuillez patienter, chargement des discussion en cours..." styleClass="messagePatienterDiscussion"/>
+                                            </p:panel>
+                                            <p:scrollPanel widgetVar="scrollpanellistediscussion" mode="native" style="height:300px">
+                                                <ui:repeat  value="#{repondreAUneTache.discussion.listeDiscussion}" var="discussionEtape">
+                                                    <div class="chat_list">
+                                                        <div class="chat_people">
+                                                            <div class="chat_img">  <h:graphicImage value="./resources/images/user.png"/> </div>
+                                                            <div class="chat_ib">
+                                                                <h5><h:outputText  value="#{discussionEtape.nomPersonne}" /></h5>
+                                                                <span  style="margin-left: 30px" class="chat_date">
+                                                                        <h:outputText value="#{discussionEtape.messageDiscussion}" style="font-size: 14px; color: #0f0f0f"/>
+                                                                    </span>
+                                                                <div style=" box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2);border-radius: 5px; ">
+                                                                    <h:outputText style="color: #777777; float: right; font-size: 11px" value="#{discussionEtape.dateDiscussion}"/>
+                                                                </div>
+                                                                <p style="float: left; margin-top:8px" >
+                                                                    <p:commandLink update="@form" actionListener="#{repondreAUneTache.voirLeFichierDUneDiscussion}">
+                                                                        <f:param name="discussionEtapeId" value="#{discussionEtape.idDiscussion}" />
+                                                                        <h:graphicImage title="Fichier" styleClass="isVisible" width="20px" height="20px"
+                                                                                        value="./resources/images/documents.png" />
+                                                                    </p:commandLink>
+                                                                </p>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </ui:repeat>
+                                            </p:scrollPanel>
+                                        </p:rowExpansion>
+                                    </p:dataTable>
+                                    <p:dialog id="detailEtape"
+                                              resizable="false"
+                                              header="Détails"
+                                              widgetVar="dlgDetailsEtape" width="470"
+                                              modal="true" hideEffect="clip"
+                                              showEffect="clip" position="‘bottom‘,‘right‘"  dynamic="true" closable="true">
+
+                                        <p:messages for="messagerreurvoirdestinatairedunetache" showDetail="true" closable="true"/>
+
+                                        <h:panelGrid columns="2" style="border:none; margin: 20px 20px"  styleClass="panelLogin">
+                                            <h:outputText style="font-size: 13px; font-weight: bold" escape="false" value="Tache crée par : "/>
+                                            <h:outputText style="font-size: 13px; margin-left: 5px" escape="false" value="#{repondreAUneTache.etape.destinataire}"/>
+                                        </h:panelGrid>
+
+                                    </p:dialog>
+                                    <p:dialog id="detailFichierDiscussion"
+                                              resizable="false"
+                                              header="Détails"
+                                              widgetVar="dlgFichierDiscussion" width="auto"
+                                              modal="true" hideEffect="clip"
+                                              showEffect="clip" position="top"  dynamic="true" closable="true">
+
+                                        <p:messages for="messagefichierdiscussion" showDetail="true" closable="true"/>
+
+                                        <div class="notice" id="telechargerlefichierdeladiscussion" style="margin-top: 10px; display: none;">
+                                            <i class="fa fa-exclamation-triangle" style="color:  #428BCA;" aria-hidden="true"></i>
+                                            <strong>Ce document ne peut pas s'afficher, cliquer sur le bouton pour le telecharger  : </strong>
+                                            <p:commandButton value="télécharger" icon="fa fa-download"/>
+                                        </div>
+                                        <div id="fichierPdfDelaDiscussion" style="margin-top: 10px; width: 750px; display: block;">
+                                            <p:media value="#{repondreAUneTache.discussion.streamedContentAlfresco}" cache="false" width="100%" player="pdf"  height="650"/>
+                                        </div>
+
+                                    </p:dialog>
+                                </h:form>
+
+                            </div>
+
+                        </div>
+
+                        <div class="columnactioncourrier" style="background-color:#f5f5f5; width: 30%">
+
+                            <p:commandButton style="margin-bottom: 15px; color: white; padding: 2px 3px; background:#286090; border-color:#286090;"  value="Actualiser la page"  onclick="rechargerLaPage()" type="button" icon="fa fa-refresh"/>
+
+                            <button class="accordionDetailCourrier"><h:graphicImage value="./resources/images/one.png" style="margin-right:10px; width: 15px; height: 15px;"/>Emetteur du courrier</button>
+                            <div class="panelInfoCourrier">
+                                <p:panelGrid id="titreParticulier" columns="2" columnClasses="ui-grid-col-2 gridcol2, ui-grid-col-8" style="width: 100%; margin-top: 15px; margin-bottom:15px; border: 1px #888 solid; background-color: white;">
+                                    <h:outputLabel value="Emetteur " style="font-weight: bold;font-size: 13px; color:black" />
+                                    <h:outputLabel value="#{repondreAUneTache.emetteur.typeDEmetteur}" style="font-size: 13px"/>
+                                    <h:outputLabel value="Ministère " style="font-weight: bold;font-size: 13px; color: black;" />
+                                    <h:outputLabel value="#{repondreAUneTache.emetteur.ministere}" style="font-size: 13px"/>
+                                </p:panelGrid>
+
+                                <p:panelGrid columns="2" columnClasses="ui-grid-col-2 gridcol2, ui-grid-col-8" style="width: 100%; border: 1px #888 solid; background-color: white; margin-bottom: 16px">
+                                    <h:outputLabel value="Direction " style="font-weight: bold;font-size: 13px; color: black"/>
+                                    <h:outputLabel value="#{repondreAUneTache.emetteur.direction}" style="font-size: 13px" />
+                                    <h:outputLabel value="Fonction  " style="font-weight: bold;font-size: 13px; color: black"/>
+                                    <h:outputLabel value="#{repondreAUneTache.emetteur.fonction}" style="font-size: 13px" />
+
+                                </p:panelGrid>
+
+                            </div>
+
+                            <button class="accordionDetailCourrier"><h:graphicImage value="./resources/images/two.png" style="margin-right:10px; width: 15px; height: 15px;"/>Eléménts du courrier</button>
+                            <div class="panelInfoCourrier">
+
+                                <p:panelGrid columns="2" columnClasses="ui-grid-col-4 gridcol2, ui-grid-col-7" style="border:none; width: 100%; margin-bottom:15px; margin-top: 15px " styleClass="panelLogin">
+                                    <h:outputLabel value="Heure d'enregistrement " style="font-weight: bold; color:black; font-size: 13px"/>
+                                    <h:outputLabel value="#{repondreAUneTache.courrier.heureDEnregistrement}" style="font-size: 13px;"/>
+                                    <h:outputLabel value="Date d'enregistrement " style="font-weight: bold; color:black; font-size: 13px"/>
+                                    <h:outputLabel value="#{repondreAUneTache.courrier.dateDEnregistrement}" style="font-size: 13px;"/>
+                                    <h:outputLabel value="Date de réception  " style="font-weight: bold; font-size: 13px; color:black"/>
+                                    <h:outputLabel value="#{repondreAUneTache.courrier.dateDeReception}" style="font-size: 13px"/>
+                                    <h:outputLabel value="Heure de réception  " style="font-weight: bold; font-size: 13px; color:black"/>
+                                    <h:outputLabel value="#{repondreAUneTache.courrier.heureDeReception}" style="font-size: 13px"/>
+                                </p:panelGrid>
+
+                                <p:panelGrid columns="2" columnClasses="ui-grid-col-4 gridcol2, ui-grid-col-7" style="width: 100%; margin-top: 15px; margin-bottom:15px; border: 1px #888 solid;">
+
+                                    <h:outputLabel value="Type de courrier " style="font-weight: bold; color:black; font-size: 13px"/>
+                                    <h:outputLabel value="#{repondreAUneTache.courrier.typeCourrier}" style="font-size: 13px;"/>
+
+                                    <h:outputLabel value="Référence  " style="font-weight: bold; font-size: 13px;color:black"/>
+                                    <h:outputLabel value="#{repondreAUneTache.courrier.referenceCourrier}" style="font-size: 13px"/>
+
+                                    <h:outputLabel value="Objet  " style="font-weight: bold; font-size: 13px; color:black"/>
+                                    <h:outputLabel value="#{repondreAUneTache.courrier.objetCourrier}" style="font-size: 13px"/>
+
+                                    <h:outputLabel value="Priorité " style="font-weight: bold; font-size: 13px; color:black" />
+                                    <h:outputLabel value="#{repondreAUneTache.courrier.prioriteCourrier}" style="font-size: 13px"/>
+
+                                    <h:outputLabel value="Confidentiel " style="font-weight: bold; font-size: 13px; color:black"/>
+                                    <h:outputLabel value="#{repondreAUneTache.courrier.confidentiel}" style="font-size: 13px"/>
+
+                                    <h:outputLabel value="Comentaires " style="font-weight: bold; font-size: 13px; color:black"/>
+                                    <h:outputLabel value="#{repondreAUneTache.courrier.commentairesCourrier}" style="font-size: 13px" />
+
+                                </p:panelGrid>
+                            </div>
+
+                            <div class="chat-popup" id="discussionForm">
+                                <div class="modal-headerFile">
+                                    <span class="closeModal" onclick="closeFormDiscussion()">&#215;</span>
+                                    <h:panelGrid columns="2" styleClass="panelLogin" style="margin-left: 10px">
+                                        <h:graphicImage value="./resources/images/commentaireetape.png" width="20px" height="18px"/>
+                                        <h4 style="margin-top: 8px; margin-left: 10px">Discussion</h4>
+                                    </h:panelGrid>
+                                </div>
+                                <h:form id="formDiscussion" class="formDiscussion" style="padding-left: 5px; padding-right: 5px">
+                                    <h:panelGrid cellspacing="10" cellpadding="10" columns="2" style="margin-top: 8px">
+                                        <h:graphicImage value="./resources/images/edit.png" style="width: 15px; height: 15px;"/>
+                                        <h:outputLabel style="font-weight: bold; margin-top: 8px; margin-left: 10px">Votre message</h:outputLabel>
+                                    </h:panelGrid>
+
+                                    <p:inputTextarea styleClass="field-style"
+                                                  id="messagediscussion" style="width: 100%; font-size: 12px"
+                                                  value="#{repondreAUneTache.etape.reponseTache}"
+                                                  rows="7"/>
+                                    <p:messages id="messageinfodiscussion" for="messageinfodiscussion" showDetail="true" closable="true"/>
+                                    <h:panelGrid cellspacing="10" cellpadding="10" columns="2">
+                                        <h:graphicImage value="./resources/images/file.png" style="width: 15px; height: 15px;"/>
+                                        <h:outputLabel style="font-weight: bold; margin-top: 15px">Ajouter un fichier</h:outputLabel>
+                                    </h:panelGrid>
+
+                                    <div class="modal-bodyFileDiscussion" id="fileUploadDiscussion">
+                                        <p:fileUpload label="Ajouter" mode="advanced"
+                                                      invalidSizeMessage="Erreur, le fichier est trop lourd!! 10 MB au plus"
+                                                      invalidFileMessage="Erreur, ce type de fichier n'est pas autorisé. Retirer le fichier : "
+                                                      uploadLabel="Valider" cancelLabel="Annuler"
+                                                      dragDropSupport="false"
+                                                      sizeLimit="10240000" fileLimit="1"
+                                                      effect="slide"
+                                                      update="messageinfodiscussion"
+                                                      listener="#{repondreAUneTache.ajouterUnFichierAUneDiscussion}"
+                                                      style="overflow: auto"
+                                                      allowTypes="/(\.|\/)(pdf|PDF|doc|docx|xls|xlsx|ppt|pptx|jpg|jpeg|png)$/"
+                                                      fileLimitMessage="Erreur, vous avez dépassé le nombre de fichier annexe autorisé (1 fichiers au plus)"/>
+                                    </div>
+                                    <div id="loadingDiscussion" style="display: none; margin-left: 45px; margin-top: 5px">
+                                        <h:graphicImage value="./resources/images/loadingdiscussion.gif"/>
+                                        <p:outputLabel value="Veuillez patienter..." styleClass="messagePatienter"/>
+                                    </div>
+
+                                    <hr style="border-top: 2px solid rgba(159,156,159,0.22);"/>
+                                    <div style="margin-top: 10px; background-color: #b5b5b5">
+                                        <p:commandButton  styleClass="validerFichier"
+                                                          id="creerDiscussion"
+                                                          oncomplete="retirerLoadingRepondreAUneDiscussion()"
+                                                          onclick="afficherLoadingRepondreAUneDiscussion()"
+                                                          actionListener="#{repondreAUneTache.creerUneDiscussion}"
+                                                          value="Envoyer" update="@form" />
+                                    </div>
+                                </h:form>
+                            </div>
+
+                        </div>
+
+
+                    </div>
+
+                </div>
+            </div>
+        </div>
+        <script>
+
+            var telechargerledocument = document.getElementById('telechargerledocument');
+            var fichierPdfDuCourrier = document.getElementById('fichierPdfDuCourrier');
+            var gridAnnexe = document.getElementById('gridAnnexe');
+            var mediaAnnexeUn = document.getElementById('mediaAnnexeUn');
+            var mediaAnnexeDeux = document.getElementById('mediaAnnexeDeux');
+            var mediaAnnexeTrois = document.getElementById('mediaAnnexeTrois');
+            var mediaAnnexeQuatre = document.getElementById('mediaAnnexeQuatre');
+            var isPDF = '#{repondreAUneTache.courrier.isPDF}';
+            var nombreDAnnexe = '#{repondreAUneTache.annexe.nombreDAnnexe}';
+
+            /***Gestion de l'affichage du fichier en fonction de son extension***/
+            function affichagePDF(){
+                if (isPDF.localeCompare("non") == 0){
+                    telechargerledocument.style.display = 'block';
+                    fichierPdfDuCourrier.style.display='none';
+                }else{
+                    fichierPdfDuCourrier.style.display = 'block';
+                    telechargerledocument.style.display = 'none';
+                }
+            }
+
+            /***Gestion de l'affichage des annexes***/
+            function affichageGridAnnexe(){
+                //console.log(annexeNumber);
+                if(Number(nombreDAnnexe) == "0"){
+                    gridAnnexe.style.display='none';
+                    info.style.display='block';
+                }else if (Number(nombreDAnnexe) > "0"){
+                    gridAnnexe.style.display='block';
+                    info.style.display='none';
+                    mediaAnnexeUn.style.display='block';
+                    console.log("plus grand que zero");
+                }
+            }
+
+            function affichageAnnexeUn(){
+                mediaAnnexeUn.style.display='block';
+                mediaAnnexeDeux.style.display='none';
+                mediaAnnexeTrois.style.display='none';
+                mediaAnnexeQuatre.style.display='none';
+            }
+
+            function affichageAnnexeDeux(){
+                mediaAnnexeUn.style.display='none';
+                mediaAnnexeDeux.style.display='block';
+                mediaAnnexeTrois.style.display='none';
+                mediaAnnexeQuatre.style.display='none';
+            }
+
+            function affichageAnnexeTrois(){
+                mediaAnnexeUn.style.display='none';
+                mediaAnnexeDeux.style.display='none';
+                mediaAnnexeTrois.style.display='block';
+                mediaAnnexeQuatre.style.display='none';
+            }
+
+            function affichageAnnexeQuatre(){
+                mediaAnnexeUn.style.display='none';
+                mediaAnnexeDeux.style.display='none';
+                mediaAnnexeTrois.style.display='none';
+                mediaAnnexeQuatre.style.display='block';
+            }
+
+            /***Formulaire de discussion**/
+            function openFormDiscussion() {
+                document.getElementById("discussionForm").style.display = "block";
+
+            }
+
+        </script>
+
+    </h:body>
+
+    <h:outputScript name="/js/repondreaunetache.js"/>
+</f:view>
+</html>

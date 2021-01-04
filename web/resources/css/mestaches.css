@@ -1,0 +1,38 @@
+.fa-eye{
+    color: #eeeeee;
+}
+.fa-sign-in{
+    color: #f5f5f5;
+}
+.ui-datatable ui-widget {
+    margin: 5% 8% 0 8%;
+    text-align: center;
+    background: #5c6bc0;
+}
+.encours {
+    background: #00cc05;
+    color: #ffffff;
+    font-weight: bold;
+}
+.terminee {
+    color: #ffffff !important;
+    font-weight: bold;
+    background-color: #209436 !important;
+}
+.en-retard {
+    color: #ffffff !important;
+    font-weight: bold;
+    background-color: #fc003b !important;
+}
+.en-traitement {
+    color: #ffffff !important;
+    font-weight: bold;
+    background-color: #fe7606 !important;
+}
+.cellulevide{
+    background-color: gray;
+    color: gray;
+}
+.popupoverinfodestinataire{
+
+}
