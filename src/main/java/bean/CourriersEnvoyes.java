@@ -1,17 +1,19 @@
 package bean;
 
 import database.DataBaseQueries;
+import dateAndTime.DateUtils;
 import model.Courrier;
+import org.primefaces.PrimeFaces;
 import sessionManager.SessionUtils;
 
 import javax.annotation.PostConstruct;
 import javax.enterprise.context.SessionScoped;
+import javax.faces.application.FacesMessage;
 import javax.faces.context.FacesContext;
 import javax.inject.Named;
 import javax.servlet.http.HttpSession;
 import java.io.Serializable;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 
 @SessionScoped
@@ -23,6 +25,10 @@ public class CourriersEnvoyes implements Serializable {
     private List<Courrier> courrierList;
     private Integer first = 0;
     private Integer rowsPerPage = 15;
+    private List<Courrier> courrierTempList = new ArrayList<>();
+    private List<Courrier> courrierSauvegardeList = new ArrayList<>();
+    private String datePourRechercheAvancee;
+    private String moisPourRechercheAvancee;
 
     @PostConstruct
     public void initialisation(){
@@ -33,8 +39,11 @@ public class CourriersEnvoyes implements Serializable {
         HttpSession session = SessionUtils.getSession();
         String idPersonne = (String) session.getAttribute("idUser");
         courrier.setListeDesCouriersEnvoyes(DataBaseQueries.recupererTousLesCourriersEnvoyesDUnUtilisateursParSonId(idPersonne));
+        courrierSauvegardeList.clear();
+        courrierSauvegardeList.addAll(courrier.getListeDesCouriersEnvoyes());
+        Collections.unmodifiableList(courrierSauvegardeList);
+        System.out.println("recharger  = " + courrierSauvegardeList.size());
     }
-
 
     public String voirLesDetailsDuCourrier(){
 
@@ -48,7 +57,53 @@ public class CourriersEnvoyes implements Serializable {
         return "detailduncourrierenvoye.xhtml?faces-redirect=true";
     }
 
+    public void faireUneRechercheAvanceeParDate(){
+        boolean trouve = false;
+        if(datePourRechercheAvancee.isEmpty()){
+            FacesContext.getCurrentInstance().addMessage("messagecourrierpardate",new FacesMessage(FacesMessage.SEVERITY_WARN,"Attention","Vous devez renseigner une date"));
+        }else{
+            courrierTempList.clear();
+            for(int a = 0; a < courrier.getListeDesCouriersEnvoyes().size(); a++){
+                if(courrier.getListeDesCouriersEnvoyes().get(a).getDateDEnregistrement().equals(datePourRechercheAvancee)){
+                    courrierTempList.add(courrier.getListeDesCouriersEnvoyes().get(a));
+                    trouve = true;
+                }
+            }
+            if(trouve){
+                courrier.getListeDesCouriersEnvoyes().clear();
+                courrier.setListeDesCouriersEnvoyes(courrierTempList);
+                PrimeFaces.current().executeScript("PF('dialogueRechercherCourrierParDate').hide()");
+                PrimeFaces.current().executeScript("afficherBoutonAnnulerRecherche()");
+                setDatePourRechercheAvancee("");
+                System.out.println("rechercher  = " + courrierSauvegardeList.size());
+            }else{
+                FacesContext.getCurrentInstance().addMessage("messagecourrierpardate",new FacesMessage(FacesMessage.SEVERITY_WARN,"Aucun resultat","Pas de courrier pour cette date"));
+
+            }
+        }
+
+    }
+
+    public List<String> recupererLesMoisDeLAnnee(){
+        return Arrays.asList(DateUtils.recupererTousLesMoisDeLAnnee());
+    }
+
+    public void annulerUneRechercheAvancee(){
+        courrier.getListeDesCouriersEnvoyes().clear();
+        System.out.println("annuler  = " + courrierSauvegardeList.size());
+        courrier.setListeDesCouriersEnvoyes(courrierSauvegardeList);
+        PrimeFaces.current().executeScript("afficherBoutonFaireUneRecherche()");
+    }
+
     /***Getter and setter**/
+
+    public String getDatePourRechercheAvancee() {
+        return datePourRechercheAvancee;
+    }
+
+    public void setDatePourRechercheAvancee(String datePourRechercheAvancee) {
+        this.datePourRechercheAvancee = datePourRechercheAvancee;
+    }
 
     public Courrier getCourrier() {
         return courrier;
@@ -80,5 +135,13 @@ public class CourriersEnvoyes implements Serializable {
 
     public void setRowsPerPage(Integer rowsPerPage) {
         this.rowsPerPage = rowsPerPage;
+    }
+
+    public String getMoisPourRechercheAvancee() {
+        return moisPourRechercheAvancee;
+    }
+
+    public void setMoisPourRechercheAvancee(String moisPourRechercheAvancee) {
+        this.moisPourRechercheAvancee = moisPourRechercheAvancee;
     }
 }
