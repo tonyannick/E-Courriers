@@ -740,6 +740,8 @@ public class DataBaseQueries {
         Connection connectionCourrierIdEnvoyes =  DatabaseManager.getConnexion();
         String requeteCourrierRecus = "select courrier.date_enregistrement,nom_direction from `recevoir_courrier` inner join `courrier` on recevoir_courrier.id_courrier = courrier.id_courrier inner join personne on recevoir_courrier.id_personne = personne.id_personne inner join direction on personne.id_direction = direction.id_direction where direction.nom_direction = '"+nomDirection+"'  and courrier.etat = '"+EtatCourrier.courrierEnvoye+"' group by courrier.id_courrier order by courrier.id_courrier desc";
         String requeteCourrierEnvoyes = "select courrier.date_enregistrement,nom_direction from `envoyer_courrier` inner join `courrier` on envoyer_courrier.id_courrier = courrier.id_courrier inner join personne on  envoyer_courrier.id_personne = personne.id_personne inner join direction on personne.id_direction = direction.id_direction where direction.nom_direction = '"+nomDirection+"'  and courrier.etat = '"+EtatCourrier.courrierEnvoye+"' group by courrier.id_courrier order by courrier.id_courrier desc";
+        System.out.println("requeteCourrierEnvoyes = " + requeteCourrierEnvoyes);
+        System.out.println("requeteCourrierRecus = " + requeteCourrierRecus);
         String requeteIdCourriersRecusSQL = "select courrier.id_courrier from `recevoir_courrier` inner join `courrier` on recevoir_courrier.id_courrier = courrier.id_courrier inner join personne on recevoir_courrier.id_personne = personne.id_personne inner join direction on personne.id_direction = direction.id_direction where direction.nom_direction = '"+nomDirection+"' and recevoir_courrier.archive = '"+ EtatCourrier.archiveNonActive +"' and recevoir_courrier.favoris = '"+EtatCourrier.pasfavoris+"' and etat = '"+EtatCourrier.courrierEnvoye+"'";
         String requeteIdCourriersEnvoyesSQL = "select courrier.id_courrier from `envoyer_courrier` inner join `courrier` on envoyer_courrier.id_courrier = courrier.id_courrier inner join personne on envoyer_courrier.id_personne = personne.id_personne inner join direction on personne.id_direction = direction.id_direction where direction.nom_direction = '"+nomDirection+"' and courrier.etat = '"+EtatCourrier.courrierEnvoye+"' and envoyer_courrier.favoris = '"+EtatCourrier.pasfavoris+"' and envoyer_courrier.archive =  '"+ EtatCourrier.archiveNonActive +"' order by courrier.id_courrier desc;";
 
@@ -872,6 +874,8 @@ public class DataBaseQueries {
 
             List<String> finalList = new ArrayList<>();
             finalList = Stream.concat(listeCourriersRecus.stream(), listeCourriersEnvoyes.stream()).collect(Collectors.toList());
+            String anneeEnCours = DateUtils.recupererLAnneeEnCours();
+            finalList.removeIf(e -> !e.equals(anneeEnCours));
             for(int a = 0; a < finalList.size(); a++){
                 try {
                     if(finalList.get(a) != null){

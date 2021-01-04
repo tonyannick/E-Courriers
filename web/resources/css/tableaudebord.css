@@ -141,3 +141,19 @@
 .detail td {
     font-size: 24px;
 }
+
+/*****Select one menu*****/
+.ui-selectonemenu .ui-selectonemenu-trigger{
+    width: 40px !important;
+    padding-top: 0.2em;
+    background-color:#0062cc;
+}
+
+.ui-selectonemenu{
+    padding-right: 0px !important;
+    width: auto;
+}
+
+.ui-selectonemenu.ui-state-hover, .ui-selectonemenu.ui-state-focus {
+    background-color: transparent;
+}

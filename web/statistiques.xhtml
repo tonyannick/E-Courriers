@@ -13,7 +13,7 @@
         <f:viewAction action="#{statistiques.recupererLesStatistiquesParMois}" onPostBack="true"/>
     </f:metadata>
     <h:head>
-        <title>Tableau de bord</title>
+        <title>Statistiques</title>
         <meta http-equiv="Content-Type" content="text/html;charset=UTF8" />
         <h:outputStylesheet name="css/tableaudebord.css" />
         <h:outputScript name="bootstrap/js/bootstrap.js" />
@@ -166,7 +166,7 @@
                             </div>
                             <div class="column" style=" width:100%; margin-right: 10px">
                                 <div class="col-md-8">
-                                     <p:panel toggleable="true" header="statistiques des courriers traités par mois">
+                                     <p:panel toggleable="true" header="statistiques des courriers traités par mois pour l'année en cours">
                                             <canvas id="courriersTraitesParMois" width="490" height="120"></canvas>
                                     </p:panel>
                                 </div>
