@@ -34,8 +34,14 @@ public class DateUtils {
 
     public static String[] recupererTousLesMoisDeLAnnee(){
         String[] frenchMonths = french_dfs.getMonths();
-        //System.out.println(Arrays.toString(frenchMonths));
         return frenchMonths;
+    }
+
+    public static String recupererLAnneeEnCours(){
+        Date date = new Date();
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy");
+        String anneeEnCours = simpleDateFormat.format(date);
+        return anneeEnCours;
     }
 
     public static void recupererLePremierEtLeDernierJourDelaSemaine(){
