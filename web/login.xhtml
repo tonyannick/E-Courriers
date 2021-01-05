@@ -41,7 +41,7 @@
                             <p:spacer height="7px"/>
                             <p:separator style="background-color: white; color: white"/>
                             <h:panelGrid columns="2" style="border:none; color: white; margin-left: 5px; cursor: hand; width: 100%">
-                                <h:outputLink value="#" title="Mot de passe oublié ?" style="color: white; font-weight: bold; font-size: 11px; margin-left: 10px; float: left">Mot de passe oublié ?</h:outputLink>
+                                <p:commandLink value="Mot de passe oublié ?" actionListener="#{login.envoyerUnMail}" title="Mot de passe oublié ?" style="color: white; font-weight: bold; font-size: 14px; margin-left: 10px; float: left"/>
                                 <h:outputLink value="#" title="Mot de passe oublié ?" style="color: white; font-weight: bold; font-size: 11px; margin-right: 20px; float: right">Créer un compte</h:outputLink>
                             </h:panelGrid>
                         </h:form>
