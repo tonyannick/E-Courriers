@@ -56,15 +56,30 @@ public class CourriersEnvoyes implements Serializable {
     }
 
     public String voirLesDetailsDuCourrier(){
+        HttpSession session = SessionUtils.getSession();
+        boolean isResponsable = (boolean)session.getAttribute("isResponsable");
 
         Map<String,String> params = FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap();
         String idCourrier = (params.get("courrierId"));
         String alfrescoId = (params.get("alfrescoId"));
-        HttpSession session = SessionUtils.getSession();
-        session.setAttribute("courrierId",idCourrier);
-        session.setAttribute("alfrescoId",alfrescoId);
-        session.setAttribute("courrierEnvoye","courrierEnvoye");
-        return "detailduncourrierenvoye.xhtml?faces-redirect=true";
+        String confidentiel = (params.get("confidentiel"));
+
+        if(confidentiel.equals(EtatCourrier.confidentiel)){
+            if(!isResponsable){
+                PrimeFaces.current().executeScript("swal('Oups','Votre profil ne vous permets de consulter ce courrier confidentiel', 'warning');");
+                return null;
+            }else{
+                session.setAttribute("courrierId",idCourrier);
+                session.setAttribute("alfrescoId",alfrescoId);
+                session.setAttribute("courrierEnvoye","courrierEnvoye");
+                return "detailduncourrierenvoye.xhtml?faces-redirect=true";
+            }
+        }else{
+            session.setAttribute("courrierId",idCourrier);
+            session.setAttribute("alfrescoId",alfrescoId);
+            session.setAttribute("courrierEnvoye","courrierEnvoye");
+            return "detailduncourrierenvoye.xhtml?faces-redirect=true";
+        }
     }
 
     public void faireUneRechercheAvanceeParDate(){

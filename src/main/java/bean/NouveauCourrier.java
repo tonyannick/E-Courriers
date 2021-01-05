@@ -310,7 +310,7 @@ public class NouveauCourrier implements Serializable {
                 if(!emetteur.getTypeDEmetteur().equals("Agent du Ministere")){
                     insertionCourrierSQL = "insert into `courrier` (`date_reception`, `heure_reception`, `objet`, `reference`, `mots_cles`,  `commentaires`, `priorite`, `confidentiel`, `nom_fichier`, `extension_fichier`, `etat`, `genre`, `fk_type_courrier`)  VALUES" +
                             " ('" + courrier.getDateDeReception() + "'," + "'" + DateUtils.convertirHeureDeReceptionAuBonFormat(courrier.getHeureDeReception()) + "'," + "'" + courrier.getObjetCourrier().replaceAll("'"," ") + "'," + "'" + courrier.getReferenceCourrier().replace("\\","/").replaceAll("'"," ") + "'," + "'" +courrier.getMotsclesCourrier().replace("\\","/").replaceAll("'"," ") + "'," + "'" +  courrier.getCommentairesCourrier().replace("\\","/").replaceAll("'"," ") + "'," + "'" + courrier.getPrioriteCourrier()+ "'," +  "'" + EtatCourrier.confidentiel+ "'," +
-                            "'" + fichierConfidentiel + "'," + "'" + fichierConfidentiel + "'," + "'" +EtatCourrier.courrierEnvoye  + "'," + "'" + courrier.getGenreCourrier()+"',"+"''"+ idTypeDeCourrier +"')";
+                            "'" + fichierConfidentiel + "'," + "'" + fichierConfidentiel + "'," + "'" +EtatCourrier.courrierEnvoye  + "'," + "'" + courrier.getGenreCourrier()+"',"+"'"+ idTypeDeCourrier +"')";
 
                     ajouterCorrespondanceEtapeCourrierSQL = "insert into `correspondance_etape_courrier` (`id_courrier`,`etat_correspondance`) VALUES" +
                             "((select id_courrier from `courrier` where date_reception ='"+ courrier.getDateDeReception()+"' and heure_reception ='"+ DateUtils.convertirHeureDeReceptionAuBonFormat(courrier.getHeureDeReception())+"' and objet = '"+courrier.getObjetCourrier().replaceAll("'"," ")+ "' and reference = '"+ courrier.getReferenceCourrier().replace("\\","/").replaceAll("'"," ")+ "' and nom_fichier = '"+ courrier.getNomCourrier().replaceAll("'","_") +"') ,'"+EtatCourrier.courrierRecu+"');";
@@ -318,7 +318,7 @@ public class NouveauCourrier implements Serializable {
                 }else{
                     insertionCourrierSQL = "insert into `courrier` (`date_reception`, `heure_reception`, `objet`, `reference`, `mots_cles`,  `commentaires`, `priorite`, `confidentiel`, `nom_fichier`, `extension_fichier`, `etat`, `genre`, `fk_type_courrier`)  VALUES" +
                             " ('" + courrier.getDateDeReception() + "'," + "'" + DateUtils.convertirHeureDeReceptionAuBonFormat(courrier.getHeureDeReception()) + "'," + "'" + courrier.getObjetCourrier().replaceAll("'"," ") + "'," + "'" + courrier.getReferenceCourrier().replace("\\","/").replaceAll("'"," ") + "'," + "'" +courrier.getMotsclesCourrier().replace("\\","/").replaceAll("'"," ") + "'," + "'" +  courrier.getCommentairesCourrier().replace("\\","/").replaceAll("'"," ") + "'," + "'" + courrier.getPrioriteCourrier()+ "'," +  "'" + EtatCourrier.confidentiel+ "'," +
-                            "'" + fichierConfidentiel + "'," + "'" + fichierConfidentiel + "'," + "'" +EtatCourrier.courrierEnregistre  + "'," + "'" + courrier.getGenreCourrier()+"',"+"''"+ idTypeDeCourrier +"')";
+                            "'" + fichierConfidentiel + "'," + "'" + fichierConfidentiel + "'," + "'" +EtatCourrier.courrierEnregistre  + "'," + "'" + courrier.getGenreCourrier()+"',"+"'"+ idTypeDeCourrier +"')";
                     ajouterCorrespondanceEtapeCourrierSQL = "insert into `correspondance_etape_courrier` (`id_courrier`) VALUES" +
                             "((select id_courrier from `courrier` where date_reception ='"+ courrier.getDateDeReception()+"' and heure_reception ='"+ DateUtils.convertirHeureDeReceptionAuBonFormat(courrier.getHeureDeReception())+"' and objet = '"+courrier.getObjetCourrier().replaceAll("'"," ")+ "' and reference = '"+ courrier.getReferenceCourrier().replace("\\","/").replaceAll("'"," ")+ "' and nom_fichier = '"+ courrier.getNomCourrier().replaceAll("'","_") +"'));";
 
@@ -399,7 +399,7 @@ public class NouveauCourrier implements Serializable {
                                 " ('" + finalUniqueIDEmetteur+"',"+"'" +idTypeDEmetteur+"',"+"'"+ idFonctionEmetteur + "',"+"'" +idDirectionEmetteur + "',"+ "'" +idEtablissementEmetteur + "')";
 
                         ajouterFonctionSQL = "insert into `fonction` (`titre_fonction`) VALUES ('" + destinataire.getFonctionEntreprise().replaceAll("'"," ")  +"')";
-                        System.out.println("ajouterFonctionSQL = " + ajouterFonctionSQL);
+
                         ajouterEtablissementSQL = "INSERT INTO `etablissement` (`nom_etablissement`, `tel_etablissement`, `mail_etablissement`, `adresse_etablissement`, `fk_type_etablissement`) VALUES" +
                                 " ('" + destinataire.getRaisonSocial().replaceAll("'"," ") +"',"+"'" +destinataire.getTelephoneEntreprise()+"',"+"'"+ destinataire.getEmailEntreprise() + "',"+"'" +destinataire.getAdresseEntreprise().replaceAll("'"," ") + "',"+ "'" +idTypeDetablissement + "')";
                         System.out.println("ajouterEtablissementSQL = " + ajouterEtablissementSQL);

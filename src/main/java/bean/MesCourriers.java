@@ -2,7 +2,9 @@ package bean;
 
 import database.DataBaseQueries;
 import model.Courrier;
+import org.primefaces.PrimeFaces;
 import sessionManager.SessionUtils;
+import variables.EtatCourrier;
 
 import javax.annotation.PostConstruct;
 import javax.enterprise.context.SessionScoped;
@@ -33,19 +35,32 @@ public class MesCourriers implements Serializable {
     }
 
     public String voirLesDetailsDunCourrierEnregistre(){
-        HttpSession session = SessionUtils.getSession();
-        String sessionID = session.getAttribute("uniqueUserID").toString();
+
         Map<String,String> params = FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap();
         int courrierId = Integer.valueOf(params.get("idCourrier"));
         String idCourrier = String.valueOf(courrierId);
         String idAjouterCourrier = String.valueOf(Integer.valueOf(params.get("idAjouterCourrier")));
         String idDocumementAlfresco = String.valueOf(params.get("idAlfresco"));
+        String confidentiel = (params.get("confidentiel"));
+        HttpSession session = SessionUtils.getSession();
+        boolean isResponsable = (boolean)session.getAttribute("isResponsable");
 
-        session.setAttribute("idAjouterCourrier",idAjouterCourrier);
-        session.setAttribute("idAlfresco",idDocumementAlfresco);
-        session.setAttribute("idCourrier",idCourrier);
-
-        return "detailduncourrierenregistre?faces-redirect=true";
+        if(confidentiel.equals(EtatCourrier.confidentiel)) {
+            if (!isResponsable) {
+                PrimeFaces.current().executeScript("swal('Oups','Votre profil ne vous permets de consulter ce courrier confidentiel', 'warning');");
+                return null;
+            }else{
+                session.setAttribute("idAjouterCourrier",idAjouterCourrier);
+                session.setAttribute("idAlfresco",idDocumementAlfresco);
+                session.setAttribute("idCourrier",idCourrier);
+                return "detailduncourrierenregistre?faces-redirect=true";
+            }
+        }else{
+            session.setAttribute("idAjouterCourrier",idAjouterCourrier);
+            session.setAttribute("idAlfresco",idDocumementAlfresco);
+            session.setAttribute("idCourrier",idCourrier);
+            return "detailduncourrierenregistre?faces-redirect=true";
+        }
     }
 
     public Courrier getCourrier() {

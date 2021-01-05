@@ -17,6 +17,8 @@
         <h:outputScript name="bootstrap/js/bootstrap.js" />
         <h:outputStylesheet name="bootstrap/css/bootstrap.css" />
         <h:outputStylesheet name="css/mescourriers.css" />
+        <h:outputScript name="/sweetalert/js/sweetalert.min.js"/>
+        <h:outputStylesheet name="/sweetalert/css/sweetalert.css"/>
     </h:head>
     <style>
         .courrierconfidentiel{
@@ -80,6 +82,7 @@
                                                 <f:param name="idCourrier" value="#{courriers.idCourrier}" />
                                                 <f:param name="idAjouterCourrier" value="#{courriers.idAjouterCourrier}" />
                                                 <f:param name="idAlfresco" value="#{courriers.idAlfresco}" />
+                                                <f:param name="confidentiel" value="#{courriers.confidentiel}" />
                                             </p:commandLink>
                                         </h:form>
                                     </h:panelGrid>
