@@ -31,6 +31,7 @@ public class CourriersEnvoyes implements Serializable {
     private List<Courrier> courrierSauvegardeList = new ArrayList<>();
     private String datePourRechercheAvancee;
     private String moisPourRechercheAvancee;
+    private String typeDeCourrierPourRechercheAvancee;
     private boolean isMoisSelectionne = false;
 
     @PostConstruct
@@ -45,7 +46,6 @@ public class CourriersEnvoyes implements Serializable {
         courrierSauvegardeList.clear();
         courrierSauvegardeList.addAll(courrier.getListeDesCouriersEnvoyes());
         Collections.unmodifiableList(courrierSauvegardeList);
-        System.out.println("recharger  = " + courrierSauvegardeList.size());
     }
 
     public String voirLesDetailsDuCourrier(){
@@ -77,7 +77,6 @@ public class CourriersEnvoyes implements Serializable {
                 courrier.setListeDesCouriersEnvoyes(courrierTempList);
                 setDatePourRechercheAvancee(null);
                 gestionDeLAffichageDesBoutonsDeRecherche();
-                System.out.println("rechercher  = " + courrierSauvegardeList.size());
             }else{
                 FacesContext.getCurrentInstance().addMessage("messagecourrierpardate",new FacesMessage(FacesMessage.SEVERITY_WARN,"Aucun resultat","Pas de courrier pour cette date"));
 
@@ -92,7 +91,6 @@ public class CourriersEnvoyes implements Serializable {
 
     public void annulerUneRechercheAvancee(){
         courrier.getListeDesCouriersEnvoyes().clear();
-        //System.out.println("annuler  = " + courrierSauvegardeList.size());
         courrier.setListeDesCouriersEnvoyes(courrierSauvegardeList);
         PrimeFaces.current().executeScript("afficherBoutonFaireUneRecherche()");
     }
@@ -101,6 +99,7 @@ public class CourriersEnvoyes implements Serializable {
         PrimeFaces.current().executeScript("PF('dialogueRechercherCourrierParDate').hide()");
         PrimeFaces.current().executeScript("afficherBoutonAnnulerRecherche()");
         PrimeFaces.current().executeScript("PF('dialogueRechercherCourrierParMois').hide()");
+        PrimeFaces.current().executeScript("PF('dialogueRechercherCourrierParTypeDeCourrier').hide()");
     }
 
     public void avoirDateEnFonctionDuMoisAuClick(){
@@ -141,6 +140,34 @@ public class CourriersEnvoyes implements Serializable {
             FacesContext.getCurrentInstance().addMessage("messagecourrierparmois",new FacesMessage(FacesMessage.SEVERITY_WARN,"Attention","Vous devez renseigner un mois"));
         }
 
+    }
+
+    public List<String> avoirListeDesTypesDeCourrier(){
+        return DataBaseQueries.recupererLaListeDeTypesDeCourrier();
+    }
+
+    public void faireUneRechercheAvanceeParTypeDeCourrier(){
+        boolean trouve = false;
+        if(typeDeCourrierPourRechercheAvancee == null){
+            FacesContext.getCurrentInstance().addMessage("messagetypedecourrier",new FacesMessage(FacesMessage.SEVERITY_WARN,"Attention","Vous devez renseigner un type de courrier"));
+        }else{
+            courrierTempList.clear();
+            for(int a = 0; a < courrier.getListeDesCouriersEnvoyes().size(); a++) {
+                if (courrier.getListeDesCouriersEnvoyes().get(a).getExtensionCourrier().equals(typeDeCourrierPourRechercheAvancee)) {
+                    courrierTempList.add(courrier.getListeDesCouriersEnvoyes().get(a));
+                    trouve = true;
+                }
+            }
+
+            if(trouve){
+                courrier.getListeDesCouriersEnvoyes().clear();
+                courrier.setListeDesCouriersEnvoyes(courrierTempList);
+                setTypeDeCourrierPourRechercheAvancee(null);
+                gestionDeLAffichageDesBoutonsDeRecherche();
+            }else{
+                FacesContext.getCurrentInstance().addMessage("messagetypedecourrier",new FacesMessage(FacesMessage.SEVERITY_WARN,"Aucun resultat","Pas de courrier dans ce type"));
+            }
+        }
     }
 
     /***Getter and setter**/
@@ -191,5 +218,13 @@ public class CourriersEnvoyes implements Serializable {
 
     public void setMoisPourRechercheAvancee(String moisPourRechercheAvancee) {
         this.moisPourRechercheAvancee = moisPourRechercheAvancee;
+    }
+
+    public String getTypeDeCourrierPourRechercheAvancee() {
+        return typeDeCourrierPourRechercheAvancee;
+    }
+
+    public void setTypeDeCourrierPourRechercheAvancee(String typeDeCourrierPourRechercheAvancee) {
+        this.typeDeCourrierPourRechercheAvancee = typeDeCourrierPourRechercheAvancee;
     }
 }

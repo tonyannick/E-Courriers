@@ -581,7 +581,6 @@ public class DataBaseQueries {
             listeNombreDeCourrierParType =  Stream.concat(listeTypeDeCourrierRecus.stream(), listeTypeDeCourrierEnvoyes.stream()).collect(Collectors.toList());
             SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
             for (int a = 0; a <  listeNombreDeCourrierParType.size(); a++) {
-
                 try {
                     Date date1 = null;
                     date1 = sdf.parse(listeNombreDeCourrierParType.get(a).getDateDEnregistrement());
@@ -593,7 +592,6 @@ public class DataBaseQueries {
                 } catch (ParseException e) {
                         e.printStackTrace();
                 }
-
             }
 
 
@@ -740,8 +738,6 @@ public class DataBaseQueries {
         Connection connectionCourrierIdEnvoyes =  DatabaseManager.getConnexion();
         String requeteCourrierRecus = "select courrier.date_enregistrement,nom_direction from `recevoir_courrier` inner join `courrier` on recevoir_courrier.id_courrier = courrier.id_courrier inner join personne on recevoir_courrier.id_personne = personne.id_personne inner join direction on personne.id_direction = direction.id_direction where direction.nom_direction = '"+nomDirection+"'  and courrier.etat = '"+EtatCourrier.courrierEnvoye+"' group by courrier.id_courrier order by courrier.id_courrier desc";
         String requeteCourrierEnvoyes = "select courrier.date_enregistrement,nom_direction from `envoyer_courrier` inner join `courrier` on envoyer_courrier.id_courrier = courrier.id_courrier inner join personne on  envoyer_courrier.id_personne = personne.id_personne inner join direction on personne.id_direction = direction.id_direction where direction.nom_direction = '"+nomDirection+"'  and courrier.etat = '"+EtatCourrier.courrierEnvoye+"' group by courrier.id_courrier order by courrier.id_courrier desc";
-        System.out.println("requeteCourrierEnvoyes = " + requeteCourrierEnvoyes);
-        System.out.println("requeteCourrierRecus = " + requeteCourrierRecus);
         String requeteIdCourriersRecusSQL = "select courrier.id_courrier from `recevoir_courrier` inner join `courrier` on recevoir_courrier.id_courrier = courrier.id_courrier inner join personne on recevoir_courrier.id_personne = personne.id_personne inner join direction on personne.id_direction = direction.id_direction where direction.nom_direction = '"+nomDirection+"' and recevoir_courrier.archive = '"+ EtatCourrier.archiveNonActive +"' and recevoir_courrier.favoris = '"+EtatCourrier.pasfavoris+"' and etat = '"+EtatCourrier.courrierEnvoye+"'";
         String requeteIdCourriersEnvoyesSQL = "select courrier.id_courrier from `envoyer_courrier` inner join `courrier` on envoyer_courrier.id_courrier = courrier.id_courrier inner join personne on envoyer_courrier.id_personne = personne.id_personne inner join direction on personne.id_direction = direction.id_direction where direction.nom_direction = '"+nomDirection+"' and courrier.etat = '"+EtatCourrier.courrierEnvoye+"' and envoyer_courrier.favoris = '"+EtatCourrier.pasfavoris+"' and envoyer_courrier.archive =  '"+ EtatCourrier.archiveNonActive +"' order by courrier.id_courrier desc;";
 
@@ -974,21 +970,6 @@ public class DataBaseQueries {
 
             myMapCourrierRecusParDirection.remove(nomDirection);
             myMapCourrierEnvoyesParDirection.remove(nomDirection);
-
-            /*nombreDeCourrierDCSI = nombreDeCourrierTempDCSI;
-            nombreDeCourrierDCAF = nombreDeCourrierTempDCAF;
-            nombreDeCourrierDCRH = nombreDeCourrierTempDCRH;
-            nombreDeCourrierDGBFIP= nombreDeCourrierTempDGBFIP;
-            nombreDeCourrierTRESOR= nombreDeCourrierTempTRESOR;
-            nombreDeCourrierIGS = nombreDeCourrierTempIGS;
-            nombreDeCourrierAJE= nombreDeCourrierTempAJE;
-            nombreDeCourrierCPPF = nombreDeCourrierTempCPPF;
-            nombreDeCourrierSGA = nombreDeCourrierTempSGA;
-            nombreDeCourrierSGA = nombreDeCourrierTempSG;
-            nombreDeCourrierCabinetMinistre= nombreDeCourrierTempCabinetMinistre;
-            nombreDeCourrierCabinetMinistreAdjoint = nombreDeCourrierTempCabinetMinistreAdjoint;
-            nombreDeCourrierMinistre = nombreDeCourrierTempMinistre;
-            nombreDeCourrierMinistreDelegue = nombreDeCourrierTempMinistreDelegue;*/
 
         } catch (SQLException e) {
             e.printStackTrace();
@@ -1698,7 +1679,7 @@ public class DataBaseQueries {
         HttpSession session = SessionUtils.getSession();
         String idDirection = (String) session.getAttribute("idDirectionUser");
 
-        requeteMesCourriersSQL = "select * from `envoyer_courrier` inner join `courrier` on envoyer_courrier.id_courrier = courrier.id_courrier left join correspondance_dossier_courrier on correspondance_dossier_courrier.id_courrier = courrier.id_courrier left join dossier on correspondance_dossier_courrier.id_dossier = dossier.id_dossier inner join personne on envoyer_courrier.id_personne = personne.id_personne inner join direction on personne.id_direction = direction.id_direction where direction.id_direction = '"+idDirection+"' and courrier.etat = '"+EtatCourrier.courrierEnvoye+"' and envoyer_courrier.favoris = '"+EtatCourrier.pasfavoris+"' and envoyer_courrier.archive =  '"+ EtatCourrier.archiveNonActive +"' order by courrier.id_courrier desc;";
+        requeteMesCourriersSQL = "select * from `envoyer_courrier` inner join `courrier` on envoyer_courrier.id_courrier = courrier.id_courrier left join correspondance_dossier_courrier on correspondance_dossier_courrier.id_courrier = courrier.id_courrier left join dossier on correspondance_dossier_courrier.id_dossier = dossier.id_dossier inner join personne on envoyer_courrier.id_personne = personne.id_personne inner join direction on personne.id_direction = direction.id_direction inner join type_courrier on courrier.fk_type_courrier = type_courrier.id_type_courrier where direction.id_direction = '"+idDirection+"' and courrier.etat = '"+EtatCourrier.courrierEnvoye+"' and envoyer_courrier.favoris = '"+EtatCourrier.pasfavoris+"' and envoyer_courrier.archive =  '"+ EtatCourrier.archiveNonActive +"' order by courrier.id_courrier desc;";
         ResultSet resultSet = null;
         try {
 
@@ -1711,7 +1692,7 @@ public class DataBaseQueries {
                         resultSet.getString("courrier.date_enregistrement"),
                         resultSet.getString("courrier.id_courrier"),
                         resultSet.getString("confidentiel"),
-                        resultSet.getString("extension_fichier"),
+                        resultSet.getString("titre_type_courrier"),
                         resultSet.getString("id_envoyer"),
                         resultSet.getString("identifiant_alfresco"),
                         resultSet.getString("dossier.id_dossier"),
