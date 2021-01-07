@@ -328,7 +328,6 @@ function clicSelectOneRadioPrioriteCourrier() {
 }
 
 function checkDesValeursDuTypeDEmetteur(){
-    console.log(typeDEmetteur);
     switch (typeDEmetteur) {
         case "Agent du Ministere":
             if(!PF('selectOneMenuDirectionEmetteur').value) {

@@ -48,6 +48,7 @@ public class NouveauCourrier implements Serializable {
     private boolean isAnnexe = false;
     private Date dateTemp = null;
     private String isResponsable = "0";
+    private String isResponsableDestinataire = "0";
     private boolean thisIsConfidentiel;
     private String fichierConfidentiel = "Fichier_Confidentiel";
     private List<String> tempListEmetteur;
@@ -91,18 +92,25 @@ public class NouveauCourrier implements Serializable {
         reinitialiserLeFormulaire();
         HttpSession httpSession = SessionUtils.getSession();
         user.setUserFonction(httpSession.getAttribute("fonctionUser").toString());
+        System.out.println("user.getUserFonction() = " + user.getUserFonction());
         if(user.getUserFonction().equals("Secrétaire Général Adjoint")){
             isResponsable = "1";
+              isResponsableDestinataire = "1";
         }else if(user.getUserFonction().equals("Secrétaire Général")){
             isResponsable = "1";
+              isResponsableDestinataire = "1";
         }else if(user.getUserFonction().equals("Ministre Délégué")){
             isResponsable = "1";
+              isResponsableDestinataire = "1";
         }else if(user.getUserFonction().equals("Ministre")){
             isResponsable = "1";
+              isResponsableDestinataire = "1";
         }else if(user.getUserFonction().equals("Directeur Général")){
             isResponsable = "1";
+              isResponsableDestinataire = "1";
         }else if(user.getUserFonction().equals("Directeur de Cabinet")){
             isResponsable = "1";
+              isResponsableDestinataire = "1";
         }
     }
 
@@ -217,30 +225,23 @@ public class NouveauCourrier implements Serializable {
     public void voirSiLeCourrierEstExterne(){
         if(emetteur.getTypeDEmetteur().equalsIgnoreCase("Entreprise")){
             courrier.setGenreCourrier(GenreDeCourrier.courrierExterne);
-            isResponsable = "0";
             direction.setListeDirectionDestinataire(direction.getListeDirectionEmetteur());
             afficherIndicationGenreCourrierAuClickSurLeTypeDEmetteur();
         }else if(emetteur.getTypeDEmetteur().equalsIgnoreCase("Association")){
             courrier.setGenreCourrier(GenreDeCourrier.courrierExterne);
             afficherIndicationGenreCourrierAuClickSurLeTypeDEmetteur();
-            isResponsable = "0";
         }else if(emetteur.getTypeDEmetteur().equalsIgnoreCase("Particulier")){
             courrier.setGenreCourrier(GenreDeCourrier.courrierExterne);
             afficherIndicationGenreCourrierAuClickSurLeTypeDEmetteur();
-            isResponsable = "0";
         }else if(emetteur.getTypeDEmetteur().equalsIgnoreCase("Agent Autre Ministere")){
             courrier.setGenreCourrier(GenreDeCourrier.courrierExterne);
             direction.setListeDirectionDestinataire(direction.getListeDirectionEmetteur());
             afficherIndicationGenreCourrierAuClickSurLeTypeDEmetteur();
-            isResponsable = "0";
         }else if(emetteur.getTypeDEmetteur().equalsIgnoreCase("Agent du Ministere")){
             courrier.setGenreCourrier(GenreDeCourrier.courrierInterne);
             retirerIndicationGenreCourrierAuClickSurLeTypeDEmetteur();
             direction.setListeDirectionDestinataire(tempListDestinataire);
-            isResponsable = "1";
         }
-
-        System.out.println("courrier.getGenreCourrier() = " + courrier.getGenreCourrier());
     }
 
     public void afficherIndicationGenreCourrierAuClickSurLeTypeDEmetteur(){
