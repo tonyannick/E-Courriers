@@ -2,6 +2,7 @@ package bean;
 
 import cookieManager.CookiesUtils;
 import database.DataBaseQueries;
+//import mailManager.MailUtils;
 import model.User;
 import sessionManager.SessionUtils;
 
@@ -12,7 +13,6 @@ import javax.faces.context.FacesContext;
 import javax.inject.Named;
 import javax.servlet.http.HttpSession;
 import java.io.Serializable;
-import java.sql.SQLException;
 import java.util.UUID;
 
 @Named
@@ -63,6 +63,11 @@ public class Login implements Serializable {
             return "login?faces-redirect=true";
         }
 
+    }
+
+
+    public String clicSurVersMotDePasseOublie(){
+        return "motdepasseoublie?faces-redirect=true";
     }
 
     /**Methode de click sur se souvenir**/

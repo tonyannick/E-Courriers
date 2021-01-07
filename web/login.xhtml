@@ -21,7 +21,7 @@
     <h:body>
         <div class="container-fluid" style="margin-bottom: 50px">
             <div class="row">
-                <div class="login">
+                <div class="loginblock">
                     <div class="row">
                         <h1 class="loginTitle">Connexion</h1>
                         <h:form id="login-form" >
@@ -41,8 +41,13 @@
                             <p:spacer height="7px"/>
                             <p:separator style="background-color: white; color: white"/>
                             <h:panelGrid columns="2" style="border:none; color: white; margin-left: 5px; cursor: hand; width: 100%">
-                                <p:commandLink value="Mot de passe oublié ?" actionListener="#{login.envoyerUnMail}" title="Mot de passe oublié ?" style="color: white; font-weight: bold; font-size: 14px; margin-left: 10px; float: left"/>
-                                <h:outputLink value="#" title="Mot de passe oublié ?" style="color: white; font-weight: bold; font-size: 11px; margin-right: 20px; float: right">Créer un compte</h:outputLink>
+                                <p:commandLink action="#{login.clicSurVersMotDePasseOublie}"
+                                               style="color: white; font-weight: bold; font-size: 14px; margin-left: 10px; float: left">
+                                    <h:outputText value="Mot de passe oublié ?" />
+                                </p:commandLink>
+                                <p:commandLink actionListener="#{login.mail}" style="color: white; font-weight: bold; font-size: 11px; margin-right: 20px; float: right">
+                                    Créer un compte
+                                </p:commandLink>
                             </h:panelGrid>
                         </h:form>
                     </div>

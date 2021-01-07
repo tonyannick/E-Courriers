@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:pt="http://xmlns.jcp.org/jsf/passthrough">
+
+<f:view transient="true">
+    <h:head>
+        <title>Mot de passe oublié</title>
+        <meta charset="utf-8" />
+        <h:outputScript name="bootstrap/js/bootstrap.js" />
+        <h:outputStylesheet name="bootstrap/css/bootstrap.css" />
+        <h:outputStylesheet name="css/login.css" />
+    </h:head>
+    <h:body>
+
+        <div class="row">
+            <div class="motdepasseoublieblock">
+                <h1 class="loginTitle"><h:graphicImage value="./resources/images/forgot.png"/>Mot de passe oublié</h1>
+                <h:form id="login-form">
+
+                    <h:outputText style="font-size: 14px; color: white; font-weight: bold; text-align: center" value="Renseignez votre adresse mail pour reinitialiser votre mot de passe" />
+                    <h:panelGrid columns="2" style="border:none; width: 100%; margin-bottom:20px; margin-top: 30px; " styleClass="panelLogin">
+                        <p:inputText id="userLogin" pt:placeholder="adresse mail"
+                                     style="width: 70%;" value="#{login.user.userlogin}"/>
+                    </h:panelGrid>
+
+                    <p:commandButton   value="Valider" ajax="false" style="margin-bottom:10px; margin-top: 20px;
+                                       background-color: #e79100; border-color: #e79100;
+                                       width: 100px; alignment: center; align-items: center; alignment-baseline: center"
+                                       action="#{login.cliquerSurValider}" />
+                    <p:messages id="messagesLogin" for="messagesLogin" showDetail="true" closable="true"/>
+                    <p:spacer height="7px"/>
+                </h:form>
+            </div>
+        </div>
+
+        <ui:insert name="footer">
+            <ui:include src="footer.xhtml" />
+        </ui:insert>
+    </h:body>
+</f:view>
+</html>

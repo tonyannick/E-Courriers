@@ -736,6 +736,7 @@ public class DataBaseQueries {
         Connection connectionCourrierEnvoyes =  DatabaseManager.getConnexion();
         Connection connectionCourrierIdRecus =  DatabaseManager.getConnexion();
         Connection connectionCourrierIdEnvoyes =  DatabaseManager.getConnexion();
+
         String requeteCourrierRecus = "select courrier.date_enregistrement,nom_direction from `recevoir_courrier` inner join `courrier` on recevoir_courrier.id_courrier = courrier.id_courrier inner join personne on recevoir_courrier.id_personne = personne.id_personne inner join direction on personne.id_direction = direction.id_direction where direction.nom_direction = '"+nomDirection+"'  and courrier.etat = '"+EtatCourrier.courrierEnvoye+"' group by courrier.id_courrier order by courrier.id_courrier desc";
         String requeteCourrierEnvoyes = "select courrier.date_enregistrement,nom_direction from `envoyer_courrier` inner join `courrier` on envoyer_courrier.id_courrier = courrier.id_courrier inner join personne on  envoyer_courrier.id_personne = personne.id_personne inner join direction on personne.id_direction = direction.id_direction where direction.nom_direction = '"+nomDirection+"'  and courrier.etat = '"+EtatCourrier.courrierEnvoye+"' group by courrier.id_courrier order by courrier.id_courrier desc";
         String requeteIdCourriersRecusSQL = "select courrier.id_courrier from `recevoir_courrier` inner join `courrier` on recevoir_courrier.id_courrier = courrier.id_courrier inner join personne on recevoir_courrier.id_personne = personne.id_personne inner join direction on personne.id_direction = direction.id_direction where direction.nom_direction = '"+nomDirection+"' and recevoir_courrier.archive = '"+ EtatCourrier.archiveNonActive +"' and recevoir_courrier.favoris = '"+EtatCourrier.pasfavoris+"' and etat = '"+EtatCourrier.courrierEnvoye+"'";
@@ -1597,14 +1598,8 @@ public class DataBaseQueries {
         List<Courrier> mesCourriers = new ArrayList<>();
         Connection connection = DatabaseManager.getConnexion();
         HttpSession session = SessionUtils.getSession();
-        String sessionID = session.getAttribute("uniqueUserID").toString();
         String idDirection = (String) session.getAttribute("idDirectionUser");
-        String requeteMesCourriersSQL = null;
-        if(isResponsable){
-            requeteMesCourriersSQL = "select * from `ajouter_courrier` inner join `courrier` on ajouter_courrier.id_courrier = courrier.id_courrier left join correspondance_dossier_courrier on correspondance_dossier_courrier.id_courrier = courrier.id_courrier left join dossier on dossier.id_dossier =  correspondance_dossier_courrier.id_dossier  inner join personne on ajouter_courrier.id_personne = personne.id_personne inner join direction on personne.id_direction = direction.id_direction where direction.id_direction = '"+idDirection+"' and etat = '"+EtatCourrier.courrierEnregistre+"' order by courrier.id_courrier desc;";
-        }else{
-            requeteMesCourriersSQL = "select * from `ajouter_courrier` inner join `courrier` on ajouter_courrier.id_courrier = courrier.id_courrier left join correspondance_dossier_courrier on correspondance_dossier_courrier.id_dossier = courrier.id_courrier left join dossier on dossier.id_dossier =  correspondance_dossier_courrier.id_dossier where id_personne = '"+idUtilisateur+"' and etat = '"+EtatCourrier.courrierEnregistre+"' order by courrier.id_courrier desc;";
-        }
+        String requeteMesCourriersSQL = "select * from `ajouter_courrier` inner join `courrier` on ajouter_courrier.id_courrier = courrier.id_courrier left join correspondance_dossier_courrier on correspondance_dossier_courrier.id_courrier = courrier.id_courrier left join dossier on dossier.id_dossier =  correspondance_dossier_courrier.id_dossier  inner join personne on ajouter_courrier.id_personne = personne.id_personne inner join direction on personne.id_direction = direction.id_direction where direction.id_direction = '"+idDirection+"' and etat = '"+EtatCourrier.courrierEnregistre+"' order by courrier.id_courrier desc;";
 
         ResultSet resultSet = null;
         try {
