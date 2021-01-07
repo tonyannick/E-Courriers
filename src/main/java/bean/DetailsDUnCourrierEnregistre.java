@@ -103,7 +103,7 @@ public class DetailsDUnCourrierEnregistre implements Serializable {
         Map<String,String> params = FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap();
         String typeDestinataireChoisie = params.get("destinataire");
         if(droitAjoutDestinataireExterne){
-            System.out.println("1");
+
             switch (typeDestinataireChoisie){
                 case "agentAutreMinistere":
                     PrimeFaces.current().executeScript("PF('dialogueAjouterDestinataireAutreMinistere').show()");
@@ -1134,7 +1134,6 @@ public class DetailsDUnCourrierEnregistre implements Serializable {
         String typeDestinataire = String.valueOf(params.get("typeDestinataireId"));
         String requeteDetailDestinataireSQL = null;
         String choixTypeDestinataire = null;
-        System.out.println("typeDestinataire = " + typeDestinataire);
         switch (typeDestinataire)  {
             case "Particulier" :
                 choixTypeDestinataire = "Particulier";
@@ -1252,7 +1251,10 @@ public class DetailsDUnCourrierEnregistre implements Serializable {
     }
 
     public void recupererListeDirection(){
+        HttpSession session = SessionUtils.getSession();
+        String directionUser = (String) session.getAttribute( "directionUser");
         direction.setListeDirection(DataBaseQueries.recupererLaListeDesDirections());
+        direction.getListeDirection().removeIf(e -> e.equals(directionUser));
     }
 
     public void recupererListeMinisteres(){
