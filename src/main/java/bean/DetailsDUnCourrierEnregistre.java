@@ -58,6 +58,7 @@ public class DetailsDUnCourrierEnregistre implements Serializable {
     private boolean isResponsable = false;
     private boolean isSecretaire = false;
     private Date dateFinalTemp = null;
+    private boolean droitAjoutDestinataireExterne = false;
 
 
     @PostConstruct
@@ -77,6 +78,47 @@ public class DetailsDUnCourrierEnregistre implements Serializable {
         recupererListeMinisteres();
         recupererListeTypeDeCourrier();
 
+    }
+
+    public void checkDesDroitsPourRajouterDesDestinataireExterne(){
+        HttpSession httpSession = SessionUtils.getSession();
+        String fonctionUser = httpSession.getAttribute("fonctionUser").toString();
+        switch (fonctionUser) {
+            case FonctionsUtilisateurs.secretaireGeneral:
+                droitAjoutDestinataireExterne = true;
+                break;
+            case FonctionsUtilisateurs.secretaireGeneralAdjoint:
+               droitAjoutDestinataireExterne = true;
+                break;
+            case FonctionsUtilisateurs.directeurCabinet:
+               droitAjoutDestinataireExterne = true;
+                break;
+            case FonctionsUtilisateurs.directeurGeneral:
+               droitAjoutDestinataireExterne = true;
+                break;
+            case FonctionsUtilisateurs.directeurGeneralAdjoint:
+               droitAjoutDestinataireExterne = true;
+                break;
+        }
+        Map<String,String> params = FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap();
+        String typeDestinataireChoisie = params.get("destinataire");
+        if(droitAjoutDestinataireExterne){
+            System.out.println("1");
+            switch (typeDestinataireChoisie){
+                case "agentAutreMinistere":
+                    PrimeFaces.current().executeScript("PF('dialogueAjouterDestinataireAutreMinistere').show()");
+                    break;
+                case "entrepriseOuAssociation":
+                    PrimeFaces.current().executeScript("PF('dialogueAjouterDestinataireEntreprise').show()");
+                    break;
+                case "particulier":
+                    PrimeFaces.current().executeScript("PF('dialogueAjouterDestinataireParticulier').show()");
+                    break;
+            }
+
+        }else{
+            PrimeFaces.current().executeScript("swal('Oups','Votre profil ne vous permets pas de réaliser cette action', 'warning');");
+        }
     }
 
     public void voirAnnexe(ActionEvent actionEvent){

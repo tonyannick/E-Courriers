@@ -47,7 +47,7 @@ public class MesCourriers implements Serializable {
 
         if(confidentiel.equals(EtatCourrier.confidentiel)) {
             if (!isResponsable) {
-                PrimeFaces.current().executeScript("swal('Oups','Votre profil ne vous permets de consulter ce courrier confidentiel', 'warning');");
+                PrimeFaces.current().executeScript("swal('Oups','Votre profil ne vous permets pas de consulter ce courrier confidentiel', 'warning');");
                 return null;
             }else{
                 session.setAttribute("idAjouterCourrier",idAjouterCourrier);

@@ -75,9 +75,18 @@
 
                                     <p:menuButton value="Ajouter un destinataire" style="margin-left: 10px;">
                                         <p:menuitem value="Agent du Ministère" onclick="PF('dialogueAjouterDestinataireAgentDuMinistere').show()" />
-                                        <p:menuitem value="Agent d'un autre Ministère" onclick="PF('dialogueAjouterDestinataireAutreMinistere').show()" />
-                                        <p:menuitem value="Entreprise ou Association" onclick="PF('dialogueAjouterDestinataireEntreprise').show()"/>
-                                        <p:menuitem value="Particulier" onclick="PF('dialogueAjouterDestinataireParticulier').show()"/>
+                                        <p:menuitem value="Agent d'un autre Ministère"
+                                                    actionListener="#{detailsDUnCourrierEnregistre.checkDesDroitsPourRajouterDesDestinataireExterne}">
+                                            <f:param value="agentAutreMinistere" name="destinataire"/>
+                                        </p:menuitem>
+                                        <p:menuitem value="Entreprise ou Association"
+                                                    actionListener="#{detailsDUnCourrierEnregistre.checkDesDroitsPourRajouterDesDestinataireExterne}">
+                                            <f:param value="entrepriseOuAssociation" name="destinataire"/>
+                                        </p:menuitem>
+                                        <p:menuitem value="Particulier"
+                                                    actionListener="#{detailsDUnCourrierEnregistre.checkDesDroitsPourRajouterDesDestinataireExterne}">
+                                            <f:param value="particulier" name="destinataire"/>
+                                        </p:menuitem>
                                     </p:menuButton>
                                     <span class="ui-separator">
                                         <span class="fa fa-ellipsis-v" />
