@@ -77,6 +77,7 @@ public class DetailDUnCourrierRecu implements Serializable {
     private String messageAccuseDeReception;
     private boolean isResponsable = false;
     private String motAppercuDetailEtape;
+    private boolean droitTransfererCourrier = false;
 
     @PostConstruct
     public void initialisation(){
@@ -234,7 +235,7 @@ public class DetailDUnCourrierRecu implements Serializable {
         courrier.setPrioriteCourrier(DataBaseQueries.prioriteCourrier);
         courrier.setTypeCourrier(DataBaseQueries.typeCourrier);
         courrier.setAccuseDeReception(DataBaseQueries.accuseDeReception);
-
+        courrier.setCommentairesCourrier(DataBaseQueries.commentairesCourrier);
         courrier.setDossierAlfresco(DataBaseQueries.dossierAlfresco);
         courrier.setConfidentiel(DataBaseQueries.confidentiel);
         courrier.setHeureDeReception(DataBaseQueries.heureDeReception);
@@ -380,7 +381,9 @@ public class DetailDUnCourrierRecu implements Serializable {
         String fonctionUser = (String) session.getAttribute( "fonctionUser");
         String isCourrierTransferer = (String) session.getAttribute( "courrierTransferer");
         String idUserAccuseDeReception = null;
-
+        System.out.println("isCourrierTransferer = " + isCourrierTransferer);
+        System.out.println("directionUser = " + directionUser);
+        System.out.println("fonctionUser = " + fonctionUser);
         if(isCourrierTransferer != null){
             for(int a = 0; a < destinataire.getListeDestinataireParTransfer().size(); a++ ){
                 if(destinataire.getListeDestinataireParTransfer().get(a).getDirection().equalsIgnoreCase(directionUser) && destinataire.getListeDestinataireParTransfer().get(a).getFonction().equalsIgnoreCase(fonctionUser)){
@@ -394,14 +397,6 @@ public class DetailDUnCourrierRecu implements Serializable {
                 }
             }
         }
-
-        /*for(int a = 0; a < destinataire.getListeDestinataire().size(); a++ ){
-            if(destinataire.getListeDestinataire().get(a).getDirection().equalsIgnoreCase(directionUser) && destinataire.getListeDestinataire().get(a).getFonction().equalsIgnoreCase(fonctionUser)){
-                idUserAccuseDeReception = destinataire.getListeDestinataire().get(a).getIdDestinataire();
-            }
-            System.out.println("idUserAccuseDeReception = " + idUserAccuseDeReception);
-        }*/
-
         if(idUserAccuseDeReception != null){
             Connection connection = DatabaseManager.getConnexion();
             String accuseReceptionDuCourrierSQL = "update `recevoir_courrier` set `accuse_reception` = '"+ EtatCourrier.accuseDeReception +"' where id_courrier = '"+idCourrier+"' and id_personne = '"+ idUserAccuseDeReception+"'; ";
@@ -1076,7 +1071,7 @@ public class DetailDUnCourrierRecu implements Serializable {
             requeteDestinataireTacheSQL = "select nom,prenom from `etape` inner join `correspondance_personne_etape` on etape.id_etape = correspondance_personne_etape.id_etape inner join `personne` on correspondance_personne_etape.id_personne = personne.id_personne where etape.id_etape = '"+idTache+"' and correspondance_personne_etape.role_agent = '"+ TypeDePersonne.affecteurTache +"' order by etape.id_etape desc";
 
         }
-         Connection connection = DatabaseManager.getConnexion();
+        Connection connection = DatabaseManager.getConnexion();
         ResultSet resultSet = null;
         try{
             resultSet = connection.createStatement().executeQuery(requeteDestinataireTacheSQL);
@@ -1323,18 +1318,46 @@ public class DetailDUnCourrierRecu implements Serializable {
         finalUniqueIDDestinataire = "destinataire" +"_"+randomDestinataireID.toString();
     }
 
+    public void checkDesDroitsPourTransfererUnCourrier(){
+        HttpSession session = SessionUtils.getSession();
+        String fonctionUser = session.getAttribute("fonctionUser").toString();
+        switch (fonctionUser) {
+            case FonctionsUtilisateurs.secretaireGeneral:
+                droitTransfererCourrier = true;
+                break;
+            case FonctionsUtilisateurs.secretaireGeneralAdjoint:
+                droitTransfererCourrier = true;
+                break;
+            case FonctionsUtilisateurs.directeurCabinet:
+                droitTransfererCourrier = true;
+                break;
+            case FonctionsUtilisateurs.directeurGeneral:
+                droitTransfererCourrier = true;
+                break;
+            case FonctionsUtilisateurs.directeurGeneralAdjoint:
+                droitTransfererCourrier = true;
+                break;
+        }
+
+        if(droitTransfererCourrier){
+            PrimeFaces.current().executeScript("PF('dialogueTransferDuCourrier').show()");
+        }else{
+            PrimeFaces.current().executeScript("swal('Oups','Votre profil ne vous permets pas de réaliser cette action', 'warning');");
+        }
+    }
+
     public void transfererLeCourrierAUneAutreDirection(){
 
         HttpSession session = SessionUtils.getSession();
         String idUser = (String) session.getAttribute( "idUser");
         String idCourrier = (String) session.getAttribute( "courrierId");
+
         String ajouterEtapeCourrierSQL = null;
         genererUniqueIDPourDestinataire();
         String idTypeDeDestinataire = DataBaseQueries.recupererIdTypeDePersonneParTitre("Agent du Ministere");
         String idFonctionDestinataire = DataBaseQueries.recupererIdFonctionParSonTitreEtSonType("Directeur", TypeDeFonctions.interne);
         String idEtablissementDestinataire = DataBaseQueries.recupererIdEtablissementParSonAbreviation(Ministere.MinistereDuBudget);
-        String ajouterDestinataireSQL = "insert into `personne` (`unique_id`, `fk_type_personne`,`id_fonction`, `id_direction`, `id_etablissement`) VALUES" +
-                " ('" + finalUniqueIDDestinataire+"',"+"'"+idTypeDeDestinataire+"',"+"'"+ idFonctionDestinataire + "',"+"'" + idDirectionATransfererLeCourrier + "',"+ "'" +idEtablissementDestinataire+ "')";
+        String ajouterDestinataireSQL = "insert into `personne` (`unique_id`, `fk_type_personne`,`id_fonction`, `id_direction`, `id_etablissement`) VALUES" + " ('" + finalUniqueIDDestinataire+"',"+"'"+idTypeDeDestinataire+"',"+"'"+ idFonctionDestinataire + "',"+"'" + idDirectionATransfererLeCourrier + "',"+ "'" +idEtablissementDestinataire+ "')";
 
         if (idAgentAffecteAUneTache == null ){
             FacesContext.getCurrentInstance().addMessage("messagesTransfererCourrier", new FacesMessage(FacesMessage.SEVERITY_WARN, "Erreur", "Vous devez selectionner un agent !!"));
@@ -1342,7 +1365,6 @@ public class DetailDUnCourrierRecu implements Serializable {
 
             if(direction.getTitreDirection().equals("rien") ){
                 FacesContext.getCurrentInstance().addMessage("messagesTransfererCourrier", new FacesMessage(FacesMessage.SEVERITY_WARN, "Erreur", "Vous devez selectionner une direction !!"));
-
             }else{
 
                 ajouterEtapeCourrierSQL = "insert into `etape` ( `titre`, `etat`,`message`) VALUES ('"+ActionEtape.transmisPourTraitement+"',"+"'"+EtatEtape.enTraitement+"',"+"'"+ActionEtape.transfererA+" "+direction.getTitreDirection()+"')";
@@ -1357,45 +1379,43 @@ public class DetailDUnCourrierRecu implements Serializable {
                         "('"+ idCourrier +"',"+"'"+ActionEtape.transfererAUneDirection+"')";
 
                 String ajouterHistoriqueCourrierSQL = "INSERT INTO `etape` (`titre`, `etat`, `message`) VALUES" +
-                        " ('" + EtatCourrier.actionSurCourrier +"',"+"'"+ EtatEtape.termine+"',"+"'"+ ActionEtape.transfererAUneDirection+"')";
+                            " ('" + EtatCourrier.actionSurCourrier +"',"+"'"+ EtatEtape.termine+"',"+"'"+ ActionEtape.transfererAUneDirection+"')";
                 String ajouterCorrespondanceEtapeCourrierHistoriqueSQL = "INSERT INTO `correspondance_etape_courrier` (`id_courrier`,`etat_correspondance`) VALUES" +
-                        "('"+ idCourrier +"',"+"'"+EtatCourrier.courrierRecu+"')";
+                            "('"+ idCourrier +"',"+"'"+EtatCourrier.courrierRecu+"')";
                 String ajouterCorrespondanceEtapePersonneSQL = "INSERT INTO `correspondance_personne_etape` (`id_personne`) VALUES" +
                         " ('" + idUser +"')";
 
                 String recevoirCourrierSQL = "insert into recevoir_courrier (`favoris`,`archive`,`id_courrier`,`id_personne`,`accuse_reception`,`transfer`) VALUES ('" + EtatCourrier.pasfavoris+"',"+"'"+EtatCourrier.archiveNonActive+"',"+"'"+idCourrier+"',(select id_personne from `personne` where unique_id = '"+finalUniqueIDDestinataire+"'), '"+EtatCourrier.accuseDeReceptionNon+"',"+"'"+EtatCourrier.courrierTransferer+"');";
-               ;
+
                 Connection connection = DatabaseManager.getConnexion();
                 Statement statement = null;
                 try {
-                    connection.setAutoCommit(false);
-                    statement = connection.createStatement();
+                      connection.setAutoCommit(false);
+                      statement = connection.createStatement();
+                      statement.addBatch(ajouterDestinataireSQL);
+                      statement.addBatch(recevoirCourrierSQL);
+                      statement.addBatch(ajouterCorrespondanceEtapePersonneAffecteurSQL);
+                      statement.addBatch(ajouterCorrespondanceEtapePersonneReceveurSQL);
+                      statement.addBatch(ajouterCorrespondanceEtapeCourrierSQL);
+                      statement.addBatch(ajouterEtapeCourrierSQL);
 
-                    statement.addBatch(ajouterDestinataireSQL);
-                    statement.addBatch(recevoirCourrierSQL);
-                    statement.addBatch(ajouterCorrespondanceEtapePersonneAffecteurSQL);
-                    statement.addBatch(ajouterCorrespondanceEtapePersonneReceveurSQL);
-                    statement.addBatch(ajouterCorrespondanceEtapeCourrierSQL);
-                    statement.addBatch(ajouterEtapeCourrierSQL);
+                      statement.addBatch(ajouterCorrespondanceEtapePersonneSQL);
+                      statement.addBatch(ajouterCorrespondanceEtapeCourrierHistoriqueSQL);
+                      statement.addBatch(ajouterHistoriqueCourrierSQL);
 
-                    statement.addBatch(ajouterCorrespondanceEtapePersonneSQL);
-                    statement.addBatch(ajouterCorrespondanceEtapeCourrierHistoriqueSQL);
-                    statement.addBatch(ajouterHistoriqueCourrierSQL);
+                      int count[]  = statement.executeBatch();
 
-                    int count[]  = statement.executeBatch();
-
-                    connection.commit();
-                    FacesContext context = FacesContext.getCurrentInstance();
-                    context.getExternalContext().getFlash().setKeepMessages(true);
-                    FacesContext.getCurrentInstance().addMessage("messagesTransfererCourrier", new FacesMessage(FacesMessage.SEVERITY_INFO, "Validation", "Transfer effectuée avec succés"));
-                    direction.setTitreDirection(null);
-                    etape.setActeur(null);
-                    idAgentAffecteAUneTache = null;
+                      connection.commit();
+                      FacesContext context = FacesContext.getCurrentInstance();
+                      context.getExternalContext().getFlash().setKeepMessages(true);
+                      FacesContext.getCurrentInstance().addMessage("messagesTransfererCourrier", new FacesMessage(FacesMessage.SEVERITY_INFO, "Validation", "Transfer effectuée avec succés"));
+                      direction.setTitreDirection(null);
+                      etape.setActeur(null);
+                      idAgentAffecteAUneTache = null;
                 } catch (SQLException e) {
                     FacesContext.getCurrentInstance().addMessage("messagesTransfererCourrier", new FacesMessage(FacesMessage.SEVERITY_ERROR, "Erreur", "Une erreur avec la base de données s'est produite !!!"));
                     e.printStackTrace();
                 }finally {
-
                     if ( statement != null) {
                         try {
                             statement.close();
@@ -1410,12 +1430,9 @@ public class DetailDUnCourrierRecu implements Serializable {
             }
         }
 
-
     }
 
     /***Getter and Setter***/
-
-
     public String getExistenceDestinataireDeTransfer() {
         return existenceDestinataireDeTransfer;
     }

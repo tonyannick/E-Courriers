@@ -98,6 +98,7 @@ public class DetailDUnCourrierFavorisOuArchiver implements Serializable {
         courrier.setHeureDeReception(DataBaseQueries.heureDeReception);
         courrier.setDateDEnregistrement(DataBaseQueries.dateDEnregistrement);
         courrier.setDateDeReception(DataBaseQueries.dateDeReception);
+        courrier.setCommentairesCourrier(DataBaseQueries.commentairesCourrier);
         String jour = courrier.getDateDeReception().substring(courrier.getDateDeReception().lastIndexOf("-") +1);
         String mois = courrier.getDateDeReception().substring(courrier.getDateDeReception().indexOf("-")+1,courrier.getDateDeReception().indexOf("-")+3);
         String annee = courrier.getDateDeReception().substring(0,4);

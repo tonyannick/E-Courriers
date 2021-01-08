@@ -16,6 +16,7 @@ import org.primefaces.model.StreamedContent;
 
 
 import java.io.*;
+import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLConnection;
@@ -78,11 +79,11 @@ public class ConnexionAlfresco implements Serializable {
     public static String enregistrerFichierCourrierDansAlfresco(File fichierAEnvoyer, String typeDeFichier,String dossierCible){
 
         String resultat = null;
-        try {
+        //try {
             resultat = uploadDocument(getAlfticket(), fichierAEnvoyer,fichierAEnvoyer.getName(),typeDeFichier,"description", dossierCible);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+       // } catch (IOException e) {
+        //    e.printStackTrace();
+        ///}
 
         return  resultat;
     }
@@ -100,10 +101,19 @@ public class ConnexionAlfresco implements Serializable {
             urlComplete = URLAlfresco.alfresscoDownloadFileUrl + idDocument +"?a=false&alf_ticket="+getAlfticket();
             url = new URL(urlComplete);
             urlConnection = url.openConnection();
-            mimeDocument = urlConnection.getContentType( );
-            inputStream = urlConnection.getInputStream();
-            bytesFromInputStream = IOUtils.toByteArray(inputStream);/*TODO methode depreciée à gerer*/
-            streamedContent = new DefaultStreamedContent(new ByteArrayInputStream(bytesFromInputStream),"application/pdf");
+            if(urlConnection != null){
+                if(urlConnection.getContentType() == null){
+                    mimeDocument = "application/octet-stream";
+                }else{
+                    mimeDocument = urlConnection.getContentType( );
+                }
+                inputStream = urlConnection.getInputStream();
+                bytesFromInputStream = IOUtils.toByteArray(inputStream);/*TODO methode depreciée à gerer*/
+                streamedContent = new DefaultStreamedContent(new ByteArrayInputStream(bytesFromInputStream),"application/pdf");
+            }else{
+                System.out.println("mal bad ");
+            }
+
         } catch (MalformedURLException e) {
             e.printStackTrace();
         } catch (IOException io){
@@ -174,16 +184,49 @@ public class ConnexionAlfresco implements Serializable {
 
     }
 
-    public static String getAlfticket() throws IOException, JSONException {
-        URL url = new URL(URLAlfresco.alfrescoUploadFileUrl);
-        URLConnection con = url.openConnection();
-        InputStream in = con.getInputStream();
-        String encoding = con.getContentEncoding();
-        encoding = encoding == null ? "UTF-8" : encoding;
-        String json = IOUtils.toString(in, encoding);
-        JSONObject getData = new JSONObject(json);
-        //System.out.println("rateaux:"+getData.getJSONObject("data").get("ticket").toString());
-        return getData.getJSONObject("data").get("ticket").toString();
+    public static String getAlfticket()  {
 
+        try {
+            URL url = new URL(URLAlfresco.alfrescoUploadFileUrl);
+            URLConnection con = null;
+            con = url.openConnection();
+
+            if(con.getInputStream() != null){
+                InputStream in = con.getInputStream();
+                String encoding = con.getContentEncoding();
+                encoding = encoding == null ? "UTF-8" : encoding;
+                String json = IOUtils.toString(in, encoding);
+                JSONObject getData = new JSONObject(json);
+                return getData.getJSONObject("data").get("ticket").toString();
+            }else{
+                return null;
+            }
+
+        } catch (IOException e) {
+            e.printStackTrace();
+            return null;
+        }
+
+
+    }
+
+
+    public static boolean voirSiLeServeurEstEnLigne(String urlDuServeur){
+        boolean isOnline = false;
+        try {
+            URL serverUrl = new URL(urlDuServeur);
+            HttpURLConnection httpURLConnection = (HttpURLConnection) serverUrl.openConnection();
+            httpURLConnection.setRequestMethod("GET");
+            httpURLConnection.connect();
+            int code = httpURLConnection.getResponseCode();
+            if (code == 200) {
+                isOnline= true;
+            }
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        return isOnline;
     }
 }

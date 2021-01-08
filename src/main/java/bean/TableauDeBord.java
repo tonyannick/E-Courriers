@@ -1,5 +1,7 @@
 package bean;
 
+import alfresco.ConnexionAlfresco;
+import alfresco.URLAlfresco;
 import database.DataBaseQueries;
 import model.Discussion;
 import model.Etape;
@@ -53,6 +55,7 @@ public class TableauDeBord implements Serializable {
         discussion = new Discussion();
         etape = new Etape();
         recupererInfosDeSessionUser();
+        checkIfAlfrescoIsOnline();
     }
 
     /***Recuperer les infos de session du user connecté***/
@@ -60,6 +63,12 @@ public class TableauDeBord implements Serializable {
         HttpSession httpSession = SessionUtils.getSession();
         user.setUserDirection((String)httpSession.getAttribute("directionUser"));
 
+    }
+
+    public void checkIfAlfrescoIsOnline(){
+        if(!ConnexionAlfresco.voirSiLeServeurEstEnLigne(URLAlfresco.alfrescoURLDuServeur)){
+            PrimeFaces.current().executeScript("PF('dialogueAlfrescoMessage').show()");
+        }
     }
 
     /**Déconnexion de l'application**/

@@ -2274,8 +2274,6 @@ public class DataBaseQueries {
         List<Etape> listeHistoriquesActionsCourrier = new ArrayList<>();
         listeHistoriquesActionsCourrier.clear();
         String requeteHistoriqueCourrierSQL = " select * from (`courrier` inner join `correspondance_etape_courrier` on courrier.id_courrier = correspondance_etape_courrier.id_courrier  inner join `etape` on correspondance_etape_courrier.id_etape = etape.id_etape)  inner join `correspondance_personne_etape` on etape.id_etape = correspondance_personne_etape.id_etape inner join personne on correspondance_personne_etape.id_personne = personne.id_personne where courrier.id_courrier = '"+idCourrier+"'  and ( etape.etat = '"+ EtatEtape.nouveauCourrier+"' or etape.etat = '"+EtatEtape.termine+"'); ";
-
-        System.out.println("requeteHistoriqueCourrierSQL = " + requeteHistoriqueCourrierSQL);
         ResultSet resultSet = null;
         Connection connection = DatabaseManager.getConnexion();
 
@@ -2330,7 +2328,6 @@ public class DataBaseQueries {
         }else{
             requeteHistoriqueCourrierSQL = " select * from (`courrier` inner join `correspondance_etape_courrier` on courrier.id_courrier = correspondance_etape_courrier.id_courrier  inner join `etape` on correspondance_etape_courrier.id_etape = etape.id_etape)  inner join `correspondance_personne_etape` on etape.id_etape = correspondance_personne_etape.id_etape inner join personne on correspondance_personne_etape.id_personne = personne.id_personne where courrier.id_courrier = '"+idCourrier+"' and (etat_correspondance ='"+EtatCourrier.courrierRecu+"' or etat_correspondance ='"+EtatCourrier.courrierEnvoye+"' or etat_correspondance ='"+EtatCourrier.transfererAUneAutreDirection+"' ) and ( etape.etat = '"+ EtatEtape.nouveauCourrier+"' or etape.etat = '"+EtatEtape.termine+"') ;";
         }
-        System.out.println("requeteHistoriqueCourrierSQL = " + requeteHistoriqueCourrierSQL);
         ResultSet resultSet = null;
         Connection connection = DatabaseManager.getConnexion();
 

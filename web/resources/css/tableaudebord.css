@@ -157,3 +157,12 @@
 .ui-selectonemenu.ui-state-hover, .ui-selectonemenu.ui-state-focus {
     background-color: transparent;
 }
+.alertaccusedereception {
+    padding: 10px;
+    border-radius: 3px;
+    background-color: #fe6449; /* Red */
+    color: white;
+    font-size: 15px;
+    font-weight: bold;
+    margin-bottom: 10px;
+}

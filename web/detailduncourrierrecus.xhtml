@@ -767,11 +767,9 @@
                                                          onclick="PF('dlgTransmettreLeCourrier').show()" iconPos="right"
                                                          value="Transmettre à un agent" icon="fa fa-mail-forward" />
                                         <p:commandButton type="button" style="background: #ffac77; margin-left: 10px; border-color:#ffac77; color: white; font-weight: bold; padding: 3px 4px"
-                                                         onclick="PF('dialogueTransferDuCourrier').show()" iconPos="right"
+                                                         actionListener="#{detailDUnCourrierRecu.checkDesDroitsPourTransfererUnCourrier}"
+                                                         iconPos="right"
                                                          value="Transferer à une autre direction" icon="fa fa-sign-in" />
-                                        <p:commandButton type="button" style="background: #6ab8f1; margin-left: 10px; border-color:#6ab8f1; color: white; font-weight: bold; padding: 3px 4px"
-                                                         onclick="PF('dlgEnvoyerEmail').show()" iconPos="right"
-                                                         value="Envoyer par mail" icon="fa fa-envelope-open" />
                                         <span class="ui-separator">
                                             <span class="fa fa-ellipsis-v" />
                                         </span>
