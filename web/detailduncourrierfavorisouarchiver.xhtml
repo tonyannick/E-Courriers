@@ -13,6 +13,7 @@
         <f:viewAction action="#{detailDUnCourrierFavorisOuArchiver.recupererLesAnnotationsDUnCourrier}" onPostback="true"/>
         <f:viewAction action="#{detailDUnCourrierFavorisOuArchiver.recupererLesDestinatairesDuCourrier}" onPostback="true"/>
         <f:viewAction action="#{detailDUnCourrierFavorisOuArchiver.recupererLesDossiers}" onPostback="true"/>
+        <f:viewAction action="#{detailDUnCourrierFavorisOuArchiver.checkIfAlfrescoIsOnline}" onPostback="true"/>
     </f:metadata>
     <h:head>
         <title>Détail d'un courrier</title>
@@ -661,6 +662,14 @@
                 mediaAnnexeTrois.style.display='none';
                 mediaAnnexeQuatre.style.display='block';
             }
+
+            function toastErreurAlfresco(){
+                new Toast({
+                    message: 'Le serveur de fichier Alfresco ne réponds pas, impossible de voir le fichier du courrier et des annexes....',
+                    type: 'danger'
+                })
+            }
+
         </script>
     </h:body>
     <h:outputScript name="/js/detailduncourrierenvoye.js"/>

@@ -157,10 +157,10 @@
 .ui-selectonemenu.ui-state-hover, .ui-selectonemenu.ui-state-focus {
     background-color: transparent;
 }
-.alertaccusedereception {
+.alertealfrescooffline {
     padding: 10px;
     border-radius: 3px;
-    background-color: #fe6449; /* Red */
+    background-color: #b44627; /* Red */
     color: white;
     font-size: 15px;
     font-weight: bold;

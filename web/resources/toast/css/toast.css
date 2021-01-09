@@ -4,7 +4,7 @@
     bottom: 130px;
     left: 30px;
     width: calc(100% - 60px);
-    max-width: 400px;
+    max-width: 450px;
 
     transform: translateX(-150%);
     transition: transform 1s;
@@ -31,21 +31,25 @@
 }
 
 .toastjs.success {
-    border-left-color: #2ECC40;
-    background: #aeffe2;
+    border-left-color: #007df0;
+    background: #29b438;
+    border-left-width: 7px;
+    color:white;
 }
 .toastjs.warning {
     border-left-color: #FF851B;
     background: #eeeeee;
 }
 .toastjs.danger {
-    border-left-color: #FF4136;
-    background: #eeeeee;
+    border-left-color: #007df0;
+    border-left-width: 7px;
+    background: #7b201c;
+    color:white;
 }
 
 
 .toastjs-btn {
-    background: rgb(240,240,240);
+    background: rgb(0, 125, 240);
     padding: 5px 10px;
     border: 0;
     border-radius: 4px;

@@ -1,6 +1,7 @@
 package bean;
 
 import alfresco.ConnexionAlfresco;
+import alfresco.URLAlfresco;
 import database.DataBaseQueries;
 import database.DatabaseManager;
 import dateAndTime.DateUtils;
@@ -118,6 +119,12 @@ public class DetailDUnCourrierFavorisOuArchiver implements Serializable {
         }
 
         PrimeFaces.current().executeScript("affichageFavorisOuPDF()");
+    }
+
+    public void checkIfAlfrescoIsOnline(){
+        if(!ConnexionAlfresco.voirSiLeServeurEstEnLigne(URLAlfresco.alfrescoURLDuServeur)){
+            PrimeFaces.current().executeScript("toastErreurAlfresco()");
+        }
     }
 
     public void afficherLeFichierDuCourier(){

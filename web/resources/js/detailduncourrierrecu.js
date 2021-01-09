@@ -63,7 +63,6 @@ function fermerModalDossier() {
     modalDossier.style.display = "none";
 }
 
-
 /***Gestion du tab***/
 function openTab(evt, cityName) {
     var i, tabcontent, tablinks;

@@ -1,6 +1,7 @@
 package bean;
 
 import alfresco.ConnexionAlfresco;
+import alfresco.URLAlfresco;
 import database.DataBaseQueries;
 import database.DatabaseManager;
 import dateAndTime.DateUtils;
@@ -86,13 +87,18 @@ public class NouveauCourrier implements Serializable {
         tempListDestinataire.removeIf(e -> e.equals(user.getUserDirection()));
 
     }
+    public void checkIfAlfrescoIsOnline(){
+        if(!ConnexionAlfresco.voirSiLeServeurEstEnLigne(URLAlfresco.alfrescoURLDuServeur)){
+            PrimeFaces.current().executeScript("PF('dialogueAlfrescoErreurMessage').show()");
+            PrimeFaces.current().executeScript("desactiverLeFormulaire()");
+        }
+    }
 
 
     public void actionAuRechargementDeLaPage(){
         reinitialiserLeFormulaire();
         HttpSession httpSession = SessionUtils.getSession();
         user.setUserFonction(httpSession.getAttribute("fonctionUser").toString());
-        System.out.println("user.getUserFonction() = " + user.getUserFonction());
         if(user.getUserFonction().equals("Secrétaire Général Adjoint")){
             isResponsable = "1";
               isResponsableDestinataire = "1";

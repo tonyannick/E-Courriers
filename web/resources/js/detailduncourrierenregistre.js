@@ -81,5 +81,3 @@ function retirerLoading(){
     loadingChangementDeFichier.style.display = "none";
     fileUpload.style.display = "block";
 }
-
-

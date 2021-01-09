@@ -5,7 +5,7 @@
       xmlns:p="http://primefaces.org/ui"
       xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
       xmlns:f="http://xmlns.jcp.org/jsf/core">
-<f:view>
+<f:view transient="true">
     <f:metadata>
         <f:viewAction action="#{tableauDeBord.recupererDataPourStatistiques}" onPostBack="true"/>
     </f:metadata>
@@ -145,14 +145,15 @@
                             </div>
 
                             <p:dialog id="alfrescoMessage"
-                                      header="Ereur sur le serveur de fichier"
+                                      header="Erreur sur le serveur de fichier"
                                       widgetVar="dialogueAlfrescoMessage"
                                       modal="true" hideEffect="clip"
                                       showEffect="clip"
                                       resizable="false">
-                                <div class="alertaccusedereception" style="width: 100%">
+                                <div class="alertealfrescooffline" style="width: 100%">
                                     <h:graphicImage value="./resources/images/alerteaccusedereception.png" style="margin-left:10px"/>
-                                    Le serveur de fichier Alfresco ne réponds pas ou n'est pas allumé, vous ne pourrez voir aucun fichier et/ou l'application risque de mal fonctionner
+                                    Le serveur de fichier Alfresco ne réponds pas ou n'est pas allumé,<br />
+                                    vous ne pourrez voir aucun fichier et/ou l'application risque de mal fonctionner
                                 </div>
                                 <p:separator/>
                                 <h:form>
@@ -289,6 +290,9 @@
                     }
                 }
             });
+
+
+
 
         </script>
 

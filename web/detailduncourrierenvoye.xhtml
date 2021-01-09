@@ -16,6 +16,7 @@
         <f:viewAction action="#{detailDUnCourrierEnvoye.recupererLHistoriqueDuCourrier}" onPostback="true"/>
         <f:viewAction action="#{detailDUnCourrierEnvoye.recupererLesDossiers}" onPostback="true"/>
         <f:viewAction action="#{detailDUnCourrierEnvoye.recupererLesReponsesDuCourrier}" onPostback="true"/>
+        <f:viewAction action="#{detailDUnCourrierEnvoye.checkIfAlfrescoIsOnline}" onPostback="true"/>
     </f:metadata>
     <h:head>
         <title>Détail d'un courrier</title>
@@ -25,6 +26,8 @@
         <h:outputStylesheet name="css/detailduncourrierenvoye.css" />
         <h:outputScript name="/sweetalert/js/sweetalert.min.js"/>
         <h:outputStylesheet name="/sweetalert/css/sweetalert.css"/>
+        <h:outputScript name="toast/js/toast.js"/>
+        <h:outputStylesheet name="toast/css/toast.css" />
     </h:head>
     <style>
         .courrierurgent{
@@ -904,6 +907,13 @@
                 mediaAnnexeDeux.style.display='none';
                 mediaAnnexeTrois.style.display='none';
                 mediaAnnexeQuatre.style.display='block';
+            }
+
+            function toastErreurAlfresco(){
+                new Toast({
+                    message: 'Le serveur de fichier Alfresco ne réponds pas, impossible de voir le fichier du courrier et des annexes....',
+                    type: 'danger'
+                })
             }
         </script>
     </h:body>

@@ -9,6 +9,7 @@
 <f:view transient="true">
     <f:metadata>
         <f:viewAction action="#{nouveauCourrier.actionAuRechargementDeLaPage}" onPostBack="true"/>
+        <f:viewAction action="#{nouveauCourrier.checkIfAlfrescoIsOnline}" onPostBack="true"/>
     </f:metadata>
    <h:head>
        <title>Nouveau Courrier</title>
@@ -26,8 +27,8 @@
        <h:outputScript name="toast/js/toast.js"/>
        <h:outputStylesheet name="toast/css/toast.css" />
    </h:head>
-   <h:body id="page">
-       <div class="container-fluid" >
+   <h:body id="page" class="formmainclass">
+       <div id="wholepage" class="container-fluid" >
             <div class="row">
                 <div id="header">
                     <ui:insert name="header" >
@@ -47,7 +48,7 @@
                         </ul>
 
                         <h3 class="page-header"><h:graphicImage value="./resources/images/nouveaucourriertitre.png" style="margin-right :10px"/>Formulaire d'enregistrement d'un nouveau courrier</h3>
-
+                        <p class="infoerreuralfresco" id="messageerreur" style="display: none;">Impossible d'enregistrer un courrier, le serveur de fichier Alfresco est indisponible</p>
                         <h:form  class="login-form-1" id="courrierForm" cellspacing="30" cellpadding="30" enctype="multipart/form-data" onkeypress="if (event.keyCode == 13) { return false; }">
                             <h:inputText value="#{nouveauCourrier.user.userFonction}" id="userFonction" style="display: none;"/>
                             <p:messages id="messagevalidation" for="messagevalidation" showDetail="true" closable="true"/>
@@ -492,6 +493,27 @@
                                 </h:form>
                             </p:dialog>
 
+                            <p:dialog id="alfrescoErreurMessage"
+                                      header="Serveur de fichier indisponible"
+                                      widgetVar="dialogueAlfrescoErreurMessage"
+                                      modal="true" hideEffect="clip"
+                                      showEffect="clip"
+                                      resizable="false">
+                                <div class="alertealfrescooffline" style="width: 100%">
+                                    <h:graphicImage value="./resources/images/alerteaccusedereception.png" style="margin-left:10px"/>
+                                        Le serveur de fichier Alfresco ne réponds pas ou n'est pas allumé.<br />
+                                        Impossible d'ajouter un courrier pour le moment.
+                                </div>
+                                <p:separator/>
+                                <h:form>
+                                    <p:commandButton value="Ok"
+                                                     type="button"
+                                                     onclick="PF('dialogueAlfrescoErreurMessage').hide()"
+                                                     style="margin-top: 14px; margin-right: 10px"
+                                                     icon="fa fa-check-circle"/>
+                                </h:form>
+                            </p:dialog>
+
                         </h:form>
                     </div>
                 </div>
@@ -499,6 +521,12 @@
        </div>
         <script>
 
+            var courrierForm = document.getElementById('courrierForm');
+            var messageerreur = document.getElementById('messageerreur');
+            function desactiverLeFormulaire(){
+                courrierForm.style.pointerEvents = 'none';
+                messageerreur.style.display='block';
+            }
             var divMessageTypeDemetteur = document.getElementById('divMessageTypeDemetteur');
             /***Appeleé depuis le bean de la vue***/
             function afficherMessageEnFonctionDuTypeDEmetteur(){

@@ -2,6 +2,7 @@ package bean;
 
 import alfresco.ConnexionAlfresco;
 import alfresco.NomDesDossiers;
+import alfresco.URLAlfresco;
 import database.DataBaseQueries;
 import database.DatabaseManager;
 import dateAndTime.DateUtils;
@@ -11,14 +12,9 @@ import org.primefaces.PrimeFaces;
 import org.primefaces.event.FileUploadEvent;
 import org.primefaces.event.SelectEvent;
 import org.primefaces.event.ToggleEvent;
-import org.primefaces.event.timeline.TimelineModificationEvent;
-import org.primefaces.event.timeline.TimelineSelectEvent;
 import org.primefaces.model.DefaultScheduleEvent;
 import org.primefaces.model.DefaultScheduleModel;
-import org.primefaces.model.ScheduleEvent;
 import org.primefaces.model.ScheduleModel;
-import org.primefaces.model.timeline.TimelineEvent;
-import org.primefaces.model.timeline.TimelineModel;
 import sessionManager.SessionUtils;
 import variables.*;
 
@@ -27,7 +23,6 @@ import javax.enterprise.context.SessionScoped;
 import javax.faces.application.FacesMessage;
 import javax.faces.context.FacesContext;
 import javax.faces.event.ActionEvent;
-import javax.faces.event.ValueChangeEvent;
 import javax.inject.Named;
 import javax.servlet.http.HttpSession;
 import java.io.*;
@@ -35,7 +30,6 @@ import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.*;
 
@@ -184,6 +178,12 @@ public class DetailDUnCourrierRecu implements Serializable {
 
         }
 
+    }
+
+    public void checkIfAlfrescoIsOnline(){
+        if(!ConnexionAlfresco.voirSiLeServeurEstEnLigne(URLAlfresco.alfrescoURLDuServeur)){
+            PrimeFaces.current().executeScript("toastErreurAlfresco()");
+        }
     }
 
     public void recupererLesDossiers(){

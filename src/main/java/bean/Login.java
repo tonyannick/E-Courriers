@@ -2,7 +2,6 @@ package bean;
 
 import cookieManager.CookiesUtils;
 import database.DataBaseQueries;
-//import mailManager.MailUtils;
 import model.User;
 import sessionManager.SessionUtils;
 
@@ -29,13 +28,10 @@ public class Login implements Serializable {
         user.setSeSouvenir(false);
     }
 
-
     /**Methode de clic sur le bouton valider**/
     public String cliquerSurValider(){
         if(DataBaseQueries.verifierUserLogin(user.getUserlogin(),user.getUserPassword())){
-
             userSessionUniqueId = UUID.randomUUID().toString();
-
             HttpSession session = SessionUtils.getSession();
             session.setAttribute("uniqueUserID",userSessionUniqueId);
             session.setAttribute("userName", DataBaseQueries.nomCompletUser);

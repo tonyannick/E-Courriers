@@ -509,7 +509,7 @@ function checkDesValeursDuTypeDeDestinataire(){
 /***Toast d'ajout de fichier du courrier appelé depuis le bean***/
 function validerAjouterFichier(){
     new Toast({
-        message: 'Le fichier à bien été ajouté....',
+        message: 'Le fichier du courrier à bien été ajouté....',
         type: 'success'
     })
 }

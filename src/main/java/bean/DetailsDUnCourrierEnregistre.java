@@ -2,6 +2,7 @@ package bean;
 
 import alfresco.ConnexionAlfresco;
 import alfresco.NomDesDossiers;
+import alfresco.URLAlfresco;
 import com.sun.org.apache.xpath.internal.operations.Bool;
 import database.DataBaseQueries;
 import database.DatabaseManager;
@@ -77,7 +78,12 @@ public class DetailsDUnCourrierEnregistre implements Serializable {
         recupererListeDirection();
         recupererListeMinisteres();
         recupererListeTypeDeCourrier();
+    }
 
+    public void checkIfAlfrescoIsOnline(){
+        if(!ConnexionAlfresco.voirSiLeServeurEstEnLigne(URLAlfresco.alfrescoURLDuServeur)){
+            PrimeFaces.current().executeScript("toastErreurAlfresco()");
+        }
     }
 
     public void checkDesDroitsPourRajouterDesDestinataireExterne(){

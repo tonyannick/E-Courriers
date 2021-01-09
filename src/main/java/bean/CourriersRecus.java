@@ -56,18 +56,34 @@ public class CourriersRecus implements Serializable {
     }
 
     public String voirLesDetailsDuCourrier(){
+
         HttpSession session = SessionUtils.getSession();
         boolean isResponsable = (boolean)session.getAttribute("isResponsable");
-        if(isResponsable){
-            PrimeFaces.current().executeScript("swal('Oups','Votre profil ne vous permets de consulter ce courrier confidentiel', 'warning');");
-            return null;
-        }else {
-            Map<String, String> params = FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap();
-            String idCourrier = (params.get("courrierId"));
-            String alfrescoId = (params.get("alfrescoId"));
-            String dossierId = (params.get("dossierId"));
-            String etatTransfer = (params.get("etatTransfer"));
 
+        Map<String,String> params = FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap();
+        String idCourrier = (params.get("courrierId"));
+        String alfrescoId = (params.get("alfrescoId"));
+        String confidentiel = (params.get("confidentiel"));
+        String etatTransfer = (params.get("etatTransfer"));
+        String dossierId = (params.get("dossierId"));
+
+        if(confidentiel.equals(EtatCourrier.confidentiel)){
+            if(!isResponsable){
+                PrimeFaces.current().executeScript("swal('Oups','Votre profil ne vous permets de consulter ce courrier confidentiel', 'warning');");
+                return null;
+            }else{
+                session.setAttribute("courrierId", idCourrier);
+                session.setAttribute("alfrescoId", alfrescoId);
+                session.setAttribute("dossierId", dossierId);
+
+                if (etatTransfer.equalsIgnoreCase("oui")) {
+                    session.setAttribute("courrierTransferer", "courrierTransferer");
+                    return "detailduncourriertransferer.xhtml?faces-redirect=true";
+                } else {
+                    return "detailduncourrierrecus.xhtml?faces-redirect=true";
+                }
+            }
+        }else{
             session.setAttribute("courrierId", idCourrier);
             session.setAttribute("alfrescoId", alfrescoId);
             session.setAttribute("dossierId", dossierId);
@@ -79,6 +95,7 @@ public class CourriersRecus implements Serializable {
                 return "detailduncourrierrecus.xhtml?faces-redirect=true";
             }
         }
+
     }
 
     public void faireUneRechercheAvanceeParDate(){

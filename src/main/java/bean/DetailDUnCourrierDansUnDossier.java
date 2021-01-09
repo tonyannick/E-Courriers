@@ -1,6 +1,7 @@
 package bean;
 
 import alfresco.ConnexionAlfresco;
+import alfresco.URLAlfresco;
 import database.DataBaseQueries;
 import database.DatabaseManager;
 import dateAndTime.DateUtils;
@@ -51,6 +52,12 @@ public class DetailDUnCourrierDansUnDossier implements Serializable {
         dossier = new Dossier();
         annotation = new Annotation();
         destinataire = new Destinataire();
+    }
+
+    public void checkIfAlfrescoIsOnline(){
+        if(!ConnexionAlfresco.voirSiLeServeurEstEnLigne(URLAlfresco.alfrescoURLDuServeur)){
+            PrimeFaces.current().executeScript("toastErreurAlfresco()");
+        }
     }
 
     public void recupererLesDossiers(){

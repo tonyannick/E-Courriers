@@ -221,3 +221,20 @@ input:checked + .sliderswitch:before {
     font-weight: bold;
     margin-bottom: 10px;
 }
+.alertealfrescooffline {
+    padding: 10px;
+    border-radius: 3px;
+    background-color: #b44627; /* Red */
+    color: white;
+    font-size: 15px;
+    font-weight: bold;
+    margin-bottom: 10px;
+}
+
+.infoerreuralfresco {
+    background-color: #fed6cc;
+    font-size: 15px;
+    border-left: 8px solid #840003;
+    margin: 10px 0px;
+    padding:15px 10px;
+}
