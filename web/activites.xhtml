@@ -1,0 +1,124 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:fn="http://xmlns.jcp.org/jsp/jstl/functions"
+      xmlns:pt="http://xmlns.jcp.org/jsf/passthrough"
+      xmlns:f="http://xmlns.jcp.org/jsf/core">
+<f:view transient="true">
+    <f:metadata>
+        <f:viewAction action="#{mesTaches.recupererLaListeDeMesTaches}" onPostback="true"/>
+    </f:metadata>
+    <h:head>
+        <title>Activités</title>
+        <meta http-equiv="Content-Type" content="text/html;charset=UTF8" />
+        <h:outputScript name="bootstrap/js/bootstrap.js" />
+        <h:outputStylesheet name="bootstrap/css/bootstrap.css" />
+        <h:outputStylesheet name="css/mestaches.css" />
+        <h:outputScript name="/sweetalert/js/sweetalert.min.js"/>
+        <h:outputStylesheet name="/sweetalert/css/sweetalert.css"/>
+        <h:outputScript name="toast/js/toast.js"/>
+        <h:outputStylesheet name="toast/css/toast.css" />
+    </h:head>
+    <h:body id="page">
+        <div class="container-fluid">
+            <div class="row">
+                <div id="header">
+                    <ui:insert name="header" >
+                        <ui:include src="header.xhtml" />
+                    </ui:insert>
+                </div>
+                <div id="footer">
+                    <ui:insert name="footer" >
+                        <ui:include src="footer.xhtml" />
+                    </ui:insert>
+                </div>
+                <div class="main-overview" style="margin-bottom: 90px; margin-top: 10px">
+                    <div class="col-sm-9 col-sm-offset-3 col-md-8 col-md-offset-2 main">
+                        <ul class="breadcrumb">
+                            <li><h:outputLink value="tableaudebord.xhtml" title="Accueil">Accueil</h:outputLink></li>
+                            <li>Mes taches</li>
+                        </ul>
+
+                        <h3 class="page-header"><h:graphicImage value="./resources/images/worker.png" style="margin-right :10px"/>#{mesTaches.titreDeLaPage}</h3>
+
+                        <div class="table-responsive">
+                            <p:messages for="messagerreurtache" showDetail="true" closable="true"/>
+                            <h:form id="form">
+                                <p:dataTable tableStyle="table-layout: auto"
+                                             scrollable="false"
+                                             paginatorAlwaysVisible="false"
+                                             paginatorPosition="top"
+                                             value="#{mesTaches.etape.listeDeMesTaches}"
+                                             var="etape" paginator="true" rows="15"
+                                             emptyMessage="Aucune tache en cours"
+                                             rowIndexVar="rowIndex" border="2">
+
+                                    <p:column style="width:100px">
+                                        <f:facet name="header">Date</f:facet>
+                                        <h:outputText style="font-size: 12px" value="#{etape.date_debut}"/>
+                                    </p:column>
+                                    <p:column>
+                                        <f:facet name="header">Message</f:facet>
+                                        <h:outputText  value="#{etape.message}" escape="false"/>
+                                    </p:column>
+                                    <p:column style="width:120px;" styleClass="#{etape.date_fin eq 'Aucun' ? 'cellulevide' : null}">
+                                        <f:facet name="header">Date butoir</f:facet>
+                                        <h:outputText value="#{etape.date_fin}" style="font-size: 12px"/>
+                                    </p:column>
+                                    <p:column styleClass="#{(etape.etat eq 'En retard') ? 'en-retard' : (etape.etat eq 'En traitement') ? 'en-traitement' : (etape.etat eq 'Terminé') ? 'terminee' : 'null'}" style="width:140px;">
+                                        <f:facet name="header">Etat</f:facet>
+                                        <h:outputText  value="#{etape.etat}" />
+                                    </p:column>
+                                    <p:column style="width:30px;">
+                                        <p:commandButton  icon="fa fa-eye"
+                                                          update="@form:detailtache"
+                                                          actionListener="#{mesTaches.recupererLeCreateurDUneTache}"
+                                                          style="background: #496ea1; border: 1px #496ea1 solid"
+                                                          title="Détails">
+                                            <f:param name="etapeId" value="#{etape.id}" />
+                                        </p:commandButton>
+
+                                    </p:column>
+                                    <p:column style="width:30px;">
+                                        <p:commandButton  icon="fa fa-sign-in"
+                                                          style="background: #0dca00"
+                                                          ajax="false"
+                                                          action="#{mesTaches.voirUneTache}"
+                                                          title="Répondre">
+                                            <f:param name="natureEtape" value="#{etape.titre}" />
+                                            <f:param name="etapeId" value="#{etape.id}" />
+                                        </p:commandButton>
+                                    </p:column>
+
+                                </p:dataTable>
+                                <p:dialog id="detailtache"
+                                          resizable="false"
+                                          header="Détails"
+                                          widgetVar="dlgDetailsTache" width="auto"
+                                          modal="true" hideEffect="clip"
+                                          showEffect="clip" position="‘bottom‘,‘right‘"  dynamic="true" closable="true">
+
+                                    <h:panelGrid columns="2" style="border:none; margin: 20px 20px"  styleClass="panelLogin">
+                                        <h:outputText style="font-size: 14px; font-weight: bold" escape="false" value="#{mesTaches.phrase}"/>
+                                        <h:outputText style="font-size: 14px; margin-left: 10px" escape="false" value="#{mesTaches.etape.createurDUneTache}"/>
+                                    </h:panelGrid>
+
+                                </p:dialog>
+                            </h:form>
+
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <script>
+
+        </script>
+
+    </h:body>
+</f:view>
+</html>

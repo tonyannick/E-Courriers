@@ -1338,7 +1338,6 @@ public class DetailDUnCourrierRecu implements Serializable {
                 droitTransfererCourrier = true;
                 break;
         }
-
         if(droitTransfererCourrier){
             PrimeFaces.current().executeScript("PF('dialogueTransferDuCourrier').show()");
         }else{
