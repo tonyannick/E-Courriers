@@ -292,7 +292,7 @@ public class DetailDUnCourrierEnvoye implements Serializable {
     }
 
     public void checkIfAlfrescoIsOnline(){
-        if(!ConnexionAlfresco.voirSiLeServeurEstEnLigne(URLAlfresco.alfrescoURLDuServeur)){
+        if(ConnexionAlfresco.getAlfticket() == null){
             PrimeFaces.current().executeScript("toastErreurAlfresco()");
         }
     }

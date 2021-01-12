@@ -88,7 +88,7 @@ public class NouveauCourrier implements Serializable {
 
     }
     public void checkIfAlfrescoIsOnline(){
-        if(!ConnexionAlfresco.voirSiLeServeurEstEnLigne(URLAlfresco.alfrescoURLDuServeur)){
+        if(ConnexionAlfresco.getAlfticket() == null){
             PrimeFaces.current().executeScript("PF('dialogueAlfrescoErreurMessage').show()");
             PrimeFaces.current().executeScript("desactiverLeFormulaire()");
         }

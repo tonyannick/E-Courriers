@@ -84,7 +84,7 @@ public class ConnexionAlfresco implements Serializable {
        // } catch (IOException e) {
         //    e.printStackTrace();
         ///}
-
+    
         return  resultat;
     }
 
