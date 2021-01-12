@@ -86,6 +86,13 @@ public class RepondreAUnCourrierRecu implements Serializable {
         eventModel = new DefaultScheduleModel();
     }
 
+
+    public void checkIfAlfrescoIsOnline(){
+        if(ConnexionAlfresco.getAlfticket() == null){
+            PrimeFaces.current().executeScript("toastErreurAlfresco()");
+        }
+    }
+
     public void recupererLesActionsParEtapeDuCourrier(){
         HttpSession session = SessionUtils.getSession();
         String idCourrier = (String) session.getAttribute("courrierId");

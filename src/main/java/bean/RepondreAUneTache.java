@@ -69,6 +69,12 @@ public class RepondreAUneTache implements Serializable {
 
     }
 
+    public void checkIfAlfrescoIsOnline(){
+        if(ConnexionAlfresco.getAlfticket() == null){
+            PrimeFaces.current().executeScript("toastErreurAlfresco()");
+        }
+    }
+
     public void voirAnnexe(ActionEvent actionEvent){
 
         Map<String,String> params = FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap();
