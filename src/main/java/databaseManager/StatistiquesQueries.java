@@ -1,10 +1,8 @@
-package database;
+package databaseManager;
 
 import dateAndTime.DateUtils;
 import model.Courrier;
-import model.Statistiques;
 import variables.EtatCourrier;
-import variables.GenreDeCourrier;
 
 import java.sql.Connection;
 import java.sql.ResultSet;
@@ -56,8 +54,8 @@ public class StatistiquesQueries {
         listeCourriersEnvoyes.clear();
         listeCourriersRecus.clear();
 
-        Connection connectionCourrierRecus = DatabaseManager.getConnexion();
-        Connection connectionCourrierEnvoyes = DatabaseManager.getConnexion();
+        Connection connectionCourrierRecus = DatabasConnection.getConnexion();
+        Connection connectionCourrierEnvoyes = DatabasConnection.getConnexion();
 
         String nombreDeCourrierRecusSQL = "select courrier.date_enregistrement,nom_direction from `recevoir_courrier` inner join `courrier` on recevoir_courrier.id_courrier = courrier.id_courrier inner join personne on recevoir_courrier.id_personne = personne.id_personne inner join direction on personne.id_direction = direction.id_direction where direction.nom_direction = '" + nomDirection + "'  and courrier.etat = '" + EtatCourrier.courrierEnvoye + "' group by courrier.id_courrier order by courrier.id_courrier desc";
         String nombreDeCourrierEnvoyesSQL = "select courrier.date_enregistrement,nom_direction from `envoyer_courrier` inner join `courrier` on envoyer_courrier.id_courrier = courrier.id_courrier inner join personne on  envoyer_courrier.id_personne = personne.id_personne inner join direction on personne.id_direction = direction.id_direction where direction.nom_direction = '" + nomDirection + "'  and courrier.etat = '" + EtatCourrier.courrierEnvoye + "' group by courrier.id_courrier order by courrier.id_courrier desc";
@@ -182,7 +180,7 @@ public class StatistiquesQueries {
 
         List<String> listeIdCourriersRecus = new ArrayList<>();
         ResultSet resultSetIdRecus = null;
-        Connection connectionCourrierIdRecus =  DatabaseManager.getConnexion();
+        Connection connectionCourrierIdRecus =  DatabasConnection.getConnexion();
         String requeteIdCourriersRecusSQL = "select courrier.id_courrier from `recevoir_courrier` inner join `courrier` on recevoir_courrier.id_courrier = courrier.id_courrier inner join personne on recevoir_courrier.id_personne = personne.id_personne inner join direction on personne.id_direction = direction.id_direction where direction.nom_direction = '"+nomDirection+"' and recevoir_courrier.archive = '"+ EtatCourrier.archiveNonActive +"' and recevoir_courrier.favoris = '"+EtatCourrier.pasfavoris+"' and etat = '"+EtatCourrier.courrierEnvoye+"'";
 
         try {
@@ -281,7 +279,7 @@ public class StatistiquesQueries {
 
         List<String> listeIdCourriersEnvoyes = new ArrayList<>();
         ResultSet resultSetIdEnvoyes = null;
-        Connection connectionCourrierIdEnvoyes =  DatabaseManager.getConnexion();
+        Connection connectionCourrierIdEnvoyes =  DatabasConnection.getConnexion();
         String requeteIdCourriersEnvoyesSQL = "select courrier.id_courrier from `envoyer_courrier` inner join `courrier` on envoyer_courrier.id_courrier = courrier.id_courrier inner join personne on envoyer_courrier.id_personne = personne.id_personne inner join direction on personne.id_direction = direction.id_direction where direction.nom_direction = '"+nomDirection+"' and courrier.etat = '"+EtatCourrier.courrierEnvoye+"' and envoyer_courrier.favoris = '"+EtatCourrier.pasfavoris+"' and envoyer_courrier.archive =  '"+ EtatCourrier.archiveNonActive +"' order by courrier.id_courrier desc;";
 
         try {
@@ -367,7 +365,7 @@ public class StatistiquesQueries {
         String nomDirection = null;
         String idTypePersonne = null;
         ResultSet resultSet = null;
-        Connection connection = DatabaseManager.getConnexion();
+        Connection connection = DatabasConnection.getConnexion();
         try {
             resultSet = connection.createStatement().executeQuery(requeteDetailEmetteurCourrierSQL);
             if (resultSet.next()){
@@ -402,7 +400,7 @@ public class StatistiquesQueries {
         String nomDirection = null;
         String idTypePersonne = null;
         ResultSet resultSet = null;
-        Connection connection = DatabaseManager.getConnexion();
+        Connection connection = DatabasConnection.getConnexion();
         try {
             resultSet = connection.createStatement().executeQuery(requeteDetailEmetteurCourrierSQL);
             if (resultSet.next()){
@@ -439,8 +437,8 @@ public class StatistiquesQueries {
 
         String listeDesCourriersRecusSQL = "select * from `recevoir_courrier` inner join `courrier` on recevoir_courrier.id_courrier = courrier.id_courrier inner join personne on recevoir_courrier.id_personne = personne.id_personne inner join direction on personne.id_direction = direction.id_direction inner join type_courrier on type_courrier.id_type_courrier =	courrier.fk_type_courrier where direction.id_direction = '"+idDirection+"' and courrier.etat = '"+EtatCourrier.courrierEnvoye+"' group by courrier.id_courrier order by courrier.id_courrier desc ";
         String listeDesCourriersEnvoyesSQL = "select * from `envoyer_courrier` inner join `courrier` on envoyer_courrier.id_courrier = courrier.id_courrier inner join personne on envoyer_courrier.id_personne = personne.id_personne inner join direction on personne.id_direction = direction.id_direction inner join type_courrier on type_courrier.id_type_courrier = courrier.fk_type_courrier where direction.id_direction = '"+idDirection+"' and courrier.etat = '"+EtatCourrier.courrierEnvoye+"' group by courrier.id_courrier order by courrier.id_courrier desc ";
-        Connection connectionCourrierRecus =  DatabaseManager.getConnexion();
-        Connection connectionCourrierEnvoyes =  DatabaseManager.getConnexion();
+        Connection connectionCourrierRecus =  DatabasConnection.getConnexion();
+        Connection connectionCourrierEnvoyes =  DatabasConnection.getConnexion();
 
         ResultSet resultSetCourriersRecus = null;
         ResultSet resultSetCourriersEnvoyes = null;
@@ -492,6 +490,7 @@ public class StatistiquesQueries {
 
 
     }
+
 
 
 }

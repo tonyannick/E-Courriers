@@ -1,7 +1,7 @@
 package bean;
 
-import database.DataBaseQueries;
-import database.DatabaseManager;
+import databaseManager.DatabasConnection;
+import databaseManager.DossiersQueries;
 import model.Courrier;
 import model.Dossier;
 import org.primefaces.PrimeFaces;
@@ -24,7 +24,6 @@ import java.util.Map;
 @Named
 public class DetailDUnDossier implements Serializable {
 
-
     private static final long serialVersionUID = -4156275961824185238L;
     private Courrier courrier;
     private Dossier dossier;
@@ -39,20 +38,19 @@ public class DetailDUnDossier implements Serializable {
         dossier = new Dossier();
     }
 
-
     public void recupererLesDossiers(){
         HttpSession session = SessionUtils.getSession();
         String idUser = (String) session.getAttribute( "idUser");
-        dossier.setDossierList(DataBaseQueries.recupererLesDossiersDUnUtilisateur(idUser));
+        dossier.setDossierList(DossiersQueries.recupererLesDossiersDUnUtilisateur(idUser));
     }
 
     public void recupererLalisteDesCourriersDansUnDossier(){
         HttpSession session = SessionUtils.getSession();
         String idPersonne = (String) session.getAttribute("idUser");
         String idDossier = (String) session.getAttribute("idDossier");
-        courrier.setListeDesCourriersDansUnDossier(DataBaseQueries.recupererLesCourriersDansUnDossiersDUnUtilisateur(idPersonne,idDossier));
-        nomDossierEnCours = DataBaseQueries.recupererLeNomDUnDossierParSonId(idDossier);
-        nombreDeCourriers = DataBaseQueries.nombreDeCourrierDansUnDossier;
+        courrier.setListeDesCourriersDansUnDossier(DossiersQueries.recupererLesCourriersDansUnDossiersDUnUtilisateur(idPersonne,idDossier));
+        nomDossierEnCours = DossiersQueries.recupererLeNomDUnDossierParSonId(idDossier);
+        nombreDeCourriers = DossiersQueries.nombreDeCourrierDansUnDossier;
     }
 
     public void renommerUnDossier(){
@@ -72,7 +70,7 @@ public class DetailDUnDossier implements Serializable {
 
                 HttpSession session = SessionUtils.getSession();
                 String idDossier = (String) session.getAttribute("idDossier");
-                DataBaseQueries.renommerUnDossier(idDossier,dossier.getNomDossier().trim().replaceAll("'"," "),"messagerenommerdossier");
+                DossiersQueries.renommerUnDossier(idDossier,dossier.getNomDossier().trim().replaceAll("'"," "),"messagerenommerdossier");
                 dossier.setNomDossier(null);
             }
         }
@@ -82,7 +80,7 @@ public class DetailDUnDossier implements Serializable {
     public void supprimerUnDossier(){
         HttpSession session = SessionUtils.getSession();
         String idDossier = (String) session.getAttribute("idDossier");
-        Connection connection = DatabaseManager.getConnexion();
+        Connection connection = DatabasConnection.getConnexion();
         String supprimerDossierSQL = "DELETE FROM `dossier` WHERE `dossier`.`id_dossier` = '"+idDossier+"' ; ";
         String supprimerTousLesCourriersDansUnDossier = null;
 

@@ -2,8 +2,9 @@ package bean;
 
 import alfresco.ConnexionAlfresco;
 import alfresco.NomDesDossiers;
-import database.DataBaseQueries;
-import database.DatabaseManager;
+import databaseManager.DataBaseQueries;
+import databaseManager.DatabasConnection;
+import databaseManager.DossiersQueries;
 import dateAndTime.DateUtils;
 import fileManager.FileManager;
 import model.*;
@@ -183,7 +184,7 @@ public class RepondreAUnCourrierRecu implements Serializable {
     public void recupererLesDossiers(){
         HttpSession session = SessionUtils.getSession();
         String idUser = (String) session.getAttribute( "idUser");
-        dossier.setDossierList(DataBaseQueries.recupererLesDossiersDUnUtilisateur(idUser));
+        dossier.setDossierList(DossiersQueries.recupererLesDossiersDUnUtilisateur(idUser));
     }
 
     public void recupererToutesLesInformationsDuCourrier(){
@@ -274,7 +275,7 @@ public class RepondreAUnCourrierRecu implements Serializable {
         PrimeFaces.current().executeScript("affichageGridAnnexe()");
         if ( Integer.parseInt(annexe.getNombreDAnnexe()) > 0){
             String voirListeAnnexeSQL = "Select * from `annexe` where id_courrier = "+courrier.getIdCourrier()+";";
-            Connection connection = DatabaseManager.getConnexion();
+            Connection connection = DatabasConnection.getConnexion();
             ResultSet resultSet = null;
 
             try {
@@ -404,7 +405,7 @@ public class RepondreAUnCourrierRecu implements Serializable {
                 break;
         }
 
-        Connection connection = DatabaseManager.getConnexion();
+        Connection connection = DatabasConnection.getConnexion();
         ResultSet resultSet = null;
         try{
             resultSet = connection.createStatement().executeQuery(requeteDetailDestinataireSQL);
@@ -488,7 +489,7 @@ public class RepondreAUnCourrierRecu implements Serializable {
         String requeteDestinataireTacheSQL = "select nom,prenom from `etape` inner join `correspondance_personne_etape` on etape.id_etape = correspondance_personne_etape.id_etape inner join `personne` on correspondance_personne_etape.id_personne = personne.id_personne where etape.id_etape = '"+idTache+"' and correspondance_personne_etape.role_agent = '"+ TypeDePersonne.affecteurTache +"' order by etape.id_etape desc";
 
 
-        Connection connection = DatabaseManager.getConnexion();
+        Connection connection = DatabasConnection.getConnexion();
         ResultSet resultSet = null;
         try{
             resultSet = connection.createStatement().executeQuery(requeteDestinataireTacheSQL);
@@ -522,7 +523,7 @@ public class RepondreAUnCourrierRecu implements Serializable {
         Map<String,String> params = FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap();
         String idDiscussionEtape = String.valueOf(params.get("discussionEtapeId"));
         String  requeteDiscussionEtapeSQL = "select identifiant_alfresco_discussion from `discussion_etape` where id_discussion_etape = '"+idDiscussionEtape+"' ; ";
-        Connection connection = DatabaseManager.getConnexion();
+        Connection connection = DatabasConnection.getConnexion();
         ResultSet resultSet = null;
         try{
             resultSet = connection.createStatement().executeQuery(requeteDiscussionEtapeSQL);
@@ -583,7 +584,7 @@ public class RepondreAUnCourrierRecu implements Serializable {
     public void creerUneDiscussion(){/*TODO bloque un message vide*/
         HttpSession session = SessionUtils.getSession();
         String idUser = (String) session.getAttribute( "idUser");
-        Connection connection = DatabaseManager.getConnexion();
+        Connection connection = DatabasConnection.getConnexion();
         if(etape.getReponseTache() == null || etape.getReponseTache().isEmpty()){
             FacesContext.getCurrentInstance().addMessage("messageinfodiscussion", new FacesMessage(FacesMessage.SEVERITY_WARN, "Erreur", "Vous devez ecrire un message!!"));
         }else{
@@ -649,16 +650,16 @@ public class RepondreAUnCourrierRecu implements Serializable {
         String idCourrier = (String) session.getAttribute("courrierId");
         String idUser = (String) session.getAttribute( "idUser");
 
-        String dossierId = DataBaseQueries.voirSiUnCourrierEstDejaDansUnDossier(idCourrier, dossier.getIdDossier());
+        String dossierId = DossiersQueries.voirSiUnCourrierEstDejaDansUnDossier(idCourrier, dossier.getIdDossier());
         if(dossierId != null){
 
             if(dossierId.equals(dossier.getIdDossier())){
                 FacesContext.getCurrentInstance().addMessage("messagedossier", new FacesMessage(FacesMessage.SEVERITY_WARN, "Attention", "Le courrier est déja dans ce dossier!!!"));
             }else{
-                DataBaseQueries.ajouterUnCourrierRecuDansUnDossier(dossier.getIdDossier(),idCourrier,idUser);
+                DossiersQueries.ajouterUnCourrierRecuDansUnDossier(dossier.getIdDossier(),idCourrier,idUser);
             }
         }else{
-            DataBaseQueries.ajouterUnCourrierRecuDansUnDossier(dossier.getIdDossier(),idCourrier,idUser);
+            DossiersQueries.ajouterUnCourrierRecuDansUnDossier(dossier.getIdDossier(),idCourrier,idUser);
         }
     }
 
@@ -683,7 +684,7 @@ public class RepondreAUnCourrierRecu implements Serializable {
                 HttpSession session = SessionUtils.getSession();
                 String idUser = (String) session.getAttribute( "idUser");
                 recupererLesDossiers();
-                DataBaseQueries.creerUnDossier(idUser,dossier.getNomDossier().replaceAll("'"," ").trim(),dossier.getDescriptionDossier());
+                DossiersQueries.creerUnDossier(idUser,dossier.getNomDossier().replaceAll("'"," ").trim(),dossier.getDescriptionDossier());
                 dossier.setNomDossier(null);
                 dossier.setDescriptionDossier(null);
             }

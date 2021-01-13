@@ -1,6 +1,6 @@
 package bean;
 
-import database.DataBaseQueries;
+import databaseManager.DossiersQueries;
 import model.Dossier;
 import sessionManager.SessionUtils;
 
@@ -28,7 +28,7 @@ public class MesDossiers implements Serializable {
     public void recupererLesDossiers(){
         HttpSession session = SessionUtils.getSession();
         String idUser = (String) session.getAttribute( "idUser");
-        dossier.setDossierList(DataBaseQueries.recupererLesDossiersDUnUtilisateur(idUser));
+        dossier.setDossierList(DossiersQueries.recupererLesDossiersDUnUtilisateur(idUser));
     }
 
     public void creerUnDossier(){
@@ -51,7 +51,7 @@ public class MesDossiers implements Serializable {
                 }
                 HttpSession session = SessionUtils.getSession();
                 String idUser = (String) session.getAttribute( "idUser");
-                DataBaseQueries.creerUnDossier(idUser,dossier.getNomDossier().replaceAll("'"," ").trim(),dossier.getDescriptionDossier());
+                DossiersQueries.creerUnDossier(idUser,dossier.getNomDossier().replaceAll("'"," ").trim(),dossier.getDescriptionDossier());
                 dossier.setNomDossier(null);
                 dossier.setDescriptionDossier(null);
             }

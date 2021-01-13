@@ -1,9 +1,9 @@
 package bean;
 
 import alfresco.ConnexionAlfresco;
-import alfresco.URLAlfresco;
-import database.DataBaseQueries;
-import database.DatabaseManager;
+import databaseManager.CourriersQueries;
+import databaseManager.DataBaseQueries;
+import databaseManager.DatabasConnection;
 import dateAndTime.DateUtils;
 import fileManager.FileManager;
 import model.*;
@@ -15,9 +15,7 @@ import variables.*;
 import javax.annotation.PostConstruct;
 import javax.enterprise.context.SessionScoped;
 import javax.faces.application.FacesMessage;
-import javax.faces.component.UIViewRoot;
 import javax.faces.context.FacesContext;
-import javax.faces.view.ViewScoped;
 import javax.inject.Named;
 import javax.servlet.http.HttpSession;
 import java.io.*;
@@ -156,7 +154,7 @@ public class NouveauCourrier implements Serializable {
     }
 
     public void recupererListeTypeDeCourrier(){
-        courrier.setListeTypeDeCourier(DataBaseQueries.recupererLaListeDeTypesDeCourrier());
+        courrier.setListeTypeDeCourier(CourriersQueries.recupererLaListeDeTypesDeCourrier());
     }
 
     public void ajoutDuFichierDuCourrier(FileUploadEvent fileUploadEvent){
@@ -291,7 +289,7 @@ public class NouveauCourrier implements Serializable {
             String ajouterFonctionSQL = null;
             String ajouterEtablissementSQL = null;
 
-            idTypeDeCourrier = DataBaseQueries.recupererIdTypeDeCourrierParTitre(courrier.getTypeCourrier().replaceAll("'"," "));
+            idTypeDeCourrier = CourriersQueries.recupererIdTypeDeCourrierParTitre(courrier.getTypeCourrier().replaceAll("'"," "));
             idTypeDEmetteur = DataBaseQueries.recupererIdTypeDePersonneParTitre(emetteur.getTypeDEmetteur());
             idTypeDeDestinataire = DataBaseQueries.recupererIdTypeDePersonneParTitre(destinataire.getTypeDestinataire());
             idDirectionEmetteur = DataBaseQueries.recupererIdDirectionParSonNom(emetteur.getDirection());
@@ -361,7 +359,7 @@ public class NouveauCourrier implements Serializable {
             String ajouterCorrespondanceEtapePersonneSQL = "insert into `correspondance_personne_etape` (`id_personne`) VALUES" +
                     " ('" + idUser +"')";
 
-            Connection connection = DatabaseManager.getConnexion();
+            Connection connection = DatabasConnection.getConnexion();
             Statement statement = null;
 
             switch (emetteur.getTypeDEmetteur()){

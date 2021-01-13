@@ -1,6 +1,6 @@
 package bean;
 
-import database.DataBaseQueries;
+import databaseManager.CourriersQueries;
 import model.Courrier;
 import sessionManager.SessionUtils;
 
@@ -29,9 +29,8 @@ public class CourriersArchives implements Serializable {
 
     public void recupererLalisteDesCourriersArchives(){
         HttpSession session = SessionUtils.getSession();
-        String sessionID = session.getAttribute("uniqueUserID").toString();
         String idPersonne = (String) session.getAttribute("idUser");
-        courrier.setListeDesCouriersArchives(DataBaseQueries.recupererTousLesCourriersArchivesDUnUtilisateursParSonId(idPersonne));
+        courrier.setListeDesCouriersArchives(CourriersQueries.recupererTousLesCourriersArchivesDUnUtilisateursParSonId(idPersonne));
     }
 
 

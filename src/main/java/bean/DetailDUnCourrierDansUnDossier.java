@@ -1,16 +1,12 @@
 package bean;
 
 import alfresco.ConnexionAlfresco;
-import alfresco.URLAlfresco;
-import database.DataBaseQueries;
-import database.DatabaseManager;
-import dateAndTime.DateUtils;
+import databaseManager.DataBaseQueries;
+import databaseManager.DatabasConnection;
+import databaseManager.DossiersQueries;
 import model.*;
 import org.primefaces.PrimeFaces;
 import sessionManager.SessionUtils;
-import variables.ActionEtape;
-import variables.EtatCourrier;
-import variables.EtatEtape;
 
 import javax.annotation.PostConstruct;
 import javax.enterprise.context.SessionScoped;
@@ -63,12 +59,11 @@ public class DetailDUnCourrierDansUnDossier implements Serializable {
     public void recupererLesDossiers(){
         HttpSession session = SessionUtils.getSession();
         String idUser = (String) session.getAttribute( "idUser");
-        dossier.setDossierList(DataBaseQueries.recupererLesDossiersDUnUtilisateur(idUser));
+        dossier.setDossierList(DossiersQueries.recupererLesDossiersDUnUtilisateur(idUser));
     }
 
     public void recupererToutesLesInformationsDuCourrier(){
         HttpSession session = SessionUtils.getSession();
-        String sessionID = session.getAttribute("uniqueUserID").toString();
         String idCourrier = (String) session.getAttribute("courrierId");
         DataBaseQueries.recupererLEmetteurDUnCourrierParIdCourrier(idCourrier);
         DataBaseQueries.recupererLeDestinataireDUnCourrierParIdCourrier(idCourrier);
@@ -107,7 +102,6 @@ public class DetailDUnCourrierDansUnDossier implements Serializable {
 
     public void afficherLeFichierDuCourier(){
         HttpSession session = SessionUtils.getSession();
-        String sessionID = session.getAttribute("uniqueUserID").toString();
         String idDocumementAlfresco = (String) session.getAttribute("alfrescoId");
         courrier.setStreamedContentAlfresco(ConnexionAlfresco.telechargerDocumentDansAlfresco(idDocumementAlfresco));
         if(!ConnexionAlfresco.mimeDocument.equals("application/pdf;charset=UTF-8")){
@@ -129,7 +123,7 @@ public class DetailDUnCourrierDansUnDossier implements Serializable {
         PrimeFaces.current().executeScript("affichageGridAnnexe()");
         if ( Integer.parseInt(annexe.getNombreDAnnexe()) > 0){
             String voirListeAnnexeSQL = "Select * from `annexe` where id_courrier = "+courrier.getIdCourrier()+";";
-            Connection connection = DatabaseManager.getConnexion();
+            Connection connection = DatabasConnection.getConnexion();
             ResultSet resultSet = null;
 
             try {
@@ -247,7 +241,7 @@ public class DetailDUnCourrierDansUnDossier implements Serializable {
                 break;
         }
 
-        Connection connection = DatabaseManager.getConnexion();
+        Connection connection = DatabasConnection.getConnexion();
         ResultSet resultSet = null;
         try{
             resultSet = connection.createStatement().executeQuery(requeteDetailDestinataireSQL);
@@ -291,7 +285,7 @@ public class DetailDUnCourrierDansUnDossier implements Serializable {
         HttpSession session = SessionUtils.getSession();
         String courrierId = (String) session.getAttribute("courrierId");
         String idDossier = (String) session.getAttribute("idDossier");
-        Connection connection = DatabaseManager.getConnexion();
+        Connection connection = DatabasConnection.getConnexion();
         String retirerCourrierDuDossierSQL = "DELETE FROM `correspondance_dossier_courrier` WHERE id_dossier = '"+idDossier+"' and id_courrier='"+courrierId+"';";
 
         Statement statement = null;

@@ -1,15 +1,14 @@
 package bean;
 
 import alfresco.ConnexionAlfresco;
-import alfresco.NomDesDossiers;
-import database.DataBaseQueries;
-import database.DatabaseManager;
+import databaseManager.CourriersQueries;
+import databaseManager.DataBaseQueries;
+import databaseManager.DatabasConnection;
 import dateAndTime.DateUtils;
 import fileManager.FileManager;
 import model.*;
 import org.primefaces.PrimeFaces;
 import org.primefaces.event.FileUploadEvent;
-import org.primefaces.event.SelectEvent;
 import org.primefaces.event.ToggleEvent;
 import sessionManager.SessionUtils;
 import variables.*;
@@ -29,7 +28,6 @@ import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-import java.util.UUID;
 
 @Named
 @SessionScoped
@@ -120,7 +118,7 @@ public class RepondreAUneTache implements Serializable {
         PrimeFaces.current().executeScript("affichageGridAnnexe()");
         if ( Integer.parseInt(annexe.getNombreDAnnexe()) > 0){
             String voirListeAnnexeSQL = "Select * from `annexe` where id_courrier = "+courrier.getIdCourrier()+";";
-            Connection connection = DatabaseManager.getConnexion();
+            Connection connection = DatabasConnection.getConnexion();
             ResultSet resultSet = null;
 
             try {
@@ -164,7 +162,7 @@ public class RepondreAUneTache implements Serializable {
     }
 
     public void recupererListeTypeDeCourrier(){
-        courrier.setListeTypeDeCourier(DataBaseQueries.recupererLaListeDeTypesDeCourrier());
+        courrier.setListeTypeDeCourier(CourriersQueries.recupererLaListeDeTypesDeCourrier());
     }
 
     public void actualisationDesDetailsDuCourrierAuChargementDeLaPage(){
@@ -256,7 +254,7 @@ public class RepondreAUneTache implements Serializable {
         Map<String,String> params = FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap();
         String idTache = String.valueOf(params.get("etapeId"));
         String  requeteDestinataireTacheSQL = "select nom,prenom from `etape` inner join `correspondance_personne_etape` on etape.id_etape = correspondance_personne_etape.id_etape inner join `personne` on correspondance_personne_etape.id_personne = personne.id_personne where etape.id_etape = '"+idTache+"' and correspondance_personne_etape.role_agent = '"+ TypeDePersonne.affecteurTache +"' order by etape.id_etape desc";
-        Connection connection = DatabaseManager.getConnexion();
+        Connection connection = DatabasConnection.getConnexion();
         ResultSet resultSet = null;
         try{
             resultSet = connection.createStatement().executeQuery(requeteDestinataireTacheSQL);
@@ -315,7 +313,7 @@ public class RepondreAUneTache implements Serializable {
     public void creerUneDiscussion(){/*TODO bloque un message vide*/
         HttpSession session = SessionUtils.getSession();
         String idUser = (String) session.getAttribute( "idUser" );
-        Connection connection = DatabaseManager.getConnexion();
+        Connection connection = DatabasConnection.getConnexion();
         String courrierMinistre = "courrier_ministre";
         if(etape.getReponseTache() == null || etape.getReponseTache().isEmpty()){
             FacesContext.getCurrentInstance().addMessage("messageerreurdiscussion", new FacesMessage(FacesMessage.SEVERITY_WARN, "Erreur", "Vous devez ecrire un message!!"));
@@ -399,7 +397,7 @@ public class RepondreAUneTache implements Serializable {
                 break;
         }
 
-        Connection connection = DatabaseManager.getConnexion();
+        Connection connection = DatabasConnection.getConnexion();
         ResultSet resultSet = null;
         try{
             resultSet = connection.createStatement().executeQuery(requeteDetailDestinataireSQL);
@@ -443,7 +441,7 @@ public class RepondreAUneTache implements Serializable {
         Map<String,String> params = FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap();
         String idDiscussionEtape = String.valueOf(params.get("discussionEtapeId"));
         String requeteDiscussionEtapeSQL = "select identifiant_alfresco_discussion from `discussion_etape` where id_discussion_etape = '"+idDiscussionEtape+"' ; ";
-        Connection connection = DatabaseManager.getConnexion();
+        Connection connection = DatabasConnection.getConnexion();
         ResultSet resultSet = null;
         try{
             resultSet = connection.createStatement().executeQuery(requeteDiscussionEtapeSQL);

@@ -1,7 +1,9 @@
 package bean;
 
 import cookieManager.CookiesUtils;
-import database.DataBaseQueries;
+import databaseManager.CourriersQueries;
+import databaseManager.DataBaseQueries;
+import databaseManager.UsersQueries;
 import model.User;
 import sessionManager.SessionUtils;
 
@@ -30,26 +32,26 @@ public class Login implements Serializable {
 
     /**Methode de clic sur le bouton valider**/
     public String cliquerSurValider(){
-        if(DataBaseQueries.verifierUserLogin(user.getUserlogin(),user.getUserPassword())){
+        if(UsersQueries.verifierUserLogin(user.getUserlogin(),user.getUserPassword())){
             userSessionUniqueId = UUID.randomUUID().toString();
             HttpSession session = SessionUtils.getSession();
             session.setAttribute("uniqueUserID",userSessionUniqueId);
-            session.setAttribute("userName", DataBaseQueries.nomCompletUser);
-            session.setAttribute("idUser",DataBaseQueries.idPersonne);
-            session.setAttribute("id_etablissement",DataBaseQueries.idEtablissement);
-            session.setAttribute("directionUser", DataBaseQueries.directionUser);
-            session.setAttribute("fonctionUser", DataBaseQueries.fonctionUser);
-            session.setAttribute("profilUser", DataBaseQueries.profilUser);
+            session.setAttribute("userName", UsersQueries.nomCompletUser);
+            session.setAttribute("idUser",UsersQueries.idPersonne);
+            session.setAttribute("id_etablissement",UsersQueries.idEtablissement);
+            session.setAttribute("directionUser", UsersQueries.directionUser);
+            session.setAttribute("fonctionUser", UsersQueries.fonctionUser);
+            session.setAttribute("profilUser", UsersQueries.profilUser);
             session.setAttribute("premiereConnexion", "oui");
-            session.setAttribute("idDirectionUser", DataBaseQueries.idDirectionUser);
+            session.setAttribute("idDirectionUser", UsersQueries.idDirectionUser);
             if(user.isSeSouvenir()) {
                 CookiesUtils.creerUnCookie("cookieIdentifiant",user.getUserlogin());
                 CookiesUtils.creerUnCookie("cookieMotDePasse",user.getUserPassword());
                 CookiesUtils.creerUnCookie("seSouvenirDeMoi","oui");
             }
-            DataBaseQueries.recupererInfosDeSession();
-            session.setAttribute("isResponsable", DataBaseQueries.isResponsable);
-            session.setAttribute("isSecretaire", DataBaseQueries.isSecretaire);
+            UsersQueries.recupererInfosDeSession();
+            session.setAttribute("isResponsable", UsersQueries.isResponsable);
+            session.setAttribute("isSecretaire", UsersQueries.isSecretaire);
             return "tableaudebord?faces-redirect=true";
         }else{
             FacesContext context = FacesContext.getCurrentInstance();

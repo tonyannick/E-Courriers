@@ -1,8 +1,9 @@
 package bean;
 
 import alfresco.ConnexionAlfresco;
-import database.DataBaseQueries;
-import database.DatabaseManager;
+import databaseManager.DataBaseQueries;
+import databaseManager.DatabasConnection;
+import databaseManager.UsersQueries;
 import dateAndTime.DateUtils;
 import fileManager.FileManager;
 import mailManager.EmailValidation;
@@ -85,25 +86,25 @@ public class Parametres implements Serializable {
     public void recupererLesInfosDeMonCompte(){
         HttpSession session = SessionUtils.getSession();
         String idPersonne = (String) session.getAttribute("idUser");
-        DataBaseQueries.recupererInfosUsersParSonId(idPersonne);
-        user.setUserName(DataBaseQueries.nomUser);
-        user.setUserPrenom(DataBaseQueries.prenomUser);
-        user.setUserMail(DataBaseQueries.emailUser);
-        user.setUserPseudo(DataBaseQueries.pseudUser);
-        user.setUserTel(DataBaseQueries.telUser);
-        user.setUserDirection(DataBaseQueries.directionUser);
-        user.setUserFonction(DataBaseQueries.fonctionUser);
-        user.setUserEtablissement(DataBaseQueries.etablissementUser);
-        user.setUserPassword(DataBaseQueries.passwordUser);
-        user.setUserProfil(DataBaseQueries.profilUser);
-        user.setUserId(DataBaseQueries.idPersonne);
+        UsersQueries.recupererInfosUsersParSonId(idPersonne);
+        user.setUserName(UsersQueries.nomUser);
+        user.setUserPrenom(UsersQueries.prenomUser);
+        user.setUserMail(UsersQueries.emailUser);
+        user.setUserPseudo(UsersQueries.pseudUser);
+        user.setUserTel(UsersQueries.telUser);
+        user.setUserDirection(UsersQueries.directionUser);
+        user.setUserFonction(UsersQueries.fonctionUser);
+        user.setUserEtablissement(UsersQueries.etablissementUser);
+        user.setUserPassword(UsersQueries.passwordUser);
+        user.setUserProfil(UsersQueries.profilUser);
+        user.setUserId(UsersQueries.idPersonne);
     }
 
     public void voirLesDetailsDUnUser(){
 
         Map<String,String> viewParams = FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap();
         String idUserTemp = viewParams.get("userId");
-        DataBaseQueries.recupererInfosUsersParSonId(idUserTemp);
+        UsersQueries.recupererInfosUsersParSonId(idUserTemp);
         userNomTemp = DataBaseQueries.nomUser;
         userPrenomTemp = DataBaseQueries.prenomUser;
         userEmailTemp = DataBaseQueries.emailUser;
@@ -117,7 +118,7 @@ public class Parametres implements Serializable {
 
     public void recupererInfosMinistereDuBudget(){
         List<Etablissement> tousLesMinisteresListe = new ArrayList<>();
-        Connection connection = DatabaseManager.getConnexion();
+        Connection connection = DatabasConnection.getConnexion();
         String requeteMinistereBudget = "select * from etablissement inner join type_etablissement on etablissement.fk_type_etablissement = type_etablissement.id_type_etablissement where etablissement.abreviation = '"+ Ministere.MinistereDuBudget +"' ;";
         String requeteTousLesMinisteres = "select * from etablissement inner join type_etablissement on etablissement.fk_type_etablissement = type_etablissement.id_type_etablissement where titre_type_etablissement = '"+ TypeDEtablissement.ministere +"' and   etablissement.abreviation != '"+ Ministere.MinistereDuBudget +"' ;";
 
@@ -163,7 +164,7 @@ public class Parametres implements Serializable {
         String updatePseudoUserSQL = "update `personne` set `pseudo` = '"+user.getUserPseudo().replaceAll("'"," ")+"' where id_personne  = '"+user.getUserId()+"' ;";
         String updateMotDePasseUserSQL = "update `personne` set `mot_de_passe` = '"+user.getUserPassword().replaceAll("'"," ")+"' where id_personne  = '"+user.getUserId()+"' ;";
 
-        Connection connection = DatabaseManager.getConnexion();
+        Connection connection = DatabasConnection.getConnexion();
         Statement statement = null;
 
         try {
@@ -206,7 +207,7 @@ public class Parametres implements Serializable {
         }else{
             updateCompteUserSQL = "update `personne` set `etat_du_compte` = '"+ EtatCompteUser.actif+"' where id_personne  = '"+idUserTemp+"';";
         }
-        Connection connection = DatabaseManager.getConnexion();
+        Connection connection = DatabasConnection.getConnexion();
         Statement statement = null;
         try {
             connection.setAutoCommit(false);
@@ -233,10 +234,10 @@ public class Parametres implements Serializable {
         /***TODO Ameliorer avec fichier xml***/
         if(fonctionUser.equals("Secrétaire Général") || fonctionUser.equals("Directeur de Cabinet") || fonctionUser.equals("Secrétaire Général Adjoint")
                 || fonctionUser.equals("Ministre") || fonctionUser.equals("Ministre Délégué")){
-            user.setUserList(DataBaseQueries.recupererLaListeDesUsers());
+            user.setUserList(UsersQueries.recupererLaListeDesUsers());
             phraseListeDesUtilisateurs = "Liste de tous les agents du Ministère enregistrés dans l'application";
         }else{
-            user.setUserList(DataBaseQueries.recupererLesAgentsDUneDirection(directionUser));
+            user.setUserList(UsersQueries.recupererLesAgentsDUneDirection(directionUser));
             phraseListeDesUtilisateurs = "Liste des agents de votre direction enregistrés dans l'application";
         }
 
@@ -308,7 +309,7 @@ public class Parametres implements Serializable {
                         String idEtablissement = DataBaseQueries.recupererIdEtablissementParSonAbreviation(Ministere.MinistereDuBudget);
                         String  ajouterUserSQL = "insert into `personne` (`fk_type_personne`, `nom`, `prenom`,`tel`, `mail`, `id_fonction`,`id_profil`,`etat_du_compte`,`id_direction` ,`id_etablissement`) VALUES" +
                                 " ('" +idType+"',"+"'"+userNomPourAjoutTemp.trim().replaceAll("'"," ")+"',"+"'"+userPrenomPourAjoutTemp.trim().replaceAll("'"," ")+"',"+"'"+userTelPourAjoutTemp.trim()+"',"+"'"+userMailPourAjoutTemp.trim()+"',"+"'"+ idFonction+ "',"+"'"+profilUtilisateur+"',"+"'"+EtatCompteUser.enAttente+"',"+"'" +idDirection+ "',"+ "'" +idEtablissement+ "')";
-                        Connection connection = DatabaseManager.getConnexion();
+                        Connection connection = DatabasConnection.getConnexion();
                         Statement statement = null;
                         try {
                             connection.setAutoCommit(false);
@@ -396,7 +397,7 @@ public class Parametres implements Serializable {
             identifiantAlfresco = ConnexionAlfresco.enregistrerFichierCourrierDansAlfresco(new File(cheminPhotoSurPC),FileManager.determinerTypeDeFichierParSonExtension(FileManager.recupererExtensionDUnFichierParSonNom(nomPhoto)),dossierPhoto);
             if(identifiantAlfresco != null){
                 String updatePhotoUserSQL = "update `personne` set `id_alfresco_photo` = '"+identifiantAlfresco+"' where id_personne  = '"+idUser+"' ;";
-                Connection connection = DatabaseManager.getConnexion();
+                Connection connection = DatabasConnection.getConnexion();
                 Statement statement = null;
                 try {
                     connection.setAutoCommit(false);
@@ -476,7 +477,7 @@ public class Parametres implements Serializable {
 
             PrimeFaces.current().executeScript("PF('panelmodifinfosministere').close()");
             PrimeFaces.current().executeScript("PF('panelinfosministereloading').toggle()");
-            Connection connection = DatabaseManager.getConnexion();
+            Connection connection = DatabasConnection.getConnexion();
             Statement statement = null;
             try {
                 connection.setAutoCommit(false);

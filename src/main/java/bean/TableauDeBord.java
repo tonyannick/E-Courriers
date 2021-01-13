@@ -1,8 +1,7 @@
 package bean;
 
 import alfresco.ConnexionAlfresco;
-import alfresco.URLAlfresco;
-import database.DataBaseQueries;
+import databaseManager.DataBaseQueries;
 import model.Discussion;
 import model.Etape;
 import model.Statistiques;
@@ -15,10 +14,8 @@ import javax.enterprise.context.SessionScoped;
 import javax.faces.context.FacesContext;
 import javax.inject.Named;
 import javax.servlet.http.HttpSession;
-import javax.xml.crypto.Data;
 import java.io.Serializable;
 import java.util.ArrayList;
-import java.util.Enumeration;
 import java.util.List;
 import java.util.Map;
 

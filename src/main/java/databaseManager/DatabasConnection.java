@@ -1,11 +1,11 @@
-package database;
+package databaseManager;
 
 
 import java.sql.Connection;
 import java.sql.DatabaseMetaData;
 import java.sql.DriverManager;
 
-public class DatabaseManager {
+public class DatabasConnection {
 
     public static Connection connect;
 

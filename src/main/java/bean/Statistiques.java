@@ -1,7 +1,7 @@
 package bean;
 
-import database.DataBaseQueries;
-import database.StatistiquesQueries;
+import databaseManager.DataBaseQueries;
+import databaseManager.StatistiquesQueries;
 import dateAndTime.DateUtils;
 import org.primefaces.event.ItemSelectEvent;
 import org.primefaces.model.chart.Axis;
@@ -17,8 +17,6 @@ import javax.faces.context.FacesContext;
 import javax.inject.Named;
 import javax.servlet.http.HttpSession;
 import java.io.Serializable;
-import java.util.Iterator;
-import java.util.Map;
 
 @SessionScoped
 @Named

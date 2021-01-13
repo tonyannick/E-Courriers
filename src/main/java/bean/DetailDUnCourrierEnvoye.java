@@ -1,9 +1,9 @@
 package bean;
 
 import alfresco.ConnexionAlfresco;
-import alfresco.URLAlfresco;
-import database.DataBaseQueries;
-import database.DatabaseManager;
+import databaseManager.DataBaseQueries;
+import databaseManager.DatabasConnection;
+import databaseManager.DossiersQueries;
 import dateAndTime.DateUtils;
 import fileManager.FileManager;
 import model.*;
@@ -66,7 +66,7 @@ public class DetailDUnCourrierEnvoye implements Serializable {
     public void recupererLesDossiers(){
         HttpSession session = SessionUtils.getSession();
         String idUser = (String) session.getAttribute( "idUser");
-        dossier.setDossierList(DataBaseQueries.recupererLesDossiersDUnUtilisateur(idUser));
+        dossier.setDossierList(DossiersQueries.recupererLesDossiersDUnUtilisateur(idUser));
     }
 
     public void recupererToutesLesInformationsDuCourrier(){
@@ -128,7 +128,7 @@ public class DetailDUnCourrierEnvoye implements Serializable {
         PrimeFaces.current().executeScript("affichageGridAnnexe()");
         if ( Integer.parseInt(annexe.getNombreDAnnexe()) > 0){
             String voirListeAnnexeSQL = "Select * from `annexe` where id_courrier = "+courrier.getIdCourrier()+";";
-            Connection connection = DatabaseManager.getConnexion();
+            Connection connection = DatabasConnection.getConnexion();
             ResultSet resultSet = null;
 
             try {
@@ -252,7 +252,7 @@ public class DetailDUnCourrierEnvoye implements Serializable {
                 break;
         }
 
-        Connection connection = DatabaseManager.getConnexion();
+        Connection connection = DatabasConnection.getConnexion();
         ResultSet resultSet = null;
         try{
             resultSet = connection.createStatement().executeQuery(requeteDetailDestinataireSQL);
@@ -342,7 +342,7 @@ public class DetailDUnCourrierEnvoye implements Serializable {
             String ajouterCorrespondancePersonneReponseCourrierSQL = "INSERT INTO `correspondance_personne_reponse_courrier` (`id_personne`,`role`,`id_reponse_courrier`) VALUES" +
                     "('"+ idUser +"',"+"'"+RoleEtape.receveurReponseAuCourrier+"',"+"(select id_reponse_courrier from reponse_courrier where identifiant_unique_reponse = '"+uniqueID+"' )"+")";
 
-            Connection connection = DatabaseManager.getConnexion();
+            Connection connection = DatabasConnection.getConnexion();
             Statement statement = null;
             try {
                 connection.setAutoCommit(false);
@@ -422,7 +422,7 @@ public class DetailDUnCourrierEnvoye implements Serializable {
         HttpSession session = SessionUtils.getSession();
         String idCourrier = (String) session.getAttribute("courrierId");
         String idUser = (String) session.getAttribute( "idUser");
-        Connection connection = DatabaseManager.getConnexion();
+        Connection connection = DatabasConnection.getConnexion();
         String mettreCourrierEnFavorisSQL = "update `envoyer_courrier` set `favoris` = '"+ EtatCourrier.favoris +"' where id_courrier = '"+idCourrier+"' ;";
 
         String ajouterEtapeCourrierSQL = "INSERT INTO `etape` (`titre`, `etat`, `message`) VALUES" +
@@ -471,7 +471,7 @@ public class DetailDUnCourrierEnvoye implements Serializable {
         HttpSession session = SessionUtils.getSession();
         String idCourrier = (String) session.getAttribute("courrierId");
         String idUser = (String) session.getAttribute( "idUser");
-        Connection connection = DatabaseManager.getConnexion();
+        Connection connection = DatabasConnection.getConnexion();
         String mettreCourrierEnFavorisSQL = "update `envoyer_courrier` set `archive` = '"+ EtatCourrier.archiveActive +"' where id_courrier = '"+idCourrier+"' ; ";
 
         String ajouterEtapeCourrierSQL = "INSERT INTO `etape` (`titre`, `etat`, `message`) VALUES" +
@@ -527,16 +527,16 @@ public class DetailDUnCourrierEnvoye implements Serializable {
         String idCourrier = (String) session.getAttribute("courrierId");
         String idUser = (String) session.getAttribute( "idUser");
 
-        String dossierId = DataBaseQueries.voirSiUnCourrierEstDejaDansUnDossier(idCourrier,dossier.getIdDossier());
+        String dossierId = DossiersQueries.voirSiUnCourrierEstDejaDansUnDossier(idCourrier,dossier.getIdDossier());
         if(dossierId != null){
 
             if(dossierId.equals(dossier.getIdDossier())){
                 FacesContext.getCurrentInstance().addMessage("messagedossier", new FacesMessage(FacesMessage.SEVERITY_WARN, "Attention", "Le courrier est déja dans ce dossier!!!"));
             }else{
-                DataBaseQueries.ajouterUnCourrierDansUnDossier(dossier.getIdDossier(),idCourrier,idUser);
+                DossiersQueries.ajouterUnCourrierDansUnDossier(dossier.getIdDossier(),idCourrier,idUser);
             }
         }else{
-            DataBaseQueries.ajouterUnCourrierDansUnDossier(dossier.getIdDossier(),idCourrier,idUser);
+            DossiersQueries.ajouterUnCourrierDansUnDossier(dossier.getIdDossier(),idCourrier,idUser);
         }
     }
 
@@ -560,7 +560,7 @@ public class DetailDUnCourrierEnvoye implements Serializable {
                 }
                 HttpSession session = SessionUtils.getSession();
                 String idUser = (String) session.getAttribute( "idUser");
-                DataBaseQueries.creerUnDossier(idUser,dossier.getNomDossier().replaceAll("'"," ").trim(),dossier.getDescriptionDossier());
+                DossiersQueries.creerUnDossier(idUser,dossier.getNomDossier().replaceAll("'"," ").trim(),dossier.getDescriptionDossier());
                 dossier.setNomDossier(null);
                 dossier.setDescriptionDossier(null);
             }

@@ -1,6 +1,6 @@
 package bean;
 
-import database.DataBaseQueries;
+import databaseManager.CourriersQueries;
 import model.Courrier;
 import org.primefaces.PrimeFaces;
 import sessionManager.SessionUtils;
@@ -31,7 +31,7 @@ public class MesCourriers implements Serializable {
     public void recupererLalisteDesCourriersEnregistres(){
         HttpSession session = SessionUtils.getSession();
         String idPersonne = (String) session.getAttribute("idUser");
-        courrier.setListeDesCouriersEnregistres(DataBaseQueries.recupererTousLesCourriersEnregistresDUnUtilisateursParSonId(idPersonne));
+        courrier.setListeDesCouriersEnregistres(CourriersQueries.recupererTousLesCourriersEnregistresDUnUtilisateursParSonId(idPersonne));
     }
 
     public String voirLesDetailsDunCourrierEnregistre(){

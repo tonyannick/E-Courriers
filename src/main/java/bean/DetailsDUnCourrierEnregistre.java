@@ -1,11 +1,9 @@
 package bean;
 
 import alfresco.ConnexionAlfresco;
-import alfresco.NomDesDossiers;
-import alfresco.URLAlfresco;
-import com.sun.org.apache.xpath.internal.operations.Bool;
-import database.DataBaseQueries;
-import database.DatabaseManager;
+import databaseManager.CourriersQueries;
+import databaseManager.DataBaseQueries;
+import databaseManager.DatabasConnection;
 import dateAndTime.DateUtils;
 import fileManager.FileManager;
 import model.*;
@@ -24,7 +22,6 @@ import javax.faces.context.FacesContext;
 import javax.faces.event.ActionEvent;
 import javax.inject.Named;
 import javax.servlet.http.HttpSession;
-import javax.xml.crypto.Data;
 import java.io.*;
 import java.sql.Connection;
 import java.sql.ResultSet;
@@ -172,7 +169,7 @@ public class DetailsDUnCourrierEnregistre implements Serializable {
         PrimeFaces.current().executeScript("affichageGridAnnexe()");
         if ( Integer.parseInt(annexe.getNombreDAnnexe()) > 0){
             String voirListeAnnexeSQL = "Select * from `annexe` where id_courrier = "+courrier.getIdCourrier()+";";
-            Connection connection = DatabaseManager.getConnexion();
+            Connection connection = DatabasConnection.getConnexion();
             ResultSet resultSet = null;
 
             try {
@@ -221,7 +218,7 @@ public class DetailsDUnCourrierEnregistre implements Serializable {
     }
 
     public void recupererListeTypeDeCourrier(){
-        courrier.setListeTypeDeCourier(DataBaseQueries.recupererLaListeDeTypesDeCourrier());
+        courrier.setListeTypeDeCourier(CourriersQueries.recupererLaListeDeTypesDeCourrier());
     }
 
     public void miseAjourDUnElementDuCourrier(){
@@ -247,7 +244,7 @@ public class DetailsDUnCourrierEnregistre implements Serializable {
                 colonne = "fk_type_courrier";
                 idTableAModifier = "id_courrier";
                 idValeurAConsiderer = idCourrierAEnvoyer;
-                idTypeDeCourrier = DataBaseQueries.recupererIdTypeDeCourrierParTitre(courrier.getTempValeurAModifier());
+                idTypeDeCourrier = CourriersQueries.recupererIdTypeDeCourrierParTitre(courrier.getTempValeurAModifier());
                 updateValueSQL = "update `"+table+"` set `"+colonne+"` = '"+idTypeDeCourrier+"' where "+idTableAModifier+" = "+idValeurAConsiderer;
                 faceMessageCibleDansFacelet = "messagesTypeCourrier";
                 break;
@@ -307,7 +304,7 @@ public class DetailsDUnCourrierEnregistre implements Serializable {
         if(courrier.getTempValeurAModifier().isEmpty()){
             FacesContext.getCurrentInstance().addMessage(faceMessageCibleDansFacelet, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Erreur", "Vous devez renseigner une valeur"));
         }else{
-            Connection connection = DatabaseManager.getConnexion();
+            Connection connection = DatabasConnection.getConnexion();
             Statement statement = null;
 
             try {
@@ -450,7 +447,7 @@ public class DetailsDUnCourrierEnregistre implements Serializable {
             String ajouterCorrespondanceEtapePersonneSQL = "INSERT INTO `correspondance_personne_etape` (`id_personne`) VALUES" +
                     " ('" + idUser +"')";
 
-            Connection connection = DatabaseManager.getConnexion();
+            Connection connection = DatabasConnection.getConnexion();
             Statement statement = null;
             try {
                 connection.setAutoCommit(false);
@@ -493,7 +490,7 @@ public class DetailsDUnCourrierEnregistre implements Serializable {
 
         String idTypeDePersonne = DataBaseQueries.recupererIdTypeDePersonneParTitre(TypeDePersonne.agentDuMinistere);
         String requeteAgentSQL = "select * from `personne` inner join `direction` on personne.id_direction = direction.id_direction inner join profil on personne.id_profil = profil.id_profil inner join fonction on personne.id_fonction = fonction.id_fonction where nom_direction = '"+direction+"' and fk_type_personne = '"+idTypeDePersonne+"';";
-        Connection connection = DatabaseManager.getConnexion();
+        Connection connection = DatabasConnection.getConnexion();
         ResultSet resultSet = null;
         try {
              resultSet = connection.createStatement().executeQuery(requeteAgentSQL);
@@ -611,7 +608,7 @@ public class DetailsDUnCourrierEnregistre implements Serializable {
                         "('"+ idCourrier +"',"+"'"+EtatCourrier.courrierEnregistre+"')";
 
 
-                Connection connection = DatabaseManager.getConnexion();
+                Connection connection = DatabasConnection.getConnexion();
                 Statement statement = null;
                 try {
                     connection.setAutoCommit(false);
@@ -655,7 +652,7 @@ public class DetailsDUnCourrierEnregistre implements Serializable {
         Map<String,String> params = FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap();
         String idTache = String.valueOf(params.get("etapeId"));
         String  requeteDestinataireTacheSQL = "select nom,prenom from `etape` inner join `correspondance_personne_etape` on etape.id_etape = correspondance_personne_etape.id_etape inner join `personne` on correspondance_personne_etape.id_personne = personne.id_personne where etape.id_etape = '"+idTache+"' and correspondance_personne_etape.role_agent = '"+ TypeDePersonne.receveurTache +"' order by etape.id_etape desc";
-        Connection connection = DatabaseManager.getConnexion();
+        Connection connection = DatabasConnection.getConnexion();
         ResultSet resultSet = null;
         try{
             resultSet = connection.createStatement().executeQuery(requeteDestinataireTacheSQL);
@@ -689,7 +686,7 @@ public class DetailsDUnCourrierEnregistre implements Serializable {
         Map<String,String> params = FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap();
         String idDiscussionEtape = String.valueOf(params.get("discussionEtapeId"));
         String  requeteDiscussionEtapeSQL = "select identifiant_alfresco_discussion from `discussion_etape` where id_discussion_etape = '"+idDiscussionEtape+"' ; ";
-        Connection connection = DatabaseManager.getConnexion();
+        Connection connection = DatabasConnection.getConnexion();
         ResultSet resultSet = null;
         try{
             resultSet = connection.createStatement().executeQuery(requeteDiscussionEtapeSQL);
@@ -723,7 +720,7 @@ public class DetailsDUnCourrierEnregistre implements Serializable {
     public void creerUneDiscussion(){/*TODO bloque un message vide*/
         HttpSession session = SessionUtils.getSession();
         String idUser = (String) session.getAttribute( "idUser");
-        Connection connection = DatabaseManager.getConnexion();
+        Connection connection = DatabasConnection.getConnexion();
         String courrierMinistre = "courrier_ministre";
         if(etape.getReponseTache() == null || etape.getReponseTache().isEmpty()){
             FacesContext.getCurrentInstance().addMessage("messageerreurdiscussion", new FacesMessage(FacesMessage.SEVERITY_WARN, "Erreur", "Vous devez ecrire un message!!"));
@@ -842,7 +839,7 @@ public class DetailsDUnCourrierEnregistre implements Serializable {
 
                 String ajouterCorrespondanceEtapePersonneSQL = "insert into `correspondance_personne_etape` (`id_personne`) VALUES" +
                         " ('" + idUser +"')";
-                Connection connection = DatabaseManager.getConnexion();
+                Connection connection = DatabasConnection.getConnexion();
                 Statement statement = null;
                 try {
                     connection.setAutoCommit(false);
@@ -924,7 +921,7 @@ public class DetailsDUnCourrierEnregistre implements Serializable {
 
                     String ajouterCorrespondanceEtapePersonneSQL = "insert into `correspondance_personne_etape` (`id_personne`) VALUES" +
                             " ('" + idUser +"')";
-                    Connection connection = DatabaseManager.getConnexion();
+                    Connection connection = DatabasConnection.getConnexion();
                     Statement statement = null;
 
                     try {
@@ -1014,7 +1011,7 @@ public class DetailsDUnCourrierEnregistre implements Serializable {
 
                         String ajouterCorrespondanceEtapePersonneSQL = "insert into `correspondance_personne_etape` (`id_personne`) VALUES" +
                                 " ('" + idUser +"')";
-                        Connection connection = DatabaseManager.getConnexion();
+                        Connection connection = DatabasConnection.getConnexion();
                         Statement statement = null;
 
                         try {
@@ -1094,7 +1091,7 @@ public class DetailsDUnCourrierEnregistre implements Serializable {
                     String ajouterCorrespondanceEtapePersonneSQL = "INSERT INTO `correspondance_personne_etape` (`id_personne`) VALUES" +
                             " ('" + idUser +"')";
 
-                    Connection connection = DatabaseManager.getConnexion();
+                    Connection connection = DatabasConnection.getConnexion();
                     Statement statement = null;
 
                     try {
@@ -1160,7 +1157,7 @@ public class DetailsDUnCourrierEnregistre implements Serializable {
                 break;
         }
 
-        Connection connection = DatabaseManager.getConnexion();
+        Connection connection = DatabasConnection.getConnexion();
         ResultSet resultSet = null;
         try{
             resultSet = connection.createStatement().executeQuery(requeteDetailDestinataireSQL);
@@ -1223,7 +1220,7 @@ public class DetailsDUnCourrierEnregistre implements Serializable {
             String ajouterCorrespondanceEtapePersonneSQL = "INSERT INTO `correspondance_personne_etape` (`id_personne`) VALUES" +
                     " ('" + idUser +"')";
 
-            Connection connection = DatabaseManager.getConnexion();
+            Connection connection = DatabasConnection.getConnexion();
             Statement statement = null;
 
             try {
@@ -1340,7 +1337,7 @@ public class DetailsDUnCourrierEnregistre implements Serializable {
 
         String updateNomFichierDuCourrierSQL = "update `courrier` set `nom_fichier` = '"+courrier.getNomCourrier().replaceAll("'","_")+"' where id_courrier  = '"+idCourrier+"';";
 
-        Connection connection = DatabaseManager.getConnexion();
+        Connection connection = DatabasConnection.getConnexion();
         Statement statement = null;
 
         try {
@@ -1381,7 +1378,7 @@ public class DetailsDUnCourrierEnregistre implements Serializable {
         String cloreDiscussionSQL = null;
         String cloreEtatEtapeSQL = null;
 
-        Connection connection = DatabaseManager.getConnexion();
+        Connection connection = DatabasConnection.getConnexion();
         Statement statement = null;
         try {
             connection.setAutoCommit(false);

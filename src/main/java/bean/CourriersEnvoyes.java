@@ -1,7 +1,8 @@
 package bean;
 
-import database.DataBaseQueries;
-import database.DatabaseManager;
+import databaseManager.CourriersQueries;
+import databaseManager.DataBaseQueries;
+import databaseManager.DatabasConnection;
 import dateAndTime.DateUtils;
 import model.Courrier;
 import org.primefaces.PrimeFaces;
@@ -49,7 +50,7 @@ public class CourriersEnvoyes implements Serializable {
     public void recupererLalisteDesCourriersEnvoyes(){
         HttpSession session = SessionUtils.getSession();
         String idPersonne = (String) session.getAttribute("idUser");
-        courrier.setListeDesCouriersEnvoyes(DataBaseQueries.recupererTousLesCourriersEnvoyesDUnUtilisateursParSonId(idPersonne));
+        courrier.setListeDesCouriersEnvoyes(CourriersQueries.recupererTousLesCourriersEnvoyesDUnUtilisateursParSonId(idPersonne));
         courrierSauvegardeList.clear();
         courrierSauvegardeList.addAll(courrier.getListeDesCouriersEnvoyes());
         Collections.unmodifiableList(courrierSauvegardeList);
@@ -166,7 +167,7 @@ public class CourriersEnvoyes implements Serializable {
     }
 
     public List<String> avoirListeDesTypesDeCourrier(){
-        return DataBaseQueries.recupererLaListeDeTypesDeCourrier();
+        return CourriersQueries.recupererLaListeDeTypesDeCourrier();
     }
 
     public List<String> avoirListeDesDirections(){
@@ -209,7 +210,7 @@ public class CourriersEnvoyes implements Serializable {
             }
             ResultSet resultSet = null;
             ResultSet resultSet1 = null;
-            Connection connection = DatabaseManager.getConnexion();
+            Connection connection = DatabasConnection.getConnexion();
             String requeteSQL = null;
             try {
                 Statement statement = connection.createStatement();

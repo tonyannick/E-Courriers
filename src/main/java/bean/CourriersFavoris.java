@@ -1,6 +1,6 @@
 package bean;
 
-import database.DataBaseQueries;
+import databaseManager.CourriersQueries;
 import model.Courrier;
 import sessionManager.SessionUtils;
 
@@ -32,7 +32,7 @@ public class CourriersFavoris implements Serializable {
     public void recupererLalisteDesCourriersEnFavoris(){
         HttpSession session = SessionUtils.getSession();
         String idPersonne = (String) session.getAttribute("idUser");
-        courrier.setListeDesCouriersFavoris(DataBaseQueries.recupererTousLesCourriersFavorisDUnUtilisateursParSonId(idPersonne));
+        courrier.setListeDesCouriersFavoris(CourriersQueries.recupererTousLesCourriersFavorisDUnUtilisateursParSonId(idPersonne));
     }
 
 
