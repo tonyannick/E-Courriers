@@ -62,7 +62,6 @@ public class DetailDUnCourrierDansUnDossier implements Serializable {
 
     public void recupererLesDossiers(){
         HttpSession session = SessionUtils.getSession();
-        String sessionID = session.getAttribute("uniqueUserID").toString();
         String idUser = (String) session.getAttribute( "idUser");
         dossier.setDossierList(DataBaseQueries.recupererLesDossiersDUnUtilisateur(idUser));
     }

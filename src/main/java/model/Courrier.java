@@ -109,6 +109,11 @@ public class Courrier {
         this.dateDEnregistrement= dateDEnregistrement;
     }
 
+    public Courrier(String dateDEnregistrement, String typeDeCourrier) {
+        this.dateDEnregistrement= dateDEnregistrement;
+        this.typeCourrier = typeDeCourrier;
+    }
+
     public Courrier(String dateDEnregistrement, String prioriteCourrier, String confidentiel, String idCourrier) {
         this.dateDEnregistrement= dateDEnregistrement;
         this.prioriteCourrier = prioriteCourrier;

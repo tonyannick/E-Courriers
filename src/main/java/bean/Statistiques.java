@@ -1,6 +1,7 @@
 package bean;
 
 import database.DataBaseQueries;
+import database.StatistiquesQueries;
 import dateAndTime.DateUtils;
 import org.primefaces.event.ItemSelectEvent;
 import org.primefaces.model.chart.Axis;
@@ -100,20 +101,24 @@ public class Statistiques implements Serializable {
         HttpSession session = SessionUtils.getSession();
         String nomDirection = session.getAttribute("directionUser").toString();
         String idDirection = session.getAttribute("idDirectionUser").toString();
-        DataBaseQueries.recupererStatistiquesSurTousLesCourriersParMoisParDirection(nomDirection);
-        DataBaseQueries.calculerLesStatistiquesDesCourriersTraitesParTypesDeCourrierDuMoisEnCours(idDirection);
-        nombreDeCourrierTraitesJanvier = DataBaseQueries.nombreDeCourrierJanvier;
-        nombreDeCourrierTraitesFevrier = DataBaseQueries.nombreDeCourrierFevrier;
-        nombreDeCourrierTraitesMars = DataBaseQueries.nombreDeCourrierMars;
-        nombreDeCourrierTraitesAvril = DataBaseQueries.nombreDeCourrierAvril;
-        nombreDeCourrierTraitesMai = DataBaseQueries.nombreDeCourrierMai;
-        nombreDeCourrierTraitesJuin = DataBaseQueries.nombreDeCourrierJuin;
-        nombreDeCourrierTraitesJuillet = DataBaseQueries.nombreDeCourrierJuillet;
-        nombreDeCourrierTraitesAout = DataBaseQueries.nombreDeCourrierAout;
-        nombreDeCourrierTraitesSeptembre = DataBaseQueries.nombreDeCourrierSeptembre;
-        nombreDeCourrierTraitesOctobre = DataBaseQueries.nombreDeCourrierOctobre;
-        nombreDeCourrierTraitesNovembre = DataBaseQueries.nombreDeCourrierNovembre;
-        nombreDeCourrierTraitesDecembre = DataBaseQueries.nombreDeCourrierDecembre;
+        StatistiquesQueries.recupererLeNombreDeCourrierTraitesParDirectionParMoisPourLAnneeEnCours(nomDirection);
+        StatistiquesQueries.recupererLeNombreDeCourrierRecusParDirection(nomDirection);
+        StatistiquesQueries.recupererLeNombreDeCourrierEnvoyesParDirection(nomDirection);
+        //DataBaseQueries.calculerLesStatistiquesDesCourriersTraitesParTypesDeCourrierDuMoisEnCours(idDirection);
+
+        StatistiquesQueries.calculerLesStatistiquesDesCourriersTraitesParTypesDeCourrierDuMoisEnCours(idDirection);
+        nombreDeCourrierTraitesJanvier = StatistiquesQueries.nombreDeCourrierJanvier;
+        nombreDeCourrierTraitesFevrier = StatistiquesQueries.nombreDeCourrierFevrier;
+        nombreDeCourrierTraitesMars = StatistiquesQueries.nombreDeCourrierMars;
+        nombreDeCourrierTraitesAvril = StatistiquesQueries.nombreDeCourrierAvril;
+        nombreDeCourrierTraitesMai = StatistiquesQueries.nombreDeCourrierMai;
+        nombreDeCourrierTraitesJuin = StatistiquesQueries.nombreDeCourrierJuin;
+        nombreDeCourrierTraitesJuillet = StatistiquesQueries.nombreDeCourrierJuillet;
+        nombreDeCourrierTraitesAout = StatistiquesQueries.nombreDeCourrierAout;
+        nombreDeCourrierTraitesSeptembre = StatistiquesQueries.nombreDeCourrierSeptembre;
+        nombreDeCourrierTraitesOctobre = StatistiquesQueries.nombreDeCourrierOctobre;
+        nombreDeCourrierTraitesNovembre = StatistiquesQueries.nombreDeCourrierNovembre;
+        nombreDeCourrierTraitesDecembre = StatistiquesQueries.nombreDeCourrierDecembre;
         barModelRecus.clear();
         barModelEnvoyes.clear();
         barModelTypeDeCourrier.clear();
@@ -122,17 +127,17 @@ public class Statistiques implements Serializable {
         ChartSeries directionEnvoyesStats = new ChartSeries();
         ChartSeries courrierPaType = new ChartSeries();
 
-        DataBaseQueries.myMapCourrierRecusParDirection.forEach((key,value) -> directionRecusStats.set(key,value));
+        StatistiquesQueries.myMapCourrierRecusParDirection.forEach((key,value) -> directionRecusStats.set(key,value));
         barModelRecus.addSeries(directionRecusStats);
         Axis xAxisRecus =  barModelRecus.getAxis(AxisType.X);
         xAxisRecus.setLabel("Directions du Ministère");
 
-        DataBaseQueries.myMapCourrierEnvoyesParDirection.forEach((key,value) -> directionEnvoyesStats.set(key,value));
+        StatistiquesQueries.myMapCourrierEnvoyesParDirection.forEach((key,value) -> directionEnvoyesStats.set(key,value));
         barModelEnvoyes.addSeries(directionEnvoyesStats);
         Axis xAxisEnvoyes = barModelEnvoyes.getAxis(AxisType.X);
         xAxisEnvoyes.setLabel("Directions du Ministère");
 
-        DataBaseQueries.mapNombreCourrierParTypeDuMoisEnCours.forEach((key,value) -> courrierPaType.set(key,value));
+        StatistiquesQueries.mapNombreCourrierParTypeDuMoisEnCours.forEach((key,value) -> courrierPaType.set(key,value));
         barModelTypeDeCourrier.addSeries(courrierPaType);
         Axis xAxisTypeCourrier = barModelTypeDeCourrier.getAxis(AxisType.X);
         xAxisTypeCourrier.setLabel("Courriers par types");

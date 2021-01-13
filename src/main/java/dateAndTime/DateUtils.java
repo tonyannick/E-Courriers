@@ -69,6 +69,7 @@ public class DateUtils {
         Date date = new Date();
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy");
         String anneeEnCours = simpleDateFormat.format(date);
+        System.out.println("anneeEnCours = " + anneeEnCours);
         return anneeEnCours;
     }
 
@@ -184,7 +185,7 @@ public class DateUtils {
     }
 
 
-    public static void recupererPremierEtDernierJourDuMoisEnCours(){
+    public static void recupererLePremierEtLeDernierJourDuMoisEnCours(){
 
         Calendar firstMonthcalendar = Calendar.getInstance(Locale.FRANCE);
         Calendar lastMonthcalendar = Calendar.getInstance(Locale.FRANCE);
