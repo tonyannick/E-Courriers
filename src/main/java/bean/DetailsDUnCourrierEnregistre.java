@@ -357,24 +357,24 @@ public class DetailsDUnCourrierEnregistre implements Serializable {
     public void recupererToutesLesInfosDuCourrier(){
         HttpSession session = SessionUtils.getSession();
         String idCourrier = (String) session.getAttribute("idCourrier");
-        DataBaseQueries.recupererLEmetteurDUnCourrierParIdCourrier(idCourrier);
-        emetteur.setTypeDEmetteur(DataBaseQueries.typeDemetteur);
-        emetteur.setMinistere(DataBaseQueries.ministereEmetteur);
-        emetteur.setDirection(DataBaseQueries.directeurEmetteur);
-        emetteur.setFonction(DataBaseQueries.fonctionEmetteur);
-        DataBaseQueries.recupererLeDestinataireDUnCourrierParIdCourrier(idCourrier);
-        DataBaseQueries.recupererLesDetailsDUnCourrierEnregistre(idCourrier);
-        courrier.setObjetCourrier(DataBaseQueries.objetCourrier);
-        courrier.setReferenceCourrier(DataBaseQueries.referenceCourrier);
-        courrier.setPrioriteCourrier(DataBaseQueries.prioriteCourrier);
-        courrier.setTypeCourrier(DataBaseQueries.typeCourrier);
+        CourriersQueries.recupererLEmetteurDUnCourrierParIdCourrier(idCourrier);
+        emetteur.setTypeDEmetteur(CourriersQueries.typeDemetteur);
+        emetteur.setMinistere(CourriersQueries.ministereEmetteur);
+        emetteur.setDirection(CourriersQueries.directeurEmetteur);
+        emetteur.setFonction(CourriersQueries.fonctionEmetteur);
+        CourriersQueries.recupererLeDestinataireDUnCourrierParIdCourrier(idCourrier);
+        CourriersQueries.recupererLesDetailsDUnCourrierEnregistre(idCourrier);
+        courrier.setObjetCourrier(CourriersQueries.objetCourrier);
+        courrier.setReferenceCourrier(CourriersQueries.referenceCourrier);
+        courrier.setPrioriteCourrier(CourriersQueries.prioriteCourrier);
+        courrier.setTypeCourrier(CourriersQueries.typeCourrier);
 
-        courrier.setDossierAlfresco(DataBaseQueries.dossierAlfresco);
-        courrier.setConfidentiel(DataBaseQueries.confidentiel);
-        courrier.setHeureDeReception(DataBaseQueries.heureDeReception);
-        courrier.setDateDEnregistrement(DataBaseQueries.dateDEnregistrement);
-        courrier.setDateDeReception(DataBaseQueries.dateDeReception);
-        courrier.setCommentairesCourrier(DataBaseQueries.commentairesCourrier);
+        courrier.setDossierAlfresco(CourriersQueries.dossierAlfresco);
+        courrier.setConfidentiel(CourriersQueries.confidentiel);
+        courrier.setHeureDeReception(CourriersQueries.heureDeReception);
+        courrier.setDateDEnregistrement(CourriersQueries.dateDEnregistrement);
+        courrier.setDateDeReception(CourriersQueries.dateDeReception);
+        courrier.setCommentairesCourrier(CourriersQueries.commentairesCourrier);
         String jour = courrier.getDateDeReception().substring(courrier.getDateDeReception().lastIndexOf("-") +1);
         String mois = courrier.getDateDeReception().substring(courrier.getDateDeReception().indexOf("-")+1,courrier.getDateDeReception().indexOf("-")+3);
         String annee = courrier.getDateDeReception().substring(0,4);
@@ -385,7 +385,7 @@ public class DetailsDUnCourrierEnregistre implements Serializable {
 
         courrier.setDateDeReception(jour+"-"+mois+"-"+annee);
         courrier.setDateDEnregistrement(jourEnregistrement+"-"+moisEnregistrement+"-"+anneeEnregistrement);
-        courrier.setHeureDEnregistrement(DataBaseQueries.heureDEnregistrement);
+        courrier.setHeureDEnregistrement(CourriersQueries.heureDEnregistrement);
     }
 
     public void recupererHistoriqueDuCourrier(){
@@ -397,8 +397,8 @@ public class DetailsDUnCourrierEnregistre implements Serializable {
     public void recupererLesDestinatairesDuCourrier(){
         HttpSession session = SessionUtils.getSession();
         String idCourrier = (String) session.getAttribute("idCourrier");
-        destinataire.setListeDestinataire(DataBaseQueries.recupererLesDestinatairesDUnCourrier(idCourrier));
-        destinataire.setNombreDeDestinataire(String.valueOf(DataBaseQueries.nombreDeDestinataireDuCourrier));
+        destinataire.setListeDestinataire(CourriersQueries.recupererLesDestinatairesDUnCourrier(idCourrier));
+        destinataire.setNombreDeDestinataire(String.valueOf(CourriersQueries.nombreDeDestinataireDuCourrier));
     }
 
     public void recupererLesActionsParEtapeDuCourrier(){

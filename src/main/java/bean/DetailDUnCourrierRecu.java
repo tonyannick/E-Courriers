@@ -2,6 +2,7 @@ package bean;
 
 import alfresco.ConnexionAlfresco;
 import alfresco.NomDesDossiers;
+import databaseManager.CourriersQueries;
 import databaseManager.DataBaseQueries;
 import databaseManager.DatabasConnection;
 import databaseManager.DossiersQueries;
@@ -202,46 +203,46 @@ public class DetailDUnCourrierRecu implements Serializable {
         HttpSession session = SessionUtils.getSession();
         String idCourrier = (String) session.getAttribute("courrierId");
         String idDirection = (String) session.getAttribute( "idDirectionUser");
-        DataBaseQueries.recupererLEmetteurDUnCourrierParIdCourrier(idCourrier);
-        DataBaseQueries.recupererLeDestinataireDUnCourrierParIdCourrier(idCourrier);
-        DataBaseQueries.recupererLesDetailsDUnCourrierRecu(idCourrier,idDirection);
+        CourriersQueries.recupererLEmetteurDUnCourrierParIdCourrier(idCourrier);
+        CourriersQueries.recupererLeDestinataireDUnCourrierParIdCourrier(idCourrier);
+        CourriersQueries.recupererLesDetailsDUnCourrierRecu(idCourrier,idDirection);
 
-        emetteur.setTypeDEmetteur(DataBaseQueries.typeDemetteur);
+        emetteur.setTypeDEmetteur(CourriersQueries.typeDemetteur);
 
-        emetteur.setMinistere(DataBaseQueries.ministereEmetteur);
-        emetteur.setDirection(DataBaseQueries.directeurEmetteur);
-        emetteur.setFonction(DataBaseQueries.fonctionEmetteur);
+        emetteur.setMinistere(CourriersQueries.ministereEmetteur);
+        emetteur.setDirection(CourriersQueries.directeurEmetteur);
+        emetteur.setFonction(CourriersQueries.fonctionEmetteur);
 
-        emetteur.setMinistereAutreMinistere(DataBaseQueries.ministereEmetteur);
-        emetteur.setDirectionAutreMinistere(DataBaseQueries.directeurEmetteur);
-        emetteur.setFonctionAutreMinistere(DataBaseQueries.fonctionEmetteur);
+        emetteur.setMinistereAutreMinistere(CourriersQueries.ministereEmetteur);
+        emetteur.setDirectionAutreMinistere(CourriersQueries.directeurEmetteur);
+        emetteur.setFonctionAutreMinistere(CourriersQueries.fonctionEmetteur);
 
-        emetteur.setRaisonSocial(DataBaseQueries.ministereEmetteur);
-        emetteur.setDirectionEntreprise(DataBaseQueries.directeurEmetteur);
-        emetteur.setFonctionEntreprise(DataBaseQueries.fonctionEmetteur);
-        emetteur.setTelephoneEntreprise(DataBaseQueries.telEmetteurEtablissement);
-        emetteur.setEmailEntreprise(DataBaseQueries.emailEmetteurEtablissement);
-        emetteur.setAdresseEntreprise(DataBaseQueries.adresseEmetteurEtablissement);
+        emetteur.setRaisonSocial(CourriersQueries.ministereEmetteur);
+        emetteur.setDirectionEntreprise(CourriersQueries.directeurEmetteur);
+        emetteur.setFonctionEntreprise(CourriersQueries.fonctionEmetteur);
+        emetteur.setTelephoneEntreprise(CourriersQueries.telEmetteurEtablissement);
+        emetteur.setEmailEntreprise(CourriersQueries.emailEmetteurEtablissement);
+        emetteur.setAdresseEntreprise(CourriersQueries.adresseEmetteurEtablissement);
 
-        emetteur.setNomParticulier(DataBaseQueries.nomEtPrenomEmetteurPersonne);
-        emetteur.setTelephoneParticulier(DataBaseQueries.telEmetteurPersonne);
-        emetteur.setEmailParticulier(DataBaseQueries.emailEmetteurPersonne);
+        emetteur.setNomParticulier(CourriersQueries.nomEtPrenomEmetteurPersonne);
+        emetteur.setTelephoneParticulier(CourriersQueries.telEmetteurPersonne);
+        emetteur.setEmailParticulier(CourriersQueries.emailEmetteurPersonne);
 
         PrimeFaces.current().executeScript("affichageEnFonctionDuTypeEmetteur()");
         PrimeFaces.current().executeScript("affichageDivAccuseDeReception()");
 
-        courrier.setObjetCourrier(DataBaseQueries.objetCourrier);
-        courrier.setReferenceCourrier(DataBaseQueries.referenceCourrier);
-        courrier.setPrioriteCourrier(DataBaseQueries.prioriteCourrier);
-        courrier.setTypeCourrier(DataBaseQueries.typeCourrier);
-        courrier.setAccuseDeReception(DataBaseQueries.accuseDeReception);
-        courrier.setCommentairesCourrier(DataBaseQueries.commentairesCourrier);
-        courrier.setDossierAlfresco(DataBaseQueries.dossierAlfresco);
-        courrier.setConfidentiel(DataBaseQueries.confidentiel);
-        courrier.setHeureDeReception(DataBaseQueries.heureDeReception);
-        courrier.setDateDEnregistrement(DataBaseQueries.dateDEnregistrement);
-        courrier.setDateDeReception(DataBaseQueries.dateDeReception);
-        courrier.setReferenceInterne(DataBaseQueries.referenceInterne);
+        courrier.setObjetCourrier(CourriersQueries.objetCourrier);
+        courrier.setReferenceCourrier(CourriersQueries.referenceCourrier);
+        courrier.setPrioriteCourrier(CourriersQueries.prioriteCourrier);
+        courrier.setTypeCourrier(CourriersQueries.typeCourrier);
+        courrier.setAccuseDeReception(CourriersQueries.accuseDeReception);
+        courrier.setCommentairesCourrier(CourriersQueries.commentairesCourrier);
+        courrier.setDossierAlfresco(CourriersQueries.dossierAlfresco);
+        courrier.setConfidentiel(CourriersQueries.confidentiel);
+        courrier.setHeureDeReception(CourriersQueries.heureDeReception);
+        courrier.setDateDEnregistrement(CourriersQueries.dateDEnregistrement);
+        courrier.setDateDeReception(CourriersQueries.dateDeReception);
+        courrier.setReferenceInterne(CourriersQueries.referenceInterne);
 
         PrimeFaces.current().executeScript("affichageMessageDivReferenceInterne()");
 
@@ -255,7 +256,7 @@ public class DetailDUnCourrierRecu implements Serializable {
         String anneeEnregistrement = courrier.getDateDEnregistrement().substring(0,4);
         courrier.setDateDEnregistrement(jourEnregistrement+"-"+moisEnregistrement+"-"+anneeEnregistrement);
 
-        courrier.setHeureDEnregistrement(DataBaseQueries.heureDEnregistrement);
+        courrier.setHeureDEnregistrement(CourriersQueries.heureDEnregistrement);
     }
 
     public void fermerDialogueAccuseDeReception(){
@@ -561,9 +562,9 @@ public class DetailDUnCourrierRecu implements Serializable {
         HttpSession session = SessionUtils.getSession();
         String idCourrier = (String) session.getAttribute("courrierId");
         String isCourrierTransferer = (String) session.getAttribute( "courrierTransferer");
-        destinataire.setListeDestinataire(DataBaseQueries.recupererLesDestinatairesDUnCourrier(idCourrier));
-        destinataire.setNombreDeDestinataire(String.valueOf(DataBaseQueries.nombreDeDestinataireDuCourrier));
-        destinataire.setListeDestinataireParTransfer(DataBaseQueries.recupererLesDestinatairesParTransferDUnCourrier(idCourrier));
+        destinataire.setListeDestinataire(CourriersQueries.recupererLesDestinatairesDUnCourrier(idCourrier));
+        destinataire.setNombreDeDestinataire(String.valueOf(CourriersQueries.nombreDeDestinataireDuCourrier));
+        destinataire.setListeDestinataireParTransfer(CourriersQueries.recupererLesDestinatairesParTransferDUnCourrier(idCourrier));
         if(destinataire.getListeDestinataireParTransfer().size() > 0){
             existenceDestinataireDeTransfer = "oui";
         }

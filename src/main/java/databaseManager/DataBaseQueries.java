@@ -20,10 +20,7 @@ import java.util.stream.Stream;
 
 public class DataBaseQueries {
 
-    public static String idPersonne;
-    public static String idEtablissement;
-    public static String etablissementUser;
-    public static String passwordUser;
+
     public static String emailUser;
     public static String telUser;
     public static String pseudUser;
@@ -52,7 +49,7 @@ public class DataBaseQueries {
     public static int nombreCourrierExterneDuMois = 0;
     public static int nombreCourrierPasUrgentDuMois = 0;
     public static int nombreCourrierConfidentielDuMois = 0;
-    public static int nombreDeDestinataireDuCourrier= 0;
+
     public static int nombreDeTacheDunAgentSurCourrier= 0;
     public static int nombreDActionEnCoursDuCourrier= 0;
     public static String typeDemetteur;
@@ -341,77 +338,6 @@ public class DataBaseQueries {
             }
 
         }
-    }
-
-    public static void calculerLesStatistiquesDesCourriersTraitesParTypesDEmetteur(String idDirection){
-
-        List<Statistiques> listeTypeDeCourrierEnvoyes = new ArrayList<>();
-        List<Statistiques> listeTypeDeCourrierRecus = new ArrayList<>();
-        List<Statistiques> listeNombreDeCourrierParTypeDEmetteur = new ArrayList<>();
-
-        String nombreDeCourrierEnvoyesParTypeSQL = "select courrier.date_enregistrement, titre_type_courrier, count(*) from `envoyer_courrier` inner join `courrier` on envoyer_courrier.id_courrier = courrier.id_courrier inner join personne on envoyer_courrier.id_personne = personne.id_personne inner join direction on personne.id_direction = direction.id_direction inner join type_courrier on type_courrier.id_type_courrier = courrier.fk_type_courrier where direction.id_direction = '"+idDirection+"' and etat='"+EtatCourrier.courrierEnvoye+"' group by type_courrier.id_type_courrier order by courrier.id_courrier ";
-        String nombreDeCourrierRecusParTypeSQL = "select courrier.date_enregistrement, titre_type_courrier, count(*) from `recevoir_courrier` inner join `courrier` on recevoir_courrier.id_courrier = courrier.id_courrier inner join personne on recevoir_courrier.id_personne = personne.id_personne inner join direction on personne.id_direction = direction.id_direction inner join type_courrier on type_courrier.id_type_courrier = courrier.fk_type_courrier where direction.id_direction = '"+idDirection+"' group by type_courrier.id_type_courrier order by courrier.id_courrier";
-
-        Connection connectionCourrierRecusParType =  DatabasConnection.getConnexion();
-        Connection connectionCourrierEnvoyesParType =  DatabasConnection.getConnexion();
-        ResultSet resultSetCourriersEnvoyesParType = null;
-        ResultSet resultSetCourriersRecusParType = null;
-        try {
-            resultSetCourriersEnvoyesParType = connectionCourrierEnvoyesParType.createStatement().executeQuery(nombreDeCourrierEnvoyesParTypeSQL);
-            resultSetCourriersRecusParType = connectionCourrierRecusParType.createStatement().executeQuery(nombreDeCourrierRecusParTypeSQL);
-
-            while (resultSetCourriersRecusParType.next()) {
-                listeTypeDeCourrierRecus.add(new Statistiques(
-                        resultSetCourriersRecusParType.getString("titre_type_courrier"),
-                        resultSetCourriersRecusParType.getString("count(*)"),
-                        resultSetCourriersRecusParType.getString("courrier.date_enregistrement")));
-            }
-            while (resultSetCourriersEnvoyesParType.next()) {
-                listeTypeDeCourrierEnvoyes.add(new Statistiques(
-                        resultSetCourriersEnvoyesParType.getString("titre_type_courrier"),
-                        resultSetCourriersEnvoyesParType.getString("count(*)"),
-                        resultSetCourriersEnvoyesParType.getString("courrier.date_enregistrement")));
-            }
-
-            listeNombreDeCourrierParType =  Stream.concat(listeTypeDeCourrierRecus.stream(), listeTypeDeCourrierEnvoyes.stream()).collect(Collectors.toList());
-            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
-            for (int a = 0; a <  listeNombreDeCourrierParType.size(); a++) {
-
-                try {
-                    Date date1 = null;
-                    date1 = sdf.parse(listeNombreDeCourrierParType.get(a).getDateDEnregistrement());
-                    if (date1.after(premierDuMois) && date1.before(dernierDuMois)) {
-
-                    }else{
-                        listeNombreDeCourrierParType.remove(a);
-                    }
-                } catch (ParseException e) {
-                    e.printStackTrace();
-                }
-
-            }
-
-            for (int a = 0; a <  listeNombreDeCourrierParType.size(); a++) {
-                System.out.println("listeNombreDeCourrierParType = " + listeNombreDeCourrierParType.get(a).getTypeDeCourrier());
-                System.out.println("listeNombreDeCourrierParType = " + listeNombreDeCourrierParType.get(a).getNombreTypeDeCourrier());
-                System.out.println("----------------------------------------------------------------------");
-            }
-
-
-            System.out.println("listeNombreDeCourrierParType apres = " + listeNombreDeCourrierParType.size());
-
-            for(Statistiques myStat : listeNombreDeCourrierParType ){
-                String key = myStat.getTypeDeCourrier();
-                int valueOfKey = mapNombreCourrierParTypeDuMoisEnCours.containsKey(key) ? mapNombreCourrierParTypeDuMoisEnCours.get(key) : 0;
-                valueOfKey += Integer.parseInt(myStat.getNombreTypeDeCourrier());
-                mapNombreCourrierParTypeDuMoisEnCours.put(key,valueOfKey);
-            }
-
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-
-
     }
 
     /***Fonction de récuperation des disucssions ouvertes d'un user***/
@@ -888,151 +814,6 @@ public class DataBaseQueries {
         return nombreCourrier;
     }
 
-    /**Fonction qui recuperer l'emetteur d'un courrier**/
-    public static void recupererLEmetteurDUnCourrierParIdCourrier(String idCourrier){
-        String requeteDetailEmetteurCourrierSQL = "select * from `envoyer_courrier` inner join `personne` on envoyer_courrier.id_personne = personne.id_personne left join fonction on fonction.id_fonction = personne.id_fonction left join direction on personne.id_direction = direction.id_direction inner join type_de_personne on personne.fk_type_personne = type_de_personne.id_type_de_personne left join etablissement on personne.id_etablissement = etablissement.id_etablissement where envoyer_courrier.id_courrier = " + idCourrier + ";";
-        ResultSet resultSet = null;
-        Connection connection = DatabasConnection.getConnexion();
-        try {
-            resultSet = connection.createStatement().executeQuery(requeteDetailEmetteurCourrierSQL);
-            if (resultSet.next()){
-                typeDemetteur = resultSet.getString("titre_type_de_personne");
-                directeurEmetteur = resultSet.getString("nom_direction");
-                fonctionEmetteur = resultSet.getString("titre_fonction");
-                ministereEmetteur = resultSet.getString("nom_etablissement");
-
-                telEmetteurEtablissement = resultSet.getString("tel_etablissement");
-                emailEmetteurEtablissement = resultSet.getString("mail_etablissement");
-                adresseEmetteurEtablissement = resultSet.getString("adresse_etablissement");
-
-                idEmetteur = resultSet.getString("envoyer_courrier.id_personne");
-                telEmetteurPersonne = resultSet.getString("tel");
-                emailEmetteurPersonne = resultSet.getString("mail");
-                nomEtPrenomEmetteurPersonne = resultSet.getString("nom") +" "+resultSet.getString("prenom") ;
-
-
-                if(telEmetteurEtablissement == null){
-                    telEmetteurEtablissement = "";
-                }
-                if(telEmetteurPersonne == null){
-                    telEmetteurPersonne = "";
-                }
-                if(adresseEmetteurEtablissement== null){
-                    adresseEmetteurEtablissement= "";
-                }
-                if(emailEmetteurEtablissement == null){
-                    emailEmetteurEtablissement= "";
-                }
-                if(emailEmetteurPersonne == null){
-                    emailEmetteurPersonne = "";
-                }
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }finally {
-            if (resultSet != null) {
-                try {
-                    resultSet.close();
-                } catch (SQLException e) { /* ignored */}
-            }
-            if (connection != null) {
-                try {
-                    connection.close();
-                } catch (SQLException e) { /* ignored */}
-            }
-        }
-    }
-
-    /**Fonction qui recuperer le destinataire d'un courrier**/
-    public static void recupererLeDestinataireDUnCourrierParIdCourrier(String idCourrier){
-        Destinataire destinataire = new Destinataire();
-        String requeteDetailEmetteurCourrierSQL = "select * from `recevoir_courrier` inner join `personne` on recevoir_courrier.id_personne = personne.id_personne left join fonction on fonction.id_fonction = personne.id_fonction left join direction on personne.id_direction = direction.id_direction inner join type_de_personne on personne.fk_type_personne = type_de_personne.id_type_de_personne left join etablissement on personne.id_etablissement = etablissement.id_etablissement where recevoir_courrier.id_courrier = " + idCourrier + ";";
-        ResultSet resultSet = null;
-        Connection connection = DatabasConnection.getConnexion();
-        try {
-            resultSet = connection.createStatement().executeQuery(requeteDetailEmetteurCourrierSQL);
-            while (resultSet.next()){
-                destinataire.setTypeDestinataire(resultSet.getString("titre_type_de_personne"));
-                destinataire.setFonction(resultSet.getString("titre_fonction"));
-                destinataire.setDirection(resultSet.getString("nom_direction"));
-                destinataire.setMinistere(resultSet.getString("nom_etablissement"));
-
-                destinataire.setNomParticulier(resultSet.getString("nom"));
-                destinataire.setPrenomParticulier(resultSet.getString("prenom"));
-                destinataire.setTelephoneParticulier(resultSet.getString("tel"));
-                destinataire.setEmailParticulier(resultSet.getString("mail"));
-
-                destinataire.setRaisonSocial(resultSet.getString("nom_etablissement"));
-                destinataire.setEmailEntreprise(resultSet.getString("mail_etablissement"));
-                destinataire.setAdresseEntreprise(resultSet.getString("adresse_etablissement"));
-                destinataire.setTelephoneEntreprise(resultSet.getString("tel_etablissement"));
-
-                destinataire.setMinistereAutreMinistere(resultSet.getString("nom_etablissement"));
-                destinataire.setDirectionAutreMinistere(resultSet.getString("nom_direction"));
-                destinataire.setFonctionAutreMinistere(resultSet.getString("titre_fonction"));
-                
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }finally {
-            if (resultSet != null) {
-                try {
-                    resultSet.close();
-                } catch (SQLException e) { /* ignored */}
-            }
-            if (connection != null) {
-                try {
-                    connection.close();
-                } catch (SQLException e) { /* ignored */}
-            }
-        }
-    }
-
-    /**Fonction qui recuperer les details d'un courrier**/
-    public static void recupererLesDetailsDUnCourrierEnregistre(String idCourrier){
-        String requeteDetailCourrierSQL = "select * from `courrier` inner join type_courrier on courrier.fk_type_courrier = type_courrier.id_type_courrier where id_courrier = " + idCourrier + " ;";
-        ResultSet resultSet = null;
-        Connection connection = DatabasConnection.getConnexion();
-        try {
-            resultSet = connection.createStatement().executeQuery(requeteDetailCourrierSQL);
-            if (resultSet.next()){
-                    dateDEnregistrement = resultSet.getString("date_enregistrement");
-                    heureDEnregistrement = resultSet.getString("heure_enregistrement");
-                    dateDeReception = resultSet.getString("date_reception");
-                    heureDeReception = resultSet.getString("heure_reception");
-                    objetCourrier = resultSet.getString("objet");
-                    commentairesCourrier = resultSet.getString("commentaires");
-                    prioriteCourrier = resultSet.getString("priorite");
-                    typeCourrier = resultSet.getString("titre_type_courrier");
-                    referenceCourrier = resultSet.getString("reference");
-                    confidentiel = resultSet.getString("confidentiel");
-                    dossierAlfresco = resultSet.getString("dossier_alfresco_emetteur");
-            }
-
-            if(confidentiel != null){
-                if(confidentiel.equals("0")){
-                    confidentiel = "non";
-                }else if(confidentiel.equals("1")){
-                    confidentiel = "oui";
-                }
-            }
-
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }finally {
-            if (resultSet != null) {
-                try {
-                    resultSet.close();
-                } catch (SQLException e) { /* ignored */}
-            }
-            if (connection != null) {
-                try {
-                    connection.close();
-                } catch (SQLException e) { /* ignored */}
-            }
-        }
-    }
-
     /**Fonction qui recuperer l'id de la relation envoye_courrire dans databaseManager en fonction de l'id d'un courrier**/
     public static void recupererIdEnvoyeCourrierParIdDuCourrier(String idCourrier){
         String requeteSQL = "select id_envoyer_courrier from `envoyer_courrier` inner join `courrier` on envoyer_courrier.id_courrier = courrier.id_courrier where courrier.id_courrier = " + idCourrier + " ;";
@@ -1044,60 +825,6 @@ public class DataBaseQueries {
             if (resultSet.next()){
                 dateDEnregistrement = resultSet.getString("id_envoyer_courrier");
             }
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }finally {
-            if (resultSet != null) {
-                try {
-                    resultSet.close();
-                } catch (SQLException e) { /* ignored */}
-            }
-            if (connection != null) {
-                try {
-                    connection.close();
-                } catch (SQLException e) { /* ignored */}
-            }
-        }
-    }
-
-    /**Fonction qui recuperer les details d'un courrier reçu par un user**/
-    public static void recupererLesDetailsDUnCourrierRecu(String idCourrier,String idDirection){
-        String requeteDetailCourrierSQL = "select * from `courrier` inner join type_courrier on courrier.fk_type_courrier = type_courrier.id_type_courrier inner join recevoir_courrier on courrier.id_courrier = recevoir_courrier.id_courrier inner join personne on personne.id_personne =  recevoir_courrier.id_personne where courrier.id_courrier = '" + idCourrier + "' and personne.id_direction = '"+idDirection+"' ;";
-
-        ResultSet resultSet = null;
-        Connection connection = DatabasConnection.getConnexion();
-        try {
-            resultSet = connection.createStatement().executeQuery(requeteDetailCourrierSQL);
-            if (resultSet.next()){
-                dateDEnregistrement = resultSet.getString("courrier.date_enregistrement");
-                heureDEnregistrement = resultSet.getString("courrier.heure_enregistrement");
-                dateDeReception = resultSet.getString("courrier.date_reception");
-                heureDeReception = resultSet.getString("courrier.heure_reception");
-                objetCourrier = resultSet.getString("objet");
-                commentairesCourrier = resultSet.getString("commentaires");
-                prioriteCourrier = resultSet.getString("priorite");
-                typeCourrier = resultSet.getString("titre_type_courrier");
-                referenceCourrier = resultSet.getString("reference");
-                confidentiel = resultSet.getString("confidentiel");
-                dossierAlfresco = resultSet.getString("dossier_alfresco_emetteur");
-                accuseDeReception = resultSet.getString("accuse_reception");
-                referenceInterne = resultSet.getString("reference_interne");
-            }
-
-            if(confidentiel != null){
-                if(confidentiel.equals("0")){
-                    confidentiel = "non";
-                }else if(confidentiel.equals("1")){
-                    confidentiel = "oui";
-                }
-            }
-
-
-            if(referenceInterne == null){
-                referenceInterne = "non";
-            }
-
-
         } catch (SQLException e) {
             e.printStackTrace();
         }finally {
@@ -1310,7 +1037,7 @@ public class DataBaseQueries {
 
     }
 
-    /**Fonction qui recuperer l"historique d'un courrier à partir du moment de sa reception**/
+    /**Fonction qui recuperer l'historique d'un courrier à partir du moment de sa reception**/
     public static List<Etape> recupererLHistoriqueDesActionsSurUnCourrierAPartirDuMomentDeSaReception(String idCourrier){
         List<Etape> listeHistoriquesActionsCourrier = new ArrayList<>();
         listeHistoriquesActionsCourrier.clear();
@@ -1496,119 +1223,6 @@ public class DataBaseQueries {
         }
 
         return listeActionsCourrier;
-
-    }
-
-    /**Fonction qui recuperer les destinataires d'un courrier**/
-    public static List<Destinataire> recupererLesDestinatairesDUnCourrier(String idCourrier){
-        List<Destinataire> listeDestinataire = new ArrayList<>();
-        listeDestinataire.clear();
-        String avoirTousLesDestinatairesDuCourrierSQL = "select * from (`recevoir_courrier` inner join `personne` on recevoir_courrier.id_personne = personne.id_personne inner join type_de_personne on personne.fk_type_personne = type_de_personne.id_type_de_personne left join `fonction` on personne.id_fonction = fonction.id_fonction left join `direction` on personne.id_direction = direction.id_direction left join `etablissement` on personne.id_etablissement = etablissement.id_etablissement ) where id_courrier = " + idCourrier + " and recevoir_courrier.transfer is NULL;";
-
-        ResultSet resultSet = null;
-        Connection connection = DatabasConnection.getConnexion();
-
-        try {
-            resultSet = connection.createStatement().executeQuery(avoirTousLesDestinatairesDuCourrierSQL);
-            while (resultSet.next()) {
-                listeDestinataire.add(new Destinataire(
-                        resultSet.getString("id_recevoir_courrier"),
-                        resultSet.getString("titre_type_de_personne"),
-                        resultSet.getString("nom_etablissement"),
-                        resultSet.getString("nom_direction"),
-                        resultSet.getString("titre_fonction"),
-                        resultSet.getString("id_personne"),
-                        resultSet.getString("accuse_reception"),
-                        resultSet.getString("transfer")));
-
-            }
-
-            nombreDeDestinataireDuCourrier = listeDestinataire.size();
-            for (int i = 0; i <  listeDestinataire.size(); i++){
-                
-                if ( listeDestinataire.get(i).getFonction() == null){
-                     listeDestinataire.get(i).setFonction("Aucun");
-                }
-                if ( listeDestinataire.get(i).getDirection() == null){
-                     listeDestinataire.get(i).setDirection("Aucun");
-                }
-                if ( listeDestinataire.get(i).getMinistere() == null){
-                     listeDestinataire.get(i).setMinistere("Aucun");
-                }
-            }
-
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }finally {
-            if ( resultSet != null) {
-                try {
-                    resultSet.close();
-                } catch (SQLException e) { /* ignored */}
-            }
-            if (connection != null) {
-                try {
-                    connection.close();
-                } catch (SQLException e) { /* ignored */}
-            }
-        }
-
-        return listeDestinataire;
-
-    }
-
-    /**Fonction qui recuperer les destinataires d'un courrier par transfer**/
-    public static List<Destinataire> recupererLesDestinatairesParTransferDUnCourrier(String idCourrier){
-        List<Destinataire> listeDestinataire = new ArrayList<>();
-        listeDestinataire.clear();
-        String avoirTousLesDestinatairesDuCourrierSQL = "select * from (`recevoir_courrier` inner join `personne` on recevoir_courrier.id_personne = personne.id_personne inner join type_de_personne on personne.fk_type_personne = type_de_personne.id_type_de_personne left join `fonction` on personne.id_fonction = fonction.id_fonction left join `direction` on personne.id_direction = direction.id_direction left join `etablissement` on personne.id_etablissement = etablissement.id_etablissement ) where id_courrier = " + idCourrier + " and recevoir_courrier.transfer = '"+EtatCourrier.courrierTransferer+"';";
-         ResultSet resultSet = null;
-        Connection connection = DatabasConnection.getConnexion();
-
-        try {
-            resultSet = connection.createStatement().executeQuery(avoirTousLesDestinatairesDuCourrierSQL);
-            while (resultSet.next()) {
-                listeDestinataire.add(new Destinataire(
-                        resultSet.getString("id_recevoir_courrier"),
-                        resultSet.getString("titre_type_de_personne"),
-                        resultSet.getString("nom_etablissement"),
-                        resultSet.getString("nom_direction"),
-                        resultSet.getString("titre_fonction"),
-                        resultSet.getString("id_personne"),
-                        resultSet.getString("accuse_reception"),
-                        resultSet.getString("transfer"),
-                        resultSet.getString("date_reception"),
-                        resultSet.getString("heure_reception")));
-
-            }
-
-
-            for (int i = 0; i <  listeDestinataire.size(); i++){
-
-                if ( listeDestinataire.get(i).getDateReception() != null){
-                    String jour = listeDestinataire.get(i).getDateReception().substring(listeDestinataire.get(i).getDateReception().lastIndexOf("-") +1);
-                    String mois = listeDestinataire.get(i).getDateReception().substring(listeDestinataire.get(i).getDateReception().indexOf("-")+1,listeDestinataire.get(i).getDateReception().indexOf("-")+3);
-                    String annee = listeDestinataire.get(i).getDateReception().substring(0,4);
-                    listeDestinataire.get(i).setDateReception(jour+"-"+mois+"-"+annee);
-                }
-            }
-
-
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }finally {
-            if ( resultSet != null) {
-                try {
-                    resultSet.close();
-                } catch (SQLException e) { /* ignored */}
-            }
-            if (connection != null) {
-                try {
-                    connection.close();
-                } catch (SQLException e) { /* ignored */}
-            }
-        }
-
-        return listeDestinataire;
 
     }
 
