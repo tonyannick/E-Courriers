@@ -2,7 +2,7 @@ package bean;
 
 import databaseManager.CourriersQueries;
 import databaseManager.DataBaseQueries;
-import databaseManager.DatabasConnection;
+import databaseManager.DatabaseConnection;
 import dateAndTime.DateUtils;
 import model.Courrier;
 import org.primefaces.PrimeFaces;
@@ -210,7 +210,7 @@ public class CourriersEnvoyes implements Serializable {
             }
             ResultSet resultSet = null;
             ResultSet resultSet1 = null;
-            Connection connection = DatabasConnection.getConnexion();
+            Connection connection = DatabaseConnection.getConnexion();
             String requeteSQL = null;
             try {
                 Statement statement = connection.createStatement();

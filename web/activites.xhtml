@@ -35,7 +35,8 @@
                     </ui:insert>
                 </div>
                 <div class="main-overview" style="margin-bottom: 90px; margin-top: 10px">
-                    <div class="col-sm-9 col-sm-offset-3 col-md-8 col-md-offset-2 main">
+                    <div class="ui-g-2"></div>
+                    <div class="ui-g-8">
                         <ul class="breadcrumb">
                             <li><h:outputLink value="tableaudebord.xhtml" title="Accueil">Accueil</h:outputLink></li>
                             <li>Activités</li>
@@ -43,11 +44,32 @@
 
                         <h3 class="page-header"><h:graphicImage value="./resources/images/alarm.png" style="margin-right :10px"/>Activités</h3>
                         <div class="ui-g">
-                            <div class="ui-g-2">2</div>
-                            <div class="ui-g-2">2</div>
-                            <div class="ui-g-2">2</div>
+                            <div class="ui-g-2"></div>
+                            <div class="ui-g-8">
+                                <ui:repeat  value="#{tableauDeBord.etape.listeDeMesTachesEnTraitement}"  var="etape">
+                                    <h:form id="form">
+                                        <h:panelGrid columns="2" columnClasses="ui-grid-col-1, ui-grid-col-10" style="width:100%">
+                                            <h:graphicImage value="./resources/images/entraitement.png"  style=" margin-left: 5px; margin-top: -30px"/>
+                                            <h:panelGrid columns="1" style="width: 100%">
+                                                <h:outputText value="#{etape.message}" escape="false" style="font-size: 13px; color: #0f0f0f"/>
+                                                <h:outputText style="color: #777777; font-size: 11px; margin-top: 5px" value="#{etape.date_debut}"/>
+                                                <p:commandButton  icon="fa fa-eye" action="#{tableauDeBord.voirUneTache}" ajax="false"
+                                                                  style="background: #496ea1; border: 1px #496ea1 solid; float: right"
+                                                                  title="Voir">
+                                                    <f:param name="etapeId" value="#{etape.id}" />
+                                                    <f:param name="natureEtape" value="#{etape.nature}" />
+                                                </p:commandButton>
+                                            </h:panelGrid>
+                                        </h:panelGrid>
+                                        <p:separator/>
+                                    </h:form>
+                                </ui:repeat>
+
+                            </div>
+                            <div class="ui-g-2"></div>
                         </div>
                     </div>
+                    <div class="ui-g-2"></div>
                 </div>
             </div>
         </div>

@@ -3,7 +3,7 @@ package bean;
 import alfresco.ConnexionAlfresco;
 import databaseManager.CourriersQueries;
 import databaseManager.DataBaseQueries;
-import databaseManager.DatabasConnection;
+import databaseManager.DatabaseConnection;
 import databaseManager.DossiersQueries;
 import model.*;
 import org.primefaces.PrimeFaces;
@@ -124,7 +124,7 @@ public class DetailDUnCourrierDansUnDossier implements Serializable {
         PrimeFaces.current().executeScript("affichageGridAnnexe()");
         if ( Integer.parseInt(annexe.getNombreDAnnexe()) > 0){
             String voirListeAnnexeSQL = "Select * from `annexe` where id_courrier = "+courrier.getIdCourrier()+";";
-            Connection connection = DatabasConnection.getConnexion();
+            Connection connection = DatabaseConnection.getConnexion();
             ResultSet resultSet = null;
 
             try {
@@ -242,7 +242,7 @@ public class DetailDUnCourrierDansUnDossier implements Serializable {
                 break;
         }
 
-        Connection connection = DatabasConnection.getConnexion();
+        Connection connection = DatabaseConnection.getConnexion();
         ResultSet resultSet = null;
         try{
             resultSet = connection.createStatement().executeQuery(requeteDetailDestinataireSQL);
@@ -286,7 +286,7 @@ public class DetailDUnCourrierDansUnDossier implements Serializable {
         HttpSession session = SessionUtils.getSession();
         String courrierId = (String) session.getAttribute("courrierId");
         String idDossier = (String) session.getAttribute("idDossier");
-        Connection connection = DatabasConnection.getConnexion();
+        Connection connection = DatabaseConnection.getConnexion();
         String retirerCourrierDuDossierSQL = "DELETE FROM `correspondance_dossier_courrier` WHERE id_dossier = '"+idDossier+"' and id_courrier='"+courrierId+"';";
 
         Statement statement = null;

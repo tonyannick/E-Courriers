@@ -3,7 +3,7 @@ package bean;
 import alfresco.ConnexionAlfresco;
 import databaseManager.CourriersQueries;
 import databaseManager.DataBaseQueries;
-import databaseManager.DatabasConnection;
+import databaseManager.DatabaseConnection;
 import databaseManager.DossiersQueries;
 import model.*;
 import org.primefaces.PrimeFaces;
@@ -148,7 +148,7 @@ public class DetailDUnCourrierFavorisOuArchiver implements Serializable {
         PrimeFaces.current().executeScript("affichageGridAnnexe()");
         if ( Integer.parseInt(annexe.getNombreDAnnexe()) > 0){
             String voirListeAnnexeSQL = "Select * from `annexe` where id_courrier = "+courrier.getIdCourrier()+";";
-            Connection connection = DatabasConnection.getConnexion();
+            Connection connection = DatabaseConnection.getConnexion();
             ResultSet resultSet = null;
 
             try {
@@ -266,7 +266,7 @@ public class DetailDUnCourrierFavorisOuArchiver implements Serializable {
                 break;
         }
 
-        Connection connection = DatabasConnection.getConnexion();
+        Connection connection = DatabaseConnection.getConnexion();
         ResultSet resultSet = null;
         try{
             resultSet = connection.createStatement().executeQuery(requeteDetailDestinataireSQL);
@@ -396,7 +396,7 @@ public class DetailDUnCourrierFavorisOuArchiver implements Serializable {
 
         }
 
-        Connection connection = DatabasConnection.getConnexion();
+        Connection connection = DatabaseConnection.getConnexion();
 
         String ajouterEtapeCourrierSQL = "INSERT INTO `etape` (`titre`, `etat`, `message`) VALUES" +
                 " ('" + EtatCourrier.modificationCourrier +"',"+"'"+ EtatEtape.termine+"',"+"'"+ ActionEtape.courrierRetirerDesArchives+"')";
@@ -459,7 +459,7 @@ public class DetailDUnCourrierFavorisOuArchiver implements Serializable {
 
         }
 
-        Connection connection = DatabasConnection.getConnexion();
+        Connection connection = DatabaseConnection.getConnexion();
 
         String ajouterEtapeCourrierSQL = "INSERT INTO `etape` (`titre`, `etat`, `message`) VALUES" +
                 " ('" + EtatCourrier.modificationCourrier +"',"+"'"+ EtatEtape.termine+"',"+"'"+ ActionEtape.courrierRetirerDesFavoris+"')";

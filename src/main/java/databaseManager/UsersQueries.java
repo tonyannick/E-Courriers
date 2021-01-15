@@ -37,7 +37,7 @@ public class UsersQueries {
     /***Fonction de verification de connexion d'un utilisateur***/
     public static boolean verifierUserLogin(String login, String motDePasse){
         boolean connected = false;
-        Connection connection =  DatabasConnection.getConnexion();
+        Connection connection =  DatabaseConnection.getConnexion();
         String requeteLoginSQL = "select * from `personne` inner join direction on personne.id_direction = direction.id_direction inner join `fonction` on personne.id_fonction = fonction.id_fonction inner join profil on personne.id_profil = profil.id_profil where pseudo = '"+login+"' and mot_de_passe = '"+motDePasse+"';";
         ResultSet resultSet = null;
         try {
@@ -75,7 +75,7 @@ public class UsersQueries {
     /***Fonction qui recupere les infos d'un utilisateur***/
     public static List<User> recupererLaListeDesUsers(){
         List<User> usersList = new ArrayList<>();
-        Connection connection =  DatabasConnection.getConnexion();
+        Connection connection =  DatabaseConnection.getConnexion();
         String requeteLoginSQL = "select * from `personne` inner join direction on personne.id_direction = direction.id_direction inner join `fonction` on personne.id_fonction = fonction.id_fonction inner join etablissement on etablissement.id_etablissement = personne.id_etablissement inner join profil on personne.id_profil = profil.id_profil inner join type_de_personne on personne.fk_type_personne = type_de_personne.id_type_de_personne order by personne.id_personne ;";
         ResultSet resultSet = null;
         try {
@@ -118,7 +118,7 @@ public class UsersQueries {
         agentDirectionList.clear();
         String idTypeDePersonne = DataBaseQueries.recupererIdTypeDePersonneParTitre(TypeDePersonne.agentDuMinistere);
         String requeteAgentSQL = "select * from `personne` inner join `direction` on personne.id_direction = direction.id_direction inner join profil on personne.id_profil = profil.id_profil inner join fonction on personne.id_fonction = fonction.id_fonction where nom_direction = '"+nomDirection+"' and fk_type_personne = '"+idTypeDePersonne+"';";
-        Connection connection = DatabasConnection.getConnexion();
+        Connection connection = DatabaseConnection.getConnexion();
         ResultSet resultSet = null;
         try {
             resultSet = connection.createStatement().executeQuery(requeteAgentSQL);
@@ -155,7 +155,7 @@ public class UsersQueries {
 
     /***Fonction qui recupere les infos d'un utilisateur***/
     public static void recupererInfosUsersParSonId(String idPersonne){
-        Connection connection =  DatabasConnection.getConnexion();
+        Connection connection =  DatabaseConnection.getConnexion();
         String requeteLoginSQL = "select * from `personne` inner join direction on personne.id_direction = direction.id_direction inner join `fonction` on personne.id_fonction = fonction.id_fonction inner join etablissement on etablissement.id_etablissement = personne.id_etablissement inner join profil on personne.id_profil = profil.id_profil inner join type_de_personne on personne.fk_type_personne = type_de_personne.id_type_de_personne where id_personne = '"+idPersonne+"' ;";
         ResultSet resultSet = null;
         try {

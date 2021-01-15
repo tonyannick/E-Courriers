@@ -1,7 +1,7 @@
 package bean;
 
 import databaseManager.DataBaseQueries;
-import databaseManager.DatabasConnection;
+import databaseManager.DatabaseConnection;
 import model.Etape;
 import org.primefaces.PrimeFaces;
 import sessionManager.SessionUtils;
@@ -71,7 +71,7 @@ public class MesTaches implements Serializable {
             phrase = "Tache crée par : ";
             requeteSQL = "select nom,prenom from `etape` inner join `correspondance_personne_etape` on etape.id_etape = correspondance_personne_etape.id_etape inner join `personne` on correspondance_personne_etape.id_personne = personne.id_personne where etape.id_etape = '"+idTache+"' and correspondance_personne_etape.role_agent = '"+ TypeDePersonne.affecteurTache +"' order by etape.id_etape desc";
         }
-        Connection connection = DatabasConnection.getConnexion();
+        Connection connection = DatabaseConnection.getConnexion();
         ResultSet resultSet = null;
         try{
             resultSet = connection.createStatement().executeQuery(requeteSQL);

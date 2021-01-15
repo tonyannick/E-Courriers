@@ -2,10 +2,7 @@ package bean;
 
 import alfresco.ConnexionAlfresco;
 import alfresco.NomDesDossiers;
-import databaseManager.CourriersQueries;
-import databaseManager.DataBaseQueries;
-import databaseManager.DatabasConnection;
-import databaseManager.DossiersQueries;
+import databaseManager.*;
 import dateAndTime.DateUtils;
 import fileManager.FileManager;
 import model.*;
@@ -316,7 +313,7 @@ public class DetailDUnCourrierRecu implements Serializable {
                 updateIdAlfrescoSQL = "update `reponse_courrier` set `identifiant_alfresco_reponse_courrier` = '"+reponseCourrier.getIdentifiantAlfresco()+"' where id_reponse_courrier  = (select id_reponse_courrier from (select id_reponse_courrier from reponse_courrier where identifiant_unique_reponse = '"+uniqueID+"' ) as temp)";
                 updateNomFichierSQL = "update `reponse_courrier` set `nom_fichier_reponse_courrier` = '"+reponseCourrier.getNomFichier()+"' where id_reponse_courrier  = (select id_reponse_courrier from (select id_reponse_courrier from reponse_courrier where identifiant_unique_reponse = '"+uniqueID+"' ) as temp)";
             }
-
+            String idTypeDactivite = ActivitesQueries.recupererIdTypeDActivitesParSonTitre(TypeDActivites.reponseAUnCourrier);
             String ajouterEtapeCourrierSQL = "INSERT INTO `etape` (`titre`, `etat`, `message`) VALUES" +
                     " ('" + EtatCourrier.ajoutDUneReponseAuCourrier+"',"+"'"+ EtatEtape.termine+"',"+"'"+ ActionEtape.ajoutDUneReponseAuCourrier+"')";
 
@@ -328,7 +325,7 @@ public class DetailDUnCourrierRecu implements Serializable {
             String ajouterCorrespondancePersonneReponseCourrierSQL = "INSERT INTO `correspondance_personne_reponse_courrier` (`id_personne`,`role`,`id_reponse_courrier`) VALUES" +
                     "('"+ idUser +"',"+"'"+RoleEtape.createurReponseAuCourrier+"',"+"(select id_reponse_courrier from reponse_courrier where identifiant_unique_reponse = '"+uniqueID+"' )"+")";
 
-            Connection connection = DatabasConnection.getConnexion();
+            Connection connection = DatabaseConnection.getConnexion();
             Statement statement = null;
             try {
                 connection.setAutoCommit(false);
@@ -344,6 +341,7 @@ public class DetailDUnCourrierRecu implements Serializable {
                 statement.addBatch(ajouterCorrespondanceEtapeCourrierSQL);
                 statement.addBatch(ajouterCorrespondanceEtapePersonneSQL);
                 statement.addBatch(ajouterEtapeCourrierSQL);
+                statement.addBatch(ActivitesQueries.ajouterUneActvitee(TitreActivites.reponseAjoutee, idCourrier ,idUser,idTypeDactivite));
                 statement.executeBatch();
                 connection.commit();
                 reponseCourrier.setText(null);
@@ -399,7 +397,7 @@ public class DetailDUnCourrierRecu implements Serializable {
             }
         }
         if(idUserAccuseDeReception != null){
-            Connection connection = DatabasConnection.getConnexion();
+            Connection connection = DatabaseConnection.getConnexion();
             String accuseReceptionDuCourrierSQL = "update `recevoir_courrier` set `accuse_reception` = '"+ EtatCourrier.accuseDeReception +"' where id_courrier = '"+idCourrier+"' and id_personne = '"+ idUserAccuseDeReception+"'; ";
 
             String ajouterEtapeCourrierSQL = "INSERT INTO `etape` (`titre`, `etat`, `message`) VALUES" +
@@ -473,7 +471,7 @@ public class DetailDUnCourrierRecu implements Serializable {
         PrimeFaces.current().executeScript("affichageGridAnnexe()");
         if ( Integer.parseInt(annexe.getNombreDAnnexe()) > 0){
             String voirListeAnnexeSQL = "Select * from `annexe` where id_courrier = "+courrier.getIdCourrier()+";";
-            Connection connection = DatabasConnection.getConnexion();
+            Connection connection = DatabaseConnection.getConnexion();
             ResultSet resultSet = null;
 
             try {
@@ -600,7 +598,7 @@ public class DetailDUnCourrierRecu implements Serializable {
                 break;
         }
 
-        Connection connection = DatabasConnection.getConnexion();
+        Connection connection = DatabaseConnection.getConnexion();
         ResultSet resultSet = null;
         try{
             resultSet = connection.createStatement().executeQuery(requeteDetailDestinataireSQL);
@@ -683,7 +681,7 @@ public class DetailDUnCourrierRecu implements Serializable {
         }
 
         if(idUserAccuseDeReception != null){
-            Connection connection = DatabasConnection.getConnexion();
+            Connection connection = DatabaseConnection.getConnexion();
             String mettreCourrierEnFavorisSQL = "update `recevoir_courrier` set `favoris` = '"+ EtatCourrier.favoris +"' where id_courrier = '"+idCourrier+"' and id_personne = '"+ idUserAccuseDeReception+"'; ";
 
             String ajouterEtapeCourrierSQL = "INSERT INTO `etape` (`titre`, `etat`, `message`) VALUES" +
@@ -761,7 +759,7 @@ public class DetailDUnCourrierRecu implements Serializable {
             }else{
                 PrimeFaces.current().executeScript("PF('panelboutonajouterreference').close()");
                 PrimeFaces.current().executeScript("PF('panelloadingReferenceinterne').toggle()");
-                Connection connection = DatabasConnection.getConnexion();
+                Connection connection = DatabaseConnection.getConnexion();
                 String ajouterReferenceInterneSQL = "update `recevoir_courrier` set `reference_interne` = '"+ referenceInterneCourrierTemp +"' where id_courrier = '"+idCourrier+"' and id_personne = '"+idUserAccuseDeReception+ "'; ";
                 String ajouterEtapeCourrierSQL = "INSERT INTO `etape` (`titre`, `etat`, `message`) VALUES" +
                         " ('" + EtatCourrier.modificationCourrier +"',"+"'"+ EtatEtape.termine+"',"+"'"+ ActionEtape.miseAJourReferenceInterne+"')";
@@ -817,7 +815,7 @@ public class DetailDUnCourrierRecu implements Serializable {
         HttpSession session = SessionUtils.getSession();
         String idCourrier = (String) session.getAttribute("courrierId");
         String idUser = (String) session.getAttribute( "idUser");
-        Connection connection = DatabasConnection.getConnexion();
+        Connection connection = DatabaseConnection.getConnexion();
         String mettreCourrierEnFavorisSQL = "update `recevoir_courrier` set `archive` = '"+ EtatCourrier.archiveActive +"' where id_courrier = '"+idCourrier+"' ; ";
 
         String ajouterEtapeCourrierSQL = "INSERT INTO `etape` (`titre`, `etat`, `message`) VALUES" +
@@ -889,7 +887,7 @@ public class DetailDUnCourrierRecu implements Serializable {
             FacesContext.getCurrentInstance().addMessage("messageAnnotation", new FacesMessage(FacesMessage.SEVERITY_FATAL, "Erreur!!!", "Vous devez ecrire un message !!!"));
         }else{
 
-            Connection connection = DatabasConnection.getConnexion();
+            Connection connection = DatabaseConnection.getConnexion();
             Statement statement = null;
             try {
                 connection.setAutoCommit(false);
@@ -932,7 +930,7 @@ public class DetailDUnCourrierRecu implements Serializable {
 
         String idTypeDePersonne = DataBaseQueries.recupererIdTypeDePersonneParTitre(TypeDePersonne.agentDuMinistere);
         String requeteAgentSQL = "select * from `personne` inner join `direction` on personne.id_direction = direction.id_direction inner join profil on personne.id_profil = profil.id_profil inner join fonction on personne.id_fonction = fonction.id_fonction where nom_direction = '"+direction+"' and fk_type_personne = '"+idTypeDePersonne+"';";
-        Connection connection = DatabasConnection.getConnexion();
+        Connection connection = DatabaseConnection.getConnexion();
         ResultSet resultSet = null;
         try {
             resultSet = connection.createStatement().executeQuery(requeteAgentSQL);
@@ -1012,7 +1010,8 @@ public class DetailDUnCourrierRecu implements Serializable {
                 String ajouterCorrespondanceEtapePersonneReceveurSQL = "INSERT INTO `correspondance_personne_etape` (`id_personne`,`role_agent`, `etat_tache`,`nature_etape`) VALUES" +
                         " ('" + idAgentAffecteAUneTache+"',"+"'"+TypeDePersonne.receveurTache+"',"+"'"+EtatEtape.PasRepondu +"',"+"'"+EtatCourrier.courrierRecu+"')";
 
-                Connection connection = DatabasConnection.getConnexion();
+                String idTypeDactivite = ActivitesQueries.recupererIdTypeDActivitesParSonTitre(TypeDActivites.tacheAjoutee);
+                Connection connection = DatabaseConnection.getConnexion();
                 Statement statement = null;
                 try {
                     connection.setAutoCommit(false);
@@ -1021,6 +1020,7 @@ public class DetailDUnCourrierRecu implements Serializable {
                     statement.addBatch(ajouterCorrespondanceEtapePersonneReceveurSQL);
                     statement.addBatch(ajouterCorrespondanceEtapeCourrierSQL);
                     statement.addBatch(ajouterEtapeCourrierSQL);
+                    statement.addBatch(ActivitesQueries.ajouterUneActvitee(TitreActivites.tacheAjoutee, idCourrier ,idUser,idTypeDactivite));
                     statement.executeBatch();
                     connection.commit();
                     FacesContext context = FacesContext.getCurrentInstance();
@@ -1072,7 +1072,7 @@ public class DetailDUnCourrierRecu implements Serializable {
             requeteDestinataireTacheSQL = "select nom,prenom from `etape` inner join `correspondance_personne_etape` on etape.id_etape = correspondance_personne_etape.id_etape inner join `personne` on correspondance_personne_etape.id_personne = personne.id_personne where etape.id_etape = '"+idTache+"' and correspondance_personne_etape.role_agent = '"+ TypeDePersonne.affecteurTache +"' order by etape.id_etape desc";
 
         }
-        Connection connection = DatabasConnection.getConnexion();
+        Connection connection = DatabaseConnection.getConnexion();
         ResultSet resultSet = null;
         try{
             resultSet = connection.createStatement().executeQuery(requeteDestinataireTacheSQL);
@@ -1125,7 +1125,7 @@ public class DetailDUnCourrierRecu implements Serializable {
         Map<String,String> params = FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap();
         String idDiscussionEtape = String.valueOf(params.get("discussionEtapeId"));
         String  requeteDiscussionEtapeSQL = "select identifiant_alfresco_discussion from `discussion_etape` where id_discussion_etape = '"+idDiscussionEtape+"' ; ";
-        Connection connection = DatabasConnection.getConnexion();
+        Connection connection = DatabaseConnection.getConnexion();
         ResultSet resultSet = null;
         try{
             resultSet = connection.createStatement().executeQuery(requeteDiscussionEtapeSQL);
@@ -1183,10 +1183,11 @@ public class DetailDUnCourrierRecu implements Serializable {
         }
     }
 
-    public void creerUneDiscussion(){/*TODO bloque un message vide*/
+    public void creerUneDiscussion(){
         HttpSession session = SessionUtils.getSession();
         String idUser = (String) session.getAttribute( "idUser");
-        Connection connection = DatabasConnection.getConnexion();
+        String idCourrier = (String) session.getAttribute( "courrierId");
+        Connection connection = DatabaseConnection.getConnexion();
         if(etape.getReponseTache() == null || etape.getReponseTache().isEmpty()){
             FacesContext.getCurrentInstance().addMessage("messageinfodiscussion", new FacesMessage(FacesMessage.SEVERITY_WARN, "Erreur", "Vous devez ecrire un message!!"));
         }else{
@@ -1206,6 +1207,7 @@ public class DetailDUnCourrierRecu implements Serializable {
 
             Statement statement = null;
             try {
+                String idTypeDactivite = ActivitesQueries.recupererIdTypeDActivitesParSonTitre(TypeDActivites.reponseAUneTache);
                 connection.setAutoCommit(false);
                 statement = connection.createStatement();
                 statement.addBatch(creerDiscussionSQL);
@@ -1216,6 +1218,7 @@ public class DetailDUnCourrierRecu implements Serializable {
                 if (updateNomFichierDansDiscussionSQL != null) {
                     statement.addBatch(updateNomFichierDansDiscussionSQL);
                 }
+                statement.addBatch(ActivitesQueries.ajouterUneActvitee(TitreActivites.discussionAjoutee, idCourrier ,idUser,idTypeDactivite));
                 statement.executeBatch();
                 connection.commit();
                 FacesContext context = FacesContext.getCurrentInstance();
@@ -1366,6 +1369,7 @@ public class DetailDUnCourrierRecu implements Serializable {
             if(direction.getTitreDirection().equals("rien") ){
                 FacesContext.getCurrentInstance().addMessage("messagesTransfererCourrier", new FacesMessage(FacesMessage.SEVERITY_WARN, "Erreur", "Vous devez selectionner une direction !!"));
             }else{
+                String idTypeDactivite = ActivitesQueries.recupererIdTypeDActivitesParSonTitre(TypeDActivites.transfertDuCourrier);
 
                 ajouterEtapeCourrierSQL = "insert into `etape` ( `titre`, `etat`,`message`) VALUES ('"+ActionEtape.transmisPourTraitement+"',"+"'"+EtatEtape.enTraitement+"',"+"'"+ActionEtape.transfererA+" "+direction.getTitreDirection()+"')";
 
@@ -1387,7 +1391,7 @@ public class DetailDUnCourrierRecu implements Serializable {
 
                 String recevoirCourrierSQL = "insert into recevoir_courrier (`favoris`,`archive`,`id_courrier`,`id_personne`,`accuse_reception`,`transfer`) VALUES ('" + EtatCourrier.pasfavoris+"',"+"'"+EtatCourrier.archiveNonActive+"',"+"'"+idCourrier+"',(select id_personne from `personne` where unique_id = '"+finalUniqueIDDestinataire+"'), '"+EtatCourrier.accuseDeReceptionNon+"',"+"'"+EtatCourrier.courrierTransferer+"');";
 
-                Connection connection = DatabasConnection.getConnexion();
+                Connection connection = DatabaseConnection.getConnexion();
                 Statement statement = null;
                 try {
                       connection.setAutoCommit(false);
@@ -1402,7 +1406,7 @@ public class DetailDUnCourrierRecu implements Serializable {
                       statement.addBatch(ajouterCorrespondanceEtapePersonneSQL);
                       statement.addBatch(ajouterCorrespondanceEtapeCourrierHistoriqueSQL);
                       statement.addBatch(ajouterHistoriqueCourrierSQL);
-
+                      statement.addBatch(ActivitesQueries.ajouterUneActvitee(TitreActivites.transfertDuCourrier, idCourrier ,idUser,idTypeDactivite));
                       int count[]  = statement.executeBatch();
 
                       connection.commit();

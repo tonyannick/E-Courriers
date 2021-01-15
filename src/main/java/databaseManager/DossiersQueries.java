@@ -24,7 +24,7 @@ public class DossiersQueries {
         String nomDossier = null;
         String recupererLesCourriersDUnDossiersSQL = " select nom_dossier from dossier where dossier.id_dossier = '"+idDossier+"' ;";
         ResultSet resultSet = null;
-        Connection connection = DatabasConnection.getConnexion();
+        Connection connection = DatabaseConnection.getConnexion();
 
         try {
             resultSet = connection.createStatement().executeQuery(recupererLesCourriersDUnDossiersSQL);
@@ -57,7 +57,7 @@ public class DossiersQueries {
         mesCourriers.clear();
         String recupererLesCourriersDUnDossiersSQL = " SELECT * FROM `courrier` left join correspondance_dossier_courrier on correspondance_dossier_courrier.id_courrier = courrier.id_courrier left join dossier on correspondance_dossier_courrier.id_dossier = dossier.id_dossier inner join correspondance_personne_dossier on dossier.id_dossier = correspondance_personne_dossier.id_dossier inner join personne on correspondance_personne_dossier.id_personne = personne.id_personne where personne.id_personne = '"+idUser+"' and dossier.id_dossier = '"+idDossier+"' order by courrier.id_courrier desc";
         ResultSet resultSet = null;
-        Connection connection = DatabasConnection.getConnexion();
+        Connection connection = DatabaseConnection.getConnexion();
 
         try {
             resultSet = connection.createStatement().executeQuery(recupererLesCourriersDUnDossiersSQL);
@@ -104,7 +104,7 @@ public class DossiersQueries {
     /***Renommer un dossier***/
     public static void renommerUnDossier(String idDossier,String nomDossier,String message){
 
-        Connection connection = DatabasConnection.getConnexion();
+        Connection connection = DatabaseConnection.getConnexion();
         String renommerDossierSQL = "update `dossier` set `nom_dossier` = '"+ nomDossier+"' where id_dossier= '"+idDossier+"' ; ";
 
         Statement statement = null;
@@ -143,7 +143,7 @@ public class DossiersQueries {
         listeDossiers.clear();
         String recupererLesDossiersSQL = "select nom_dossier,nom,prenom,dossier.id_dossier from dossier inner join correspondance_personne_dossier on dossier.id_dossier = correspondance_personne_dossier.id_dossier inner join personne on personne.id_personne = correspondance_personne_dossier.id_personne where personne.id_personne = '"+idUser+"' order by dossier.id_dossier desc";
         ResultSet resultSet = null;
-        Connection connection = DatabasConnection.getConnexion();
+        Connection connection = DatabaseConnection.getConnexion();
 
         try {
             resultSet = connection.createStatement().executeQuery(recupererLesDossiersSQL);
@@ -175,7 +175,7 @@ public class DossiersQueries {
     /***Ajouter un courrier à un dossier***/
     public static void ajouterUnCourrierDansUnDossier(String idDossier, String idCourrier, String idUser){
 
-        Connection connection = DatabasConnection.getConnexion();
+        Connection connection = DatabaseConnection.getConnexion();
 
         String ajouterCorrespondanceDossierCourrierSQL = "INSERT INTO `correspondance_dossier_courrier` (`id_courrier`,`id_dossier`) VALUES" +
                 "('"+ idCourrier +"',"+"'"+idDossier+"')";
@@ -223,7 +223,7 @@ public class DossiersQueries {
     /***Ajouter un courrier à un dossier***/
     public static void ajouterUnCourrierRecuDansUnDossier(String idDossier, String idCourrier, String idUser){
 
-        Connection connection = DatabasConnection.getConnexion();
+        Connection connection = DatabaseConnection.getConnexion();
 
         String ajouterCorrespondanceDossierCourrierSQL = "INSERT INTO `correspondance_dossier_courrier` (`id_courrier`,`id_dossier`) VALUES" +
                 "('"+ idCourrier +"',"+"'"+idDossier+"')";
@@ -271,7 +271,7 @@ public class DossiersQueries {
     /***Verifier si un courrier est dans un dossier***/
     public static String  voirSiUnCourrierEstDejaDansUnDossier(String idCourrier,String idDossier){
         String idCheckDossier = null;
-        Connection connection = DatabasConnection.getConnexion();
+        Connection connection = DatabaseConnection.getConnexion();
 
         String checkCourrierSQL = "select * from courrier left join `correspondance_dossier_courrier` on correspondance_dossier_courrier.id_courrier = courrier.id_courrier left  join dossier on dossier.id_dossier = correspondance_dossier_courrier.id_dossier where dossier.id_dossier = '"+idDossier+"' and courrier.id_courrier='"+idCourrier+"' ; ";
         ResultSet resultSet = null;
@@ -303,7 +303,7 @@ public class DossiersQueries {
     /***Créer un dossier***/
     public static void creerUnDossier(String idUser, String nomDossier, String descriptionDossier){
 
-        Connection connection = DatabasConnection.getConnexion();
+        Connection connection = DatabaseConnection.getConnexion();
 
         String creerDossierSQL = "INSERT INTO `dossier` (`nom_dossier`, `description_dossier`) VALUES" +
                 " ('" + nomDossier +"',"+"'"+ descriptionDossier+"')";

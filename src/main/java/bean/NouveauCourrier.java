@@ -3,7 +3,7 @@ package bean;
 import alfresco.ConnexionAlfresco;
 import databaseManager.CourriersQueries;
 import databaseManager.DataBaseQueries;
-import databaseManager.DatabasConnection;
+import databaseManager.DatabaseConnection;
 import dateAndTime.DateUtils;
 import fileManager.FileManager;
 import model.*;
@@ -359,7 +359,7 @@ public class NouveauCourrier implements Serializable {
             String ajouterCorrespondanceEtapePersonneSQL = "insert into `correspondance_personne_etape` (`id_personne`) VALUES" +
                     " ('" + idUser +"')";
 
-            Connection connection = DatabasConnection.getConnexion();
+            Connection connection = DatabaseConnection.getConnexion();
             Statement statement = null;
 
             switch (emetteur.getTypeDEmetteur()){

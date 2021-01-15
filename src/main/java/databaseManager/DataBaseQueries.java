@@ -26,13 +26,9 @@ public class DataBaseQueries {
     public static String pseudUser;
     public static String nomUser;
     public static String prenomUser;
-    public static String nomCompletUser;
     public static String directionUser;
     public static String serviceUser;
-    public static String idDirectionUser;
     public static String fonctionUser;
-    public static String profilUser;
-    public static String typeDeUser;
     public static String photoUser;
     public static int nombreCourrierEnvoyesDuJour = 0;
     public static int nombreCourrierRecusDuJour = 0;
@@ -52,17 +48,6 @@ public class DataBaseQueries {
 
     public static int nombreDeTacheDunAgentSurCourrier= 0;
     public static int nombreDActionEnCoursDuCourrier= 0;
-    public static String typeDemetteur;
-    public static String idEmetteur;
-    public static String ministereEmetteur;
-    public static String directeurEmetteur;
-    public static String fonctionEmetteur;
-    public static String telEmetteurEtablissement;
-    public static String telEmetteurPersonne;
-    public static String emailEmetteurEtablissement;
-    public static String emailEmetteurPersonne;
-    public static String adresseEmetteurEtablissement;
-    public static String nomEtPrenomEmetteurPersonne;
     public static String dateDeReception;
     public static String dateDEnregistrement;
     public static String objetCourrier;
@@ -85,7 +70,6 @@ public class DataBaseQueries {
     public static List<Courrier> listeCourriersEnvoyes = new ArrayList<>();
     private static List<Statistiques> listeNombreDeCourrierParType = new ArrayList<>();
     public static Map<String, Integer> mapNombreCourrierParType = new HashMap<>();
-    public static Map<String, Integer> mapNombreCourrierParTypeDuMoisEnCours = new HashMap<>();
 
     /***Fonction de récuperation des statistiques de la page d'accueil***/
     public static void recupererLesStatistiquesPourLaPageDAccueil() {
@@ -104,10 +88,10 @@ public class DataBaseQueries {
         HttpSession session = SessionUtils.getSession();
         String idDirection = (String) session.getAttribute("idDirectionUser");
 
-        Connection connectionCourrierRecus =  DatabasConnection.getConnexion();
-        Connection connectionCourrierEnvoyes =  DatabasConnection.getConnexion();
-        Connection connectionCourrierRecusParType =  DatabasConnection.getConnexion();
-        Connection connectionCourrierEnvoyesParType =  DatabasConnection.getConnexion();
+        Connection connectionCourrierRecus =  DatabaseConnection.getConnexion();
+        Connection connectionCourrierEnvoyes =  DatabaseConnection.getConnexion();
+        Connection connectionCourrierRecusParType =  DatabaseConnection.getConnexion();
+        Connection connectionCourrierEnvoyesParType =  DatabaseConnection.getConnexion();
 
         String nombreDeCourrierRecusSQL = "select * from `recevoir_courrier` inner join `courrier` on recevoir_courrier.id_courrier = courrier.id_courrier inner join personne on recevoir_courrier.id_personne = personne.id_personne inner join direction on personne.id_direction = direction.id_direction inner join type_courrier on type_courrier.id_type_courrier =	courrier.fk_type_courrier where direction.id_direction = '"+idDirection+"' and courrier.etat = '"+EtatCourrier.courrierEnvoye+"' group by courrier.id_courrier order by courrier.id_courrier desc ";
         String nombreDeCourrierEnvoyesSQL = "select * from `envoyer_courrier` inner join `courrier` on envoyer_courrier.id_courrier = courrier.id_courrier inner join personne on envoyer_courrier.id_personne = personne.id_personne inner join direction on personne.id_direction = direction.id_direction inner join type_courrier on type_courrier.id_type_courrier = courrier.fk_type_courrier where direction.id_direction = '"+idDirection+"' and courrier.etat = '"+EtatCourrier.courrierEnvoye+"' group by courrier.id_courrier order by courrier.id_courrier desc ";
@@ -345,8 +329,8 @@ public class DataBaseQueries {
         List<Discussion> mesDiscussions = new ArrayList<>();
         mesDiscussions.clear();
         String requeteListeDesDiscussionsEnCoursSQL = "select * from `discussion_etape` inner join `personne` on discussion_etape.id_personne = personne.id_personne inner join `correspondance_etape_courrier` on discussion_etape.id_etape = correspondance_etape_courrier.id_etape where personne.id_personne = '"+idUser+"' and etat_discussion = '"+EtatEtape.Ouvert+"' group by discussion_etape.id_etape desc limit 5;";
-
-        Connection connection = DatabasConnection.getConnexion();
+        System.out.println("requeteListeDesDiscussionsEnCoursSQL = " + requeteListeDesDiscussionsEnCoursSQL);
+        Connection connection = DatabaseConnection.getConnexion();
         ResultSet resultSet = null;
         try {
             resultSet = connection.createStatement().executeQuery(requeteListeDesDiscussionsEnCoursSQL);
@@ -369,7 +353,7 @@ public class DataBaseQueries {
     public static List<String> recupererLaListeDesDirections(){
         List<String> list = new ArrayList<>();
         list.clear();
-        Connection connection = DatabasConnection.getConnexion();
+        Connection connection = DatabaseConnection.getConnexion();
         String requete = "select nom_direction from direction inner join etablissement on direction.fk_etablissement = etablissement.id_etablissement where id_etablissement = '"+idMinistereDuBudget+"';";
         ResultSet resultSet = null;
         try {
@@ -399,7 +383,7 @@ public class DataBaseQueries {
 
         List<Direction> list = new ArrayList<>();
         list.clear();
-        Connection connection = DatabasConnection.getConnexion();
+        Connection connection = DatabaseConnection.getConnexion();
         String requete = "select nom_direction from direction inner join etablissement on direction.fk_etablissement = etablissement.id_etablissement where id_etablissement = '"+idMinistereDuBudget+"';";
         ResultSet resultSet = null;
         try {
@@ -429,7 +413,7 @@ public class DataBaseQueries {
 
         List<String> list = new ArrayList<>();
         list.clear();
-        Connection connection = DatabasConnection.getConnexion();
+        Connection connection = DatabaseConnection.getConnexion();
         String requete = "select nom_direction from direction inner join etablissement on direction.fk_etablissement = etablissement.id_etablissement where id_etablissement = '"+idMinistereDuBudget+"';";
         ResultSet resultSet = null;
         try {
@@ -470,7 +454,7 @@ public class DataBaseQueries {
     public static List<String> recupererLaListeDesFonctions(){
         List<String> list = new ArrayList<>();
         list.clear();
-        Connection connection = DatabasConnection.getConnexion();
+        Connection connection = DatabaseConnection.getConnexion();
         String requete = "select titre_fonction from fonction where type_fonction = '"+ TypeDeFonctions.interne +"' and responsable_courrier = '"+EtatCourrier.responsableCourrier+"' ;";
         ResultSet resultSet = null;
         try {
@@ -499,7 +483,7 @@ public class DataBaseQueries {
     public static List<String> recupererLaListeDesFonctionsParDirection(String direction){
         List<String> list = new ArrayList<>();
         list.clear();
-        Connection connection = DatabasConnection.getConnexion();
+        Connection connection = DatabaseConnection.getConnexion();
         String requete = "select titre_fonction from fonction inner join correspondance_direction_fonction on fonction.id_fonction = correspondance_direction_fonction.fk_fonction inner join direction " +
                 " on correspondance_direction_fonction.fk_direction = direction.id_direction where type_fonction = '"+ TypeDeFonctions.interne +"' and responsable_courrier = '"+EtatCourrier.responsableCourrier+"' and nom_direction = '"+direction+"';";
         ResultSet resultSet = null;
@@ -529,7 +513,7 @@ public class DataBaseQueries {
     public static List<String> recupererLaListeDesMinisteres(){
         List<String> list = new ArrayList<>();
         list.clear();
-        Connection connection = DatabasConnection.getConnexion();
+        Connection connection = DatabaseConnection.getConnexion();
         String requete = "select abreviation from etablissement inner join type_etablissement on etablissement.fk_type_etablissement = type_etablissement.id_type_etablissement where titre_type_etablissement = '"+ TypeDEtablissement.ministere +"' ;";
         ResultSet resultSet = null;
         try {
@@ -558,7 +542,7 @@ public class DataBaseQueries {
     public static List<String> recupererLaListeDesFonctionsDesAgentsParDirection(){
         List<String> list = new ArrayList<>();
         list.clear();
-        Connection connection = DatabasConnection.getConnexion();
+        Connection connection = DatabaseConnection.getConnexion();
         String requete = "select titre_fonction from fonction where type_fonction = '"+ TypeDeFonctions.interne +"' and responsable_courrier = '"+EtatCourrier.pasResponsableCourrier+"';";
         ResultSet resultSet = null;
         try {
@@ -587,7 +571,7 @@ public class DataBaseQueries {
     public static String recupererIdTypeDePersonneParTitre(String typeDePersonne) {
         String id = null;
         String recupererIdTypeDePersonneSQL = "select id_type_de_personne from `type_de_personne` where titre_type_de_personne = '" + typeDePersonne + "'";
-        Connection connection = DatabasConnection.getConnexion();
+        Connection connection = DatabaseConnection.getConnexion();
         ResultSet resultSet = null;
         try {
             resultSet = connection.createStatement().executeQuery(recupererIdTypeDePersonneSQL);
@@ -616,7 +600,7 @@ public class DataBaseQueries {
     public static String recupererIdDirectionParSonNom(String direction) {
         String id = null;
         String recupererIdDirectionSQL = "select id_direction from `direction` where nom_direction = '" + direction + "'";
-        Connection connection = DatabasConnection.getConnexion();
+        Connection connection = DatabaseConnection.getConnexion();
         ResultSet resultSet = null;
         try {
             resultSet = connection.createStatement().executeQuery(recupererIdDirectionSQL);
@@ -645,7 +629,7 @@ public class DataBaseQueries {
     public static String recupererIdEtablissementParSonAbreviation(String etablissement) {
         String id = null;
         String recupererIdEtablissementSQL = "select id_etablissement from `etablissement` where abreviation = '" + etablissement + "'";
-        Connection connection = DatabasConnection.getConnexion();
+        Connection connection = DatabaseConnection.getConnexion();
         ResultSet resultSet = null;
         try {
             resultSet = connection.createStatement().executeQuery(recupererIdEtablissementSQL);
@@ -674,7 +658,7 @@ public class DataBaseQueries {
     public static String recupererIdFonctionParSonTitreEtSonType(String titreFonction, String typeFonction) {
         String id = null;
         String recupererIdFonctionSQL = "select id_fonction from `fonction` where titre_fonction = '" + titreFonction + "' and type_fonction = '"+typeFonction+"' ; ";
-        Connection connection = DatabasConnection.getConnexion();
+        Connection connection = DatabaseConnection.getConnexion();
         ResultSet resultSet = null;
         try {
             resultSet = connection.createStatement().executeQuery(recupererIdFonctionSQL);
@@ -703,7 +687,7 @@ public class DataBaseQueries {
     public static String recupererIdFonctionDuDernierEnregistrementCorrespondantParSonTitre(String titreFonction) {
         String id = null;
         String recupererIdFonctionSQL = "select id_fonction from `fonction` where titre_fonction = '" + titreFonction + "' order by id_fonction desc limit 1 ; ";
-        Connection connection = DatabasConnection.getConnexion();
+        Connection connection = DatabaseConnection.getConnexion();
         ResultSet resultSet = null;
         try {
             resultSet = connection.createStatement().executeQuery(recupererIdFonctionSQL);
@@ -731,7 +715,7 @@ public class DataBaseQueries {
     public static String recupererIdDirectionDuDernierEnregistrementCorrespondantParSonNom(String direction) {
         String id = null;
         String recupererIdDirectionSQL = "select id_direction from `direction` where nom_direction = '" + direction + "' order by id_direction desc limit 1";
-        Connection connection = DatabasConnection.getConnexion();
+        Connection connection = DatabaseConnection.getConnexion();
         ResultSet resultSet = null;
         try {
             resultSet = connection.createStatement().executeQuery(recupererIdDirectionSQL);
@@ -760,7 +744,7 @@ public class DataBaseQueries {
     public static String recupererIdTypeDEtablissementParTitre(String type) {
         String id = null;
         String recupererIdTypeDEtablissemenntSQL = "select id_type_etablissement from `type_etablissement` where titre_type_etablissement = '" + type + "'";
-        Connection connection = DatabasConnection.getConnexion();
+        Connection connection = DatabaseConnection.getConnexion();
         ResultSet resultSet = null;
         try {
             resultSet = connection.createStatement().executeQuery(recupererIdTypeDEtablissemenntSQL);
@@ -790,7 +774,7 @@ public class DataBaseQueries {
         String nombreCourrier = null;
         String requeteNombreAnnexeDuCourrierSQL = "select count(*) from `annexe` where id_courrier = " + idCourrier + ";";
         ResultSet resultSet = null;
-        Connection connection = DatabasConnection.getConnexion();
+        Connection connection = DatabaseConnection.getConnexion();
         try {
             resultSet = connection.createStatement().executeQuery(requeteNombreAnnexeDuCourrierSQL);
             if(resultSet.next()){
@@ -819,7 +803,7 @@ public class DataBaseQueries {
         String requeteSQL = "select id_envoyer_courrier from `envoyer_courrier` inner join `courrier` on envoyer_courrier.id_courrier = courrier.id_courrier where courrier.id_courrier = " + idCourrier + " ;";
 
         ResultSet resultSet = null;
-        Connection connection = DatabasConnection.getConnexion();
+        Connection connection = DatabaseConnection.getConnexion();
         try {
             resultSet = connection.createStatement().executeQuery(requeteSQL);
             if (resultSet.next()){
@@ -848,7 +832,7 @@ public class DataBaseQueries {
         String requeteHistoriqueCourrierSQL = " select * from (`courrier` inner join `correspondance_etape_courrier` on courrier.id_courrier = correspondance_etape_courrier.id_courrier  inner join `etape` on correspondance_etape_courrier.id_etape = etape.id_etape)  inner join `correspondance_personne_etape` on etape.id_etape = correspondance_personne_etape.id_etape inner join personne on correspondance_personne_etape.id_personne = personne.id_personne where courrier.id_courrier = '"+idCourrier+"' and etat_correspondance ='"+EtatCourrier.courrierEnvoye+"' and ( etape.etat = '"+ EtatEtape.nouveauCourrier+"' or etape.etat = '"+EtatEtape.termine+"')";
 
         ResultSet resultSet = null;
-        Connection connection = DatabasConnection.getConnexion();
+        Connection connection = DatabaseConnection.getConnexion();
 
         try {
             resultSet = connection.createStatement().executeQuery(requeteHistoriqueCourrierSQL);
@@ -894,7 +878,7 @@ public class DataBaseQueries {
         listeHistoriquesActionsCourrier.clear();
         String requeteHistoriqueCourrierSQL = " select * from (`courrier` inner join `correspondance_etape_courrier` on courrier.id_courrier = correspondance_etape_courrier.id_courrier  inner join `etape` on correspondance_etape_courrier.id_etape = etape.id_etape)  inner join `correspondance_personne_etape` on etape.id_etape = correspondance_personne_etape.id_etape inner join personne on correspondance_personne_etape.id_personne = personne.id_personne where courrier.id_courrier = '"+idCourrier+"'  and ( etape.etat = '"+ EtatEtape.nouveauCourrier+"' or etape.etat = '"+EtatEtape.termine+"'); ";
         ResultSet resultSet = null;
-        Connection connection = DatabasConnection.getConnexion();
+        Connection connection = DatabaseConnection.getConnexion();
 
         try {
             resultSet = connection.createStatement().executeQuery(requeteHistoriqueCourrierSQL);
@@ -948,7 +932,7 @@ public class DataBaseQueries {
             requeteHistoriqueCourrierSQL = " select * from (`courrier` inner join `correspondance_etape_courrier` on courrier.id_courrier = correspondance_etape_courrier.id_courrier  inner join `etape` on correspondance_etape_courrier.id_etape = etape.id_etape)  inner join `correspondance_personne_etape` on etape.id_etape = correspondance_personne_etape.id_etape inner join personne on correspondance_personne_etape.id_personne = personne.id_personne where courrier.id_courrier = '"+idCourrier+"' and (etat_correspondance ='"+EtatCourrier.courrierRecu+"' or etat_correspondance ='"+EtatCourrier.courrierEnvoye+"' or etat_correspondance ='"+EtatCourrier.transfererAUneAutreDirection+"' ) and ( etape.etat = '"+ EtatEtape.nouveauCourrier+"' or etape.etat = '"+EtatEtape.termine+"') ;";
         }
         ResultSet resultSet = null;
-        Connection connection = DatabasConnection.getConnexion();
+        Connection connection = DatabaseConnection.getConnexion();
 
         try {
             resultSet = connection.createStatement().executeQuery(requeteHistoriqueCourrierSQL);
@@ -996,7 +980,7 @@ public class DataBaseQueries {
         String requeteHistoriqueCourrierSQL = " select * from (`courrier` inner join `correspondance_etape_courrier` on courrier.id_courrier = correspondance_etape_courrier.id_courrier  inner join `etape` on correspondance_etape_courrier.id_etape = etape.id_etape)  inner join `correspondance_personne_etape` on etape.id_etape = correspondance_personne_etape.id_etape inner join personne on correspondance_personne_etape.id_personne = personne.id_personne where courrier.id_courrier = '"+idCourrier+"' and (etat_correspondance ='"+EtatCourrier.courrierEnvoye+"' or etat_correspondance='"+EtatCourrier.courrierEnregistre+"') and ( etape.etat = '"+ EtatEtape.nouveauCourrier+"' or etape.etat = '"+EtatEtape.termine+"')";
 
         ResultSet resultSet = null;
-        Connection connection = DatabasConnection.getConnexion();
+        Connection connection = DatabaseConnection.getConnexion();
 
         try {
             resultSet = connection.createStatement().executeQuery(requeteHistoriqueCourrierSQL);
@@ -1045,7 +1029,7 @@ public class DataBaseQueries {
         String requeteActionsCourrierSQL = "select * from ((`etape` inner join `correspondance_etape_courrier` on etape.id_etape = correspondance_etape_courrier.id_etape) inner join `correspondance_personne_etape` on etape.id_etape = correspondance_personne_etape.id_etape ) inner join `personne` on correspondance_personne_etape.id_personne = personne.id_personne  where correspondance_etape_courrier.id_courrier = '"+idCourrier+"' and etape.titre = '"+ActionEtape.transmisPourTraitement+"' and correspondance_personne_etape.role_agent = '"+ RoleEtape.AffecteurTache+"' order by etape.id_etape desc;";
 
         ResultSet resultSet = null;
-        Connection connection = DatabasConnection.getConnexion();
+        Connection connection = DatabaseConnection.getConnexion();
 
         try {
             resultSet = connection.createStatement().executeQuery(requeteHistoriqueCourrierSQL);
@@ -1093,7 +1077,7 @@ public class DataBaseQueries {
 
         String requeteSQL = "select * from `etape` inner join `correspondance_etape_courrier` on etape.id_etape = correspondance_etape_courrier.id_etape inner join `courrier` on correspondance_etape_courrier.id_courrier = courrier.id_courrier where etape.id_etape = '"+idEtape+"'";
         ResultSet resultSet = null;
-        Connection connection = DatabasConnection.getConnexion();
+        Connection connection = DatabaseConnection.getConnexion();
         try {
             resultSet = connection.createStatement().executeQuery(requeteSQL);
             if (resultSet.next()){
@@ -1109,6 +1093,7 @@ public class DataBaseQueries {
         }
         if(isResponsable){
             if(natureEtape.contains("Courrier")){
+
                 return "detailduncourrierrecus.xhtml?faces-redirect=true";
             }else{
                 return "detailduncourrierenregistre?faces-redirect=true";
@@ -1127,12 +1112,11 @@ public class DataBaseQueries {
     public static String allerAUneEtapeAPartirDUneDiscussion(String idDiscussion){
         HttpSession session = SessionUtils.getSession();
         String requeteSQL = "select * from `etape` inner join `correspondance_etape_courrier` on etape.id_etape = correspondance_etape_courrier.id_etape inner join `courrier` on correspondance_etape_courrier.id_courrier = courrier.id_courrier where etape.id_etape = (select id_etape from `discussion_etape` where id_discussion_etape = '"+idDiscussion+"') ;";
-
         String etatCorrespondanceEtape = session.getAttribute("etatCorrespondanceEtape").toString();
         boolean isResponsable = (boolean)session.getAttribute("isResponsable");
 
         ResultSet resultSet = null;
-        Connection connection = DatabasConnection.getConnexion();
+        Connection connection = DatabaseConnection.getConnexion();
         try {
             resultSet = connection.createStatement().executeQuery(requeteSQL);
             if (resultSet.next()){
@@ -1148,17 +1132,15 @@ public class DataBaseQueries {
             e.printStackTrace();
         }
         if(isResponsable){
-            if(etatCorrespondanceEtape.contains("Courrier Recu")){
+            if(etatCorrespondanceEtape.contains("Courrier")){
                 return "detailduncourrierrecus.xhtml?faces-redirect=true";
             }else{
                 return "detailduncourrierenregistre?faces-redirect=true";
             }
         }else{
             if(etatCorrespondanceEtape.contains("Courrier Enregistré")){
-                System.out.println("ici");
                 return "repondreaunetache.xhtml?faces-redirect=true";
             }else{
-                System.out.println("la");
                 return "repondreauncourrierrecus.xhtml?faces-redirect=true";
             }
 
@@ -1172,7 +1154,7 @@ public class DataBaseQueries {
         listeActionsCourrier.clear();
         String requeteActionsCourrierSQL = "select * from ((`etape` inner join `correspondance_etape_courrier` on etape.id_etape = correspondance_etape_courrier.id_etape) inner join `correspondance_personne_etape` on etape.id_etape = correspondance_personne_etape.id_etape ) inner join `personne` on correspondance_personne_etape.id_personne = personne.id_personne  where correspondance_etape_courrier.id_courrier = '"+idCourrier+"' and etape.titre = '"+ActionEtape.transmisPourTraitement+"' and correspondance_personne_etape.role_agent = '"+ RoleEtape.AffecteurTache+"' order by etape.id_etape desc;";
         ResultSet resultSet = null;
-        Connection connection = DatabasConnection.getConnexion();
+        Connection connection = DatabaseConnection.getConnexion();
 
         try {
             resultSet = connection.createStatement().executeQuery(requeteActionsCourrierSQL);
@@ -1231,7 +1213,7 @@ public class DataBaseQueries {
         listeActionsCourrier.clear();
         String requeteActionsUsersSQL = "select * from `etape` inner join `correspondance_personne_etape` on etape.id_etape = correspondance_personne_etape.id_etape inner join `personne` on correspondance_personne_etape.id_personne = personne.id_personne where personne.id_personne = '"+idUser+"' and correspondance_personne_etape.role_agent = '"+RoleEtape.AffecteurTache+"' order by etape.id_etape desc;";
         ResultSet resultSet = null;
-        Connection connection = DatabasConnection.getConnexion();
+        Connection connection = DatabaseConnection.getConnexion();
 
         try {
             resultSet = connection.createStatement().executeQuery(requeteActionsUsersSQL);
@@ -1312,9 +1294,8 @@ public class DataBaseQueries {
         List<Etape> listeActionsCourrier = new ArrayList<>();
         listeActionsCourrier.clear();
         String requeteActionsUsersSQL = "select * from `etape` inner join `correspondance_personne_etape` on etape.id_etape = correspondance_personne_etape.id_etape inner join `personne` on correspondance_personne_etape.id_personne = personne.id_personne where personne.id_personne = '"+idUser+"' and correspondance_personne_etape.role_agent = '"+RoleEtape.AffecteurTache+"' and etat = '"+EtatEtape.enTraitement+"' order by etape.id_etape desc limit 5;";
-
         ResultSet resultSet = null;
-        Connection connection = DatabasConnection.getConnexion();
+        Connection connection = DatabaseConnection.getConnexion();
 
         try {
             resultSet = connection.createStatement().executeQuery(requeteActionsUsersSQL);
@@ -1372,7 +1353,7 @@ public class DataBaseQueries {
         String requeteActionsCourrierSQL = "select * from ((`etape` inner join `correspondance_etape_courrier` on etape.id_etape = correspondance_etape_courrier.id_etape) inner join `correspondance_personne_etape` on etape.id_etape = correspondance_personne_etape.id_etape ) inner join `personne` on correspondance_personne_etape.id_personne = personne.id_personne  where correspondance_etape_courrier.id_courrier = '"+idCourrier+"' and etat_correspondance ='"+EtatCourrier.courrierEnregistre+"' and etape.titre = '"+ActionEtape.transmisPourTraitement+"' and correspondance_personne_etape.role_agent = '"+ RoleEtape.AffecteurTache+"' order by etape.id_etape desc;";
 
         ResultSet resultSet = null;
-        Connection connection = DatabasConnection.getConnexion();
+        Connection connection = DatabaseConnection.getConnexion();
 
         try {
             resultSet = connection.createStatement().executeQuery(requeteActionsCourrierSQL);
@@ -1461,7 +1442,7 @@ public class DataBaseQueries {
 
 
         ResultSet resultSet = null;
-        Connection connection = DatabasConnection.getConnexion();
+        Connection connection = DatabaseConnection.getConnexion();
         String dateDuJour = DateUtils.recupererSimpleDateEnCours();
         try {
             resultSet = connection.createStatement().executeQuery(requeteActionsCourrierSQL);
@@ -1542,7 +1523,7 @@ public class DataBaseQueries {
         listeDesActionsAffecteesAUnAgent.clear();
         String requeteActionsCourrierSQL = "select * from ((`etape` inner join `correspondance_etape_courrier` on etape.id_etape = correspondance_etape_courrier.id_etape) inner join `correspondance_personne_etape` on etape.id_etape = correspondance_personne_etape.id_etape ) inner join `personne` on correspondance_personne_etape.id_personne = personne.id_personne  where correspondance_etape_courrier.id_courrier = '"+idCourrier+"' and etape.titre = '"+ActionEtape.transmisPourTraitement+"' and correspondance_personne_etape.role_agent = '"+ RoleEtape.ReceveurTache+"' and  personne.id_personne = '"+idAgent+"' order by etape.id_etape desc;";
         ResultSet resultSet = null;
-        Connection connection = DatabasConnection.getConnexion();
+        Connection connection = DatabaseConnection.getConnexion();
 
         try {
             resultSet = connection.createStatement().executeQuery(requeteActionsCourrierSQL);
@@ -1621,7 +1602,7 @@ public class DataBaseQueries {
         listDesTaches.clear();
         String requeteListeDesTachesSQL = "select * from `etape` inner join `correspondance_personne_etape` on etape.id_etape = correspondance_personne_etape.id_etape inner join `personne` on correspondance_personne_etape.id_personne = personne.id_personne where personne.id_personne = '"+idAgent+"' and correspondance_personne_etape.role_agent = '"+ TypeDePersonne.receveurTache +"' order by etape.id_etape desc";
         ResultSet resultSet = null;
-        Connection connection = DatabasConnection.getConnexion();
+        Connection connection = DatabaseConnection.getConnexion();
 
         try {
             resultSet = connection.createStatement().executeQuery(requeteListeDesTachesSQL);
@@ -1720,7 +1701,7 @@ public class DataBaseQueries {
     public static int recupererNombredeTachesAffecteesAUnAgent(String idAgent){
         int nbre = 0;
         String requeteNombreDeTachesSQL = "select count(*) from `etape` inner join `correspondance_personne_etape` on etape.id_etape = correspondance_personne_etape.id_etape inner join `personne` on correspondance_personne_etape.id_personne = personne.id_personne where personne.id_personne = '"+idAgent+"' and correspondance_personne_etape.role_agent = '"+ TypeDePersonne.receveurTache +"'";
-        Connection connection = DatabasConnection.getConnexion();
+        Connection connection = DatabaseConnection.getConnexion();
         try {
             ResultSet resultSet = connection.createStatement().executeQuery(requeteNombreDeTachesSQL);
             while (resultSet.next()) {
@@ -1740,7 +1721,7 @@ public class DataBaseQueries {
         listDesTaches.clear();
         String requeteListeDesTachesSQL = "select * from `etape` inner join `correspondance_personne_etape` on etape.id_etape = correspondance_personne_etape.id_etape inner join `personne` on correspondance_personne_etape.id_personne = personne.id_personne where personne.id_personne = '"+idAgent+"' and correspondance_personne_etape.role_agent = '"+ TypeDePersonne.receveurTache +"' and etat = '"+EtatEtape.enTraitement+"'order by etape.id_etape desc limit 5";
         ResultSet resultSet = null;
-        Connection connection = DatabasConnection.getConnexion();
+        Connection connection = DatabaseConnection.getConnexion();
         String dateDuJour = DateUtils.recupererSimpleDateEnCours();
 
         try {
@@ -1817,7 +1798,7 @@ public class DataBaseQueries {
         listeAnnotationsCourrier.clear();
         String recupererAnnotationsDuCourrierSQL = "select * from `annotation` inner join personne on personne.id_personne = annotation.id_personne where id_courrier = " + idCourrier + "  order by id_annotation desc;";
         ResultSet resultSet = null;
-        Connection connection = DatabasConnection.getConnexion();
+        Connection connection = DatabaseConnection.getConnexion();
 
         try {
             resultSet = connection.createStatement().executeQuery(recupererAnnotationsDuCourrierSQL);
@@ -1863,7 +1844,7 @@ public class DataBaseQueries {
         listeReponseCourrier.clear();
         String recupererReponseDuCourrierSQL = "select message_reponse_courrier,date_reponse_courrier,heure_reponse_courrier,nom,prenom,identifiant_alfresco_reponse_courrier,role from `reponse_courrier` inner join courrier on reponse_courrier.fk_courrier = courrier.id_courrier inner join correspondance_personne_reponse_courrier on correspondance_personne_reponse_courrier.id_reponse_courrier = reponse_courrier.id_reponse_courrier inner join personne on correspondance_personne_reponse_courrier.id_personne = personne.id_personne where courrier.id_courrier = '"+idCourrier+"' order by reponse_courrier.id_reponse_courrier desc;";
         ResultSet resultSet = null;
-        Connection connection = DatabasConnection.getConnexion();
+        Connection connection = DatabaseConnection.getConnexion();
 
         try {
             resultSet = connection.createStatement().executeQuery(recupererReponseDuCourrierSQL);
@@ -1912,7 +1893,7 @@ public class DataBaseQueries {
         listeDesDiscussion.clear();
         String discussionSQL = "select * from `discussion_etape` inner join  `personne` on discussion_etape.id_personne = personne.id_personne where id_etape = " +  idEtape + " order by id_discussion_etape desc;";
         ResultSet resultSet = null;
-        Connection connection = DatabasConnection.getConnexion();
+        Connection connection = DatabaseConnection.getConnexion();
         try {
             resultSet = connection.createStatement().executeQuery(discussionSQL);
             while (resultSet.next()) {
@@ -1954,7 +1935,7 @@ public class DataBaseQueries {
         String cloreDiscussionSQL = "update `discussion_etape` set `etat_discussion` = '"+EtatEtape.Fermer+"' where id_etape = '"+idEtape+"'";
         String cloreEtatEtapeSQL = "update `etape` set `etat` = '"+EtatEtape.termine+"' where id_etape = '"+idEtape+"'";
 
-        Connection connection = DatabasConnection.getConnexion();
+        Connection connection = DatabaseConnection.getConnexion();
         Statement statement = null;
         try {
             connection.setAutoCommit(false);

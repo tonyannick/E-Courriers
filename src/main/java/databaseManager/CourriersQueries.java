@@ -45,7 +45,7 @@ public class CourriersQueries {
     /***Fonction qui recupere tous les courriers reçus par un utilisateur***/
     public static List<Courrier> recupererTousLesCourriersReçusParUnUtilisateurParSonId(String idUtilisateur) {
         List<Courrier> mesCourriers = new ArrayList<>();
-        Connection connection = DatabasConnection.getConnexion();
+        Connection connection = DatabaseConnection.getConnexion();
         String requeteMesCourriersSQL = null;
         HttpSession session = SessionUtils.getSession();
         String idDirection = (String) session.getAttribute("idDirectionUser");
@@ -104,7 +104,7 @@ public class CourriersQueries {
     /***Fonction qui recupere tous les courriers envoyés d'un utilisateur***/
     public static List<Courrier> recupererTousLesCourriersEnvoyesDUnUtilisateursParSonId(String idUtilisateur) {
         List<Courrier> mesCourriers = new ArrayList<>();
-        Connection connection = DatabasConnection.getConnexion();
+        Connection connection = DatabaseConnection.getConnexion();
         String requeteMesCourriersSQL = null;
         HttpSession session = SessionUtils.getSession();
         String idDirection = (String) session.getAttribute("idDirectionUser");
@@ -165,7 +165,7 @@ public class CourriersQueries {
         List<Courrier> mesCourriersEnvoyes = new ArrayList<>();
         List<Courrier> mesCourriersRecus = new ArrayList<>();
         List<Courrier> finalList = new ArrayList<>();
-        Connection connection = DatabasConnection.getConnexion();
+        Connection connection = DatabaseConnection.getConnexion();
         String requeteMesCourriersEnvoyesFavorisSQL = null;
         String requeteMesCourriersRecusFavorisSQL = null;
         HttpSession session = SessionUtils.getSession();
@@ -258,7 +258,7 @@ public class CourriersQueries {
     /***Fonction qui recupere tous les courriers archivés d'un utilisateur***/
     public static List<Courrier> recupererTousLesCourriersArchivesDUnUtilisateursParSonId(String idUtilisateur) {
 
-        Connection connection = DatabasConnection.getConnexion();
+        Connection connection = DatabaseConnection.getConnexion();
         List<Courrier> mesCourriersEnvoyes = new ArrayList<>();
         List<Courrier> mesCourriersRecus = new ArrayList<>();
         List<Courrier> finalList = new ArrayList<>();
@@ -346,7 +346,7 @@ public class CourriersQueries {
     /***Fonction qui recupere tous les courriers enregistrés d'un utilisateur***/
     public static List<Courrier> recupererTousLesCourriersEnregistresDUnUtilisateursParSonId(String idUtilisateur) {
         List<Courrier> mesCourriers = new ArrayList<>();
-        Connection connection = DatabasConnection.getConnexion();
+        Connection connection = DatabaseConnection.getConnexion();
         HttpSession session = SessionUtils.getSession();
         String idDirection = (String) session.getAttribute("idDirectionUser");
         String requeteMesCourriersSQL = "select * from `ajouter_courrier` inner join `courrier` on ajouter_courrier.id_courrier = courrier.id_courrier left join correspondance_dossier_courrier on correspondance_dossier_courrier.id_courrier = courrier.id_courrier left join dossier on dossier.id_dossier =  correspondance_dossier_courrier.id_dossier  inner join personne on ajouter_courrier.id_personne = personne.id_personne inner join direction on personne.id_direction = direction.id_direction where direction.id_direction = '"+idDirection+"' and etat = '"+EtatCourrier.courrierEnregistre+"' order by courrier.id_courrier desc;";
@@ -418,7 +418,7 @@ public class CourriersQueries {
     public static String recupererIdTypeDeCourrierParTitre(String typeDeCourrier) {
         String id = null;
         String recupererIdTypeCourrierSQL = "select id_type_courrier from `type_courrier` where titre_type_courrier = '" + typeDeCourrier + "'";
-        Connection connection = DatabasConnection.getConnexion();
+        Connection connection = DatabaseConnection.getConnexion();
         ResultSet resultSet = null;
         try {
             resultSet = connection.createStatement().executeQuery(recupererIdTypeCourrierSQL);
@@ -447,7 +447,7 @@ public class CourriersQueries {
     public static List<String> recupererLaListeDeTypesDeCourrier(){
         List<String> list = new ArrayList<>();
         list.clear();
-        Connection connection = DatabasConnection.getConnexion();
+        Connection connection = DatabaseConnection.getConnexion();
         String requete = "select titre_type_courrier from type_courrier order by titre_type_courrier ;";
         ResultSet resultSet = null;
         try {
@@ -479,7 +479,7 @@ public class CourriersQueries {
         String avoirTousLesDestinatairesDuCourrierSQL = "select * from (`recevoir_courrier` inner join `personne` on recevoir_courrier.id_personne = personne.id_personne inner join type_de_personne on personne.fk_type_personne = type_de_personne.id_type_de_personne left join `fonction` on personne.id_fonction = fonction.id_fonction left join `direction` on personne.id_direction = direction.id_direction left join `etablissement` on personne.id_etablissement = etablissement.id_etablissement ) where id_courrier = " + idCourrier + " and recevoir_courrier.transfer is NULL;";
 
         ResultSet resultSet = null;
-        Connection connection = DatabasConnection.getConnexion();
+        Connection connection = DatabaseConnection.getConnexion();
 
         try {
             resultSet = connection.createStatement().executeQuery(avoirTousLesDestinatairesDuCourrierSQL);
@@ -535,7 +535,7 @@ public class CourriersQueries {
         listeDestinataire.clear();
         String avoirTousLesDestinatairesDuCourrierSQL = "select * from (`recevoir_courrier` inner join `personne` on recevoir_courrier.id_personne = personne.id_personne inner join type_de_personne on personne.fk_type_personne = type_de_personne.id_type_de_personne left join `fonction` on personne.id_fonction = fonction.id_fonction left join `direction` on personne.id_direction = direction.id_direction left join `etablissement` on personne.id_etablissement = etablissement.id_etablissement ) where id_courrier = " + idCourrier + " and recevoir_courrier.transfer = '"+EtatCourrier.courrierTransferer+"';";
         ResultSet resultSet = null;
-        Connection connection = DatabasConnection.getConnexion();
+        Connection connection = DatabaseConnection.getConnexion();
 
         try {
             resultSet = connection.createStatement().executeQuery(avoirTousLesDestinatairesDuCourrierSQL);
@@ -590,7 +590,7 @@ public class CourriersQueries {
         Destinataire destinataire = new Destinataire();
         String requeteDetailEmetteurCourrierSQL = "select * from `recevoir_courrier` inner join `personne` on recevoir_courrier.id_personne = personne.id_personne left join fonction on fonction.id_fonction = personne.id_fonction left join direction on personne.id_direction = direction.id_direction inner join type_de_personne on personne.fk_type_personne = type_de_personne.id_type_de_personne left join etablissement on personne.id_etablissement = etablissement.id_etablissement where recevoir_courrier.id_courrier = " + idCourrier + ";";
         ResultSet resultSet = null;
-        Connection connection = DatabasConnection.getConnexion();
+        Connection connection = DatabaseConnection.getConnexion();
         try {
             resultSet = connection.createStatement().executeQuery(requeteDetailEmetteurCourrierSQL);
             while (resultSet.next()){
@@ -634,7 +634,7 @@ public class CourriersQueries {
     public static void recupererLesDetailsDUnCourrierEnregistre(String idCourrier){
         String requeteDetailCourrierSQL = "select * from `courrier` inner join type_courrier on courrier.fk_type_courrier = type_courrier.id_type_courrier where id_courrier = " + idCourrier + " ;";
         ResultSet resultSet = null;
-        Connection connection = DatabasConnection.getConnexion();
+        Connection connection = DatabaseConnection.getConnexion();
         try {
             resultSet = connection.createStatement().executeQuery(requeteDetailCourrierSQL);
             if (resultSet.next()){
@@ -679,7 +679,7 @@ public class CourriersQueries {
     public static void recupererLEmetteurDUnCourrierParIdCourrier(String idCourrier){
         String requeteDetailEmetteurCourrierSQL = "select * from `envoyer_courrier` inner join `personne` on envoyer_courrier.id_personne = personne.id_personne left join fonction on fonction.id_fonction = personne.id_fonction left join direction on personne.id_direction = direction.id_direction inner join type_de_personne on personne.fk_type_personne = type_de_personne.id_type_de_personne left join etablissement on personne.id_etablissement = etablissement.id_etablissement where envoyer_courrier.id_courrier = " + idCourrier + ";";
         ResultSet resultSet = null;
-        Connection connection = DatabasConnection.getConnexion();
+        Connection connection = DatabaseConnection.getConnexion();
         try {
             resultSet = connection.createStatement().executeQuery(requeteDetailEmetteurCourrierSQL);
             if (resultSet.next()){
@@ -735,7 +735,7 @@ public class CourriersQueries {
         String requeteDetailCourrierSQL = "select * from `courrier` inner join type_courrier on courrier.fk_type_courrier = type_courrier.id_type_courrier inner join recevoir_courrier on courrier.id_courrier = recevoir_courrier.id_courrier inner join personne on personne.id_personne =  recevoir_courrier.id_personne where courrier.id_courrier = '" + idCourrier + "' and personne.id_direction = '"+idDirection+"' ;";
 
         ResultSet resultSet = null;
-        Connection connection = DatabasConnection.getConnexion();
+        Connection connection = DatabaseConnection.getConnexion();
         try {
             resultSet = connection.createStatement().executeQuery(requeteDetailCourrierSQL);
             if (resultSet.next()){

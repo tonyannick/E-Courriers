@@ -1,20 +1,14 @@
 package bean;
 
 import alfresco.ConnexionAlfresco;
-import databaseManager.CourriersQueries;
-import databaseManager.DataBaseQueries;
-import databaseManager.DatabasConnection;
-import databaseManager.DossiersQueries;
+import databaseManager.*;
 import dateAndTime.DateUtils;
 import fileManager.FileManager;
 import model.*;
 import org.primefaces.PrimeFaces;
 import org.primefaces.event.FileUploadEvent;
 import sessionManager.SessionUtils;
-import variables.ActionEtape;
-import variables.EtatCourrier;
-import variables.EtatEtape;
-import variables.RoleEtape;
+import variables.*;
 
 import javax.annotation.PostConstruct;
 import javax.enterprise.context.SessionScoped;
@@ -43,6 +37,7 @@ public class DetailDUnCourrierEnvoye implements Serializable {
     private Emetteur emetteur;
     private Destinataire destinataire;
     private Annexe annexe;
+    private Activites activites;
     private Dossier dossier;
     private Annotation annotation;
     private Etape etape;
@@ -58,6 +53,7 @@ public class DetailDUnCourrierEnvoye implements Serializable {
         emetteur = new Emetteur();
         annexe = new Annexe();
         etape = new Etape();
+        activites = new Activites();
         dossier = new Dossier();
         annotation = new Annotation();
         destinataire = new Destinataire();
@@ -129,7 +125,7 @@ public class DetailDUnCourrierEnvoye implements Serializable {
         PrimeFaces.current().executeScript("affichageGridAnnexe()");
         if ( Integer.parseInt(annexe.getNombreDAnnexe()) > 0){
             String voirListeAnnexeSQL = "Select * from `annexe` where id_courrier = "+courrier.getIdCourrier()+";";
-            Connection connection = DatabasConnection.getConnexion();
+            Connection connection = DatabaseConnection.getConnexion();
             ResultSet resultSet = null;
 
             try {
@@ -253,7 +249,7 @@ public class DetailDUnCourrierEnvoye implements Serializable {
                 break;
         }
 
-        Connection connection = DatabasConnection.getConnexion();
+        Connection connection = DatabaseConnection.getConnexion();
         ResultSet resultSet = null;
         try{
             resultSet = connection.createStatement().executeQuery(requeteDetailDestinataireSQL);
@@ -316,7 +312,6 @@ public class DetailDUnCourrierEnvoye implements Serializable {
         if(reponseCourrier.getText().isEmpty()){
             FacesContext.getCurrentInstance().addMessage("messagereponse",new FacesMessage(FacesMessage.SEVERITY_WARN,"Attention","Vous devez ecrire un message"));
         }else{
-            System.out.println("ici 1");
             HttpSession session = SessionUtils.getSession();
             String idCourrier = (String) session.getAttribute("courrierId");
             String idUser = (String) session.getAttribute( "idUser");
@@ -343,7 +338,8 @@ public class DetailDUnCourrierEnvoye implements Serializable {
             String ajouterCorrespondancePersonneReponseCourrierSQL = "INSERT INTO `correspondance_personne_reponse_courrier` (`id_personne`,`role`,`id_reponse_courrier`) VALUES" +
                     "('"+ idUser +"',"+"'"+RoleEtape.receveurReponseAuCourrier+"',"+"(select id_reponse_courrier from reponse_courrier where identifiant_unique_reponse = '"+uniqueID+"' )"+")";
 
-            Connection connection = DatabasConnection.getConnexion();
+            String idTypeDactivite = ActivitesQueries.recupererIdTypeDActivitesParSonTitre(TypeDActivites.reponseAUnCourrier);
+            Connection connection = DatabaseConnection.getConnexion();
             Statement statement = null;
             try {
                 connection.setAutoCommit(false);
@@ -359,16 +355,15 @@ public class DetailDUnCourrierEnvoye implements Serializable {
                 statement.addBatch(ajouterCorrespondanceEtapeCourrierSQL);
                 statement.addBatch(ajouterCorrespondanceEtapePersonneSQL);
                 statement.addBatch(ajouterEtapeCourrierSQL);
+                statement.addBatch(ActivitesQueries.ajouterUneActvitee(TitreActivites.reponseAjoutee, idCourrier ,idUser,idTypeDactivite));
                 statement.executeBatch();
                 connection.commit();
-                System.out.println("ici 3 ");
                 reponseCourrier.setText(null);
                 FacesContext context = FacesContext.getCurrentInstance();
                 context.getExternalContext().getFlash().setKeepMessages(true);
                 FacesContext.getCurrentInstance().addMessage("messagereponse",new FacesMessage(FacesMessage.SEVERITY_INFO,"Validation","Votre réponse à bien été ajoutée"));
                 recupererLesReponsesDuCourrier();
             } catch (SQLException e) {
-                //PrimeFaces.current().executeScript("swal(Erreur','Une erreur s'est produite sur le réseau', 'error');");
                 FacesContext.getCurrentInstance().addMessage("messagereponse",new FacesMessage(FacesMessage.SEVERITY_ERROR,"Erreur","Une erreur s'est produite sur le réseau"));
                 e.printStackTrace();
             }
@@ -423,7 +418,7 @@ public class DetailDUnCourrierEnvoye implements Serializable {
         HttpSession session = SessionUtils.getSession();
         String idCourrier = (String) session.getAttribute("courrierId");
         String idUser = (String) session.getAttribute( "idUser");
-        Connection connection = DatabasConnection.getConnexion();
+        Connection connection = DatabaseConnection.getConnexion();
         String mettreCourrierEnFavorisSQL = "update `envoyer_courrier` set `favoris` = '"+ EtatCourrier.favoris +"' where id_courrier = '"+idCourrier+"' ;";
 
         String ajouterEtapeCourrierSQL = "INSERT INTO `etape` (`titre`, `etat`, `message`) VALUES" +
@@ -472,7 +467,7 @@ public class DetailDUnCourrierEnvoye implements Serializable {
         HttpSession session = SessionUtils.getSession();
         String idCourrier = (String) session.getAttribute("courrierId");
         String idUser = (String) session.getAttribute( "idUser");
-        Connection connection = DatabasConnection.getConnexion();
+        Connection connection = DatabaseConnection.getConnexion();
         String mettreCourrierEnFavorisSQL = "update `envoyer_courrier` set `archive` = '"+ EtatCourrier.archiveActive +"' where id_courrier = '"+idCourrier+"' ; ";
 
         String ajouterEtapeCourrierSQL = "INSERT INTO `etape` (`titre`, `etat`, `message`) VALUES" +
@@ -643,5 +638,13 @@ public class DetailDUnCourrierEnvoye implements Serializable {
 
     public void setReponseCourrier(ReponseCourrier reponseCourrier) {
         this.reponseCourrier = reponseCourrier;
+    }
+
+    public Activites getActivites() {
+        return activites;
+    }
+
+    public void setActivites(Activites activites) {
+        this.activites = activites;
     }
 }

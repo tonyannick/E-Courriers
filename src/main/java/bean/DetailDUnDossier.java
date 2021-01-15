@@ -1,6 +1,6 @@
 package bean;
 
-import databaseManager.DatabasConnection;
+import databaseManager.DatabaseConnection;
 import databaseManager.DossiersQueries;
 import model.Courrier;
 import model.Dossier;
@@ -80,7 +80,7 @@ public class DetailDUnDossier implements Serializable {
     public void supprimerUnDossier(){
         HttpSession session = SessionUtils.getSession();
         String idDossier = (String) session.getAttribute("idDossier");
-        Connection connection = DatabasConnection.getConnexion();
+        Connection connection = DatabaseConnection.getConnexion();
         String supprimerDossierSQL = "DELETE FROM `dossier` WHERE `dossier`.`id_dossier` = '"+idDossier+"' ; ";
         String supprimerTousLesCourriersDansUnDossier = null;
 
