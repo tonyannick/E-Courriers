@@ -109,7 +109,6 @@ public class CourriersQueries {
         String requeteMesCourriersSQL = null;
         HttpSession session = SessionUtils.getSession();
         String idDirection = (String) session.getAttribute("idDirectionUser");
-
         requeteMesCourriersSQL = "select * from `envoyer_courrier` inner join `courrier` on envoyer_courrier.id_courrier = courrier.id_courrier left join correspondance_dossier_courrier on correspondance_dossier_courrier.id_courrier = courrier.id_courrier left join dossier on correspondance_dossier_courrier.id_dossier = dossier.id_dossier inner join personne on envoyer_courrier.id_personne = personne.id_personne inner join direction on personne.id_direction = direction.id_direction inner join type_courrier on courrier.fk_type_courrier = type_courrier.id_type_courrier where direction.id_direction = '"+idDirection+"' and courrier.etat = '"+EtatCourrier.courrierEnvoye+"' and envoyer_courrier.favoris = '"+EtatCourrier.pasfavoris+"' and envoyer_courrier.archive =  '"+ EtatCourrier.archiveNonActive +"' order by courrier.id_courrier desc;";
         ResultSet resultSet = null;
         try {
@@ -127,7 +126,8 @@ public class CourriersQueries {
                         resultSet.getString("id_envoyer"),
                         resultSet.getString("identifiant_alfresco"),
                         resultSet.getString("dossier.id_dossier"),
-                        resultSet.getString("confirmation_reception")));
+                        resultSet.getString("confirmation_reception"),
+                        resultSet.getString("mots_cles")));
             }
 
             for (int i = 0; i < mesCourriers.size(); i++){

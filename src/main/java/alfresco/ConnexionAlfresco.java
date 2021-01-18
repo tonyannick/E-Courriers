@@ -210,11 +210,6 @@ public class ConnexionAlfresco implements Serializable {
 
     }
 
-
-    private static void recupererLesInfosDeConnexionPourAlfresco(){
-        PropertiesFilesReader.lireLeFichierDeProprietesDAlfresco("alfrescoURLs.properties");
-    }
-
     public static boolean voirSiLeServeurEstEnLigne(String urlDuServeur){
         boolean isOnline = false;
         try {

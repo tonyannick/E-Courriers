@@ -41,6 +41,7 @@ public class CourriersEnvoyes implements Serializable {
     private String moisPourRechercheAvancee;
     private String directionPourRechercheAvancee;
     private String typeDeCourrierPourRechercheAvancee;
+    private String motClesPourRechercheAvancee;
     private boolean isMoisSelectionne = false;
 
     @PostConstruct
@@ -103,6 +104,31 @@ public class CourriersEnvoyes implements Serializable {
                 gestionDeLAffichageDesBoutonsDeRecherche();
             }else{
                 FacesContext.getCurrentInstance().addMessage("messagecourrierpardate",new FacesMessage(FacesMessage.SEVERITY_WARN,"Aucun resultat","Pas de courrier pour cette date"));
+
+            }
+        }
+
+    }
+
+    public void faireUneRechercheAvanceeParMotsCles(){
+        boolean trouve = false;
+        if(motClesPourRechercheAvancee.isEmpty()){
+            FacesContext.getCurrentInstance().addMessage("messageparmotscles",new FacesMessage(FacesMessage.SEVERITY_WARN,"Attention","Vous devez renseigner un mot clé"));
+        }else{
+            courrierTempList.clear();
+            for(int a = 0; a < courrier.getListeDesCouriersEnvoyes().size(); a++){
+                if(courrier.getListeDesCouriersEnvoyes().get(a).getTransferer().equals(motClesPourRechercheAvancee)){
+                    courrierTempList.add(courrier.getListeDesCouriersEnvoyes().get(a));
+                    trouve = true;
+                }
+            }
+            if(trouve){
+                courrier.getListeDesCouriersEnvoyes().clear();
+                courrier.setListeDesCouriersEnvoyes(courrierTempList);
+                setMotClesPourRechercheAvancee(null);
+                gestionDeLAffichageDesBoutonsDeRecherche();
+            }else{
+                FacesContext.getCurrentInstance().addMessage("messageparmotscles",new FacesMessage(FacesMessage.SEVERITY_WARN,"Aucun resultat","Pas de courrier trouvé"));
 
             }
         }
@@ -265,7 +291,18 @@ public class CourriersEnvoyes implements Serializable {
         }
     }
 
+
+
     /***Getter and setter**/
+
+
+    public String getMotClesPourRechercheAvancee() {
+        return motClesPourRechercheAvancee;
+    }
+
+    public void setMotClesPourRechercheAvancee(String motClesPourRechercheAvancee) {
+        this.motClesPourRechercheAvancee = motClesPourRechercheAvancee;
+    }
 
     public String getDatePourRechercheAvancee() {
         return datePourRechercheAvancee;
