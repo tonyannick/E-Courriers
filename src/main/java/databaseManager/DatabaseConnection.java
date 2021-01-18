@@ -1,8 +1,11 @@
 package databaseManager;
 
 
+import fileManager.PropertiesFilesReader;
+
 import java.sql.Connection;
 import java.sql.DatabaseMetaData;
+import java.sql.Driver;
 import java.sql.DriverManager;
 
 public class DatabaseConnection {
@@ -10,15 +13,13 @@ public class DatabaseConnection {
     public static Connection connect;
 
     public static Connection getConnexion(){
-        String databaseName = "e_courrier";
-        String username = "root";
-        String password = "";
-        String urlDatabase = "jdbc:mysql://localhost:3306";
         //String urlDatabase = "jdbc:mysql://41.159.133.101:3306";
-
         try {
             Class.forName("com.mysql.jdbc.Driver");
-            connect = DriverManager.getConnection(urlDatabase+"/"+databaseName,username,password);
+            PropertiesFilesReader.LireLeFichierDeConnexionAlaBaseDeDonnees("basededonnees.properties");
+            //connect = DriverManager.getConnection(urlDatabase+"/"+databaseName,username,password);
+            connect = DriverManager.getConnection(PropertiesFilesReader.urlBaseDeDonnees+"/"+PropertiesFilesReader.nomBaseDeDonnees,PropertiesFilesReader.identifiantUser,
+                    PropertiesFilesReader.motDePasseUser);
             DatabaseMetaData databaseMetaData  = connect.getMetaData();
             int maxTimeOut = connect.getNetworkTimeout();
             int maxConnection = databaseMetaData.getMaxConnections();

@@ -1,5 +1,6 @@
 package alfresco;
 
+import fileManager.PropertiesFilesReader;
 import org.apache.commons.httpclient.HttpClient;
 import org.apache.commons.httpclient.HttpStatus;
 import org.apache.commons.httpclient.methods.DeleteMethod;
@@ -31,9 +32,9 @@ public class ConnexionAlfresco implements Serializable {
     private static StreamedContent streamedContent;
 
     public static String uploadDocument(String authTicket, File fileobj, String filename, String filetype, String description, String dossierCible) {
-
+        PropertiesFilesReader.lireLeFichierDeProprietesDAlfresco("alfrescoURLs.properties");
         try {
-            String urlString = URLAlfresco.alfrescoTicketUrl+authTicket;
+            String urlString = PropertiesFilesReader.alfrescoTicketUrl+authTicket;
             HttpClient client = new HttpClient();
             PostMethod mPost = new PostMethod(urlString);
             Part[] parts = {
@@ -89,7 +90,7 @@ public class ConnexionAlfresco implements Serializable {
     }
 
     public static StreamedContent telechargerDocumentDansAlfresco(String idDocument) {
-
+        PropertiesFilesReader.lireLeFichierDeProprietesDAlfresco("alfrescoURLs.properties");
         byte[] bytesFromInputStream = null;
         String urlComplete = null;
         URL url = null;
@@ -98,7 +99,7 @@ public class ConnexionAlfresco implements Serializable {
 
         try {
 
-            urlComplete = URLAlfresco.alfresscoDownloadFileUrl + idDocument +"?a=false&alf_ticket="+getAlfticket();
+            urlComplete = PropertiesFilesReader.alfresscoDownloadFileUrl + idDocument +"?a=false&alf_ticket="+getAlfticket();
             url = new URL(urlComplete);
             urlConnection = url.openConnection();
             if(urlConnection != null){
@@ -185,12 +186,11 @@ public class ConnexionAlfresco implements Serializable {
     }
 
     public static String getAlfticket()  {
-
+        PropertiesFilesReader.lireLeFichierDeProprietesDAlfresco("alfrescoURLs.properties");
         try {
-            URL url = new URL(URLAlfresco.alfrescoUploadFileUrl);
+            URL url = new URL(PropertiesFilesReader.alfrescoUploadFileUrl);
             URLConnection con = null;
             con = url.openConnection();
-
             if(con.getInputStream() != null){
                 InputStream in = con.getInputStream();
                 String encoding = con.getContentEncoding();
@@ -210,6 +210,10 @@ public class ConnexionAlfresco implements Serializable {
 
     }
 
+
+    private static void recupererLesInfosDeConnexionPourAlfresco(){
+        PropertiesFilesReader.lireLeFichierDeProprietesDAlfresco("alfrescoURLs.properties");
+    }
 
     public static boolean voirSiLeServeurEstEnLigne(String urlDuServeur){
         boolean isOnline = false;

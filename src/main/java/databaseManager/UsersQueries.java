@@ -1,6 +1,10 @@
 package databaseManager;
 
+import fileManager.PropertiesFilesReader;
 import model.User;
+import securityManager.Cryptage;
+import securityManager.Decryptage;
+import securityManager.GenerateurCleSecrete;
 import sessionManager.SessionUtils;
 import variables.FonctionsUtilisateurs;
 import variables.TypeDePersonne;
@@ -36,10 +40,14 @@ public class UsersQueries {
 
     /***Fonction de verification de connexion d'un utilisateur***/
     public static boolean verifierUserLogin(String login, String motDePasse){
-        boolean connected = false;
+        String motCrypter = PropertiesFilesReader.lireLeFichierDuMotSecret("cledesecurite.properties");
+        Cryptage.crypterUnMot(login,motCrypter);
+        System.out.println("motCrypter = " +  Cryptage.crypterUnMot(login,motCrypter));
         Connection connection =  DatabaseConnection.getConnexion();
-        String requeteLoginSQL = "select * from `personne` inner join direction on personne.id_direction = direction.id_direction inner join `fonction` on personne.id_fonction = fonction.id_fonction inner join profil on personne.id_profil = profil.id_profil where pseudo = '"+login+"' and mot_de_passe = '"+motDePasse+"';";
         ResultSet resultSet = null;
+        boolean connected = false;
+        String requeteLoginSQL = "select * from `personne` inner join direction on personne.id_direction = direction.id_direction inner join `fonction` on personne.id_fonction = fonction.id_fonction inner join profil on personne.id_profil = profil.id_profil where pseudo = '"+login+"' and mot_de_passe = '"+motDePasse+"';";
+
         try {
             resultSet = connection.createStatement().executeQuery(requeteLoginSQL);
             if(resultSet.next()){
