@@ -52,6 +52,7 @@ public class CourriersQueries {
         String idDirection = (String) session.getAttribute("idDirectionUser");
         requeteMesCourriersSQL = "select * from `recevoir_courrier` inner join `courrier` on recevoir_courrier.id_courrier = courrier.id_courrier left join correspondance_dossier_courrier\n" +
                 " on correspondance_dossier_courrier.id_courrier = courrier.id_courrier left join dossier on correspondance_dossier_courrier.id_dossier = dossier.id_dossier  inner join personne on recevoir_courrier.id_personne = personne.id_personne inner join direction on personne.id_direction = direction.id_direction inner join type_courrier on courrier.fk_type_courrier = type_courrier.id_type_courrier where direction.id_direction = '"+idDirection+"' and recevoir_courrier.archive = '"+ EtatCourrier.archiveNonActive +"' and recevoir_courrier.favoris = '"+EtatCourrier.pasfavoris+"' and etat = '"+EtatCourrier.courrierEnvoye+"' group by courrier.id_courrier order by courrier.id_courrier desc";
+        System.out.println("requeteMesCourriersSQL = " + requeteMesCourriersSQL);
         ResultSet resultSet = null;
         try {
 
@@ -69,7 +70,9 @@ public class CourriersQueries {
                         resultSet.getString("identifiant_alfresco"),
                         resultSet.getString("id_dossier"),
                         resultSet.getString("accuse_reception"),
-                        resultSet.getString("transfer")));
+                        resultSet.getString("transfer"),
+                        resultSet.getString("mots_cles"),
+                        resultSet.getString("reference_interne")));
             }
 
             for (int i = 0; i < mesCourriers.size(); i++){

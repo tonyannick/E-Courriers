@@ -65,10 +65,11 @@ public class Courrier {
 
     }
 
+
     public Courrier(String referenceCourrier, String prioriteCourrier, String objetCourrier,
                     String dateDEnregistrement, String idCourrier, String confidentiel,
                     String extensionCourrier, String idAjouterCourrier,String idAlfresco,
-                    String idDossier,String accuseDeReception,String motsclesCourrier,String referenceInterne) {
+                    String idDossier,String accuseDeReception, String transferer,String motsclesCourrier,String referenceInterne) {
 
         this.referenceCourrier = referenceCourrier;
         this.prioriteCourrier = prioriteCourrier;
@@ -81,6 +82,7 @@ public class Courrier {
         this.idAlfresco = idAlfresco;
         this.idDossier = idDossier;
         this.accuseDeReception = accuseDeReception;
+        this.transferer = transferer;
         this.motsclesCourrier = motsclesCourrier;
         this.referenceInterne = referenceCourrier;
 

@@ -38,6 +38,7 @@ public class CourriersRecus implements Serializable {
     private String moisPourRechercheAvancee;
     private String directionPourRechercheAvancee;
     private String typeDeCourrierPourRechercheAvancee;
+    private String motClesPourRechercheAvancee;
     private boolean isMoisSelectionne = false;
     private List<Courrier> courrierTempList = new ArrayList<>();
     private List<Courrier> courrierSauvegardeList = new ArrayList<>();
@@ -128,6 +129,32 @@ public class CourriersRecus implements Serializable {
     public List<String> recupererLesMoisDeLAnnee(){
         return Arrays.asList(DateUtils.recupererTousLesMoisDeLAnnee());
     }
+
+    public void faireUneRechercheAvanceeParMotsCles(){
+        boolean trouve = false;
+        if(motClesPourRechercheAvancee.isEmpty()){
+            FacesContext.getCurrentInstance().addMessage("messageparmotscles",new FacesMessage(FacesMessage.SEVERITY_WARN,"Attention","Vous devez renseigner un mot clé"));
+        }else{
+            courrierTempList.clear();
+            for(int a = 0; a < courrier.getListeDesCouriersRecus().size(); a++){
+                if(courrier.getListeDesCouriersRecus().get(a).getMotsclesCourrier().equals(motClesPourRechercheAvancee)){
+                    courrierTempList.add(courrier.getListeDesCouriersRecus().get(a));
+                    trouve = true;
+                }
+            }
+            if(trouve){
+                courrier.getListeDesCouriersRecus().clear();
+                courrier.setListeDesCouriersRecus(courrierTempList);
+                setMotClesPourRechercheAvancee(null);
+                gestionDeLAffichageDesBoutonsDeRecherche();
+            }else{
+                FacesContext.getCurrentInstance().addMessage("messageparmotscles",new FacesMessage(FacesMessage.SEVERITY_WARN,"Aucun resultat","Pas de courrier trouvé"));
+
+            }
+        }
+
+    }
+
 
     public void annulerUneRechercheAvancee(){
         courrier.getListeDesCouriersRecus().clear();
@@ -276,6 +303,7 @@ public class CourriersRecus implements Serializable {
     private void gestionDeLAffichageDesBoutonsDeRecherche(){
         PrimeFaces.current().executeScript("PF('dialogueRechercherCourrierParDate').hide()");
         PrimeFaces.current().executeScript("PF('dialogueRechercherCourrierParMois').hide()");
+        PrimeFaces.current().executeScript("PF('dialogueRechercherCourrierParMotsCles').hide()");
         PrimeFaces.current().executeScript("PF('dialogueRechercherCourrierParTypeDeCourrier').hide()");
         PrimeFaces.current().executeScript("PF('dialogueRechercherCourrierParDirection').hide()");
         PrimeFaces.current().executeScript("afficherBoutonAnnulerRecherche()");
@@ -336,5 +364,13 @@ public class CourriersRecus implements Serializable {
 
     public void setTypeDeCourrierPourRechercheAvancee(String typeDeCourrierPourRechercheAvancee) {
         this.typeDeCourrierPourRechercheAvancee = typeDeCourrierPourRechercheAvancee;
+    }
+
+    public String getMotClesPourRechercheAvancee() {
+        return motClesPourRechercheAvancee;
+    }
+
+    public void setMotClesPourRechercheAvancee(String motClesPourRechercheAvancee) {
+        this.motClesPourRechercheAvancee = motClesPourRechercheAvancee;
     }
 }
