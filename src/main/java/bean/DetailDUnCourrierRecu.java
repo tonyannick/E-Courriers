@@ -1305,9 +1305,9 @@ public class DetailDUnCourrierRecu implements Serializable {
         HttpSession session = SessionUtils.getSession();
         String directionUser = (String) session.getAttribute( "directionUser");
         if(emetteur.getDirection() != null){
-            direction.setListeDirection(DataBaseQueries.recupererLaListeDesAutresDirections(directionUser,emetteur.getDirection()));
+            direction.setListeDirection(DirectionQueries.recupererLaListeDesAutresDirections(directionUser,emetteur.getDirection()));
         }else{
-            direction.setListeDirection(DataBaseQueries.recupererLaListeDesDirections());
+            direction.setListeDirection(DirectionQueries.recupererLaListeDesDirections());
             direction.getListeDirection().removeIf(e -> e.equals(directionUser));
         }
 

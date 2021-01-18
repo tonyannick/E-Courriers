@@ -3,6 +3,7 @@ package bean;
 import alfresco.ConnexionAlfresco;
 import databaseManager.DataBaseQueries;
 import databaseManager.DatabaseConnection;
+import databaseManager.DirectionQueries;
 import databaseManager.UsersQueries;
 import dateAndTime.DateUtils;
 import fileManager.FileManager;
@@ -79,7 +80,7 @@ public class Parametres implements Serializable {
         etablissement = new Etablissement();
         direction = new Direction();
         fonction = new Fonction();
-        direction.setListeObjetsDirection(DataBaseQueries.recupererLaListeDesDirectionsDuMinistere());
+        direction.setListeObjetsDirection(DirectionQueries.recupererLaListeDesDirectionsDuMinistere());
         recupererListeDesDirections();
     }
 
@@ -246,7 +247,7 @@ public class Parametres implements Serializable {
     public void recupererListeDesDirections(){
         HttpSession session = SessionUtils.getSession();
         String nomDirection = session.getAttribute("directionUser").toString();
-        direction.setListeDirection(DataBaseQueries.recupererLaListeDesDirections());
+        direction.setListeDirection(DirectionQueries.recupererLaListeDesDirections());
         direction.getListeDirection().removeIf(e -> !e.equals(nomDirection));
     }
 

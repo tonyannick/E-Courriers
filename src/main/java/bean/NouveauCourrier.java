@@ -4,6 +4,7 @@ import alfresco.ConnexionAlfresco;
 import databaseManager.CourriersQueries;
 import databaseManager.DataBaseQueries;
 import databaseManager.DatabaseConnection;
+import databaseManager.DirectionQueries;
 import dateAndTime.DateUtils;
 import fileManager.FileManager;
 import model.*;
@@ -131,10 +132,10 @@ public class NouveauCourrier implements Serializable {
     }
 
     public void recupererListeDirection(){
-        direction.setListeDirection(DataBaseQueries.recupererLaListeDesDirections());
-        direction.setListeDirectionEmetteur(DataBaseQueries.recupererLaListeDesDirections());
-        direction.setListeDirectionDestinataire(DataBaseQueries.recupererLaListeDesDirections());
-        tempListDestinataire.addAll(DataBaseQueries.recupererLaListeDesDirections());
+        direction.setListeDirection(DirectionQueries.recupererLaListeDesDirections());
+        direction.setListeDirectionEmetteur(DirectionQueries.recupererLaListeDesDirections());
+        direction.setListeDirectionDestinataire(DirectionQueries.recupererLaListeDesDirections());
+        tempListDestinataire.addAll(DirectionQueries.recupererLaListeDesDirections());
        // tempListEmetteur.addAll(DataBaseQueries.recupererLaListeDesDirections());
     }
 

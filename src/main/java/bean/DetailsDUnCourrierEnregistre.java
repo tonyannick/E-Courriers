@@ -1,10 +1,7 @@
 package bean;
 
 import alfresco.ConnexionAlfresco;
-import databaseManager.CourriersQueries;
-import databaseManager.DataBaseQueries;
-import databaseManager.DatabaseConnection;
-import databaseManager.DiscussionsQueries;
+import databaseManager.*;
 import dateAndTime.DateUtils;
 import fileManager.FileManager;
 import model.*;
@@ -1258,7 +1255,7 @@ public class DetailsDUnCourrierEnregistre implements Serializable {
     public void recupererListeDirection(){
         HttpSession session = SessionUtils.getSession();
         String directionUser = (String) session.getAttribute( "directionUser");
-        direction.setListeDirection(DataBaseQueries.recupererLaListeDesDirections());
+        direction.setListeDirection(DirectionQueries.recupererLaListeDesDirections());
         direction.getListeDirection().removeIf(e -> e.equals(directionUser));
     }
 

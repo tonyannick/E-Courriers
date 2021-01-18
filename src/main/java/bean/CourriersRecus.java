@@ -3,6 +3,7 @@ package bean;
 import databaseManager.CourriersQueries;
 import databaseManager.DataBaseQueries;
 import databaseManager.DatabaseConnection;
+import databaseManager.DirectionQueries;
 import dateAndTime.DateUtils;
 import model.Courrier;
 import org.primefaces.PrimeFaces;
@@ -179,7 +180,7 @@ public class CourriersRecus implements Serializable {
     }
 
     public List<String> avoirListeDesDirections(){
-        return DataBaseQueries.recupererLaListeDesDirections();
+        return DirectionQueries.recupererLaListeDesDirections();
     }
 
     public void faireUneRechercheAvanceeParTypeDeCourrier(){
