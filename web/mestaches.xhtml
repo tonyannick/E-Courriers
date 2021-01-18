@@ -45,75 +45,78 @@
                         <h3 class="page-header"><h:graphicImage value="./resources/images/worker.png" style="margin-right :10px"/>#{mesTaches.titreDeLaPage}</h3>
 
                         <div class="table-responsive" style="box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2);">
-                            <p:messages for="messagerreurtache" showDetail="true" closable="true"/>
-                            <h:form id="form">
-                                <p:dataTable tableStyle="table-layout: auto"
-                                             scrollable="false"
-                                             paginatorAlwaysVisible="false"
-                                             rows="#{mesTaches.rowsPerPage}"
-                                             first="#{mesTaches.first}"
-                                             rowsPerPageTemplate="15,25,35"
-                                             paginatorPosition="top"
-                                             value="#{mesTaches.etape.listeDeMesTaches}"
-                                             var="etape" paginator="true"
-                                             emptyMessage="Aucune tache en cours"
-                                             rowIndexVar="rowIndex" border="2">
+                                <p:messages for="messagerreurtache" showDetail="true" closable="true"/>
+                                <h:form id="form">
+                                    <p:dataTable tableStyle="table-layout: auto"
+                                                 scrollable="false"
+                                                 paginatorAlwaysVisible="false"
+                                                 rows="#{mesTaches.rowsPerPage}"
+                                                 first="#{mesTaches.first}"
+                                                 rowsPerPageTemplate="15,25,35"
+                                                 paginatorPosition="top"
+                                                 value="#{mesTaches.etape.listeDeMesTaches}"
+                                                 var="etape" paginator="true"
+                                                 emptyMessage="Aucune tache en cours"
+                                                 rowIndexVar="rowIndex" border="2">
 
-                                    <p:column style="width:100px">
-                                        <f:facet name="header">Date</f:facet>
-                                        <h:outputText style="font-size: 12px" value="#{etape.date_debut}"/>
-                                    </p:column>
-                                    <p:column>
-                                        <f:facet name="header">Message</f:facet>
-                                        <h:outputText  value="#{etape.message}" escape="false"/>
-                                    </p:column>
-                                    <p:column style="width:120px;" styleClass="#{etape.date_fin eq 'Aucun' ? 'cellulevide' : null}">
-                                        <f:facet name="header">Date butoir</f:facet>
-                                        <h:outputText value="#{etape.date_fin}" style="font-size: 12px"/>
-                                    </p:column>
-                                    <p:column styleClass="#{(etape.etat eq 'En retard') ? 'en-retard' : (etape.etat eq 'En traitement') ? 'en-traitement' : (etape.etat eq 'Terminé') ? 'terminee' : 'null'}" style="width:140px;">
-                                        <f:facet name="header">Etat</f:facet>
-                                        <h:outputText  value="#{etape.etat}" />
-                                    </p:column>
-                                    <p:column style="width:30px;">
-                                        <p:commandButton  icon="fa fa-eye"
-                                                          update="@form:detailtache"
-                                                          actionListener="#{mesTaches.recupererLeCreateurDUneTache}"
-                                                          style="background: #496ea1; border: 1px #496ea1 solid"
-                                                          title="Détails">
-                                            <f:param name="etapeId" value="#{etape.id}" />
-                                        </p:commandButton>
+                                        <p:column style="width:100px">
+                                            <f:facet name="header">Date</f:facet>
+                                            <h:outputText style="font-size: 12px" value="#{etape.date_debut}"/>
+                                        </p:column>
+                                        <p:column>
+                                            <f:facet name="header">Message</f:facet>
+                                            <h:outputText  value="#{etape.message}" escape="false"/>
+                                        </p:column>
+                                        <p:column style="width:120px;" styleClass="#{etape.date_fin eq 'Aucun' ? 'cellulevide' : null}">
+                                            <f:facet name="header">Date butoir</f:facet>
+                                            <h:outputText value="#{etape.date_fin}" style="font-size: 12px"/>
+                                        </p:column>
+                                        <p:column styleClass="#{(etape.etat eq 'En retard') ? 'en-retard' : (etape.etat eq 'En traitement') ? 'en-traitement' : (etape.etat eq 'Terminé') ? 'terminee' : 'null'}" style="width:140px;">
+                                            <f:facet name="header">Etat</f:facet>
+                                            <h:outputText  value="#{etape.etat}" />
+                                        </p:column>
+                                        <p:column style="width:30px;">
+                                            <p:commandButton  icon="fa fa-eye"
+                                                              update="@form:detailtache"
+                                                              actionListener="#{mesTaches.recupererLeCreateurDUneTache}"
+                                                              style="background: #496ea1; border: 1px #496ea1 solid"
+                                                              title="Détails">
+                                                <f:param name="etapeId" value="#{etape.id}" />
+                                            </p:commandButton>
 
-                                    </p:column>
-                                    <p:column style="width:30px;">
-                                        <p:commandButton  icon="fa fa-sign-in"
-                                                          style="background: #0dca00"
-                                                          ajax="false"
-                                                          action="#{mesTaches.voirUneTache}"
-                                                          title="Répondre">
-                                            <f:param name="natureEtape" value="#{etape.titre}" />
-                                            <f:param name="etapeId" value="#{etape.id}" />
-                                        </p:commandButton>
-                                    </p:column>
+                                        </p:column>
+                                        <p:column style="width:30px;">
+                                            <p:commandButton  icon="fa fa-sign-in"
+                                                              style="background: #0dca00"
+                                                              ajax="false"
+                                                              action="#{mesTaches.voirUneTache}"
+                                                              title="Répondre">
+                                                <f:param name="natureEtape" value="#{etape.titre}" />
+                                                <f:param name="etapeId" value="#{etape.id}" />
+                                            </p:commandButton>
+                                        </p:column>
 
-                                </p:dataTable>
-                                <p:dialog id="detailtache"
-                                          resizable="false"
-                                          header="Détails"
-                                          widgetVar="dlgDetailsTache" width="auto"
-                                          modal="true" hideEffect="clip"
-                                          showEffect="clip" position="‘bottom‘,‘right‘"  dynamic="true" closable="true">
+                                    </p:dataTable>
+                                    <p:dialog id="detailtache"
+                                              resizable="false"
+                                              header="Détails"
+                                              widgetVar="dlgDetailsTache" width="auto"
+                                              modal="true" hideEffect="clip"
+                                              showEffect="clip" position="‘bottom‘,‘right‘"  dynamic="true" closable="true">
 
-                                    <h:panelGrid columns="2" style="border:none; margin: 20px 20px"  styleClass="panelLogin">
-                                        <h:outputText style="font-size: 14px; font-weight: bold" escape="false" value="#{mesTaches.phrase}"/>
-                                        <h:outputText style="font-size: 14px; margin-left: 10px" escape="false" value="#{mesTaches.etape.createurDUneTache}"/>
-                                    </h:panelGrid>
+                                        <h:panelGrid columns="2" style="border:none; margin: 20px 20px"  styleClass="panelLogin">
+                                            <h:outputText style="font-size: 14px; font-weight: bold" escape="false" value="#{mesTaches.phrase}"/>
+                                            <h:outputText style="font-size: 14px; margin-left: 10px" escape="false" value="#{mesTaches.etape.createurDUneTache}"/>
+                                        </h:panelGrid>
 
-                                </p:dialog>
-                            </h:form>
+                                    </p:dialog>
+                                </h:form>
 
 
-                        </div>
+                            </div>
+
+
+
                     </div>
                 </div>
             </div>

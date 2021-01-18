@@ -206,7 +206,7 @@ public class DetailDUnCourrierDansUnDossier implements Serializable {
     public void recupererLesAnnotationsDUnCourrier(){
         HttpSession session = SessionUtils.getSession();
         String idCourrier = (String) session.getAttribute("courrierId");
-        annotation.setListeDesAnnotations(DataBaseQueries.recupererLesAnnotationsDUnCourrier(idCourrier));
+        annotation.setListeDesAnnotations(CourriersQueries.recupererLesAnnotationsDUnCourrier(idCourrier));
     }
 
     public void recupererLesDestinatairesDuCourrier(){

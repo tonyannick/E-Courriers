@@ -1804,52 +1804,6 @@ public class DataBaseQueries {
 
     }
 
-    /**Fonction qui recupere les annotations d'un courrier**/
-    public static List<Annotation> recupererLesAnnotationsDUnCourrier(String idCourrier){
-        List<Annotation> listeAnnotationsCourrier = new ArrayList<>();
-        listeAnnotationsCourrier.clear();
-        String recupererAnnotationsDuCourrierSQL = "select * from `annotation` inner join personne on personne.id_personne = annotation.id_personne where id_courrier = " + idCourrier + "  order by id_annotation desc;";
-        ResultSet resultSet = null;
-        Connection connection = DatabaseConnection.getConnexion();
-
-        try {
-            resultSet = connection.createStatement().executeQuery(recupererAnnotationsDuCourrierSQL);
-            while (resultSet.next()) {
-                listeAnnotationsCourrier.add(new Annotation(
-                        resultSet.getString("id_annotation"),
-                        resultSet.getString("texte"),
-                        resultSet.getString("date_saisie"),
-                        resultSet.getString("heure_saisie"),
-                        resultSet.getString("id_courrier"),
-                        resultSet.getString("nom") +" "+resultSet.getString("prenom")));
-            }
-
-            for (int i = 0; i < listeAnnotationsCourrier.size(); i++){
-                String jour = listeAnnotationsCourrier.get(i).getDateNote().substring(listeAnnotationsCourrier.get(i).getDateNote().lastIndexOf("-") +1);
-                String mois = listeAnnotationsCourrier.get(i).getDateNote().substring(listeAnnotationsCourrier.get(i).getDateNote().indexOf("-")+1,listeAnnotationsCourrier.get(i).getDateNote().indexOf("-")+3);
-                String annee = listeAnnotationsCourrier.get(i).getDateNote().substring(0,4);
-                listeAnnotationsCourrier.get(i).setDateNote(jour+"-"+mois+"-"+annee);
-            }
-
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }finally {
-            if ( resultSet != null) {
-                try {
-                    resultSet.close();
-                } catch (SQLException e) { /* ignored */}
-            }
-            if (connection != null) {
-                try {
-                    connection.close();
-                } catch (SQLException e) { /* ignored */}
-            }
-        }
-
-        return listeAnnotationsCourrier;
-
-    }
-
     /**Fonction qui recupere les réponses d'un courrier**/
     public static List<ReponseCourrier> recupererLesReponsesDUnCourrier(String idCourrier){
         List<ReponseCourrier> listeReponseCourrier = new ArrayList<>();

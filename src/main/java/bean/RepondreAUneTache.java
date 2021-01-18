@@ -236,7 +236,7 @@ public class RepondreAUneTache implements Serializable {
     public void recupererLesAnnotationsDUnCourrier(){
         HttpSession session = SessionUtils.getSession();
         String idCourrier = (String) session.getAttribute("idCourrier");
-        annotation.setListeDesAnnotations(DataBaseQueries.recupererLesAnnotationsDUnCourrier(idCourrier));
+        annotation.setListeDesAnnotations(CourriersQueries.recupererLesAnnotationsDUnCourrier(idCourrier));
     }
 
     public List<Discussion> recupererLesDiscussionsDUneEtape(){
