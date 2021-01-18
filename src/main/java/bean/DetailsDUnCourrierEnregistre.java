@@ -4,6 +4,7 @@ import alfresco.ConnexionAlfresco;
 import databaseManager.CourriersQueries;
 import databaseManager.DataBaseQueries;
 import databaseManager.DatabaseConnection;
+import databaseManager.DiscussionsQueries;
 import dateAndTime.DateUtils;
 import fileManager.FileManager;
 import model.*;
@@ -415,13 +416,13 @@ public class DetailsDUnCourrierEnregistre implements Serializable {
     }
 
     public List<Discussion> recupererLesDiscussionsDUneEtape(){
-        discussion.setListeDiscussion(DataBaseQueries.recupererLesDiscussionsDUneEtape(discussion.getIdEtape()));
+        discussion.setListeDiscussion(DiscussionsQueries.recupererLesDiscussionsDUneEtape(discussion.getIdEtape()));
         return discussion.getListeDiscussion();
     }
 
     public void clickExpansionToggleEtape(ToggleEvent toggleEvent){
         discussion.setIdEtape(((Etape)toggleEvent.getData()).getId());
-        discussion.setListeDiscussion(DataBaseQueries.recupererLesDiscussionsDUneEtape(discussion.getIdEtape()));
+        discussion.setListeDiscussion(DiscussionsQueries.recupererLesDiscussionsDUneEtape(discussion.getIdEtape()));
 
         PrimeFaces.current().executeScript("PF('panelloadingdiscussion').close()");
     }
@@ -793,7 +794,7 @@ public class DetailsDUnCourrierEnregistre implements Serializable {
 
 
     public void fermerDefinitivementUneDiscussion(){
-        DataBaseQueries.cloreUneDiscussion(etape.getId());
+        DiscussionsQueries.cloreUneDiscussion(etape.getId());
     }
 
     public List<String> recupererListeFonctionsParDirectionDuDestinataire(){

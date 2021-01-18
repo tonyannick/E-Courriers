@@ -1056,7 +1056,7 @@ public class DetailDUnCourrierRecu implements Serializable {
 
     public void clickExpansionToggleEtape(ToggleEvent toggleEvent){
         discussion.setIdEtape(((Etape)toggleEvent.getData()).getId());
-        discussion.setListeDiscussion(DataBaseQueries.recupererLesDiscussionsDUneEtape(discussion.getIdEtape()));
+        discussion.setListeDiscussion(DiscussionsQueries.recupererLesDiscussionsDUneEtape(discussion.getIdEtape()));
         PrimeFaces.current().executeScript("PF('panelloadingdiscussion').close()");
     }
 
@@ -1119,7 +1119,7 @@ public class DetailDUnCourrierRecu implements Serializable {
     }
 
     public void fermerDefinitivementUneDiscussion(){
-        DataBaseQueries.cloreUneDiscussion(etape.getId());
+        DiscussionsQueries.cloreUneDiscussion(etape.getId());
     }
 
     public void voirLeFichierDUneDiscussion(ActionEvent actionEvent){

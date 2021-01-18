@@ -472,7 +472,7 @@ public class RepondreAUnCourrierRecu implements Serializable {
 
     public void clickExpansionToggleEtape(ToggleEvent toggleEvent){
         discussion.setIdEtape(((Etape)toggleEvent.getData()).getId());
-        discussion.setListeDiscussion(DataBaseQueries.recupererLesDiscussionsDUneEtape(discussion.getIdEtape()));
+        discussion.setListeDiscussion(DiscussionsQueries.recupererLesDiscussionsDUneEtape(discussion.getIdEtape()));
         PrimeFaces.current().executeScript("PF('panelloadingdiscussion').close()");
     }
 
