@@ -350,7 +350,6 @@ public class CourriersQueries {
         HttpSession session = SessionUtils.getSession();
         String idDirection = (String) session.getAttribute("idDirectionUser");
         String requeteMesCourriersSQL = "select * from `ajouter_courrier` inner join `courrier` on ajouter_courrier.id_courrier = courrier.id_courrier left join correspondance_dossier_courrier on correspondance_dossier_courrier.id_courrier = courrier.id_courrier left join dossier on dossier.id_dossier =  correspondance_dossier_courrier.id_dossier  inner join personne on ajouter_courrier.id_personne = personne.id_personne inner join direction on personne.id_direction = direction.id_direction where direction.id_direction = '"+idDirection+"' and etat = '"+EtatCourrier.courrierEnregistre+"' order by courrier.id_courrier desc;";
-
         ResultSet resultSet = null;
         try {
             resultSet = connection.createStatement().executeQuery(requeteMesCourriersSQL);
@@ -369,16 +368,13 @@ public class CourriersQueries {
             }
 
             for (int i = 0; i < mesCourriers.size(); i++){
-
                 String jour = mesCourriers.get(i).getDateDEnregistrement().substring(mesCourriers.get(i).getDateDEnregistrement().lastIndexOf("-") +1);
                 String mois = mesCourriers.get(i).getDateDEnregistrement().substring(mesCourriers.get(i).getDateDEnregistrement().indexOf("-")+1,mesCourriers.get(i).getDateDEnregistrement().indexOf("-")+3);
                 String annee = mesCourriers.get(i).getDateDEnregistrement().substring(0,4);
-
-                mesCourriers.get(i).setDateDeReception(jour+"-"+mois+"-"+annee);
+                mesCourriers.get(i).setDateDEnregistrement(jour+"-"+mois+"-"+annee);
             }
 
             for (int i = 0; i < mesCourriers.size(); i++){
-
                 if(mesCourriers.get(i).getExtensionCourrier() != null){
                     if(mesCourriers.get(i).getExtensionCourrier().equals("pdf") || mesCourriers.get(i).getExtensionCourrier().equals("PDF")){
                         mesCourriers.get(i).setImageCourrier("pdf.png");
@@ -393,9 +389,7 @@ public class CourriersQueries {
                         mesCourriers.get(i).setExtensionCourrier("confidentiel");
                     }
                 }
-
             }
-
         } catch (SQLException e) {
             e.printStackTrace();
         }finally {
@@ -784,4 +778,36 @@ public class CourriersQueries {
         }
     }
 
+    /**Fonction qui check si une personne est le destinataire d'un courrier par son id**/
+    public static boolean voirSiUnePersonneEstUnDestinataireOuUnEmetteurParSonId(String idPersonne,String idCourrier,String nomTableDansDatabase){
+        boolean isEmetteur = false;
+        String requeteSQL = "select * from nomTableDansDatabase where id_courrier = '"+idCourrier+"' and id_personne = '"+idPersonne+"';";
+        System.out.println("requeteSQL = " + requeteSQL);
+        Connection connection = DatabaseConnection.getConnexion();
+        ResultSet resultSet = null;
+        try {
+            resultSet = connection.createStatement().executeQuery(requeteSQL);
+            if(resultSet.next()){
+                isEmetteur = true;
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }finally {
+            if(resultSet != null){
+                try {
+                    resultSet.close();
+                } catch (SQLException e) {
+                    e.printStackTrace();
+                }
+            }
+            if(connection != null){
+                try {
+                    connection.close();
+                } catch (SQLException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+        return isEmetteur;
+    }
 }

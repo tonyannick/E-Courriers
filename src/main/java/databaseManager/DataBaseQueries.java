@@ -329,7 +329,7 @@ public class DataBaseQueries {
         List<Discussion> mesDiscussions = new ArrayList<>();
         mesDiscussions.clear();
         String requeteListeDesDiscussionsEnCoursSQL = "select * from `discussion_etape` inner join `personne` on discussion_etape.id_personne = personne.id_personne inner join `correspondance_etape_courrier` on discussion_etape.id_etape = correspondance_etape_courrier.id_etape where personne.id_personne = '"+idUser+"' and etat_discussion = '"+EtatEtape.Ouvert+"' group by discussion_etape.id_etape desc limit 5;";
-        System.out.println("requeteListeDesDiscussionsEnCoursSQL = " + requeteListeDesDiscussionsEnCoursSQL);
+       // System.out.println("requeteListeDesDiscussionsEnCoursSQL = " + requeteListeDesDiscussionsEnCoursSQL);
         Connection connection = DatabaseConnection.getConnexion();
         ResultSet resultSet = null;
         try {
@@ -343,6 +343,17 @@ public class DataBaseQueries {
             }
         } catch (SQLException e) {
             e.printStackTrace();
+        }finally {
+            if (resultSet != null) {
+                try {
+                    resultSet.close();
+                } catch (SQLException e) { /* ignored */}
+            }
+            if (connection != null) {
+                try {
+                    connection.close();
+                } catch (SQLException e) { /* ignored */}
+            }
         }
 
         return mesDiscussions;
@@ -1112,9 +1123,9 @@ public class DataBaseQueries {
     public static String allerAUneEtapeAPartirDUneDiscussion(String idDiscussion){
         HttpSession session = SessionUtils.getSession();
         String requeteSQL = "select * from `etape` inner join `correspondance_etape_courrier` on etape.id_etape = correspondance_etape_courrier.id_etape inner join `courrier` on correspondance_etape_courrier.id_courrier = courrier.id_courrier where etape.id_etape = (select id_etape from `discussion_etape` where id_discussion_etape = '"+idDiscussion+"') ;";
+
         String etatCorrespondanceEtape = session.getAttribute("etatCorrespondanceEtape").toString();
         boolean isResponsable = (boolean)session.getAttribute("isResponsable");
-
         ResultSet resultSet = null;
         Connection connection = DatabaseConnection.getConnexion();
         try {
@@ -1294,6 +1305,7 @@ public class DataBaseQueries {
         List<Etape> listeActionsCourrier = new ArrayList<>();
         listeActionsCourrier.clear();
         String requeteActionsUsersSQL = "select * from `etape` inner join `correspondance_personne_etape` on etape.id_etape = correspondance_personne_etape.id_etape inner join `personne` on correspondance_personne_etape.id_personne = personne.id_personne where personne.id_personne = '"+idUser+"' and correspondance_personne_etape.role_agent = '"+RoleEtape.AffecteurTache+"' and etat = '"+EtatEtape.enTraitement+"' order by etape.id_etape desc limit 5;";
+       // System.out.println("requeteActionsUsersSQL = " + requeteActionsUsersSQL);
         ResultSet resultSet = null;
         Connection connection = DatabaseConnection.getConnexion();
 

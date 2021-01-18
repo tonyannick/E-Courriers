@@ -25,6 +25,8 @@ public class MesTaches implements Serializable {
 
     private static final long serialVersionUID = -684928672440884703L;
     private Etape etape;
+    private Integer first = 0;
+    private Integer rowsPerPage = 15;
     private String titreDeLaPage;
     private boolean isResponsable = false;
     private String phrase;
@@ -108,4 +110,19 @@ public class MesTaches implements Serializable {
         this.phrase = phrase;
     }
 
+    public Integer getFirst() {
+        return first;
+    }
+
+    public void setFirst(Integer first) {
+        this.first = first;
+    }
+
+    public Integer getRowsPerPage() {
+        return rowsPerPage;
+    }
+
+    public void setRowsPerPage(Integer rowsPerPage) {
+        this.rowsPerPage = rowsPerPage;
+    }
 }

@@ -44,15 +44,18 @@
 
                         <h3 class="page-header"><h:graphicImage value="./resources/images/worker.png" style="margin-right :10px"/>#{mesTaches.titreDeLaPage}</h3>
 
-                        <div class="table-responsive">
+                        <div class="table-responsive" style="box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2);">
                             <p:messages for="messagerreurtache" showDetail="true" closable="true"/>
                             <h:form id="form">
                                 <p:dataTable tableStyle="table-layout: auto"
                                              scrollable="false"
                                              paginatorAlwaysVisible="false"
+                                             rows="#{mesTaches.rowsPerPage}"
+                                             first="#{mesTaches.first}"
+                                             rowsPerPageTemplate="15,25,35"
                                              paginatorPosition="top"
                                              value="#{mesTaches.etape.listeDeMesTaches}"
-                                             var="etape" paginator="true" rows="15"
+                                             var="etape" paginator="true"
                                              emptyMessage="Aucune tache en cours"
                                              rowIndexVar="rowIndex" border="2">
 

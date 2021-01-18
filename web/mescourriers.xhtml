@@ -22,20 +22,30 @@
     </h:head>
     <style>
         .courrierconfidentiel{
-            background-color: #810028 !important;
-            padding: 5px 20px;
-            color: white;
-            font-size: 18px;
+            color: #750025;
+            font-size: 17px;
             font-weight: bold;
             text-align: center;
         }
         .courrierurgent{
-            background-color: #fca752 !important;
-            padding: 5px 20px;
-            color: #fefefe;
-            font-size: 18px;
+            color: #fc7739;
+            font-size: 17px;
             font-weight: bold;
             text-align: center;
+        }
+        ul .ui-datalist-item:hover{
+            background-color: #fbf35c;
+            font-weight: bold;
+        }
+        ul .ui-datalist-item{
+            border-bottom: 1px gray solid;
+        }
+        .noBorders *{
+            border: none !important;
+        }
+        ul.ui-datalist-data {
+            padding-inline-start: 0px;
+            list-style-type: none;
         }
     </style>
     <h:body id="page">
@@ -59,46 +69,93 @@
                         </ul>
 
                         <h3 class="page-header"><h:graphicImage value="./resources/images/officematerial.png" style="margin-right :10px"/>Mes courriers enregistrés</h3>
-                        <p:dataScroller value="#{mesCourriers.courrier.listeDesCouriersEnregistres}" var="courriers"
-                                        chunkSize="10" mode="inline"
-                                        rows="8"
-                                        emptyMessage="aucun courrier" scrollHeight="500">
-                            <f:facet name="header">
-                                Liste de vos courriers enregistrés
-                                <span class="ui-separator">
-                                        <span class="fa fa-ellipsis-v" />
-                                    </span>
-                                Nombre total de courriers :  #{fn:length(mesCourriers.courrier.listeDesCouriersEnregistres)}
-                            </f:facet>
-                            <h:panelGrid columns="2" style="width:100%" columnClasses="logo,detail">
-                                <p:graphicImage value="./resources/images/#{courriers.imageCourrier}"  style="width: 54px ; height: 54px; margin-left: 5px;"/>
-                                <p:outputPanel>
-                                    <h:panelGrid columns="2" cellpadding="2">
-                                        <h:outputText style="font-size: 14px; font-weight: bold;" value="Objet du courrier : " />
-                                        <h:form>
-                                            <p:commandLink ajax="false" action="#{mesCourriers.voirLesDetailsDunCourrierEnregistre}">
-                                                <h:outputText  styleClass="#{courriers.objetCourrier eq 'Confidentiel' ? 'courrierconfidentiel' : 'null'}"
-                                                               value="#{courriers.objetCourrier}" style="font-size:14px; margin-left:10px"/>
-                                                <f:param name="idCourrier" value="#{courriers.idCourrier}" />
-                                                <f:param name="idAjouterCourrier" value="#{courriers.idAjouterCourrier}" />
-                                                <f:param name="idAlfresco" value="#{courriers.idAlfresco}" />
-                                                <f:param name="confidentiel" value="#{courriers.confidentiel}" />
-                                            </p:commandLink>
-                                        </h:form>
-                                    </h:panelGrid>
-                                    <h:panelGrid columns="2" cellpadding="2">
-                                        <h:outputText style="font-size: 14px; font-weight: bold;" value="Priorité : " />
-                                        <h:outputText styleClass="#{courriers.prioriteCourrier eq 'Urgent' ? 'courrierurgent' : 'null'}"
-                                                      value="#{courriers.prioriteCourrier}" style=" font-size:14px; margin-left: 10px"/>
-                                    </h:panelGrid>
-                                    <h:panelGrid columns="2" cellpadding="2">
-                                        <h:outputText style="font-size: 14px; font-weight: bold;" value="Type de document : " />
-                                        <h:outputText value="#{courriers.extensionCourrier}" style=" font-size:14px; text-transform:uppercase; margin-left:10px; color:#0000e7;"/>
-                                    </h:panelGrid>
-                                </p:outputPanel>
-                            </h:panelGrid>
-                            <p:separator/>
-                        </p:dataScroller>
+
+
+                        <p:panel toggleable="true" header="Courriers enregistrés du jour"
+                                 style="margin-bottom: 60px; background-color: #fdfdfd;
+                                         box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2);">
+                            <p:dataList
+                                    styleClass="noBorders"
+                                    value="#{mesCourriers.mesCourriersDuJour}" var="courriers"
+                                    rows="5" paginator="true" paginatorAlwaysVisible="false" paginatorPosition="bottom"
+                                    emptyMessage="aucun courrier enregistré pour le moment">
+                                <h:panelGrid columns="2" style="width:100%" columnClasses="logo,detail">
+                                    <p:graphicImage value="./resources/images/#{courriers.imageCourrier}"  style="width: 54px ; height: 54px; margin-left: 5px;"/>
+                                    <p:outputPanel>
+                                        <h:panelGrid columns="2" cellpadding="2">
+                                            <h:outputText style="font-size: 14px; font-weight: bold;" value="Objet du courrier : " />
+                                            <h:form>
+                                                <p:commandLink ajax="false" action="#{mesCourriers.voirLesDetailsDunCourrierEnregistre}">
+                                                    <h:outputText  styleClass="#{courriers.objetCourrier eq 'Confidentiel' ? 'courrierconfidentiel' : 'null'}"
+                                                                   value="#{courriers.objetCourrier}" style="font-size:14px; margin-left:10px"/>
+                                                    <f:param name="idCourrier" value="#{courriers.idCourrier}" />
+                                                    <f:param name="idAjouterCourrier" value="#{courriers.idAjouterCourrier}" />
+                                                    <f:param name="idAlfresco" value="#{courriers.idAlfresco}" />
+                                                    <f:param name="confidentiel" value="#{courriers.confidentiel}" />
+                                                </p:commandLink>
+                                            </h:form>
+                                        </h:panelGrid>
+                                        <h:panelGrid columns="2" cellpadding="2">
+                                            <h:outputText style="font-size: 14px; font-weight: bold;" value="Priorité : " />
+                                            <h:outputText styleClass="#{courriers.prioriteCourrier eq 'Urgent' ? 'courrierurgent' : 'null'}"
+                                                          value="#{courriers.prioriteCourrier}" style=" font-size:14px; margin-left: 10px"/>
+                                        </h:panelGrid>
+                                        <h:panelGrid columns="2" cellpadding="2">
+                                            <h:outputText style="font-size: 14px; font-weight: bold;" value="Type de document : " />
+                                            <h:outputText value="#{courriers.extensionCourrier}" style=" font-size:14px; text-transform:uppercase; margin-left:10px; color:#0000e7;"/>
+                                        </h:panelGrid>
+                                    </p:outputPanel>
+                                </h:panelGrid>
+                                <p:separator/>
+                            </p:dataList>
+
+                        </p:panel>
+
+                        <p:panel header="Anciens courriers enregistrés"
+                                 style="margin-bottom: 60px; background-color: #fdfdfd;
+                                 box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2);">
+
+                            <p:dataList
+                                    styleClass="noBorders"
+                                    value="#{mesCourriers.courrier.listeDesCouriersEnregistres}" var="courriers"
+                                    rows="5" paginator="true" paginatorAlwaysVisible="false" paginatorPosition="bottom"
+                                    emptyMessage="aucun courrier enregistré pour le moment">
+
+                                <div class="ui-g">
+                                    <div class="ui-g-1">
+                                        <p:graphicImage value="./resources/images/#{courriers.imageCourrier}" style="width: 54px ; height: 54px; margin-left: 5px;"/>
+                                    </div>
+                                    <div class="ui-g-9" style=" margin-left:-35px;">
+                                        <h:panelGrid columns="2" cellpadding="2">
+                                            <h:outputText style="font-size: 14px; font-weight: bold;" value="Objet du courrier : " />
+                                            <h:form>
+                                                <p:commandLink ajax="false" action="#{mesCourriers.voirLesDetailsDunCourrierEnregistre}">
+                                                    <h:outputText  styleClass="#{courriers.objetCourrier eq 'Confidentiel' ? 'courrierconfidentiel' : 'null'}"
+                                                                   value="#{courriers.objetCourrier}" style="font-size:14px; margin-left:10px"/>
+                                                    <f:param name="idCourrier" value="#{courriers.idCourrier}" />
+                                                    <f:param name="idAjouterCourrier" value="#{courriers.idAjouterCourrier}" />
+                                                    <f:param name="idAlfresco" value="#{courriers.idAlfresco}" />
+                                                    <f:param name="confidentiel" value="#{courriers.confidentiel}" />
+                                                </p:commandLink>
+                                            </h:form>
+                                            <h:outputText style="font-size: 14px; margin-top: 3px; font-weight: bold;" value="Priorité : " />
+                                            <h:outputText styleClass="#{courriers.prioriteCourrier eq 'Urgent' ? 'courrierurgent' : 'null'}"
+                                                          value="#{courriers.prioriteCourrier}" style=" font-size:14px; margin-top: 3px; margin-left: 10px"/>
+                                            <h:outputText style="font-size: 14px; margin-top:3px; font-weight: bold;" value="Type de document : " />
+                                            <h:outputText value="#{courriers.extensionCourrier}" style=" font-size:14px; text-transform:uppercase; margin-left:10px; color:#0000e7;"/>
+
+                                        </h:panelGrid>
+                                    </div>
+                                    <div class="ui-g-2">
+                                        <h:outputText value="Enregistré le : #{courriers.dateDEnregistrement}" style=" font-size: 12px; margin-left:10px; color:#a19b9e;"/>
+                                    </div>
+                                </div>
+                                <p:separator/>
+                            </p:dataList>
+
+                        </p:panel>
+
+
                     </div>
                 </div>
             </div>

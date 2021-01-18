@@ -9,7 +9,7 @@
       xmlns:f="http://xmlns.jcp.org/jsf/core">
 <f:view transient="true">
     <f:metadata>
-        <f:viewAction action="#{mesTaches.recupererLaListeDeMesTaches}" onPostback="true"/>
+        <f:viewAction action="#{mesActivites.recupererLaListeDesActivites}" onPostback="true"/>
     </f:metadata>
     <h:head>
         <title>Activités</title>
@@ -21,6 +21,16 @@
         <h:outputScript name="toast/js/toast.js"/>
         <h:outputStylesheet name="toast/css/toast.css" />
     </h:head>
+    <style>
+
+        .noBorders *{
+            border: none !important;
+        }
+        ul .ui-datalist-item:hover{
+            background-color: #fbf35c;
+            font-weight: bold;
+        }
+    </style>
     <h:body id="page">
         <div class="container-fluid">
             <div class="row">
@@ -44,29 +54,74 @@
 
                         <h3 class="page-header"><h:graphicImage value="./resources/images/alarm.png" style="margin-right :10px"/>Activités</h3>
                         <div class="ui-g">
-                            <div class="ui-g-2"></div>
-                            <div class="ui-g-8">
-                                <ui:repeat  value="#{tableauDeBord.etape.listeDeMesTachesEnTraitement}"  var="etape">
-                                    <h:form id="form">
-                                        <h:panelGrid columns="2" columnClasses="ui-grid-col-1, ui-grid-col-10" style="width:100%">
-                                            <h:graphicImage value="./resources/images/entraitement.png"  style=" margin-left: 5px; margin-top: -30px"/>
-                                            <h:panelGrid columns="1" style="width: 100%">
-                                                <h:outputText value="#{etape.message}" escape="false" style="font-size: 13px; color: #0f0f0f"/>
-                                                <h:outputText style="color: #777777; font-size: 11px; margin-top: 5px" value="#{etape.date_debut}"/>
-                                                <p:commandButton  icon="fa fa-eye" action="#{tableauDeBord.voirUneTache}" ajax="false"
-                                                                  style="background: #496ea1; border: 1px #496ea1 solid; float: right"
-                                                                  title="Voir">
-                                                    <f:param name="etapeId" value="#{etape.id}" />
-                                                    <f:param name="natureEtape" value="#{etape.nature}" />
-                                                </p:commandButton>
-                                            </h:panelGrid>
-                                        </h:panelGrid>
+                            <div class="ui-g-12">
+
+                                <p:panel toggleable="true" header="Activités du jour"
+                                         style="margin-bottom: 30px; background-color: #fdfdfd;
+                                         box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2);">
+                                    <p:dataList  styleClass="noBorders"
+                                                 value="#{mesActivites.activitesDuJour}"  var="activites"
+                                                 paginator="true" paginatorAlwaysVisible="false" paginatorPosition="bottom"
+                                                 emptyMessage="Aucune activités aujourd'hui pour le moment" rows="5">
+                                        <h:form id="formActivitesDuJour">
+                                            <div class="ui-g">
+                                                <div class="ui-g-1">
+                                                    <h:graphicImage value="./resources/images/time.png"  style="margin-left: 5px; margin-top: 10px"/>
+                                                </div>
+                                                <div class="ui-g-9" style=" margin-left:-45px;">
+                                                    <h:panelGrid columns="1" style="width: 100%">
+                                                        <h:outputText value="#{activites.titreActivites}" escape="false" style=" font-size: 15px; color: #0f0f0f"/>
+                                                        <h:outputText style="color: #777777; font-size: 12px; color: #2b669a; font-weight: bold; text-transform: uppercase; margin-top: 5px" value=" objet du courrier concerné : #{activites.objetCourrier}"/>
+                                                        <h:outputText style="color: #777777; font-size: 11px; margin-top: 5px" value="#{activites.personneActivites}"/>
+                                                    </h:panelGrid>
+                                                    <h:panelGrid columns="2" style="width: 20%">
+                                                        <h:outputText style="color: #777777; font-size: 11px; margin-top: 5px" value="#{activites.heureActivites}"/>
+                                                        <h:outputText style="color: #777777; font-size: 11px; margin-top: 5px" value="#{activites.dateActivites}"/>
+                                                    </h:panelGrid>
+                                                </div>
+                                                <div class="ui-g-2">
+
+                                                </div>
+                                            </div>
+                                            <p:separator/>
+                                        </h:form>
+                                    </p:dataList>
+                                </p:panel>
+
+                                <p:panel header="Anciennes activités" style="margin-bottom: 40px;
+                                    border: 1px #e2f6ff solid; box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2);">
+                                    <p:dataList
+                                            styleClass="noBorders"
+                                            paginator="true" paginatorAlwaysVisible="false" paginatorPosition="bottom"
+                                            emptyMessage="Aucune activités" rows="7" style="border: 1px white solid;"
+                                            value="#{mesActivites.activites.activitesList}"  var="activites">
+                                        <h:form id="formAncienneActivites">
+                                            <div class="ui-g">
+                                                <div class="ui-g-1">
+                                                    <h:graphicImage value="./resources/images/sticky-notes.png"  style="margin-left: 5px; margin-top: 10px"/>
+                                                </div>
+                                                <div class="ui-g-9" style=" margin-left:-45px;">
+                                                    <h:panelGrid columns="1" style="width: 100%">
+                                                        <h:outputText value="#{activites.titreActivites}" escape="false" style=" font-size: 15px; color: #0f0f0f"/>
+                                                        <h:outputText style="color: #777777; font-size: 11px; margin-top: 5px" value="#{activites.personneActivites}"/>
+                                                        <h:outputText style="font-size: 12px; color: #2b669a; font-weight: bold; text-transform: uppercase; margin-top: 5px" value=" objet du courrier concerné : #{activites.objetCourrier}"/>
+                                                    </h:panelGrid>
+                                                    <h:panelGrid columns="2" style="width: 20%">
+                                                        <h:outputText style="color: #777777; font-size: 11px; margin-top: 5px" value="#{activites.heureActivites}"/>
+                                                        <h:outputText style="color: #777777; font-size: 11px; margin-top: 5px" value="#{activites.dateActivites}"/>
+                                                    </h:panelGrid>
+                                                </div>
+
+                                                <div class="ui-g-2">
+
+                                                </div>
+                                            </div>
+                                        </h:form>
                                         <p:separator/>
-                                    </h:form>
-                                </ui:repeat>
+                                    </p:dataList>
+                                </p:panel>
 
                             </div>
-                            <div class="ui-g-2"></div>
                         </div>
                     </div>
                     <div class="ui-g-2"></div>

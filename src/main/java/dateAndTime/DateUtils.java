@@ -111,6 +111,14 @@ public class DateUtils {
         return myDate;
     }
 
+    public static String recupererSimpleDateEnCoursAuFormatFrancais(){
+        Date date = new Date();
+        String myDate = null;
+        Format formatDate = new SimpleDateFormat("dd-MM-yyyy");
+        myDate = formatDate.format(date);
+        return myDate;
+    }
+
     public static String recupererSimpleHeuresEnCours(){
         Date date = new Date();
         String myDate = null;

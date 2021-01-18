@@ -1,6 +1,7 @@
 package bean;
 
 import databaseManager.CourriersQueries;
+import dateAndTime.DateUtils;
 import model.Courrier;
 import org.primefaces.PrimeFaces;
 import sessionManager.SessionUtils;
@@ -12,8 +13,10 @@ import javax.faces.context.FacesContext;
 import javax.inject.Named;
 import javax.servlet.http.HttpSession;
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 import java.util.Map;
-
 
 @Named
 @SessionScoped
@@ -21,17 +24,19 @@ public class MesCourriers implements Serializable {
 
     private static final long serialVersionUID = 1261200135886356695L;
     private Courrier courrier;
+    private List<Courrier> mesCourriersDuJour = new ArrayList<>();
 
     @PostConstruct
     public void initialisation(){
         courrier = new Courrier();
-       // recupererLalisteDesCourriersEnregistres();
+       //recupererLalisteDesCourriersEnregistres();
     }
 
     public void recupererLalisteDesCourriersEnregistres(){
         HttpSession session = SessionUtils.getSession();
         String idPersonne = (String) session.getAttribute("idUser");
         courrier.setListeDesCouriersEnregistres(CourriersQueries.recupererTousLesCourriersEnregistresDUnUtilisateursParSonId(idPersonne));
+        remplirActivitesDuJour();
     }
 
     public String voirLesDetailsDunCourrierEnregistre(){
@@ -63,11 +68,31 @@ public class MesCourriers implements Serializable {
         }
     }
 
+    public void remplirActivitesDuJour(){
+        String dateDuJour = DateUtils.recupererSimpleDateEnCoursAuFormatFrancais();
+        mesCourriersDuJour.clear();
+        for(int a = 0; a < courrier.getListeDesCouriersEnregistres().size(); a++){
+            if ( courrier.getListeDesCouriersEnregistres().get(a).getDateDEnregistrement().equals(dateDuJour)) {
+                mesCourriersDuJour.add(courrier.getListeDesCouriersEnregistres().get(a));
+            }
+        }
+        Collections.reverse(mesCourriersDuJour);
+        courrier.getListeDesCouriersEnregistres().removeIf(e -> e.getDateDEnregistrement().equals(dateDuJour));
+    }
+
     public Courrier getCourrier() {
         return courrier;
     }
 
     public void setCourrier(Courrier courrier) {
         this.courrier = courrier;
+    }
+
+    public List<Courrier> getMesCourriersDuJour() {
+        return mesCourriersDuJour;
+    }
+
+    public void setMesCourriersDuJour(List<Courrier> mesCourriersDuJour) {
+        this.mesCourriersDuJour = mesCourriersDuJour;
     }
 }

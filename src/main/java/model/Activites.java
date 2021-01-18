@@ -1,5 +1,7 @@
 package model;
 
+import java.util.List;
+
 public class Activites {
 
     private String titreActivites;
@@ -8,17 +10,29 @@ public class Activites {
     private String personneActivites;
     private String idCourrier;
     private String objetCourrier;
+    private String etatCourrier;
+    private List<Activites> activitesList;
 
-    public Activites(String titreActivites, String heureActivites, String dateActivites, String personneActivites, String idCourrier, String objetCourrier) {
+    public Activites(String titreActivites, String heureActivites, String dateActivites, String personneActivites,
+                     String idCourrier, String objetCourrier, String etatCourrier) {
         this.titreActivites = titreActivites;
         this.heureActivites = heureActivites;
         this.dateActivites = dateActivites;
         this.personneActivites = personneActivites;
         this.idCourrier = idCourrier;
         this.objetCourrier = objetCourrier;
+        this.etatCourrier = etatCourrier;
     }
 
     public Activites() {
+    }
+
+    public List<Activites> getActivitesList() {
+        return activitesList;
+    }
+
+    public void setActivitesList(List<Activites> activitesList) {
+        this.activitesList = activitesList;
     }
 
     public String getTitreActivites() {
@@ -67,5 +81,13 @@ public class Activites {
 
     public void setObjetCourrier(String objetCourrier) {
         this.objetCourrier = objetCourrier;
+    }
+
+    public String getEtatCourrier() {
+        return etatCourrier;
+    }
+
+    public void setEtatCourrier(String etatCourrier) {
+        this.etatCourrier = etatCourrier;
     }
 }

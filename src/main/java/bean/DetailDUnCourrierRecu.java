@@ -302,6 +302,7 @@ public class DetailDUnCourrierRecu implements Serializable {
             HttpSession session = SessionUtils.getSession();
             String idCourrier = (String) session.getAttribute("courrierId");
             String idUser = (String) session.getAttribute( "idUser");
+            String idDirectionUser = (String) session.getAttribute( "idDirectionUser");
             String repondreSQL = "INSERT INTO `reponse_courrier` (`message_reponse_courrier`, `identifiant_unique_reponse`,`fk_courrier`, `fk_personne`) " +
                     "VALUES ( '"+reponseCourrier.getText().replaceAll("'", " ")+"','"+uniqueID+"' ,'"+idCourrier+"', '"+idUser+"');";
 
@@ -341,7 +342,7 @@ public class DetailDUnCourrierRecu implements Serializable {
                 statement.addBatch(ajouterCorrespondanceEtapeCourrierSQL);
                 statement.addBatch(ajouterCorrespondanceEtapePersonneSQL);
                 statement.addBatch(ajouterEtapeCourrierSQL);
-                statement.addBatch(ActivitesQueries.ajouterUneActvitee(TitreActivites.reponseAjoutee, idCourrier ,idUser,idTypeDactivite));
+                statement.addBatch(ActivitesQueries.ajouterUneActvitee(TitreActivites.reponseAjoutee, idCourrier ,idUser,idTypeDactivite,idDirectionUser));
                 statement.executeBatch();
                 connection.commit();
                 reponseCourrier.setText(null);
@@ -977,6 +978,7 @@ public class DetailDUnCourrierRecu implements Serializable {
         String idUser = (String) session.getAttribute( "idUser");
         String idCourrier = (String) session.getAttribute( "courrierId");
         String isCourrierTransferer = (String) session.getAttribute( "courrierTransferer");
+        String idDirectionUser = (String) session.getAttribute( "idDirectionUser");
         String ajouterEtapeCourrierSQL;
         String ajouterCorrespondanceEtapeCourrierSQL = null;
 
@@ -1020,7 +1022,7 @@ public class DetailDUnCourrierRecu implements Serializable {
                     statement.addBatch(ajouterCorrespondanceEtapePersonneReceveurSQL);
                     statement.addBatch(ajouterCorrespondanceEtapeCourrierSQL);
                     statement.addBatch(ajouterEtapeCourrierSQL);
-                    statement.addBatch(ActivitesQueries.ajouterUneActvitee(TitreActivites.tacheAjoutee, idCourrier ,idUser,idTypeDactivite));
+                    statement.addBatch(ActivitesQueries.ajouterUneActvitee(TitreActivites.tacheAjoutee, idCourrier ,idUser,idTypeDactivite,idDirectionUser));
                     statement.executeBatch();
                     connection.commit();
                     FacesContext context = FacesContext.getCurrentInstance();
@@ -1187,6 +1189,7 @@ public class DetailDUnCourrierRecu implements Serializable {
         HttpSession session = SessionUtils.getSession();
         String idUser = (String) session.getAttribute( "idUser");
         String idCourrier = (String) session.getAttribute( "courrierId");
+        String idDirectionUser = (String) session.getAttribute( "idDirectionUser");
         Connection connection = DatabaseConnection.getConnexion();
         if(etape.getReponseTache() == null || etape.getReponseTache().isEmpty()){
             FacesContext.getCurrentInstance().addMessage("messageinfodiscussion", new FacesMessage(FacesMessage.SEVERITY_WARN, "Erreur", "Vous devez ecrire un message!!"));
@@ -1218,7 +1221,7 @@ public class DetailDUnCourrierRecu implements Serializable {
                 if (updateNomFichierDansDiscussionSQL != null) {
                     statement.addBatch(updateNomFichierDansDiscussionSQL);
                 }
-                statement.addBatch(ActivitesQueries.ajouterUneActvitee(TitreActivites.discussionAjoutee, idCourrier ,idUser,idTypeDactivite));
+                statement.addBatch(ActivitesQueries.ajouterUneActvitee(TitreActivites.discussionAjoutee, idCourrier ,idUser,idTypeDactivite,idDirectionUser));
                 statement.executeBatch();
                 connection.commit();
                 FacesContext context = FacesContext.getCurrentInstance();
@@ -1354,7 +1357,7 @@ public class DetailDUnCourrierRecu implements Serializable {
         HttpSession session = SessionUtils.getSession();
         String idUser = (String) session.getAttribute( "idUser");
         String idCourrier = (String) session.getAttribute( "courrierId");
-
+        String idDirectionUser = (String) session.getAttribute( "idDirectionUser");
         String ajouterEtapeCourrierSQL = null;
         genererUniqueIDPourDestinataire();
         String idTypeDeDestinataire = DataBaseQueries.recupererIdTypeDePersonneParTitre("Agent du Ministere");
@@ -1406,7 +1409,7 @@ public class DetailDUnCourrierRecu implements Serializable {
                       statement.addBatch(ajouterCorrespondanceEtapePersonneSQL);
                       statement.addBatch(ajouterCorrespondanceEtapeCourrierHistoriqueSQL);
                       statement.addBatch(ajouterHistoriqueCourrierSQL);
-                      statement.addBatch(ActivitesQueries.ajouterUneActvitee(TitreActivites.transfertDuCourrier, idCourrier ,idUser,idTypeDactivite));
+                      statement.addBatch(ActivitesQueries.ajouterUneActvitee(TitreActivites.transfertDuCourrier, idCourrier ,idUser,idTypeDactivite,idDirectionUser));
                       int count[]  = statement.executeBatch();
 
                       connection.commit();

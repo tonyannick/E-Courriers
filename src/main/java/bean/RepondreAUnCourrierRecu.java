@@ -2,10 +2,7 @@ package bean;
 
 import alfresco.ConnexionAlfresco;
 import alfresco.NomDesDossiers;
-import databaseManager.CourriersQueries;
-import databaseManager.DataBaseQueries;
-import databaseManager.DatabaseConnection;
-import databaseManager.DossiersQueries;
+import databaseManager.*;
 import dateAndTime.DateUtils;
 import fileManager.FileManager;
 import model.*;
@@ -16,9 +13,7 @@ import org.primefaces.model.DefaultScheduleEvent;
 import org.primefaces.model.DefaultScheduleModel;
 import org.primefaces.model.ScheduleModel;
 import sessionManager.SessionUtils;
-import variables.EtatCourrier;
-import variables.EtatEtape;
-import variables.TypeDePersonne;
+import variables.*;
 
 import javax.annotation.PostConstruct;
 import javax.enterprise.context.SessionScoped;
@@ -585,6 +580,8 @@ public class RepondreAUnCourrierRecu implements Serializable {
     public void creerUneDiscussion(){/*TODO bloque un message vide*/
         HttpSession session = SessionUtils.getSession();
         String idUser = (String) session.getAttribute( "idUser");
+        String idCourrier = (String) session.getAttribute("courrierId");
+        String idDirectionUser = (String) session.getAttribute( "idDirectionUser");
         Connection connection = DatabaseConnection.getConnexion();
         if(etape.getReponseTache() == null || etape.getReponseTache().isEmpty()){
             FacesContext.getCurrentInstance().addMessage("messageinfodiscussion", new FacesMessage(FacesMessage.SEVERITY_WARN, "Erreur", "Vous devez ecrire un message!!"));
@@ -605,6 +602,7 @@ public class RepondreAUnCourrierRecu implements Serializable {
 
             Statement statement = null;
             try {
+                String idTypeDactivite = ActivitesQueries.recupererIdTypeDActivitesParSonTitre(TypeDActivites.reponseAUneTache);
                 connection.setAutoCommit(false);
                 statement = connection.createStatement();
                 statement.addBatch(creerDiscussionSQL);
@@ -615,6 +613,7 @@ public class RepondreAUnCourrierRecu implements Serializable {
                 if (updateNomFichierDansDiscussionSQL != null) {
                     statement.addBatch(updateNomFichierDansDiscussionSQL);
                 }
+                statement.addBatch(ActivitesQueries.ajouterUneActvitee(TitreActivites.discussionAjoutee, idCourrier ,idUser,idTypeDactivite,idDirectionUser));
                 statement.executeBatch();
                 connection.commit();
                 FacesContext context = FacesContext.getCurrentInstance();
