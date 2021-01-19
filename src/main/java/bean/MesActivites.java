@@ -45,6 +45,7 @@ public class MesActivites implements Serializable {
         String dateDuJour = DateUtils.recupererSimpleDateEnCoursAuFormatFrancais();
         activitesDuJour.clear();
         for(int a = 0; a < activites.getActivitesList().size(); a++){
+            System.out.println("activites = " + activites.getActivitesList().get(a).getDateActivites());
             if ( activites.getActivitesList().get(a).getDateActivites().equals(dateDuJour)) {
                 activitesDuJour.add(activites.getActivitesList().get(a));
             }

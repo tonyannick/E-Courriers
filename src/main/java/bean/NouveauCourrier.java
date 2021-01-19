@@ -1,10 +1,7 @@
 package bean;
 
 import alfresco.ConnexionAlfresco;
-import databaseManager.CourriersQueries;
-import databaseManager.DataBaseQueries;
-import databaseManager.DatabaseConnection;
-import databaseManager.DirectionQueries;
+import databaseManager.*;
 import dateAndTime.DateUtils;
 import fileManager.FileManager;
 import model.*;
@@ -259,7 +256,7 @@ public class NouveauCourrier implements Serializable {
     public void validerLeFormulaire(){
         HttpSession session = SessionUtils.getSession();
         idUser = (String) session.getAttribute("idUser");
-
+        String idDirectionUser = (String) session.getAttribute( "idDirectionUser");
         String courrierMinistre = "courrier_ministre";
         String idTypeDeCourrier = null;
         String idTypeDeDestinataire = null;
@@ -290,6 +287,7 @@ public class NouveauCourrier implements Serializable {
             String ajouterFonctionSQL = null;
             String ajouterEtablissementSQL = null;
 
+            String idTypeDactivite = ActivitesQueries.recupererIdTypeDActivitesParSonTitre(TypeDActivites.ajoutCourrier);
             idTypeDeCourrier = CourriersQueries.recupererIdTypeDeCourrierParTitre(courrier.getTypeCourrier().replaceAll("'"," "));
             idTypeDEmetteur = DataBaseQueries.recupererIdTypeDePersonneParTitre(emetteur.getTypeDEmetteur());
             idTypeDeDestinataire = DataBaseQueries.recupererIdTypeDePersonneParTitre(destinataire.getTypeDestinataire());
@@ -478,7 +476,7 @@ public class NouveauCourrier implements Serializable {
                                 statement.addBatch( ajouterAnnexeAlfrescoSQL);
                             }
                         }
-
+                        statement.addBatch(ActivitesQueries.ajouterUneActvitee(TitreActivites.nouveauCourrier,idUser,idTypeDactivite,idDirectionUser));
                         statement.executeBatch();
                         connection.commit();
                         reinitialiserLeFormulaire();
@@ -546,7 +544,7 @@ public class NouveauCourrier implements Serializable {
                                 statement.addBatch( ajouterAnnexeAlfrescoSQL);
                             }
                         }
-
+                        statement.addBatch(ActivitesQueries.ajouterUneActvitee(TitreActivites.nouveauCourrier,idUser,idTypeDactivite,idDirectionUser));
                         statement.executeBatch();
                         connection.commit();
                         reinitialiserLeFormulaire();
@@ -617,7 +615,7 @@ public class NouveauCourrier implements Serializable {
                                 statement.addBatch( ajouterAnnexeAlfrescoSQL);
                             }
                         }
-
+                        statement.addBatch(ActivitesQueries.ajouterUneActvitee(TitreActivites.nouveauCourrier,idUser,idTypeDactivite,idDirectionUser));
                         statement.executeBatch();
                         connection.commit();
                         reinitialiserLeFormulaire();
@@ -689,7 +687,7 @@ public class NouveauCourrier implements Serializable {
                                 statement.addBatch( ajouterAnnexeAlfrescoSQL);
                             }
                         }
-
+                        statement.addBatch(ActivitesQueries.ajouterUneActvitee(TitreActivites.nouveauCourrier,idUser,idTypeDactivite,idDirectionUser));
                         statement.executeBatch();
                         connection.commit();
                         reinitialiserLeFormulaire();
@@ -748,7 +746,7 @@ public class NouveauCourrier implements Serializable {
                                 statement.addBatch( ajouterAnnexeAlfrescoSQL);
                             }
                         }
-
+                        statement.addBatch(ActivitesQueries.ajouterUneActvitee(TitreActivites.nouveauCourrier,idUser,idTypeDactivite,idDirectionUser));
                         statement.executeBatch();
                         connection.commit();
                         reinitialiserLeFormulaire();
@@ -764,7 +762,6 @@ public class NouveauCourrier implements Serializable {
         }else{
             FacesContext.getCurrentInstance().addMessage("messagesErreur", new FacesMessage(FacesMessage.SEVERITY_ERROR, "Erreur", "Vous devez renseigner la date et l'heure de reception du courrier"));
         }
-        //return  null;
     }
 
     public void reinitialiserLeFormulaire(){

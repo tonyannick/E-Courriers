@@ -7,5 +7,6 @@ public class TypeDActivites {
     public static final String reponseAUneTache = "Réponse à une tache";
     public static final String transfertDuCourrier = "Transfert du courrier";
     public static final String tacheAjoutee= "Tache ajoutée";
+    public static final String ajoutCourrier= "Nouveau courrier enregistré";
 
 }

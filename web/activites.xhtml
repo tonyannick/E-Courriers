@@ -30,6 +30,9 @@
             background-color: #fbf35c;
             font-weight: bold;
         }
+        .pasDObjet{
+            display: none;
+        }
     </style>
     <h:body id="page">
         <div class="container-fluid">
@@ -71,7 +74,9 @@
                                                 <div class="ui-g-9" style=" margin-left:-45px;">
                                                     <h:panelGrid columns="1" style="width: 100%">
                                                         <h:outputText value="#{activites.titreActivites}" escape="false" style=" font-size: 15px; color: #0f0f0f"/>
-                                                        <h:outputText style="color: #777777; font-size: 12px; color: #2b669a; font-weight: bold; text-transform: uppercase; margin-top: 5px" value=" objet du courrier concerné : #{activites.objetCourrier}"/>
+                                                        <h:outputText  styleClass="#{activites.objetCourrier eq 'Aucun' ? 'pasDObjet' : null}"
+                                                                       style=" font-size: 12px; color: #2b669a; font-weight: bold; text-transform: uppercase; margin-top: 5px"
+                                                                       value=" objet du courrier concerné : #{activites.objetCourrier}"/>
                                                         <h:outputText style="color: #777777; font-size: 11px; margin-top: 5px" value="#{activites.personneActivites}"/>
                                                     </h:panelGrid>
                                                     <h:panelGrid columns="2" style="width: 20%">
@@ -104,7 +109,9 @@
                                                     <h:panelGrid columns="1" style="width: 100%">
                                                         <h:outputText value="#{activites.titreActivites}" escape="false" style=" font-size: 15px; color: #0f0f0f"/>
                                                         <h:outputText style="color: #777777; font-size: 11px; margin-top: 5px" value="#{activites.personneActivites}"/>
-                                                        <h:outputText style="font-size: 12px; color: #2b669a; font-weight: bold; text-transform: uppercase; margin-top: 5px" value=" objet du courrier concerné : #{activites.objetCourrier}"/>
+                                                        <h:outputText styleClass="#{activites.objetCourrier eq 'Aucun' ? 'pasDObjet' : null}"
+                                                                      style="font-size: 12px; color: #2b669a; font-weight: bold; text-transform: uppercase; margin-top: 5px"
+                                                                      value=" objet du courrier concerné : #{activites.objetCourrier}"/>
                                                     </h:panelGrid>
                                                     <h:panelGrid columns="2" style="width: 20%">
                                                         <h:outputText style="color: #777777; font-size: 11px; margin-top: 5px" value="#{activites.heureActivites}"/>

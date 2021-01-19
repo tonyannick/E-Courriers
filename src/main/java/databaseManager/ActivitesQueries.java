@@ -19,6 +19,13 @@ public class ActivitesQueries {
         return ajouterActiviteeSQL;
     }
 
+    public static String ajouterUneActvitee(String titreActivite, String idPersonne,String idTypeDActivites,String idDirection){
+
+        String ajouterActiviteeSQL = "INSERT INTO `activites`  (`titre_activites`, `id_personne`,`id_type_activites`,`id_direction`) VALUES" +
+                " ('" + titreActivite + "',"+ "'" +idPersonne+ "',"+"'"+idTypeDActivites+"',"+"'"+idDirection+"')";
+        return ajouterActiviteeSQL;
+    }
+
     /***Fonction qui retourne l'id du type d'une activité en fonction de son titre***/
     public static String recupererIdTypeDActivitesParSonTitre(String titreDActivite){
         String id = null;
@@ -52,8 +59,7 @@ public class ActivitesQueries {
     public static List recupererLesActivitesDUneDirectionParSonId(String idDirectionUser){
         List<Activites> mesActivites = new ArrayList<>();
         mesActivites.clear();
-        String requeteListeDesActivitesSQL = " SELECT titre_activites,heure_activites,date_activites,courrier.id_courrier,objet,identifiant_alfresco,nom,prenom,nom_direction, titre_type_activites,etat FROM `activites` inner join courrier on activites.id_courrier = courrier.id_courrier inner join personne on personne.id_personne = activites.id_personne inner join direction on personne.id_direction = direction.id_direction inner join type_activites on type_activites.id_type_activites = activites.id_type_activites where activites.id_direction = '"+idDirectionUser+"';";
-        //System.out.println("requeteListeDesActivitesSQL = " + requeteListeDesActivitesSQL);
+        String requeteListeDesActivitesSQL = " SELECT titre_activites,heure_activites,date_activites,courrier.id_courrier,objet,identifiant_alfresco,nom,prenom,nom_direction, titre_type_activites,etat FROM `activites` left join courrier on activites.id_courrier = courrier.id_courrier inner join personne on personne.id_personne = activites.id_personne inner join direction on personne.id_direction = direction.id_direction inner join type_activites on type_activites.id_type_activites = activites.id_type_activites where activites.id_direction = '"+idDirectionUser+"' order by activites.id_activites desc ;";
         Connection connection = DatabaseConnection.getConnexion();
         ResultSet resultSet = null;
         try {
@@ -76,6 +82,10 @@ public class ActivitesQueries {
                     String mois = mesActivites.get(i).getDateActivites().substring(mesActivites.get(i).getDateActivites().indexOf("-")+1,mesActivites.get(i).getDateActivites().indexOf("-")+3);
                     String annee = mesActivites.get(i).getDateActivites().substring(0,4);
                     mesActivites.get(i).setDateActivites(jour+"-"+mois+"-"+annee);
+                }
+
+                if(mesActivites.get(i).getObjetCourrier() == null){
+                    mesActivites.get(i).setObjetCourrier("Aucun");
                 }
             }
         } catch (SQLException e) {
