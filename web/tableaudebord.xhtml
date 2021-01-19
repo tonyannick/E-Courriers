@@ -73,23 +73,22 @@
                                 <div class="chartbox">
                                     <div class="chartboxcontent">
                                         <h5 style="font-weight: bold; font-size: 13px">Nombre de courriers entrants et sortant traités le mois courant</h5>
-                                        <canvas id="courrierEntrantEtSortant" width="290" height="203"></canvas>
+                                        <canvas id="courrierEntrantEtSortant" width="290" height="170"></canvas>
                                     </div>
                                 </div>
 
                                 <div class="chartbox">
                                     <div class="chartboxcontent">
                                         <h5 style="font-weight: bold; font-size: 13px">Nombre de courriers traités par priorité le mois courant</h5>
-                                        <canvas id="courriersTraitesParUrgence" width="290" height="203"></canvas>
+                                        <canvas id="courriersTraitesParUrgence" width="290" height="170"></canvas>
                                     </div>
 
                                 </div>
 
-
-                                <div class="chartboxtype">
+                                <div class="chartbox">
                                     <div class="chartboxcontent">
-                                        <h5 style="font-weight: bold; font-size: 13px">Nombre de courriers traités par direction du ministère le mois courant</h5>
-                                        <canvas id="courriersTraitesParType" width="290" height="110"></canvas>
+                                        <h5 style="font-weight: bold; font-size: 13px">Nombre de courriers traités par confidentialité le mois courant</h5>
+                                        <canvas id="courriersTraitesParType" width="290" height="170"></canvas>
                                     </div>
 
                                 </div>
@@ -180,10 +179,10 @@
             var myChart = new Chart(courriersTraitesParUrgence, {
                 type: 'doughnut',
                 data: {
-                    labels: ['Courriers urgents', 'Courriers normaux', 'Courrier confidentiel'],
+                    labels: ['Courriers urgents', 'Courriers normaux'],
                     datasets: [{
                         label: '',
-                        data: ['#{tableauDeBord.statistiques.nombreDeCourrierUrgentDuMois}', '#{tableauDeBord.statistiques.nombreDeCourrierPasUrgentDuMois}', '#{tableauDeBord.statistiques.nombreDeCourrierConfidentielDuMois}'],
+                        data: ['#{tableauDeBord.statistiques.nombreDeCourrierUrgentDuMois}', '#{tableauDeBord.statistiques.nombreDeCourrierPasUrgentDuMois}'],
                         backgroundColor: [
                             'rgba(249, 174, 46, 0.4)',
                             'rgba(54, 162, 235, 0.4)',
@@ -246,28 +245,20 @@
             });
 
             var myChart2 = new Chart(courriersTraitesParType, {
-                type: 'bar',
+                type: 'doughnut',
                 data: {
-                    labels: ['#{tableauDeBord.typeCourrierUn}', '#{tableauDeBord.typeCourrierDeux}', '#{tableauDeBord.typeCourrierTrois}', '#{tableauDeBord.typeCourrierQuatre}', '#{tableauDeBord.typeCourrierCinq}', '#{tableauDeBord.typeCourrierSix}'],
+                    labels: ['Courriers confidentiel', 'Courriers normaux'],
 
                     datasets: [{
                         label: '',
-                        data: ['#{tableauDeBord.valeurTypeCourrierUn}', '#{tableauDeBord.valeurTypeCourrierDeux}', '#{tableauDeBord.valeurTypeCourrierTrois}', '#{tableauDeBord.valeurTypeCourrierQuatre}', '#{tableauDeBord.valeurTypeCourrierCinq}', '#{tableauDeBord.valeurTypeCourrierSix}'],
+                        data: ['#{tableauDeBord.courrierConfidentiel}', '#{tableauDeBord.courrierPasConfidentiel}'],
                         backgroundColor: [
-                            'rgba(255, 99, 132, 0.4)',
-                            'rgba(54, 162, 235, 0.4)',
-                            'rgba(255, 206, 86, 0.4)',
-                            'rgba(75, 192, 192, 0.4)',
-                            'rgba(153, 102, 255, 0.4)',
-                            'rgba(255, 159, 64, 0.4)'
+                            'rgba(255, 99, 132, 0.6)',
+                            'rgba(41, 180, 56, 0.6)'
                         ],
                         borderColor: [
                             'rgba(255, 99, 132, 1)',
-                            'rgba(54, 162, 235, 1)',
-                            'rgba(255, 206, 86, 1)',
-                            'rgba(75, 192, 192, 1)',
-                            'rgba(153, 102, 255, 1)',
-                            'rgba(255, 159, 64, 1)'
+                            'rgba(41, 180, 56, 1)'
                         ],
                         borderWidth:2,
                         hoverBorderWidth : 3,
@@ -278,15 +269,11 @@
                     scales: {
                         yAxes: [{
                             ticks: {
-                                beginAtZero: true
+                                display:false
                             }
-                        }]
-                    },
-                    legend : {
-                        display:false
-                    },
-                    tooltip: {
-                        enable:true
+                        }], legend : {
+                            display:false
+                        },
                     }
                 }
             });

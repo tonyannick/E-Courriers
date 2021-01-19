@@ -106,14 +106,14 @@ public class Parametres implements Serializable {
         Map<String,String> viewParams = FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap();
         String idUserTemp = viewParams.get("userId");
         UsersQueries.recupererInfosUsersParSonId(idUserTemp);
-        userNomTemp = DataBaseQueries.nomUser;
-        userPrenomTemp = DataBaseQueries.prenomUser;
-        userEmailTemp = DataBaseQueries.emailUser;
-        userPseudoTemp = DataBaseQueries.pseudUser;
-        userTelTemp = DataBaseQueries.telUser;
-        userFonctionTemp = DataBaseQueries.fonctionUser;
-        userDirectionTemp = DataBaseQueries.directionUser;
-        userServiceTemp = DataBaseQueries.serviceUser;
+        userNomTemp = UsersQueries.nomUser;
+        userPrenomTemp = UsersQueries.prenomUser;
+        userEmailTemp = UsersQueries.emailUser;
+        userPseudoTemp = UsersQueries.pseudUser;
+        userTelTemp = UsersQueries.telUser;
+        userFonctionTemp = UsersQueries.fonctionUser;
+        userDirectionTemp = UsersQueries.directionUser;
+        userServiceTemp = UsersQueries.serviceUser;
 
     }
 
@@ -232,7 +232,7 @@ public class Parametres implements Serializable {
         HttpSession session = SessionUtils.getSession();
         String directionUser = session.getAttribute("directionUser").toString();
         String fonctionUser = session.getAttribute("fonctionUser").toString();
-        /***TODO Ameliorer avec fichier xml***/
+        /***TODO Ameliorer***/
         if(fonctionUser.equals("Secrétaire Général") || fonctionUser.equals("Directeur de Cabinet") || fonctionUser.equals("Secrétaire Général Adjoint")
                 || fonctionUser.equals("Ministre") || fonctionUser.equals("Ministre Délégué")){
             user.setUserList(UsersQueries.recupererLaListeDesUsers());

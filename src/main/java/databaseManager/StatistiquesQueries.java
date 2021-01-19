@@ -27,12 +27,16 @@ public class StatistiquesQueries {
     public static int nombreDeCourrierOctobre = 0;
     public static int nombreDeCourrierNovembre = 0;
     public static int nombreDeCourrierDecembre = 0;
+    public static int nombreCourrierUrgentDuMois = 0;
+    public static int nombreCourrierPasUrgentDuMois = 0;
+    public static int nombreCourrierConfidentielDuMois = 0;
+    public static int nombreCourrierPasConfidentielDuMois = 0;
     public static Map<String, Integer> myMapCourrierRecusParDirection = new HashMap<>();
     public static Map<String, Integer> myMapCourrierEnvoyesParDirection = new HashMap<>();
     public static Map<String, Integer> mapNombreCourrierParTypeDuMoisEnCours = new HashMap<>();
 
     /***Fonction de récuperation du nombre de courrier traités par mois***/
-    public static void recupererLeNombreDeCourrierTraitesParDirectionParMoisPourLAnneeEnCours(String nomDirection) {
+    public static void recupererLeNombreDeCourrierTraitesParMoisPourLAnneeEnCours(String nomDirection) {
 
         int nombreDeCourrierTempJanvier = 0;
         int nombreDeCourrierTempFevrier = 0;
@@ -57,8 +61,8 @@ public class StatistiquesQueries {
         Connection connectionCourrierRecus = DatabaseConnection.getConnexion();
         Connection connectionCourrierEnvoyes = DatabaseConnection.getConnexion();
 
-        String nombreDeCourrierRecusSQL = "select courrier.date_enregistrement,nom_direction from `recevoir_courrier` inner join `courrier` on recevoir_courrier.id_courrier = courrier.id_courrier inner join personne on recevoir_courrier.id_personne = personne.id_personne inner join direction on personne.id_direction = direction.id_direction where direction.nom_direction = '" + nomDirection + "'  and courrier.etat = '" + EtatCourrier.courrierEnvoye + "' group by courrier.id_courrier order by courrier.id_courrier desc";
-        String nombreDeCourrierEnvoyesSQL = "select courrier.date_enregistrement,nom_direction from `envoyer_courrier` inner join `courrier` on envoyer_courrier.id_courrier = courrier.id_courrier inner join personne on  envoyer_courrier.id_personne = personne.id_personne inner join direction on personne.id_direction = direction.id_direction where direction.nom_direction = '" + nomDirection + "'  and courrier.etat = '" + EtatCourrier.courrierEnvoye + "' group by courrier.id_courrier order by courrier.id_courrier desc";
+        String nombreDeCourrierRecusSQL = "select courrier.date_enregistrement,nom_direction,confidentiel,priorite from `recevoir_courrier` inner join `courrier` on recevoir_courrier.id_courrier = courrier.id_courrier inner join personne on recevoir_courrier.id_personne = personne.id_personne inner join direction on personne.id_direction = direction.id_direction where direction.nom_direction = '" + nomDirection + "'  and courrier.etat = '" + EtatCourrier.courrierEnvoye + "' group by courrier.id_courrier order by courrier.id_courrier desc";
+        String nombreDeCourrierEnvoyesSQL = "select courrier.date_enregistrement,nom_direction,confidentiel,priorite from `envoyer_courrier` inner join `courrier` on envoyer_courrier.id_courrier = courrier.id_courrier inner join personne on  envoyer_courrier.id_personne = personne.id_personne inner join direction on personne.id_direction = direction.id_direction where direction.nom_direction = '" + nomDirection + "'  and courrier.etat = '" + EtatCourrier.courrierEnvoye + "' group by courrier.id_courrier order by courrier.id_courrier desc";
         ResultSet resultSetCourriersRecus = null;
         ResultSet resultSetCourriersEnvoyes = null;
 
@@ -75,6 +79,7 @@ public class StatistiquesQueries {
             }
 
             listeCourriersTraites = Stream.concat(listeCourriersRecus.stream(), listeCourriersEnvoyes.stream()).collect(Collectors.toList());
+
             String anneeEnCours = DateUtils.recupererLAnneeEnCours();
             listeCourriersTraites.removeIf(e -> !e.contains(anneeEnCours));
             for (int a = 0; a < listeCourriersTraites.size(); a++) {
@@ -486,11 +491,102 @@ public class StatistiquesQueries {
             e.printStackTrace();
         }
 
-
-
-
     }
 
+    public static void calculDuNombreDeCourrierTraitesParPrioriteEtParConfidentielaiteLeMoisCourant(String nomDirection){
 
+        nombreCourrierUrgentDuMois = 0;
+        nombreCourrierPasUrgentDuMois = 0;
+        nombreCourrierConfidentielDuMois = 0;
+        nombreCourrierPasConfidentielDuMois = 0;
+
+        List<Courrier> listeCourriersRecus = new ArrayList<>();
+        List<Courrier> listeCourriersEnvoyes = new ArrayList<>();
+
+        listeCourriersRecus.clear();
+        listeCourriersEnvoyes.clear();
+
+        Connection connectionCourrierRecus = DatabaseConnection.getConnexion();
+        Connection connectionCourrierEnvoyes = DatabaseConnection.getConnexion();
+
+        String nombreDeCourrierRecusSQL = "select courrier.id_courrier,nom_direction,courrier.date_enregistrement,confidentiel,priorite,genre from `recevoir_courrier` inner join `courrier` on recevoir_courrier.id_courrier = courrier.id_courrier inner join personne on recevoir_courrier.id_personne = personne.id_personne inner join direction on personne.id_direction = direction.id_direction where direction.nom_direction = '" + nomDirection + "'  and courrier.etat = '" + EtatCourrier.courrierEnvoye + "' group by courrier.id_courrier order by courrier.id_courrier desc";
+        String nombreDeCourrierEnvoyesSQL = "select courrier.id_courrier,nom_direction,courrier.date_enregistrement,confidentiel,priorite,genre from `envoyer_courrier` inner join `courrier` on envoyer_courrier.id_courrier = courrier.id_courrier inner join personne on  envoyer_courrier.id_personne = personne.id_personne inner join direction on personne.id_direction = direction.id_direction where direction.nom_direction = '" + nomDirection + "'  and courrier.etat = '" + EtatCourrier.courrierEnvoye + "' group by courrier.id_courrier order by courrier.id_courrier desc";
+        ResultSet resultSetCourriersRecus = null;
+        ResultSet resultSetCourriersEnvoyes = null;
+
+        try {
+            resultSetCourriersRecus = connectionCourrierRecus.createStatement().executeQuery(nombreDeCourrierRecusSQL);
+            resultSetCourriersEnvoyes = connectionCourrierEnvoyes.createStatement().executeQuery(nombreDeCourrierEnvoyesSQL);
+
+            while (resultSetCourriersRecus.next()) {
+                listeCourriersRecus.add(new Courrier(
+                        resultSetCourriersRecus.getString("courrier.date_enregistrement"),
+                        resultSetCourriersRecus.getString("priorite"),
+                        resultSetCourriersRecus.getString("confidentiel"),
+                        resultSetCourriersRecus.getString("courrier.id_courrier"),
+                        resultSetCourriersRecus.getString("genre")));
+            }
+
+            while (resultSetCourriersEnvoyes.next()) {
+
+                listeCourriersEnvoyes.add(new Courrier(
+                        resultSetCourriersEnvoyes.getString("courrier.date_enregistrement"),
+                        resultSetCourriersEnvoyes.getString("priorite"),
+                        resultSetCourriersEnvoyes.getString("confidentiel"),
+                        resultSetCourriersEnvoyes.getString("courrier.id_courrier"),
+                        resultSetCourriersEnvoyes.getString("genre")));
+            }
+
+            List<Courrier> listeCourriersTraites = Stream.of(listeCourriersEnvoyes, listeCourriersRecus).flatMap(x -> x.stream()).collect(Collectors.toList());
+            DateUtils.recupererLePremierEtLeDernierJourDuMoisEnCours();
+            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+            if(listeCourriersTraites.size() > 0){
+                Date currentDate = null;
+                for (int a = 0; a <listeCourriersTraites.size(); a++) {
+                    try {
+                        currentDate = sdf.parse(listeCourriersTraites.get(a).getDateDEnregistrement());
+                        if (currentDate.after(DateUtils.premierJourDuMois) && currentDate.before(DateUtils.dernierJourDuMois)){
+                            if (listeCourriersTraites.get(a).getPrioriteCourrier().equalsIgnoreCase("Urgent")) {
+                                nombreCourrierUrgentDuMois++;
+                            }
+                            if(listeCourriersTraites.get(a).getPrioriteCourrier().equals("Normal")){
+                                nombreCourrierPasUrgentDuMois++;
+                            }
+                            if(listeCourriersTraites.get(a).getConfidentiel().equals("Oui")){
+                                nombreCourrierConfidentielDuMois++;
+                            }
+                            if(listeCourriersTraites.get(a).getConfidentiel().equals("Non")){
+                                nombreCourrierPasConfidentielDuMois++;
+                            }
+                        }
+                    } catch (ParseException e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
+
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+            if (resultSetCourriersRecus != null) {
+                try {
+                    resultSetCourriersRecus.close();
+                } catch (SQLException e) { /* ignored */}
+            }
+            if (resultSetCourriersEnvoyes != null) {
+                try {
+                    resultSetCourriersEnvoyes.close();
+                } catch (SQLException e) { /* ignored */}
+            }
+
+        }
+
+        }
+
+    /****Fonction qui calcul du nombre de courrier recu par direction du SG****/
+    public static void recupererLeNombreDeCourrierParDirectionDuSecreteriatGeneral(){
+
+    }
 
 }

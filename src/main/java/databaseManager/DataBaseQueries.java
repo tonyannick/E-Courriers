@@ -21,13 +21,8 @@ import java.util.stream.Stream;
 public class DataBaseQueries {
 
 
-    public static String emailUser;
-    public static String telUser;
-    public static String pseudUser;
-    public static String nomUser;
-    public static String prenomUser;
-    public static String directionUser;
-    public static String serviceUser;
+
+    public static String directionUser;;
     public static String fonctionUser;
     public static String photoUser;
     public static int nombreCourrierEnvoyesDuJour = 0;
@@ -58,10 +53,8 @@ public class DataBaseQueries {
     public static String confidentiel;
     public static String dossierAlfresco;
     public static String accuseDeReception;
-    public static String referenceInterne;
     public static String heureDeReception;
     public static String heureDEnregistrement;
-    public static String idMinistereDuBudget = "1";
     public static boolean isResponsable = false;
     public static boolean isSecretaire = false;
     private static Date premierDuMois;
@@ -1059,66 +1052,6 @@ public class DataBaseQueries {
 
     }
 
-    /**/
-    public static List<Etape> recupererLesEtapesClesDuCourrierPourLaTimeLine(String idCourrier){
-        List<Etape> listeActionsCourrier = new ArrayList<>();
-        listeActionsCourrier.clear();
-        String requeteActionsCourrierSQL = "select * from ((`etape` inner join `correspondance_etape_courrier` on etape.id_etape = correspondance_etape_courrier.id_etape) inner join `correspondance_personne_etape` on etape.id_etape = correspondance_personne_etape.id_etape ) inner join `personne` on correspondance_personne_etape.id_personne = personne.id_personne  where correspondance_etape_courrier.id_courrier = '"+idCourrier+"' and etape.titre = '"+ActionEtape.transmisPourTraitement+"' and correspondance_personne_etape.role_agent = '"+ RoleEtape.AffecteurTache+"' order by etape.id_etape desc;";
-        ResultSet resultSet = null;
-        Connection connection = DatabaseConnection.getConnexion();
-
-        try {
-            resultSet = connection.createStatement().executeQuery(requeteActionsCourrierSQL);
-            while (resultSet.next()) {
-                listeActionsCourrier.add(new Etape(
-                        resultSet.getString("id_etape"),
-                        resultSet.getString("date_debut"),
-                        resultSet.getString("date_fin"),
-                        resultSet.getString("nom") + " "+resultSet.getString("prenom"),
-                        resultSet.getString("etat"),
-                        resultSet.getString("message")));
-            }
-
-            nombreDActionEnCoursDuCourrier = listeActionsCourrier.size();
-            for (int i = 0; i < listeActionsCourrier.size(); i++){
-
-                String jour = listeActionsCourrier.get(i).getDate_debut().substring(listeActionsCourrier.get(i).getDate_debut().lastIndexOf("-") +1);
-                String mois = listeActionsCourrier.get(i).getDate_debut().substring(listeActionsCourrier.get(i).getDate_debut().indexOf("-")+1,listeActionsCourrier.get(i).getDate_debut().indexOf("-")+3);
-                String annee = listeActionsCourrier.get(i).getDate_debut().substring(0,4);
-                listeActionsCourrier.get(i).setDate_debut(jour+"-"+mois+"-"+annee);
-
-                if (listeActionsCourrier.get(i).getDate_fin() == null){
-                    listeActionsCourrier.get(i).setDate_fin("Aucun");
-                }else{
-                    String jourFin = listeActionsCourrier.get(i).getDate_fin().substring(listeActionsCourrier.get(i).getDate_fin().lastIndexOf("-") +1);
-                    String moisFin = listeActionsCourrier.get(i).getDate_fin().substring(listeActionsCourrier.get(i).getDate_fin().indexOf("-")+1,listeActionsCourrier.get(i).getDate_fin().indexOf("-")+3);
-                    String anneeFin = listeActionsCourrier.get(i).getDate_fin().substring(0,4);
-                    listeActionsCourrier.get(i).setDate_fin(jourFin+"-"+moisFin+"-"+anneeFin);
-                }
-
-
-            }
-
-
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }finally {
-            if ( resultSet != null) {
-                try {
-                    resultSet.close();
-                } catch (SQLException e) { /* ignored */}
-            }
-            if (connection != null) {
-                try {
-                    connection.close();
-                } catch (SQLException e) { /* ignored */}
-            }
-        }
-
-        return listeActionsCourrier;
-
-    }
-
     public static List<Etape> recupererLesTachesCreesParUnUser(String idUser){
         List<Etape> listeActionsCourrier = new ArrayList<>();
         listeActionsCourrier.clear();
@@ -1607,23 +1540,6 @@ public class DataBaseQueries {
 
         return  listDesTaches;
 
-
-    }
-
-    public static int recupererNombredeTachesAffecteesAUnAgent(String idAgent){
-        int nbre = 0;
-        String requeteNombreDeTachesSQL = "select count(*) from `etape` inner join `correspondance_personne_etape` on etape.id_etape = correspondance_personne_etape.id_etape inner join `personne` on correspondance_personne_etape.id_personne = personne.id_personne where personne.id_personne = '"+idAgent+"' and correspondance_personne_etape.role_agent = '"+ TypeDePersonne.receveurTache +"'";
-        Connection connection = DatabaseConnection.getConnexion();
-        try {
-            ResultSet resultSet = connection.createStatement().executeQuery(requeteNombreDeTachesSQL);
-            while (resultSet.next()) {
-                nbre = resultSet.getInt("count(*)");
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-
-        return nbre;
 
     }
 

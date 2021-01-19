@@ -99,9 +99,10 @@ public class Statistiques implements Serializable {
         HttpSession session = SessionUtils.getSession();
         String nomDirection = session.getAttribute("directionUser").toString();
         String idDirection = session.getAttribute("idDirectionUser").toString();
-        StatistiquesQueries.recupererLeNombreDeCourrierTraitesParDirectionParMoisPourLAnneeEnCours(nomDirection);
+        StatistiquesQueries.recupererLeNombreDeCourrierTraitesParMoisPourLAnneeEnCours(nomDirection);
         StatistiquesQueries.recupererLeNombreDeCourrierRecusParDirection(nomDirection);
         StatistiquesQueries.recupererLeNombreDeCourrierEnvoyesParDirection(nomDirection);
+        StatistiquesQueries.calculDuNombreDeCourrierTraitesParPrioriteEtParConfidentielaiteLeMoisCourant(nomDirection);
         //DataBaseQueries.calculerLesStatistiquesDesCourriersTraitesParTypesDeCourrierDuMoisEnCours(idDirection);
 
         StatistiquesQueries.calculerLesStatistiquesDesCourriersTraitesParTypesDeCourrierDuMoisEnCours(idDirection);

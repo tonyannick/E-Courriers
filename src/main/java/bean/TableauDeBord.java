@@ -2,6 +2,7 @@ package bean;
 
 import alfresco.ConnexionAlfresco;
 import databaseManager.DataBaseQueries;
+import databaseManager.StatistiquesQueries;
 import model.Discussion;
 import model.Etape;
 import model.Statistiques;
@@ -30,19 +31,8 @@ public class TableauDeBord implements Serializable {
     private Etape etape;
     private boolean isResponsable = false;
     private List<Statistiques> statistiquesList = new ArrayList<>();
-    private String typeCourrierUn;
-    private String typeCourrierDeux;
-    private String typeCourrierTrois;
-    private String typeCourrierQuatre;
-    private String typeCourrierCinq;
-    private String typeCourrierSix;
-    private String valeurTypeCourrierUn;
-    private String valeurTypeCourrierDeux;
-    private String valeurTypeCourrierTrois;
-    private String valeurTypeCourrierQuatre;
-    private String valeurTypeCourrierCinq;
-    private String valeurTypeCourrierSix;
-    private String valeurTypeCourrierSept;
+    private int courrierConfidentiel;
+    private int courrierPasConfidentiel;
 
 
     @PostConstruct
@@ -194,7 +184,11 @@ public class TableauDeBord implements Serializable {
     public void recupererDataPourStatistiques(){
         HttpSession httpSession = SessionUtils.getSession();
         String idUser = (String)httpSession.getAttribute("idUser");
+        String nomDirection = httpSession.getAttribute("directionUser").toString();
         DataBaseQueries.recupererLesStatistiquesPourLaPageDAccueil();
+        StatistiquesQueries.calculDuNombreDeCourrierTraitesParPrioriteEtParConfidentielaiteLeMoisCourant(nomDirection);
+        courrierConfidentiel = StatistiquesQueries.nombreCourrierConfidentielDuMois;
+        courrierPasConfidentiel = StatistiquesQueries.nombreCourrierPasConfidentielDuMois;
         statistiques.setNombreDeCourrierRecusDuJour(String.valueOf(DataBaseQueries.nombreCourrierRecusDuJour));
         statistiques.setNombreDeCourrierEnvoyesDuJour(String.valueOf(DataBaseQueries.nombreCourrierEnvoyesDuJour));
         statistiques.setNombreDeCourrierUrgentDuJour(String.valueOf(DataBaseQueries.nombreCourrierUrgentDuJour));
@@ -213,26 +207,6 @@ public class TableauDeBord implements Serializable {
             etape.setListeDeMesTachesEnTraitement(DataBaseQueries.recupererLesCinqsDernieresTachesEnCoursDeTraitementCreesParUnUser(idUser));
         }else{
             etape.setListeDeMesTachesEnTraitement(DataBaseQueries.recupererLesCinqDernieresTachesEnTraitementDUnAgent(idUser));
-        }
-
-        if (statistiquesList.size() > 0){
-           typeCourrierUn = statistiquesList.get(0).getTypeDeCourrier();
-           valeurTypeCourrierUn = statistiquesList.get(0).getNombreTypeDeCourrier();
-        } if (statistiquesList.size() > 1){
-            typeCourrierDeux = statistiquesList.get(1).getTypeDeCourrier();
-            valeurTypeCourrierDeux = statistiquesList.get(1).getNombreTypeDeCourrier();
-        } if (statistiquesList.size() > 2){
-            typeCourrierTrois = statistiquesList.get(2).getTypeDeCourrier();
-            valeurTypeCourrierTrois = statistiquesList.get(2).getNombreTypeDeCourrier();
-        } if (statistiquesList.size() > 3){
-            typeCourrierQuatre = statistiquesList.get(3).getTypeDeCourrier();
-            valeurTypeCourrierQuatre = statistiquesList.get(3).getNombreTypeDeCourrier();
-        } if (statistiquesList.size() > 4){
-            typeCourrierCinq = statistiquesList.get(4).getTypeDeCourrier();
-            valeurTypeCourrierCinq = statistiquesList.get(4).getNombreTypeDeCourrier();
-        } if (statistiquesList.size() > 5){
-            typeCourrierSix = statistiquesList.get(5).getTypeDeCourrier();
-            valeurTypeCourrierSix = statistiquesList.get(5).getNombreTypeDeCourrier();
         }
 
 
@@ -271,108 +245,21 @@ public class TableauDeBord implements Serializable {
         this.discussion = discussion;
     }
 
-    public String getTypeCourrierUn() {
-        return typeCourrierUn;
+    public int getCourrierConfidentiel() {
+        return courrierConfidentiel;
     }
 
-    public void setTypeCourrierUn(String typeCourrierUn) {
-        this.typeCourrierUn = typeCourrierUn;
+    public void setCourrierConfidentiel(int courrierConfidentiel) {
+        this.courrierConfidentiel = courrierConfidentiel;
     }
 
-    public String getTypeCourrierDeux() {
-        return typeCourrierDeux;
+    public int getCourrierPasConfidentiel() {
+        return courrierPasConfidentiel;
     }
 
-    public void setTypeCourrierDeux(String typeCourrierDeux) {
-        this.typeCourrierDeux = typeCourrierDeux;
+    public void setCourrierPasConfidentiel(int courrierPasConfidentiel) {
+        this.courrierPasConfidentiel = courrierPasConfidentiel;
     }
 
-    public String getTypeCourrierTrois() {
-        return typeCourrierTrois;
-    }
-
-    public void setTypeCourrierTrois(String typeCourrierTrois) {
-        this.typeCourrierTrois = typeCourrierTrois;
-    }
-
-    public String getTypeCourrierQuatre() {
-        return typeCourrierQuatre;
-    }
-
-    public void setTypeCourrierQuatre(String typeCourrierQuatre) {
-        this.typeCourrierQuatre = typeCourrierQuatre;
-    }
-
-    public String getTypeCourrierCinq() {
-        return typeCourrierCinq;
-    }
-
-    public void setTypeCourrierCinq(String typeCourrierCinq) {
-        this.typeCourrierCinq = typeCourrierCinq;
-    }
-
-    public String getTypeCourrierSix() {
-        return typeCourrierSix;
-    }
-
-    public void setTypeCourrierSix(String typeCourrierSix) {
-        this.typeCourrierSix = typeCourrierSix;
-    }
-
-    public String getValeurTypeCourrierUn() {
-        return valeurTypeCourrierUn;
-    }
-
-    public void setValeurTypeCourrierUn(String valeurTypeCourrierUn) {
-        this.valeurTypeCourrierUn = valeurTypeCourrierUn;
-    }
-
-    public String getValeurTypeCourrierDeux() {
-        return valeurTypeCourrierDeux;
-    }
-
-    public void setValeurTypeCourrierDeux(String valeurTypeCourrierDeux) {
-        this.valeurTypeCourrierDeux = valeurTypeCourrierDeux;
-    }
-
-    public String getValeurTypeCourrierTrois() {
-        return valeurTypeCourrierTrois;
-    }
-
-    public void setValeurTypeCourrierTrois(String valeurTypeCourrierTrois) {
-        this.valeurTypeCourrierTrois = valeurTypeCourrierTrois;
-    }
-
-    public String getValeurTypeCourrierQuatre() {
-        return valeurTypeCourrierQuatre;
-    }
-
-    public void setValeurTypeCourrierQuatre(String valeurTypeCourrierQuatre) {
-        this.valeurTypeCourrierQuatre = valeurTypeCourrierQuatre;
-    }
-
-    public String getValeurTypeCourrierCinq() {
-        return valeurTypeCourrierCinq;
-    }
-
-    public void setValeurTypeCourrierCinq(String valeurTypeCourrierCinq) {
-        this.valeurTypeCourrierCinq = valeurTypeCourrierCinq;
-    }
-
-    public String getValeurTypeCourrierSix() {
-        return valeurTypeCourrierSix;
-    }
-
-    public void setValeurTypeCourrierSix(String valeurTypeCourrierSix) {
-        this.valeurTypeCourrierSix = valeurTypeCourrierSix;
-    }
-
-    public String getValeurTypeCourrierSept() {
-        return valeurTypeCourrierSept;
-    }
-
-    public void setValeurTypeCourrierSept(String valeurTypeCourrierSept) {
-        this.valeurTypeCourrierSept = valeurTypeCourrierSept;
-    }
 }
 
