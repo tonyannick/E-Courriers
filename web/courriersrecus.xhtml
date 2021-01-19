@@ -81,6 +81,7 @@
                                             <p:menuitem value="Recherche par type de courrier" onclick="PF('dialogueRechercherCourrierParTypeDeCourrier').show()"/>
                                             <p:menuitem value="Recherche par direction"  onclick="PF('dialogueRechercherCourrierParDirection').show()"/>
                                             <p:menuitem value="Recherche par mots clés"  onclick="PF('dialogueRechercherCourrierParMotsCles').show()"/>
+                                            <p:menuitem value="Recherche par référence interne"  onclick="PF('dialogueRechercherCourrierReferencesInterne').show()"/>
                                         </p:menuButton>
                                     </div>
 
@@ -312,6 +313,28 @@
                                                  actionListener="#{courriersRecus.faireUneRechercheAvanceeParMotsCles}"
                                                  style="margin-top: 12px; margin-right: 10px; float: right"
                                                  update="@form form:tableCourrierRecus messageparmotscles"/>
+                            </h:panelGrid>
+                        </h:form>
+                    </p:dialog>
+
+                    <p:dialog id="dialogueRechercheParReferencesInterne"
+                              resizable="false"
+                              header="Recherche par date"
+                              widgetVar="dialogueRechercherCourrierReferencesInterne" width="auto"
+                              modal="true" hideEffect="slide" height="auto"
+                              showEffect="slide"  dynamic="true" closable="true">
+                        <h:form >
+                            <p:messages  id="messagepourreferenceinterne" showDetail="true" closable="true" for="messagepourreferenceinterne"/>
+                            <h:panelGrid style="width: 100%" columns="2" styleClass="panelLogin" cellspacing="30" cellpadding="30">
+                                <h4 style="font-weight:bold; font-size: 13px">Renseignez une reférence interne :  </h4>
+                                <p:inputText style="margin-left: 10px;" size="35" value="#{courriersRecus.referenceInternePourRechercheAvancee}"/>
+                            </h:panelGrid>
+                            <h:panelGrid columns="1" style="width: 100%">
+
+                                <p:commandButton value="valider"
+                                                 actionListener="#{courriersRecus.faireUneRechercheAvanceeParReferenceInterne}"
+                                                 style="margin-top: 12px; margin-right: 10px; float: right"
+                                                 update="@form form:tableCourrierRecus messagepourreferenceinterne"/>
                             </h:panelGrid>
                         </h:form>
                     </p:dialog>

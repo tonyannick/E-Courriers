@@ -39,6 +39,7 @@ public class CourriersRecus implements Serializable {
     private String directionPourRechercheAvancee;
     private String typeDeCourrierPourRechercheAvancee;
     private String motClesPourRechercheAvancee;
+    private String referenceInternePourRechercheAvancee;
     private boolean isMoisSelectionne = false;
     private List<Courrier> courrierTempList = new ArrayList<>();
     private List<Courrier> courrierSauvegardeList = new ArrayList<>();
@@ -137,7 +138,7 @@ public class CourriersRecus implements Serializable {
         }else{
             courrierTempList.clear();
             for(int a = 0; a < courrier.getListeDesCouriersRecus().size(); a++){
-                if(courrier.getListeDesCouriersRecus().get(a).getMotsclesCourrier().equals(motClesPourRechercheAvancee)){
+                if(courrier.getListeDesCouriersRecus().get(a).getMotsclesCourrier().contains(motClesPourRechercheAvancee)){
                     courrierTempList.add(courrier.getListeDesCouriersRecus().get(a));
                     trouve = true;
                 }
@@ -155,6 +156,30 @@ public class CourriersRecus implements Serializable {
 
     }
 
+    public void faireUneRechercheAvanceeParReferenceInterne(){
+        boolean trouve = false;
+        if(referenceInternePourRechercheAvancee.isEmpty()){
+            FacesContext.getCurrentInstance().addMessage("messagepourreferenceinterne",new FacesMessage(FacesMessage.SEVERITY_WARN,"Attention","Vous devez renseigner une référence interne"));
+        }else{
+            courrierTempList.clear();
+            for(int a = 0; a < courrier.getListeDesCouriersRecus().size(); a++){
+                if(courrier.getListeDesCouriersRecus().get(a).getReferenceInterne().contains(referenceInternePourRechercheAvancee.trim())){
+                    courrierTempList.add(courrier.getListeDesCouriersRecus().get(a));
+                    trouve = true;
+                }
+            }
+            if(trouve){
+                courrier.getListeDesCouriersRecus().clear();
+                courrier.setListeDesCouriersRecus(courrierTempList);
+                setMotClesPourRechercheAvancee(null);
+                gestionDeLAffichageDesBoutonsDeRecherche();
+            }else{
+                FacesContext.getCurrentInstance().addMessage("messagepourreferenceinterne",new FacesMessage(FacesMessage.SEVERITY_WARN,"Aucun resultat","Pas de courrier trouvé"));
+
+            }
+        }
+
+    }
 
     public void annulerUneRechercheAvancee(){
         courrier.getListeDesCouriersRecus().clear();
@@ -372,5 +397,13 @@ public class CourriersRecus implements Serializable {
 
     public void setMotClesPourRechercheAvancee(String motClesPourRechercheAvancee) {
         this.motClesPourRechercheAvancee = motClesPourRechercheAvancee;
+    }
+
+    public String getReferenceInternePourRechercheAvancee() {
+        return referenceInternePourRechercheAvancee;
+    }
+
+    public void setReferenceInternePourRechercheAvancee(String referenceInternePourRechercheAvancee) {
+        this.referenceInternePourRechercheAvancee = referenceInternePourRechercheAvancee;
     }
 }
