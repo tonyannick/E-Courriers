@@ -20,7 +20,7 @@
     </context-param>
 
     <session-config>
-        <session-timeout>45</session-timeout>
+        <session-timeout>2</session-timeout>
     </session-config>
 
     <!-- Pour appliquer le theme primefaces  -->
@@ -75,8 +75,5 @@
         <exception-type>java.lang.Exception</exception-type>
         <location>/faces/erreur.xhtml</location>
     </error-page>
-
-
-
 
 </web-app>

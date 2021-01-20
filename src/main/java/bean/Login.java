@@ -68,6 +68,10 @@ public class Login implements Serializable {
         return "motdepasseoublie?faces-redirect=true";
     }
 
+    public String clic(){
+        return "sessionexpiree?faces-redirect=true";
+    }
+
     /**Methode de click sur se souvenir**/
     public void cliquerSurSeSouvenir(){
 

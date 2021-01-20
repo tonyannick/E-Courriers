@@ -82,8 +82,8 @@
 .chartboxcontent{
     box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
     padding: 16px;
+    background-color: rgb(248, 246, 246);
     text-align: center;
-    background-color: rgba(255, 253, 253, 0.43);
     border: 1px solid #ccc;
     border-radius: 2px;
 }

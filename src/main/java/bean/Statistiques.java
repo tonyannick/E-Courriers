@@ -56,7 +56,9 @@ public class Statistiques implements Serializable {
         barModelRecus.setTitle("Nombre de courriers reçus par directions");
         barModelRecus.setSeriesColors("53A9F1");
         barModelEnvoyes.setSeriesColors("6FBC6F");
+        barModelTypeDeCourrier.setSeriesColors("E6B332");
         barModelRecus.setShowDatatip(false);
+        barModelTypeDeCourrier.setShowDatatip(false);
         barModelEnvoyes.setShowDatatip(false);
         barModelEnvoyes.setAnimate(true);
         barModelRecus.setAnimate(true);
@@ -103,7 +105,6 @@ public class Statistiques implements Serializable {
         StatistiquesQueries.recupererLeNombreDeCourrierRecusParDirection(nomDirection);
         StatistiquesQueries.recupererLeNombreDeCourrierEnvoyesParDirection(nomDirection);
         StatistiquesQueries.calculDuNombreDeCourrierTraitesParPrioriteEtParConfidentielaiteLeMoisCourant(nomDirection);
-        //DataBaseQueries.calculerLesStatistiquesDesCourriersTraitesParTypesDeCourrierDuMoisEnCours(idDirection);
 
         StatistiquesQueries.calculerLesStatistiquesDesCourriersTraitesParTypesDeCourrierDuMoisEnCours(idDirection);
         nombreDeCourrierTraitesJanvier = StatistiquesQueries.nombreDeCourrierJanvier;

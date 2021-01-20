@@ -78,9 +78,12 @@
                                     value="#{mesCourriers.mesCourriersDuJour}" var="courriers"
                                     rows="5" paginator="true" paginatorAlwaysVisible="false" paginatorPosition="bottom"
                                     emptyMessage="aucun courrier enregistré pour le moment">
-                                <h:panelGrid columns="2" style="width:100%" columnClasses="logo,detail">
-                                    <p:graphicImage value="./resources/images/#{courriers.imageCourrier}"  style="width: 54px ; height: 54px; margin-left: 5px;"/>
-                                    <p:outputPanel>
+
+                                <div class="ui-g">
+                                    <div class="ui-g-1">
+                                        <p:graphicImage value="./resources/images/#{courriers.imageCourrier}" style="width: 54px ; height: 54px; margin-left: 5px;"/>
+                                    </div>
+                                    <div class="ui-g-8" style=" margin-left:-35px;">
                                         <h:panelGrid columns="2" cellpadding="2">
                                             <h:outputText style="font-size: 14px; font-weight: bold;" value="Objet du courrier : " />
                                             <h:form>
@@ -93,18 +96,18 @@
                                                     <f:param name="confidentiel" value="#{courriers.confidentiel}" />
                                                 </p:commandLink>
                                             </h:form>
-                                        </h:panelGrid>
-                                        <h:panelGrid columns="2" cellpadding="2">
-                                            <h:outputText style="font-size: 14px; font-weight: bold;" value="Priorité : " />
+                                            <h:outputText style="font-size: 14px; margin-top: 3px; font-weight: bold;" value="Priorité : " />
                                             <h:outputText styleClass="#{courriers.prioriteCourrier eq 'Urgent' ? 'courrierurgent' : 'null'}"
-                                                          value="#{courriers.prioriteCourrier}" style=" font-size:14px; margin-left: 10px"/>
-                                        </h:panelGrid>
-                                        <h:panelGrid columns="2" cellpadding="2">
-                                            <h:outputText style="font-size: 14px; font-weight: bold;" value="Type de document : " />
+                                                          value="#{courriers.prioriteCourrier}" style=" font-size:14px; margin-top: 3px; margin-left: 10px"/>
+                                            <h:outputText style="font-size: 14px; margin-top:3px; font-weight: bold;" value="Type de document : " />
                                             <h:outputText value="#{courriers.extensionCourrier}" style=" font-size:14px; text-transform:uppercase; margin-left:10px; color:#0000e7;"/>
+
                                         </h:panelGrid>
-                                    </p:outputPanel>
-                                </h:panelGrid>
+                                    </div>
+                                    <div class="ui-g-3">
+                                        <h:outputText value="Heure d'enregistrement : #{courriers.heureDEnregistrement}" style=" font-size: 12px; margin-left:10px; color:#a19b9e;"/>
+                                    </div>
+                                </div>
                                 <p:separator/>
                             </p:dataList>
 
@@ -146,7 +149,7 @@
                                         </h:panelGrid>
                                     </div>
                                     <div class="ui-g-2">
-                                        <h:outputText value="Enregistré le : #{courriers.dateDEnregistrement}" style=" font-size: 12px; margin-left:10px; color:#a19b9e;"/>
+                                        <h:outputText value="Date : #{courriers.dateDEnregistrement}" style=" font-size: 12px; margin-left:10px; color:#a19b9e;"/>
                                     </div>
                                 </div>
                                 <p:separator/>

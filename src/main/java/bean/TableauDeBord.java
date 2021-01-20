@@ -209,7 +209,6 @@ public class TableauDeBord implements Serializable {
             etape.setListeDeMesTachesEnTraitement(DataBaseQueries.recupererLesCinqDernieresTachesEnTraitementDUnAgent(idUser));
         }
 
-
     }
 
 

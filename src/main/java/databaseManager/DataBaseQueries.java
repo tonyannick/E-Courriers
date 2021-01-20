@@ -67,10 +67,6 @@ public class DataBaseQueries {
     /***Fonction de récuperation des statistiques de la page d'accueil***/
     public static void recupererLesStatistiquesPourLaPageDAccueil() {
 
-        List<Statistiques> listeTypeDeCourrierEnvoyes = new ArrayList<>();
-        List<Statistiques> listeTypeDeCourrierRecus = new ArrayList<>();
-        listeTypeDeCourrierEnvoyes.clear();
-        listeTypeDeCourrierRecus.clear();
         listeCourriersEnvoyes.clear();
         listeCourriersRecus.clear();
         int tempCourrierUrgentRecu = 0;
@@ -83,13 +79,9 @@ public class DataBaseQueries {
 
         Connection connectionCourrierRecus =  DatabaseConnection.getConnexion();
         Connection connectionCourrierEnvoyes =  DatabaseConnection.getConnexion();
-        Connection connectionCourrierRecusParType =  DatabaseConnection.getConnexion();
-        Connection connectionCourrierEnvoyesParType =  DatabaseConnection.getConnexion();
 
         String nombreDeCourrierRecusSQL = "select * from `recevoir_courrier` inner join `courrier` on recevoir_courrier.id_courrier = courrier.id_courrier inner join personne on recevoir_courrier.id_personne = personne.id_personne inner join direction on personne.id_direction = direction.id_direction inner join type_courrier on type_courrier.id_type_courrier =	courrier.fk_type_courrier where direction.id_direction = '"+idDirection+"' and courrier.etat = '"+EtatCourrier.courrierEnvoye+"' group by courrier.id_courrier order by courrier.id_courrier desc ";
         String nombreDeCourrierEnvoyesSQL = "select * from `envoyer_courrier` inner join `courrier` on envoyer_courrier.id_courrier = courrier.id_courrier inner join personne on envoyer_courrier.id_personne = personne.id_personne inner join direction on personne.id_direction = direction.id_direction inner join type_courrier on type_courrier.id_type_courrier = courrier.fk_type_courrier where direction.id_direction = '"+idDirection+"' and courrier.etat = '"+EtatCourrier.courrierEnvoye+"' group by courrier.id_courrier order by courrier.id_courrier desc ";
-        String nombreDeCourrierEnvoyesParTypeSQL = "select titre_type_courrier, count(*) from `envoyer_courrier` inner join `courrier` on envoyer_courrier.id_courrier = courrier.id_courrier inner join personne on envoyer_courrier.id_personne = personne.id_personne inner join direction on personne.id_direction = direction.id_direction inner join type_courrier on type_courrier.id_type_courrier = courrier.fk_type_courrier where direction.id_direction = '"+idDirection+"' and etat='"+EtatCourrier.courrierEnvoye+"' group by type_courrier.id_type_courrier order by courrier.id_courrier  desc limit 6";
-        String nombreDeCourrierRecusParTypeSQL = "select titre_type_courrier, count(*) from `recevoir_courrier` inner join `courrier` on recevoir_courrier.id_courrier = courrier.id_courrier inner join personne on recevoir_courrier.id_personne = personne.id_personne inner join direction on personne.id_direction = direction.id_direction inner join type_courrier on type_courrier.id_type_courrier = courrier.fk_type_courrier where direction.id_direction = '"+idDirection+"' group by type_courrier.id_type_courrier order by courrier.id_courrier  desc limit 6";
 
         nombreCourrierRecusDuJour = 0;
         nombreCourrierEnvoyesDuJour = 0;
@@ -135,25 +127,12 @@ public class DataBaseQueries {
         String dateDuJour = DateUtils.recupererSimpleDateEnCours();
         ResultSet resultSetCourriersRecus = null;
         ResultSet resultSetCourriersEnvoyes = null;
-        ResultSet resultSetCourriersRecusParType = null;
-        ResultSet resultSetCourriersEnvoyesParType = null;
 
         try {
             resultSetCourriersRecus = connectionCourrierRecus.createStatement().executeQuery(nombreDeCourrierRecusSQL);
             resultSetCourriersEnvoyes = connectionCourrierEnvoyes.createStatement().executeQuery(nombreDeCourrierEnvoyesSQL);
-            resultSetCourriersEnvoyesParType = connectionCourrierEnvoyesParType.createStatement().executeQuery(nombreDeCourrierEnvoyesParTypeSQL);
-            resultSetCourriersRecusParType = connectionCourrierRecusParType.createStatement().executeQuery(nombreDeCourrierRecusParTypeSQL);
 
-            while (resultSetCourriersRecusParType.next()) {
-                listeTypeDeCourrierRecus.add(new Statistiques(
-                        resultSetCourriersRecusParType.getString("titre_type_courrier"),
-                        resultSetCourriersRecusParType.getString("count(*)")));
-            }
-            while (resultSetCourriersEnvoyesParType.next()) {
-                listeTypeDeCourrierEnvoyes.add(new Statistiques(
-                        resultSetCourriersEnvoyesParType.getString("titre_type_courrier"),
-                        resultSetCourriersEnvoyesParType.getString("count(*)")));
-            }
+
 
             while (resultSetCourriersRecus.next()) {
                 listeCourriersRecus.add(new Courrier(
@@ -173,14 +152,8 @@ public class DataBaseQueries {
                         resultSetCourriersEnvoyes.getString("genre")));
             }
 
-            listeNombreDeCourrierParType =  Stream.concat(  listeTypeDeCourrierRecus.stream(), listeTypeDeCourrierEnvoyes.stream()).collect(Collectors.toList());
 
-            for(Statistiques myStat : listeNombreDeCourrierParType ){
-                String key = myStat.getTypeDeCourrier();
-                int valueOfKey = mapNombreCourrierParType.containsKey(key) ? mapNombreCourrierParType.get(key) : 0;
-                valueOfKey += Integer.parseInt(myStat.getNombreTypeDeCourrier());
-                mapNombreCourrierParType.put(key,valueOfKey);
-            }
+
 
             if(listeCourriersRecus.size() > 0){
 

@@ -58,7 +58,9 @@
                                                  var="etape" paginator="true"
                                                  emptyMessage="Aucune tache en cours"
                                                  rowIndexVar="rowIndex" border="2">
+                                        <f:facet name="header">
 
+                                        </f:facet>
                                         <p:column style="width:100px">
                                             <f:facet name="header">Date</f:facet>
                                             <h:outputText style="font-size: 12px" value="#{etape.date_debut}"/>

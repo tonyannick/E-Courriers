@@ -435,7 +435,7 @@ public class StatistiquesQueries {
     }
 
     public static void calculerLesStatistiquesDesCourriersTraitesParTypesDeCourrierDuMoisEnCours(String idDirection){
-
+        mapNombreCourrierParTypeDuMoisEnCours.clear();
         List<Courrier> listeCourriersRecus = new ArrayList<>();
         List<Courrier> listeCourriersEnvoyes = new ArrayList<>();
         List<Courrier> finalListeCourriers = new ArrayList<>();

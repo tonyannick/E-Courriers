@@ -367,7 +367,7 @@ public class CourriersQueries {
                         resultSet.getString("extension_fichier"),
                         resultSet.getString("id_ajouter_courrier"),
                         resultSet.getString("identifiant_alfresco"),
-                        resultSet.getString("id_dossier")));
+                        resultSet.getString("heure_enregistrement")));
             }
 
             for (int i = 0; i < mesCourriers.size(); i++){

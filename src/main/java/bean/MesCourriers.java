@@ -76,7 +76,7 @@ public class MesCourriers implements Serializable {
                 mesCourriersDuJour.add(courrier.getListeDesCouriersEnregistres().get(a));
             }
         }
-        Collections.reverse(mesCourriersDuJour);
+       // Collections.reverse(mesCourriersDuJour);
         courrier.getListeDesCouriersEnregistres().removeIf(e -> e.getDateDEnregistrement().equals(dateDuJour));
     }
 
