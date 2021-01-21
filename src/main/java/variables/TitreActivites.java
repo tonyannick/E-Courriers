@@ -7,5 +7,8 @@ public class TitreActivites {
     public static final String discussionAjoutee = "Un commentaire à été posté sur une tache";
     public static final String transfertDuCourrier = "Le courrier a été transféré à une autre direction";
     public static final String nouveauCourrier = "Un courrier a été enregistré";
+    public static final String courrierEnvoye = "Un courrier a été envoyé";
+    public static final String accuseDeReception = "Confirmation de réception physique";
+
 
 }

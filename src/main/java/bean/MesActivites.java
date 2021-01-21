@@ -50,7 +50,7 @@ public class MesActivites implements Serializable {
                 activitesDuJour.add(activites.getActivitesList().get(a));
             }
         }
-        Collections.reverse(activitesDuJour);
+       // Collections.reverse(activitesDuJour);
         activites.getActivitesList().removeIf(e -> e.getDateActivites().equals(dateDuJour));
     }
 

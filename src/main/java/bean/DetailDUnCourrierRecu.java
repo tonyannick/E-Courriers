@@ -378,6 +378,7 @@ public class DetailDUnCourrierRecu implements Serializable {
         String idCourrier = (String) session.getAttribute("courrierId");
         String idUser = (String) session.getAttribute( "idUser");
         String directionUser = (String) session.getAttribute( "directionUser");
+        String idDirectionUser = (String) session.getAttribute( "idDirectionUser");
         String fonctionUser = (String) session.getAttribute( "fonctionUser");
         String isCourrierTransferer = (String) session.getAttribute( "courrierTransferer");
         String idUserAccuseDeReception = null;
@@ -413,11 +414,20 @@ public class DetailDUnCourrierRecu implements Serializable {
 
             try {
                 connection.setAutoCommit(false);
+               /* for(int a = 0; a < etape.getListeDesActionsSurLeCourrier().size(); a++){
+                    if(etape.getListeDesActionsSurLeCourrier().get(a).getMessage().contains("Courrier à transferer à :")){
+                        if(){
+
+                        }
+                    }
+                }*/
+                String idTypeDactivite = ActivitesQueries.recupererIdTypeDActivitesParSonTitre(TypeDActivites.confirmationReception);
                 statement = connection.createStatement();
                 statement.addBatch(accuseReceptionDuCourrierSQL);
                 statement.addBatch(ajouterCorrespondanceEtapeCourrierSQL);
                 statement.addBatch(ajouterCorrespondanceEtapePersonneSQL);
                 statement.addBatch(ajouterEtapeCourrierSQL);
+                statement.addBatch(ActivitesQueries.ajouterUneActvitee(TitreActivites.accuseDeReception, idCourrier ,idUser,idTypeDactivite,idDirectionUser));
                 statement.executeBatch();
                 connection.commit();
                 FacesContext context = FacesContext.getCurrentInstance();

@@ -1169,7 +1169,7 @@ public class DataBaseQueries {
         List<Etape> listeActionsCourrier = new ArrayList<>();
         listeActionsCourrier.clear();
         String requeteActionsCourrierSQL = "select * from ((`etape` inner join `correspondance_etape_courrier` on etape.id_etape = correspondance_etape_courrier.id_etape) inner join `correspondance_personne_etape` on etape.id_etape = correspondance_personne_etape.id_etape ) inner join `personne` on correspondance_personne_etape.id_personne = personne.id_personne  where correspondance_etape_courrier.id_courrier = '"+idCourrier+"' and etat_correspondance ='"+EtatCourrier.courrierEnregistre+"' and etape.titre = '"+ActionEtape.transmisPourTraitement+"' and correspondance_personne_etape.role_agent = '"+ RoleEtape.AffecteurTache+"' order by etape.id_etape desc;";
-
+        System.out.println("requeteActionsCourrierSQL = " + requeteActionsCourrierSQL);
         ResultSet resultSet = null;
         Connection connection = DatabaseConnection.getConnexion();
 
@@ -1257,7 +1257,7 @@ public class DataBaseQueries {
             requeteActionsCourrierSQL = "select * from ((`etape` inner join `correspondance_etape_courrier` on etape.id_etape = correspondance_etape_courrier.id_etape) inner join `correspondance_personne_etape` on etape.id_etape = correspondance_personne_etape.id_etape ) inner join `personne` on correspondance_personne_etape.id_personne = personne.id_personne  where correspondance_etape_courrier.id_courrier = '"+idCourrier+"'  and (etat_correspondance ='"+EtatCourrier.courrierRecu+"' or etat_correspondance ='"+EtatCourrier.transfererAUneAutreDirection+"') and etape.titre = '"+ActionEtape.transmisPourTraitement+"' and (correspondance_personne_etape.role_agent = '"+ RoleEtape.AffecteurTache+"' or correspondance_personne_etape.role_agent = '"+ RoleEtape.createurReponseAuCourrier+"')order by etape.id_etape desc;";
 
         }
-
+        System.out.println("requeteActionsCourrierSQL = " + requeteActionsCourrierSQL);
 
         ResultSet resultSet = null;
         Connection connection = DatabaseConnection.getConnexion();

@@ -1362,6 +1362,7 @@ public class DetailsDUnCourrierEnregistre implements Serializable {
         HttpSession session = SessionUtils.getSession();
         String idCourrier = (String) session.getAttribute("idCourrier");
         String idUser = (String) session.getAttribute( "idUser");
+        String idDirectionUser = (String) session.getAttribute( "idDirectionUser");
         String updateEtatCourrierSQL = "update `courrier` SET `etat` = 'Courrier envoyé' WHERE id_courrier = '"+idCourrier+"';";
 
         String ajouterEtapeCourrierSQL = "INSERT INTO `etape` (`titre`, `etat`, `message`) VALUES" +
@@ -1381,6 +1382,7 @@ public class DetailsDUnCourrierEnregistre implements Serializable {
         try {
             connection.setAutoCommit(false);
             statement = connection.createStatement();
+            String idTypeDactivite = ActivitesQueries.recupererIdTypeDActivitesParSonTitre(TypeDActivites.courrierEnvoye);
             for(int a = 0; a < etape.getListeDesActionsSurLeCourrier().size(); a++){
                 cloreDiscussionSQL = "update `discussion_etape` set `etat_discussion` = '"+EtatEtape.Fermer+"' where id_etape = '"+etape.getListeDesActionsSurLeCourrier().get(a).getId()+"'";
                 cloreEtatEtapeSQL = "update `etape` set `etat` = '"+EtatEtape.termine+"' where id_etape = '"+etape.getListeDesActionsSurLeCourrier().get(a).getId()+"'";
@@ -1391,6 +1393,7 @@ public class DetailsDUnCourrierEnregistre implements Serializable {
             statement.addBatch(ajouterCorrespondanceEtapeCourrierSQL);
             statement.addBatch(ajouterCorrespondanceEtapePersonneSQL);
             statement.addBatch(ajouterEtapeCourrierSQL);
+            statement.addBatch(ActivitesQueries.ajouterUneActvitee(TitreActivites.tacheAjoutee, idCourrier ,idUser,idTypeDactivite,idDirectionUser));
             statement.executeBatch();
             connection.commit();
             FacesContext context = FacesContext.getCurrentInstance();

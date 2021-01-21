@@ -42,7 +42,7 @@ public class UsersQueries {
     public static boolean verifierUserLogin(String login, String motDePasse){
         String motCrypter = PropertiesFilesReader.lireLeFichierDuMotSecret("cledesecurite.properties");
         Cryptage.crypterUnMot(login,motCrypter);
-        System.out.println("motCrypter = " +  Cryptage.crypterUnMot(login,motCrypter));
+        //System.out.println("motCrypter = " +  Cryptage.crypterUnMot(login,motCrypter));
         Connection connection =  DatabaseConnection.getConnexion();
         ResultSet resultSet = null;
         boolean connected = false;
