@@ -60,6 +60,7 @@ public class Parametres implements Serializable {
     private String userEmailTemp;
     private String userPseudoTemp;
     private String profilUtilisateur = "4";
+    private String idMinistereBudget = "1";
     private String userTelTemp;
     private String userFonctionTemp;
     private String userDirectionTemp;
@@ -72,7 +73,7 @@ public class Parametres implements Serializable {
     private String userServiceTemp;
     private String infosMinistereAModifier;
     private String elementDuMinistereAModifier;
-
+    private String nomEntite;
 
     @PostConstruct
     public void initialisation(){
@@ -360,13 +361,16 @@ public class Parametres implements Serializable {
     public void mettrePremiereLettreDuPrenomEnMajuscule(){
         setUserPrenomPourAjoutTemp(StringUtils.mettrePremiereLettreDuMotEnMajuscule(userPrenomPourAjoutTemp));
     }
+    public void mettrePremiereLettreEnMajuscule(){
+        setNomEntite(StringUtils.mettrePremiereLettreDuMotEnMajuscule(nomEntite));
+    }
 
     public void ajouterUnePhoto(FileUploadEvent fileUploadEvent){
         byte[] bytes = null;
         nomPhoto = DateUtils.recupererSimpleHeuresEnCours()+"_"+fileUploadEvent.getFile().getFileName();
         bytes = fileUploadEvent.getFile().getContent();
         BufferedOutputStream stream = null;
-        cheminPhotoSurPC = FileManager.tempDirectoryOSPath +"fichier_reponseaucourrier_"+nomPhoto;
+        cheminPhotoSurPC = FileManager.tempDirectoryOSPath +"photo_"+nomPhoto;
         try {
             stream = new BufferedOutputStream(new FileOutputStream(new File(cheminPhotoSurPC)));
             stream.write(bytes);
@@ -385,6 +389,32 @@ public class Parametres implements Serializable {
             } catch (IOException e) {
                 e.printStackTrace();
             }
+        }
+    }
+
+    public void ajouterUneEntiteAuMinistere(){
+        if(nomEntite.isEmpty()){
+            FacesContext.getCurrentInstance().addMessage("messagesNomEntite", new FacesMessage(FacesMessage.SEVERITY_WARN, "Erreur", "Vous devez renseigner une valeur"));
+        }else{
+            PrimeFaces.current().executeScript("PF('panelajoutentite').close()");
+            PrimeFaces.current().executeScript("PF('panelajoutentiteloading').toggle()");
+            Connection connection = DatabaseConnection.getConnexion();
+            Statement statement = null;
+            String ajouterEntiteSQL = "INSERT INTO `direction` (`nom_direction`, `fk_etablissement`) VALUES ('"+nomEntite+"', '"+idMinistereBudget+"');";
+            try {
+                connection.setAutoCommit(false);
+                statement = connection.createStatement();
+                statement.addBatch(ajouterEntiteSQL);
+                statement.executeBatch();
+                connection.commit();
+                setNomEntite(null);
+                PrimeFaces.current().executeScript("PF('panelajoutentiteloading').close()");
+                PrimeFaces.current().executeScript("PF('panelajoutentitevalide').toggle()");
+                direction.setListeObjetsDirection(DirectionQueries.recupererLaListeDesDirectionsDuMinistere());
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+
         }
     }
 
@@ -484,7 +514,6 @@ public class Parametres implements Serializable {
                 connection.setAutoCommit(false);
                 statement = connection.createStatement();
                 statement.addBatch(updateSQL);
-                System.out.println("updateSQL = " + updateSQL);
                 statement.executeBatch();
                 connection.commit();
                 setInfosMinistereAModifier(null);
@@ -498,7 +527,13 @@ public class Parametres implements Serializable {
         }
     }
 
+    public String getNomEntite() {
+        return nomEntite;
+    }
 
+    public void setNomEntite(String nomEntite) {
+        this.nomEntite = nomEntite;
+    }
 
     public User getUser() {
         return user;

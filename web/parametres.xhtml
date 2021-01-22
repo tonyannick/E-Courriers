@@ -52,7 +52,16 @@
         ul.ui-datalist-data {
             padding-inline-start: 0px;
         }
-
+        .noBorders *{
+            border: none !important;
+            margin: 0px;
+            list-style-type: none;
+            margin-bottom: 5px;
+        }
+        ul .ui-datalist-item:hover{
+            background-color: #fbf35c;
+            font-weight: bold;
+        }
 
     </style>
     <h:body id="page" onload="gestionDuProfilAuChargementDeLaPage()">
@@ -359,7 +368,7 @@
                                         </div>
 
                                         <input type="radio" name="tabs" id="tabthree"/>
-                                        <label for="tabthree">Parametres généraux</label>
+                                        <label for="tabthree">Parametres du Ministère</label>
                                         <div class="tab">
                                             <div id="pageDesNonAdministrateurs" style="display: block">
                                                 <p class="titresection">
@@ -409,15 +418,33 @@
                                                         </h:panelGrid>
                                                     </p:panel>
 
+
                                                     <p:panel header="Liste des entités du Ministère" toggleable="true" collapsed="true"
                                                              style=" margin-top: 35px; height: auto;  overflow: auto;" >
 
-                                                        <ui:repeat value="#{parametres.direction.listeObjetsDirection}"  var="direction">
-                                                            <i class="fa fa-certificate" style="font-size:7px"></i>
-                                                            <h:outputText  style="margin-left:10px" value="#{direction.titreDirection}"/>
+                                                        <h:form>
+                                                            <p:commandButton value="Ajouter" iconPos="right" icon="fa fa-plus-square"
+                                                                             type="button" onclick="PF('dialogueAjouterUneEntiteAuMinistere').show()"
+                                                                             style="display: inline-block; margin-top: 10px"/>
+                                                            <p:separator style="margin-bottom: 10px; "/>
+                                                        </h:form>
 
-                                                            <p:separator/>
-                                                        </ui:repeat>
+                                                        <h:form id="formListeEntitesDuMinistere">
+                                                            <p:dataList type="unordered"
+                                                                    styleClass="noBorders"
+                                                                    value="#{parametres.direction.listeObjetsDirection}"   var="direction"
+                                                                    rows="8" paginator="true" paginatorAlwaysVisible="false" paginatorPosition="bottom">
+
+                                                                <div class="ui-g">
+                                                                    <div class="ui-g-9">
+                                                                        <i class="fa fa-certificate" aria-hidden="true" style="font-size: 8px; margin-right: 8px"/>
+                                                                        <h:outputText  value="#{direction.titreDirection}"/>
+                                                                    </div>
+
+                                                                </div>
+                                                            </p:dataList>
+
+                                                        </h:form>
 
                                                     </p:panel>
 
@@ -431,10 +458,9 @@
                                                                 <li><h:outputText  style="margin-left:10px" value="#{etablissement.abreviationEtablissement}"/></li>
                                                             </ul>
                                                             <p:separator/>
-                                                        </ui:repeat>
+                                                           </ui:repeat>
                                                     </p:panel>
                                                 </div>
-
                                             </div>
                                         </div>
                                     </div>
@@ -673,6 +699,43 @@
                                             <p:outputLabel value="Modification validée." styleClass="messagePatienter"/>
                                             <p:commandButton value="Ok"
                                                              onclick="rechargerLaPage()"
+                                                             style="margin-top: 20px; margin-right: 5px; float: right"/>
+                                        </p:panel>
+
+                                    </p:dialog>
+                                    <p:dialog id="dialogueAjouterUneEntite"
+                                              resizable="false"
+                                              header="Ajout d'une entité au Ministère"
+                                              widgetVar="dialogueAjouterUneEntiteAuMinistere" width="auto"
+                                              modal="true" hideEffect="clip"
+                                              showEffect="clip"  dynamic="true" closable="true">
+
+                                        <p:panel widgetVar="panelajoutentite" toggleable="true" closable="true" style="border-color: white">
+                                            <h:form id="formAjoutEntite">
+                                                <p:messages  showDetail="true" closable="true" for="messagesNomEntite"/>
+                                                <h:panelGrid style="width: 100%" columns="2" styleClass="panelLogin" cellspacing="30" cellpadding="30">
+                                                    <h4 style="font-weight:bold; font-size: 13px">Dénomination :  </h4>
+                                                    <p:inputText id="nomEntite" style="margin-left: 10px;" size="45" value="#{parametres.nomEntite}">
+                                                        <p:ajax event="keyup" update="@form:nomEntite" listener="#{parametres.mettrePremiereLettreEnMajuscule}"/>
+                                                    </p:inputText>
+                                                </h:panelGrid>
+
+                                                <p:commandButton value="valider"
+                                                                 style="margin-top: 12px; margin-right: 10px; float: right; background-color: #00a867; border-color: #00a867"
+                                                                 update="formAjoutEntite"
+                                                                 action="#{parametres.ajouterUneEntiteAuMinistere}"/>
+                                            </h:form>
+                                        </p:panel>
+                                        <p:panel collapsed="true" widgetVar="panelajoutentiteloading" style="border-color: white; background-color: white" toggleable="true" closable="true">
+                                            <h:graphicImage value="./resources/images/loadingdiscussion.gif"/>
+                                            <p:outputLabel value="Veuillez patienter..." styleClass="messagePatienter"/>
+                                        </p:panel>
+                                        <p:panel collapsed="true" style="margin-top:10px; border-color: white"
+                                                 widgetVar="panelajoutentitevalide" toggleable="true" closable="true">
+                                            <p:outputLabel value="Ajout validée." styleClass="messagePatienter"/>
+                                            <p:commandButton value="Ok"
+                                                             type="button"
+                                                             onclick="PF('dialogueAjouterUneEntiteAuMinistere').hide()"
                                                              style="margin-top: 20px; margin-right: 5px; float: right"/>
                                         </p:panel>
 

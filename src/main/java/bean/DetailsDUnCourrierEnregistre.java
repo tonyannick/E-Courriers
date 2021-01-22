@@ -1393,7 +1393,7 @@ public class DetailsDUnCourrierEnregistre implements Serializable {
             statement.addBatch(ajouterCorrespondanceEtapeCourrierSQL);
             statement.addBatch(ajouterCorrespondanceEtapePersonneSQL);
             statement.addBatch(ajouterEtapeCourrierSQL);
-            statement.addBatch(ActivitesQueries.ajouterUneActvitee(TitreActivites.tacheAjoutee, idCourrier ,idUser,idTypeDactivite,idDirectionUser));
+            statement.addBatch(ActivitesQueries.ajouterUneActvitee(TitreActivites.courrierEnvoye, idCourrier ,idUser,idTypeDactivite,idDirectionUser));
             statement.executeBatch();
             connection.commit();
             FacesContext context = FacesContext.getCurrentInstance();

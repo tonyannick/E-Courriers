@@ -382,9 +382,6 @@ public class DetailDUnCourrierRecu implements Serializable {
         String fonctionUser = (String) session.getAttribute( "fonctionUser");
         String isCourrierTransferer = (String) session.getAttribute( "courrierTransferer");
         String idUserAccuseDeReception = null;
-        System.out.println("isCourrierTransferer = " + isCourrierTransferer);
-        System.out.println("directionUser = " + directionUser);
-        System.out.println("fonctionUser = " + fonctionUser);
         if(isCourrierTransferer != null){
             for(int a = 0; a < destinataire.getListeDestinataireParTransfer().size(); a++ ){
                 if(destinataire.getListeDestinataireParTransfer().get(a).getDirection().equalsIgnoreCase(directionUser) && destinataire.getListeDestinataireParTransfer().get(a).getFonction().equalsIgnoreCase(fonctionUser)){

@@ -1,8 +1,6 @@
 package bean;
 
 import cookieManager.CookiesUtils;
-import databaseManager.CourriersQueries;
-import databaseManager.DataBaseQueries;
 import databaseManager.UsersQueries;
 import model.User;
 import sessionManager.SessionUtils;
@@ -52,6 +50,7 @@ public class Login implements Serializable {
             UsersQueries.recupererInfosDeSession();
             session.setAttribute("isResponsable", UsersQueries.isResponsable);
             session.setAttribute("isSecretaire", UsersQueries.isSecretaire);
+
             return "tableaudebord?faces-redirect=true";
         }else{
             FacesContext context = FacesContext.getCurrentInstance();
