@@ -1369,7 +1369,7 @@ public class DetailDUnCourrierRecu implements Serializable {
         genererUniqueIDPourDestinataire();
         String idTypeDeDestinataire = DataBaseQueries.recupererIdTypeDePersonneParTitre("Agent du Ministere");
         String idFonctionDestinataire = DataBaseQueries.recupererIdFonctionParSonTitreEtSonType("Directeur", TypeDeFonctions.interne);
-        String idEtablissementDestinataire = DataBaseQueries.recupererIdEtablissementParSonAbreviation(Ministere.MinistereDuBudget);
+        String idEtablissementDestinataire = EtablissementQueries.recupererIdEtablissementParSonAbreviation(Ministere.MinistereDuBudget);
         String ajouterDestinataireSQL = "insert into `personne` (`unique_id`, `fk_type_personne`,`id_fonction`, `id_direction`, `id_etablissement`) VALUES" + " ('" + finalUniqueIDDestinataire+"',"+"'"+idTypeDeDestinataire+"',"+"'"+ idFonctionDestinataire + "',"+"'" + idDirectionATransfererLeCourrier + "',"+ "'" +idEtablissementDestinataire+ "')";
 
         if (idAgentAffecteAUneTache == null ){

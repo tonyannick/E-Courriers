@@ -148,7 +148,7 @@ public class NouveauCourrier implements Serializable {
     }
 
     public void recupererListeMinisteres(){
-        etablissement.setListeEtablissement(DataBaseQueries.recupererLaListeDesMinisteres());
+        etablissement.setListeEtablissement(EtablissementQueries.recupererLaListeDesMinisteres());
         etablissement.getListeEtablissement().removeIf(e -> e.equals(Ministere.MinistereDuBudget));
     }
 
@@ -294,11 +294,11 @@ public class NouveauCourrier implements Serializable {
             idTypeDeDestinataire = DataBaseQueries.recupererIdTypeDePersonneParTitre(destinataire.getTypeDestinataire());
             idDirectionEmetteur = DataBaseQueries.recupererIdDirectionParSonNom(emetteur.getDirection());
             idDirectionDestinataire = DataBaseQueries.recupererIdDirectionParSonNom(destinataire.getDirection());
-            idEtablissementDestinataireAutreMinistere = DataBaseQueries.recupererIdEtablissementParSonAbreviation(destinataire.getMinistere());
-            idEtablissementEmetteur = DataBaseQueries.recupererIdEtablissementParSonAbreviation(Ministere.MinistereDuBudget);
-            idEtablissementEmetteurAutreMinistere = DataBaseQueries.recupererIdEtablissementParSonAbreviation(emetteur.getMinistereAutreMinistere());
-            idEtablissementDestinataire = DataBaseQueries.recupererIdEtablissementParSonAbreviation(Ministere.MinistereDuBudget);
-            idTypeDetablissement= DataBaseQueries.recupererIdTypeDEtablissementParTitre(TypeDEtablissement.entreprisePrivee);
+            idEtablissementDestinataireAutreMinistere = EtablissementQueries.recupererIdEtablissementParSonAbreviation(destinataire.getMinistere());
+            idEtablissementEmetteur = EtablissementQueries.recupererIdEtablissementParSonAbreviation(Ministere.MinistereDuBudget);
+            idEtablissementEmetteurAutreMinistere = EtablissementQueries.recupererIdEtablissementParSonAbreviation(emetteur.getMinistereAutreMinistere());
+            idEtablissementDestinataire = EtablissementQueries.recupererIdEtablissementParSonAbreviation(Ministere.MinistereDuBudget);
+            idTypeDetablissement= EtablissementQueries.recupererIdTypeDEtablissementParTitre(TypeDEtablissement.entreprisePrivee);
             idFonctionEmetteur = DataBaseQueries.recupererIdFonctionParSonTitreEtSonType(emetteur.getFonction(), TypeDeFonctions.interne);
             idFonctionDestinataire = DataBaseQueries.recupererIdFonctionParSonTitreEtSonType(destinataire.getFonction(), TypeDeFonctions.interne);
            

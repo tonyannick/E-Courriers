@@ -39,4 +39,63 @@ public class EtablissementQueries {
         }
         return list;
     }
+
+    /***Fonction qui recuperer  l'id de l'établissement par son abreviation***/
+    public static String recupererIdEtablissementParSonAbreviation(String etablissement) {
+        String id = null;
+        String recupererIdEtablissementSQL = "select id_etablissement from `etablissement` where abreviation = '" + etablissement + "'";
+        Connection connection = DatabaseConnection.getConnexion();
+        ResultSet resultSet = null;
+        try {
+            resultSet = connection.createStatement().executeQuery(recupererIdEtablissementSQL);
+            if (resultSet.next()) {
+                id = resultSet.getString("id_etablissement");
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+            if (resultSet != null) {
+                try {
+                    resultSet.close();
+                } catch (SQLException e) { }
+            }
+            if (connection != null) {
+                try {
+                    connection.close();
+                } catch (SQLException e) {}
+            }
+
+        }
+        return id;
+    }
+
+    /***Fonction qui recupere l'id du type d'etablissement  par son titre***/
+    public static String recupererIdTypeDEtablissementParTitre(String type) {
+        String id = null;
+        String recupererIdTypeDEtablissemenntSQL = "select id_type_etablissement from `type_etablissement` where titre_type_etablissement = '" + type + "'";
+        Connection connection = DatabaseConnection.getConnexion();
+        ResultSet resultSet = null;
+        try {
+            resultSet = connection.createStatement().executeQuery(recupererIdTypeDEtablissemenntSQL);
+            if (resultSet.next()) {
+                id = resultSet.getString("id_type_etablissement");
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+            if (resultSet != null) {
+                try {
+                    resultSet.close();
+                } catch (SQLException e) { }
+            }
+            if (connection != null) {
+                try {
+                    connection.close();
+                } catch (SQLException e) {}
+            }
+
+        }
+        return id;
+    }
+
 }

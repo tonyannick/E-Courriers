@@ -823,7 +823,7 @@ public class DetailsDUnCourrierEnregistre implements Serializable {
                 String idTypeDeDestinataire = DataBaseQueries.recupererIdTypeDePersonneParTitre("Agent du Ministere");
                 String idFonctionDestinataire = DataBaseQueries.recupererIdFonctionParSonTitreEtSonType(destinataire.getFonction(), TypeDeFonctions.interne);
                 String idDirectionDestinataire = DataBaseQueries.recupererIdDirectionParSonNom(destinataire.getDirection());
-                String idEtablissementDestinataire = DataBaseQueries.recupererIdEtablissementParSonAbreviation(Ministere.MinistereDuBudget);
+                String idEtablissementDestinataire = EtablissementQueries.recupererIdEtablissementParSonAbreviation(Ministere.MinistereDuBudget);
 
                 ajouterDestinataireSQL = "insert into `personne` (`unique_id`, `fk_type_personne`,`id_fonction`, `id_direction`, `id_etablissement`) VALUES" +
                         " ('" + finalUniqueIDDestinataire+"',"+"'"+idTypeDeDestinataire+"',"+"'"+ idFonctionDestinataire + "',"+"'" +idDirectionDestinataire + "',"+ "'" +idEtablissementDestinataire+ "')";
@@ -901,7 +901,7 @@ public class DetailsDUnCourrierEnregistre implements Serializable {
 
                     String idTypeDeDestinataire = DataBaseQueries.recupererIdTypeDePersonneParTitre("Agent autre Ministère");
 
-                    String idEtablissementDestinataireAutreMinistere = DataBaseQueries.recupererIdEtablissementParSonAbreviation(destinataire.getMinistereAutreMinistere());
+                    String idEtablissementDestinataireAutreMinistere = EtablissementQueries.recupererIdEtablissementParSonAbreviation(destinataire.getMinistereAutreMinistere());
 
                     String ajouterFonctionSQL = "insert into `fonction` (`titre_fonction`) VALUES ('" + destinataire.getFonctionAutreMinistere().trim().replaceAll("'"," ") +"')";
 
@@ -986,7 +986,7 @@ public class DetailsDUnCourrierEnregistre implements Serializable {
                         String idCourrierAEnvoyer = (String) session.getAttribute( "idCourrier");
                         genererUniqueIDPourEmetteurEtDestinataire();
 
-                        String idTypeDetablissement= DataBaseQueries.recupererIdTypeDEtablissementParTitre(TypeDEtablissement.entreprisePrivee);
+                        String idTypeDetablissement= EtablissementQueries.recupererIdTypeDEtablissementParTitre(TypeDEtablissement.entreprisePrivee);
                         String idTypeDeDestinataire = DataBaseQueries.recupererIdTypeDePersonneParTitre("Entreprise");
 
                         String ajouterFonctionSQL = "insert into `fonction` (`titre_fonction`) VALUES ('" + destinataire.getFonctionEntreprise().trim().replaceAll("'"," ") +"')";
@@ -1260,7 +1260,7 @@ public class DetailsDUnCourrierEnregistre implements Serializable {
     }
 
     public void recupererListeMinisteres(){
-        etablissement.setListeEtablissement(DataBaseQueries.recupererLaListeDesMinisteres());
+        etablissement.setListeEtablissement(EtablissementQueries.recupererLaListeDesMinisteres());
         etablissement.getListeEtablissement().removeIf(e -> e.equals(Ministere.MinistereDuBudget));
     }
 

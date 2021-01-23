@@ -1,10 +1,7 @@
 package bean;
 
 import alfresco.ConnexionAlfresco;
-import databaseManager.DataBaseQueries;
-import databaseManager.DatabaseConnection;
-import databaseManager.DirectionQueries;
-import databaseManager.UsersQueries;
+import databaseManager.*;
 import dateAndTime.DateUtils;
 import fileManager.FileManager;
 import mailManager.EmailValidation;
@@ -293,10 +290,10 @@ public class Parametres implements Serializable {
                     }else{
                         PrimeFaces.current().executeScript("PF('panelajoutuser').close()");
                         PrimeFaces.current().executeScript("PF('paneluserloading').toggle()");
-                        String idType = DataBaseQueries.recupererIdEtablissementParSonAbreviation(Ministere.MinistereDuBudget);
+                        String idType = EtablissementQueries.recupererIdEtablissementParSonAbreviation(Ministere.MinistereDuBudget);
                         String idFonction = DataBaseQueries.recupererIdFonctionParSonTitreEtSonType(userFonctionPourAjoutTemp, TypeDeFonctions.interne);
                         String idDirection = DataBaseQueries.recupererIdDirectionParSonNom(userDirectionPourAjoutTemp);
-                        String idEtablissement = DataBaseQueries.recupererIdEtablissementParSonAbreviation(Ministere.MinistereDuBudget);
+                        String idEtablissement = EtablissementQueries.recupererIdEtablissementParSonAbreviation(Ministere.MinistereDuBudget);
                         String  ajouterUserSQL = "insert into `personne` (`fk_type_personne`, `nom`, `prenom`,`tel`, `mail`, `id_fonction`,`id_profil`,`etat_du_compte`,`id_direction` ,`id_etablissement`) VALUES" +
                                 " ('" +idType+"',"+"'"+userNomPourAjoutTemp.trim().replaceAll("'"," ")+"',"+"'"+userPrenomPourAjoutTemp.trim().replaceAll("'"," ")+"',"+"'"+userTelPourAjoutTemp.trim()+"',"+"'"+userMailPourAjoutTemp.trim()+"',"+"'"+ idFonction+ "',"+"'"+profilUtilisateur+"',"+"'"+EtatCompteUser.enAttente+"',"+"'" +idDirection+ "',"+ "'" +idEtablissement+ "')";
                         Connection connection = DatabaseConnection.getConnexion();
