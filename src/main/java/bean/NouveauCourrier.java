@@ -149,6 +149,7 @@ public class NouveauCourrier implements Serializable {
 
     public void recupererListeMinisteres(){
         etablissement.setListeEtablissement(DataBaseQueries.recupererLaListeDesMinisteres());
+        etablissement.getListeEtablissement().removeIf(e -> e.equals(Ministere.MinistereDuBudget));
     }
 
     public void recupererListeTypeDeCourrier(){

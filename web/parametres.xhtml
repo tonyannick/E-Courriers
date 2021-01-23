@@ -417,8 +417,6 @@
                                                             </p:commandLink>
                                                         </h:panelGrid>
                                                     </p:panel>
-
-
                                                     <p:panel header="Liste des entités du Ministère" toggleable="true" collapsed="true"
                                                              style=" margin-top: 35px; height: auto;  overflow: auto;" >
 
@@ -443,22 +441,51 @@
 
                                                                 </div>
                                                             </p:dataList>
-
                                                         </h:form>
 
                                                     </p:panel>
-
-
                                                 </div>
                                                 <div class="col-md-6">
                                                     <p:panel header="Liste des Ministères enregistrés" toggleable="true" collapsed="true"
                                                              style=" height: auto; overflow: auto" >
-                                                        <ui:repeat value="#{parametres.etablissement.listeDesEtablissements}"  var="etablissement">
-                                                            <ul>
-                                                                <li><h:outputText  style="margin-left:10px" value="#{etablissement.abreviationEtablissement}"/></li>
-                                                            </ul>
-                                                            <p:separator/>
-                                                           </ui:repeat>
+                                                        <h:form>
+                                                            <p:dataList type="unordered"
+                                                                        styleClass="noBorders"
+                                                                        value="#{parametres.etablissement.listeDesEtablissements}"  var="etablissement"
+                                                                        rows="8" paginator="true" paginatorAlwaysVisible="false" paginatorPosition="bottom">
+
+                                                                <div class="ui-g">
+                                                                    <div class="ui-g-10">
+                                                                        <i class="fa fa-window-minimize" aria-hidden="true" style="font-size: 8px; margin-right: 8px"/>
+                                                                        <h:outputText  style="margin-left:10px" value="#{etablissement.abreviationEtablissement}"/>
+                                                                    </div>
+                                                                    <div class="ui-g-2">
+                                                                        <p:commandButton icon="fa fa-search" style="background-color: #2b669a; border-color: #2b669a"
+                                                                                     type="button" onclick="PF('dialogueDetailsMinistere').show()"/>
+                                                                            <f:param value="#{etablissement.idetablissement}" name="idEtablissement"/>
+                                                                        <p:commandButton icon="fa fa-pencil" style="background-color: #eea236; border-color: #eea236; margin-left: 10px"
+                                                                                     type="button" onclick="PF('dialogueAjouterUneEntiteAuMinistere').show()"/>
+                                                                    </div>
+                                                                </div>
+                                                                <p:dialog resizable="false"
+                                                                          header="Détails d'un ministère"
+                                                                          widgetVar="dialogueDetailsMinistere" width="550"
+                                                                          modal="true" hideEffect="clip"
+                                                                          showEffect="clip"  dynamic="true">
+
+                                                                    <h:panelGrid columns="3" styleClass="panelLogin" cellspacing="30" cellpadding="30">
+                                                                        <h:graphicImage value="./resources/images/user.png" />
+                                                                        <h4 style="margin-left:10px; font-weight:bold; font-size: 16px" >Nom complet </h4>
+                                                                        <h:outputText style="margin-left:30px" value="#{parametres.userNomTemp}"/>
+                                                                        <h:graphicImage value="./resources/images/user.png" />
+                                                                        <h4 style="margin-left:10px; font-weight:bold; font-size: 16px">Abréviation </h4>
+                                                                        <h:outputText  size="55" style="margin-left:30px" value="#{parametres.userPrenomTemp}"/>
+                                                                    </h:panelGrid>
+
+                                                                    <p:separator/>
+                                                                </p:dialog>
+                                                            </p:dataList>
+                                                        </h:form>
                                                     </p:panel>
                                                 </div>
                                             </div>
@@ -735,7 +762,7 @@
                                             <p:outputLabel value="Ajout validée." styleClass="messagePatienter"/>
                                             <p:commandButton value="Ok"
                                                              type="button"
-                                                             onclick="PF('dialogueAjouterUneEntiteAuMinistere').hide()"
+                                                             onclick="rechargerLaPage()"
                                                              style="margin-top: 20px; margin-right: 5px; float: right"/>
                                         </p:panel>
 

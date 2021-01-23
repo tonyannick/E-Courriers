@@ -154,6 +154,12 @@ public class Parametres implements Serializable {
 
         } catch (SQLException e) {
             e.printStackTrace();
+        }finally {
+            if ( connection != null) {
+                try {
+                    connection.close();
+                } catch (SQLException e) { /* ignored */}
+            }
         }
 
     }
@@ -257,24 +263,6 @@ public class Parametres implements Serializable {
         return fonction.getListeFonction();
     }
 
-    public void voirDetailsDUnUser(ActionEvent actionEvent) throws IOException {
-
-
-        //ConfigurableNavigationHandler configurableNavigationHandler = (ConfigurableNavigationHandler) FacesContext.getCurrentInstance().getApplication().getNavigationHandler();
-        //configurableNavigationHandler.performNavigation("comptedunutilisateur.xhtml?faces-redirect=true");
-        FacesContext.getCurrentInstance().getExternalContext().redirect("comptedunutilisateur.xhtml?faces-redirect=true");
-
-        /*Map<String,String> params = FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap();
-        String idCourrier = (params.get("courrierId"));
-        String alfrescoId = (params.get("alfrescoId"));
-        HttpSession session = SessionUtils.getSession();
-        session.setAttribute("courrierId",idCourrier);
-        session.setAttribute("alfrescoId",alfrescoId);
-        session.setAttribute("courrierEnvoye","courrierEnvoye");*/
-
-        //return "comptedunutilisateur.xhtml?faces-redirect=true";
-    }
-
     public void checkDuProfilDuUser(){
         HttpSession session = SessionUtils.getSession();
         boolean isResponsable = (Boolean) session.getAttribute("isResponsable");
@@ -363,6 +351,11 @@ public class Parametres implements Serializable {
     }
     public void mettrePremiereLettreEnMajuscule(){
         setNomEntite(StringUtils.mettrePremiereLettreDuMotEnMajuscule(nomEntite));
+    }
+
+    public void affichgerDetailsDUnMinistereParSonId(){
+        Map<String,String> stringMap = FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap();
+        String idEtab = stringMap.get("idEtablissement");
     }
 
     public void ajouterUnePhoto(FileUploadEvent fileUploadEvent){

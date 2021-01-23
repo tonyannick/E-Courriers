@@ -694,7 +694,6 @@ public class CourriersQueries {
                 emailEmetteurPersonne = resultSet.getString("mail");
                 nomEtPrenomEmetteurPersonne = resultSet.getString("nom") +" "+resultSet.getString("prenom") ;
 
-
                 if(telEmetteurEtablissement == null){
                     telEmetteurEtablissement = "";
                 }
