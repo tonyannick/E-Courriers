@@ -4,6 +4,8 @@ import alfresco.ConnexionAlfresco;
 import databaseManager.*;
 import dateAndTime.DateUtils;
 import fileManager.FileManager;
+import fileManager.PropertiesFilesReader;
+import messages.FacesMessages;
 import model.*;
 import org.primefaces.PrimeFaces;
 import org.primefaces.event.FileUploadEvent;
@@ -50,6 +52,9 @@ public class NouveauCourrier implements Serializable {
     private String fichierConfidentiel = "Fichier_Confidentiel";
     private List<String> tempListEmetteur;
     private List<String> tempListDestinataire = new ArrayList<>();
+    private String dossierCourrierAlfresco;
+    private String dossierAnnexeAlfresco;
+
 
     @PostConstruct
     public void initialisation(){
@@ -79,17 +84,30 @@ public class NouveauCourrier implements Serializable {
            }
         }
 
+        if(user.getUserDirection().equalsIgnoreCase("sécrétariat générale adjoint")){
+            user.setUserDirection("sga");
+        }
+        if(user.getUserDirection().equalsIgnoreCase("sécrétariat générale")){
+            user.setUserDirection("sg");
+        }
+
         direction.getListeDirectionDestinataire().removeIf(e -> e.equals(user.getUserDirection()));
         tempListDestinataire.removeIf(e -> e.equals(user.getUserDirection()));
 
+        PropertiesFilesReader.trouverLesDossiersDeLaDirectionDansAlfresco("dossiersAlfrescoMinistere.properties",user.getUserDirection());
+        dossierCourrierAlfresco = PropertiesFilesReader.mapDossiersDirectionDansAlfresco.get("courrier_"+user.getUserDirection().toLowerCase());
+        dossierAnnexeAlfresco = PropertiesFilesReader.mapDossiersDirectionDansAlfresco.get("annexe_"+user.getUserDirection().toLowerCase());
+        System.out.println("dossierCourrierAlfresco = " + dossierCourrierAlfresco);
+        System.out.println("dossierAnnexeAlfresco = " + dossierAnnexeAlfresco);
+
     }
+
     public void checkIfAlfrescoIsOnline(){
         if(ConnexionAlfresco.getAlfticket() == null){
             PrimeFaces.current().executeScript("PF('dialogueAlfrescoErreurMessage').show()");
             PrimeFaces.current().executeScript("desactiverLeFormulaire()");
         }
     }
-
 
     public void actionAuRechargementDeLaPage(){
         reinitialiserLeFormulaire();
@@ -119,7 +137,6 @@ public class NouveauCourrier implements Serializable {
     public void rechargerLaPage(){
         PrimeFaces.current().executeScript("rechargerLaPageDuFormulaire()");
     }
-
 
     private void genererUniqueIDPourEmetteurEtDestinataire(){
         UUID randomEmetteurID = UUID.randomUUID();
@@ -168,7 +185,7 @@ public class NouveauCourrier implements Serializable {
             stream.flush();
             stream.close();
             PrimeFaces.current().executeScript("validerAjouterFichier()");
-            FacesContext.getCurrentInstance().addMessage("messageFichierCourrier",new FacesMessage(FacesMessage.SEVERITY_INFO,"Info","Le fichier du courrier à bien été ajouté"));
+            FacesMessages.infoMessage("messageFichierCourrier","Info","Le fichier du courrier à bien été ajouté");
         } catch (IOException e) {
             PrimeFaces.current().executeScript("swal('Erreur!', 'Une erreur s'est produite lors de l'ajout du fichier', 'error')");
             e.printStackTrace();
@@ -198,9 +215,9 @@ public class NouveauCourrier implements Serializable {
                 stream.close();
                 listeAnnexe.add(new Annexe(annexe.getCheminAnnexeSurPC(), annexe.getNomAnnexe(), FileManager.recupererExtensionDUnFichierParSonNom(annexe.getNomAnnexe())));
                 isAnnexe = true;
-                FacesContext.getCurrentInstance().addMessage("messagesAnnexes", new FacesMessage(FacesMessage.SEVERITY_INFO, "Validation !!!", "Le/Les fichier(s) annexe(s) a/ont bien été(s) ajouté(s) !!!"));
+                FacesMessages.infoMessage("messagesAnnexes","Info","Le/Les fichier(s) annexe(s) a/ont bien été(s) ajouté(s) !!!");
             } catch (IOException e) {
-                FacesContext.getCurrentInstance().addMessage("messagesAnnexes", new FacesMessage(FacesMessage.SEVERITY_ERROR, "Erreur!!!", "Une erreur s'est produite lors de l'ajour des fichiers annexes, veuillez réessayer !!!"));
+                FacesMessages.errorMessage("messagesAnnexes","Erreur","Une erreur s'est produite lors de l'ajour des fichiers annexes, veuillez réessayer !!!");
                 e.printStackTrace();
             }finally {
                 try {
@@ -216,12 +233,11 @@ public class NouveauCourrier implements Serializable {
 
     }
 
-
     public void voirSiLeCourrierEstConfidentiel(){
         if(courrier.getConfidentiel().equalsIgnoreCase("Oui")){
-            FacesContext.getCurrentInstance().addMessage("messageconfidentiel", new FacesMessage(FacesMessage.SEVERITY_INFO, "Info", "Le courrier à été marqué comme confidentiel"));
+            FacesMessages.infoMessage("messageconfidentiel","Info","Le courrier à été marqué comme confidentiel");
         }else if(courrier.getConfidentiel().equalsIgnoreCase("Non")){
-            FacesContext.getCurrentInstance().addMessage("messageconfidentiel", new FacesMessage(FacesMessage.SEVERITY_INFO, "Info", "Le courrier à été marqué comme non confidentiel"));
+            FacesMessages.infoMessage("messageconfidentiel","Info","Le courrier à été marqué comme non confidentiel");
         }
     }
 
@@ -407,9 +423,9 @@ public class NouveauCourrier implements Serializable {
 
                         ajouterEtablissementSQL = "INSERT INTO `etablissement` (`nom_etablissement`, `tel_etablissement`, `mail_etablissement`, `adresse_etablissement`, `fk_type_etablissement`) VALUES" +
                                 " ('" + destinataire.getRaisonSocial().replaceAll("'"," ") +"',"+"'" +destinataire.getTelephoneEntreprise()+"',"+"'"+ destinataire.getEmailEntreprise() + "',"+"'" +destinataire.getAdresseEntreprise().replaceAll("'"," ") + "',"+ "'" +idTypeDetablissement + "')";
-                        System.out.println("ajouterEtablissementSQL = " + ajouterEtablissementSQL);
+
                         ajouterDirectionSQL = "insert into `direction` (`nom_direction`, `fk_etablissement`) VALUES ('" + destinataire.getDirectionEntreprise().replaceAll("'"," ")  + "'," +  "(select id_etablissement from `etablissement` where nom_etablissement = '" + destinataire.getRaisonSocial().replaceAll("'"," ")  + "' and tel_etablissement  = '"+destinataire.getTelephoneEntreprise() +"' and mail_etablissement = '"+destinataire.getEmailEntreprise()+"'  and adresse_etablissement = '"+destinataire.getAdresseEntreprise().replaceAll("'"," ")  +"' order by  id_etablissement desc limit 1)"+ ")";
-                        System.out.println("ajouterDirectionSQL = " + ajouterDirectionSQL);
+
                         ajouterDestinataireSQL = "insert into `personne` (`unique_id`, `fk_type_personne`,`id_fonction`, `id_direction`, `id_etablissement`) VALUES" +
                                 " ('" + finalUniqueIDDestinataire+"',"+"'"+idTypeDeDestinataire+"',"+  "(select id_fonction from `fonction` where titre_fonction = '" + destinataire.getFonctionEntreprise().replaceAll("'"," ")  + "' order by id_fonction desc limit 1)" +"," +"(select id_direction from `direction` where nom_direction = '" + destinataire.getDirectionEntreprise().replaceAll("'"," ")  + "' order by id_direction desc limit 1)" + ","+ "(select id_etablissement from `etablissement` where nom_etablissement = '" + destinataire.getRaisonSocial().replaceAll("'"," ")  + "' and tel_etablissement  = '"+destinataire.getTelephoneEntreprise() +"' and mail_etablissement = '"+destinataire.getEmailEntreprise()+"'  and adresse_etablissement = '"+destinataire.getAdresseEntreprise().replaceAll("'"," ")  +"' order by id_etablissement desc limit 1)"+ ")";
 

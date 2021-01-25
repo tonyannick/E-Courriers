@@ -24,6 +24,10 @@ public class MesCourriers implements Serializable {
 
     private static final long serialVersionUID = 1261200135886356695L;
     private Courrier courrier;
+    private Integer first = 0;
+    private Integer rowsPerPage = 5;
+    private Integer firstAncienCourrier = 0;
+    private Integer rowsPerPageAncienCourrier = 5;
     private List<Courrier> mesCourriersDuJour = new ArrayList<>();
 
     @PostConstruct
@@ -94,5 +98,37 @@ public class MesCourriers implements Serializable {
 
     public void setMesCourriersDuJour(List<Courrier> mesCourriersDuJour) {
         this.mesCourriersDuJour = mesCourriersDuJour;
+    }
+
+    public Integer getFirst() {
+        return first;
+    }
+
+    public void setFirst(Integer first) {
+        this.first = first;
+    }
+
+    public Integer getRowsPerPage() {
+        return rowsPerPage;
+    }
+
+    public void setRowsPerPage(Integer rowsPerPage) {
+        this.rowsPerPage = rowsPerPage;
+    }
+
+    public Integer getFirstAncienCourrier() {
+        return firstAncienCourrier;
+    }
+
+    public void setFirstAncienCourrier(Integer firstAncienCourrier) {
+        this.firstAncienCourrier = firstAncienCourrier;
+    }
+
+    public Integer getRowsPerPageAncienCourrier() {
+        return rowsPerPageAncienCourrier;
+    }
+
+    public void setRowsPerPageAncienCourrier(Integer rowsPerPageAncienCourrier) {
+        this.rowsPerPageAncienCourrier = rowsPerPageAncienCourrier;
     }
 }

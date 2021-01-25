@@ -2,6 +2,8 @@ package fileManager;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Properties;
 
 public class PropertiesFilesReader {
@@ -14,7 +16,7 @@ public class PropertiesFilesReader {
     public static String alfrescoTicketUrl;
     public static String alfresscoDownloadFileUrl;
     public static String alfresscoDeletedFileUrl;
-
+    public static Map<String,String> mapDossiersDirectionDansAlfresco = new HashMap<>();
 
     public static String lireLeFichierDuMotSecret(String nomFichier){
         Properties properties = new Properties();
@@ -41,7 +43,6 @@ public class PropertiesFilesReader {
         urlBaseDeDonnees = properties.getProperty("urlDatabase");
     }
 
-
     public static void lireLeFichierDeProprietesDAlfresco(String nomFichier){
         Properties properties = new Properties();
         InputStream inputStream = PropertiesFilesReader.class.getClassLoader().getResourceAsStream(nomFichier);
@@ -53,5 +54,27 @@ public class PropertiesFilesReader {
         alfrescoTicketUrl = properties.getProperty("alfrescoticketurl");
         alfrescoUploadFileUrl = properties.getProperty("alfrescoUploadFileUrl");
         alfresscoDownloadFileUrl = properties.getProperty("alfresscoDownloadFileUrl");
+    }
+
+    public static void trouverLesDossiersDeLaDirectionDansAlfresco(String nomFichier,String nomDirectionUser){
+        nomDirectionUser = nomDirectionUser.toLowerCase();
+        Properties properties = new Properties();
+        InputStream inputStream = PropertiesFilesReader.class.getClassLoader().getResourceAsStream(nomFichier);
+        try {
+            properties.load(inputStream);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        if(nomDirectionUser.equalsIgnoreCase("sécrétariat générale adjoint")){
+            nomDirectionUser = "sga";
+        }
+        if(nomDirectionUser.equalsIgnoreCase("sécrétariat générale")){
+            nomDirectionUser = "sg";
+        }
+        mapDossiersDirectionDansAlfresco.clear();
+        mapDossiersDirectionDansAlfresco.put("courrier_"+nomDirectionUser,properties.getProperty("courrier_"+nomDirectionUser));
+        mapDossiersDirectionDansAlfresco.put("annexe_"+nomDirectionUser,properties.getProperty("annexe_"+nomDirectionUser));
+        mapDossiersDirectionDansAlfresco.put("discussion_"+nomDirectionUser,properties.getProperty("discussion_"+nomDirectionUser));
+
     }
 }

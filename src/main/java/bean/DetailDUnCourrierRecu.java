@@ -460,7 +460,6 @@ public class DetailDUnCourrierRecu implements Serializable {
         HttpSession session = SessionUtils.getSession();
         String idDocumementAlfresco = (String) session.getAttribute("alfrescoId");
         courrier.setStreamedContentAlfresco(ConnexionAlfresco.telechargerDocumentDansAlfresco(idDocumementAlfresco));
-        /***TODO gerer le null ponter exception quand alfresco est pas allumé***/
         if(!ConnexionAlfresco.mimeDocument.equals("application/pdf;charset=UTF-8")){
             courrier.setIsPDF("non");
             PrimeFaces.current().executeScript("affichagePDF()");

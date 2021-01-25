@@ -5,10 +5,8 @@ import databaseManager.*;
 import dateAndTime.DateUtils;
 import fileManager.FileManager;
 import mailManager.EmailValidation;
-import model.Direction;
-import model.Etablissement;
-import model.Fonction;
-import model.User;
+import messages.FacesMessages;
+import model.*;
 import org.primefaces.PrimeFaces;
 import org.primefaces.event.FileUploadEvent;
 import sessionManager.SessionUtils;
@@ -49,6 +47,7 @@ public class Parametres implements Serializable {
     private String cheminPhotoSurPC;
     private Boolean isPhotoAjoute = false;
     private String dossierPhoto = "Photos";
+    private Courrier courrier;
     private String phraseListeDesUtilisateurs;
     private String phraseEtatCompteUser;
     private String idUserTemp = null;
@@ -68,9 +67,13 @@ public class Parametres implements Serializable {
     private String userMailPourAjoutTemp;
     private String userTelPourAjoutTemp;
     private String userServiceTemp;
+    private String nomMinistereTemp;
+    private String abreviationTemp;
     private String infosMinistereAModifier;
     private String elementDuMinistereAModifier;
     private String nomEntite;
+    private String typeDeCourrier;
+    private List<Courrier> typeCourriers = new ArrayList<>();
 
     @PostConstruct
     public void initialisation(){
@@ -78,8 +81,10 @@ public class Parametres implements Serializable {
         etablissement = new Etablissement();
         direction = new Direction();
         fonction = new Fonction();
+        courrier = new Courrier();
         direction.setListeObjetsDirection(DirectionQueries.recupererLaListeDesDirectionsDuMinistere());
         recupererListeDesDirections();
+        recupererListeDesTypesDeCourriers();
     }
 
     public void recupererLesInfosDeMonCompte(){
@@ -100,7 +105,6 @@ public class Parametres implements Serializable {
     }
 
     public void voirLesDetailsDUnUser(){
-
         Map<String,String> viewParams = FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap();
         String idUserTemp = viewParams.get("userId");
         UsersQueries.recupererInfosUsersParSonId(idUserTemp);
@@ -192,7 +196,6 @@ public class Parametres implements Serializable {
     }
 
     public void recupererEtatDuCompte(){
-
         Map<String,String> viewParams = FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap();
         user.setUserEtat(viewParams.get("etatCompte"));
         idUserTemp = viewParams.get("userId");
@@ -343,16 +346,26 @@ public class Parametres implements Serializable {
     public void mettreNomEnMajuscule(){
         setUserNomPourAjoutTemp(StringUtils.mettreMotEnMajuscule(userNomPourAjoutTemp));
     }
+
     public void mettrePremiereLettreDuPrenomEnMajuscule(){
         setUserPrenomPourAjoutTemp(StringUtils.mettrePremiereLettreDuMotEnMajuscule(userPrenomPourAjoutTemp));
     }
+
     public void mettrePremiereLettreEnMajuscule(){
         setNomEntite(StringUtils.mettrePremiereLettreDuMotEnMajuscule(nomEntite));
     }
 
-    public void affichgerDetailsDUnMinistereParSonId(){
+    public void afficherDetailsDUnMinistereParSonId(){
         Map<String,String> stringMap = FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap();
         String idEtab = stringMap.get("idEtablissement");
+        System.out.println("idEtab = " + idEtab);
+        EtablissementQueries.recupererInfosMinistereParSonId(idEtab);
+        nomMinistereTemp = EtablissementQueries.nomCompletMinistere;
+        abreviationTemp = EtablissementQueries.abreviationMinistere;
+    }
+
+    public void recupererListeDesTypesDeCourriers(){
+        typeCourriers.addAll(CourriersQueries.recupererTousLesTypesDeCourrier());
     }
 
     public void ajouterUnePhoto(FileUploadEvent fileUploadEvent){
@@ -382,6 +395,35 @@ public class Parametres implements Serializable {
         }
     }
 
+    public void ajouterUnTypeDeCourrier(){
+        if(typeDeCourrier.isEmpty()){
+            FacesMessages.errorMessage("messagesNomTypeCourrier","Erreur", "Vous devez renseigner une valeur");
+        }else{
+            PrimeFaces.current().executeScript("PF('paneltypecourrier').close()");
+            PrimeFaces.current().executeScript("PF('paneltypecourrierloading').toggle()");
+            Connection connection = DatabaseConnection.getConnexion();
+            Statement statement = null;
+            String ajouterTypeCOurrierSQL = "INSERT INTO `type_courrier` (`titre_type_courrier`) VALUES ('"+typeDeCourrier+"');";
+            try {
+                connection.setAutoCommit(false);
+                statement = connection.createStatement();
+                statement.addBatch(ajouterTypeCOurrierSQL);
+                statement.executeBatch();
+                connection.commit();
+                setTypeDeCourrier(null);
+                PrimeFaces.current().executeScript("PF('paneltypecourrierloading').close()");
+                PrimeFaces.current().executeScript("PF('panelajouttypecourriervalide').toggle()");
+                typeCourriers.clear();
+                recupererListeDesTypesDeCourriers();
+            } catch (SQLException e) {
+                PrimeFaces.current().executeScript("PF('paneltypecourrierloading').close()");
+                PrimeFaces.current().executeScript("PF('paneltypecourrier').toggle()");
+                e.printStackTrace();
+            }
+
+        }
+    }
+
     public void ajouterUneEntiteAuMinistere(){
         if(nomEntite.isEmpty()){
             FacesContext.getCurrentInstance().addMessage("messagesNomEntite", new FacesMessage(FacesMessage.SEVERITY_WARN, "Erreur", "Vous devez renseigner une valeur"));
@@ -402,6 +444,8 @@ public class Parametres implements Serializable {
                 PrimeFaces.current().executeScript("PF('panelajoutentitevalide').toggle()");
                 direction.setListeObjetsDirection(DirectionQueries.recupererLaListeDesDirectionsDuMinistere());
             } catch (SQLException e) {
+                PrimeFaces.current().executeScript("PF('panelajoutentiteloading').close()");
+                PrimeFaces.current().executeScript("PF('panelajoutentite').toggle()");
                 e.printStackTrace();
             }
 
@@ -699,5 +743,45 @@ public class Parametres implements Serializable {
 
     public void setUserTelPourAjoutTemp(String userTelPourAjoutTemp) {
         this.userTelPourAjoutTemp = userTelPourAjoutTemp;
+    }
+
+    public String getNomMinistereTemp() {
+        return nomMinistereTemp;
+    }
+
+    public void setNomMinistereTemp(String nomMinistereTemp) {
+        this.nomMinistereTemp = nomMinistereTemp;
+    }
+
+    public String getAbreviationTemp() {
+        return abreviationTemp;
+    }
+
+    public void setAbreviationTemp(String abreviationTemp) {
+        this.abreviationTemp = abreviationTemp;
+    }
+
+    public Courrier getCourrier() {
+        return courrier;
+    }
+
+    public void setCourrier(Courrier courrier) {
+        this.courrier = courrier;
+    }
+
+    public List<Courrier> getTypeCourriers() {
+        return typeCourriers;
+    }
+
+    public void setTypeCourriers(List<Courrier> typeCourriers) {
+        this.typeCourriers = typeCourriers;
+    }
+
+    public String getTypeDeCourrier() {
+        return typeDeCourrier;
+    }
+
+    public void setTypeDeCourrier(String typeDeCourrier) {
+        this.typeDeCourrier = typeDeCourrier;
     }
 }

@@ -76,10 +76,12 @@
                                     <div class="colonnecontent">
                                         <h:panelGrid columns="2"  styleClass="panelLogin" cellspacing="30" cellpadding="30">
                                             <h4 style="font-weight:bold; margin-right:5px; font-size: 14px" >Date de réception*</h4>
+
                                             <p:calendar styleClass="inputtextstyle" value="#{nouveauCourrier.dateTemp}"
                                                         showOn="focus" pages="1" effect="slide" locale="fr" widgetVar="calendarCourrier" id="dateAjout"/>
                                             <h4 style="font-weight:bold;  margin-right:8px; font-size: 14px">Heure de réception*</h4>
                                             <p:inputText styleClass="timepicker" value="#{nouveauCourrier.courrier.heureDeReception}" id="timepicker"/>
+
                                         </h:panelGrid>
 
                                     </div>

@@ -128,8 +128,8 @@ public class Courrier {
     }
 
 
-    public Courrier(String dateDEnregistrement) {
-        this.dateDEnregistrement= dateDEnregistrement;
+    public Courrier(String typeDeCourrier) {
+        this.typeCourrier = typeDeCourrier;
     }
 
     public Courrier(String dateDEnregistrement, String typeDeCourrier) {

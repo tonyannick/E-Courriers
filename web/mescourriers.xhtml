@@ -76,7 +76,11 @@
                             <p:dataList
                                     styleClass="noBorders"
                                     value="#{mesCourriers.mesCourriersDuJour}" var="courriers"
-                                    rows="5" paginator="true" paginatorAlwaysVisible="false" paginatorPosition="bottom"
+                                    rows="#{mesCourriers.rowsPerPage}"
+                                    first="#{mesCourriers.first}"
+                                    paginator="true"
+                                    paginatorAlwaysVisible="false"
+                                    paginatorPosition="bottom"
                                     emptyMessage="aucun courrier enregistré pour le moment">
 
                                 <div class="ui-g">
@@ -120,7 +124,11 @@
                             <p:dataList
                                     styleClass="noBorders"
                                     value="#{mesCourriers.courrier.listeDesCouriersEnregistres}" var="courriers"
-                                    rows="5" paginator="true" paginatorAlwaysVisible="false" paginatorPosition="bottom"
+                                    rows="#{mesCourriers.rowsPerPageAncienCourrier}"
+                                    first="#{mesCourriers.firstAncienCourrier}"
+                                    paginator="true"
+                                    paginatorAlwaysVisible="false"
+                                    paginatorPosition="bottom"
                                     emptyMessage="aucun courrier enregistré pour le moment">
 
                                 <div class="ui-g">

@@ -469,6 +469,40 @@ public class CourriersQueries {
         return list;
     }
 
+    /****Fonction qui récupère les type de courrier (objet)***/
+    public static List<Courrier> recupererTousLesTypesDeCourrier(){
+        List<Courrier> list = new ArrayList<>();
+        list.clear();
+        Connection connection = DatabaseConnection.getConnexion();
+        String requete = "select titre_type_courrier from type_courrier order by titre_type_courrier ;";
+        ResultSet resultSet = null;
+        try {
+            resultSet = connection.createStatement().executeQuery(requete);
+            while (resultSet.next()){
+                list.add(new Courrier(
+                        resultSet.getString("titre_type_courrier")));
+            }
+            
+            for(int a =0; a <list.size(); a++){
+                System.out.println("list.get(a).getTypeCourrier() = " + list.get(a).getTypeCourrier());
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }finally {
+            if (resultSet != null) {
+                try {
+                    resultSet.close();
+                } catch (SQLException e) { /* ignored */}
+            }
+            if (connection != null) {
+                try {
+                    connection.close();
+                } catch (SQLException e) { /* ignored */}
+            }
+        }
+        return list;
+    }
+
     /**Fonction qui recuperer les destinataires d'un courrier**/
     public static List<Destinataire> recupererLesDestinatairesDUnCourrier(String idCourrier){
         List<Destinataire> listeDestinataire = new ArrayList<>();

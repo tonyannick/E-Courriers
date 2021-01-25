@@ -212,11 +212,9 @@
                                             </div>
 
                                             <div id="divListeDesUsers" style="display: none">
-
                                                 <h:outputText value="#{parametres.phraseListeDesUtisateurs}"
                                                               style="font-size: 18px; font-weight: bold;
                                                               alignment: center; text-align: center; margin-bottom: 10px"/>
-
                                                 <p:separator/>
                                                 <div id="toolbarUsersActions">
                                                     <p:toolbar style="margin-bottom: 15px; margin-top: 15px">
@@ -252,8 +250,6 @@
                                                                              style="width:300px; background-color: #fff; border-radius: 5px; border: 1px #d3d6d6 solid;" />
                                                             </p:outputPanel>
                                                         </f:facet>
-
-
                                                         <p:column style="text-align: center"
                                                                   filterStyle="background-color: white; width: 50%;
                                                                   border-radius: 5px;
@@ -307,11 +303,11 @@
                                                             </p:commandButton>
                                                         </p:column>
                                                         <p:column style="width:32px">
-                                                            <p:commandButton  icon="fa fa-retweet"
+                                                            <p:commandButton  icon="fa fa-lock"
                                                                               update="formBloquerCompte:phraseIndicatifEtatCompte"
                                                                               actionListener="#{parametres.recupererEtatDuCompte}"
                                                                               onclick="PF('dialogueBloquerUser').show()"
-                                                                              style="background-color: #e79100; border: 1px #e79100 solid">
+                                                                              style="background-color: #e76e0e; border: 1px #e76e0e solid">
                                                                 <f:param name="userId" value="#{user.userId}" />
                                                                 <f:param name="etatCompte" value="#{user.userEtat}" />
                                                             </p:commandButton>
@@ -366,7 +362,6 @@
                                             </div>
 
                                         </div>
-
                                         <input type="radio" name="tabs" id="tabthree"/>
                                         <label for="tabthree">Parametres du Ministère</label>
                                         <div class="tab">
@@ -451,6 +446,7 @@
                                                         <h:form>
                                                             <p:dataList type="unordered"
                                                                         styleClass="noBorders"
+
                                                                         value="#{parametres.etablissement.listeDesEtablissements}"  var="etablissement"
                                                                         rows="8" paginator="true" paginatorAlwaysVisible="false" paginatorPosition="bottom">
 
@@ -461,31 +457,95 @@
                                                                     </div>
                                                                     <div class="ui-g-2">
                                                                         <p:commandButton icon="fa fa-search" style="background-color: #2b669a; border-color: #2b669a"
-                                                                                     type="button" onclick="PF('dialogueDetailsMinistere').show()"/>
+                                                                                         update="@form"
+                                                                                         actionListener="#{parametres.afficherDetailsDUnMinistereParSonId}"
+                                                                                         oncomplete="PF('dialogueDetailsMinistere').show()">
                                                                             <f:param value="#{etablissement.idetablissement}" name="idEtablissement"/>
+                                                                        </p:commandButton>
                                                                         <p:commandButton icon="fa fa-pencil" style="background-color: #eea236; border-color: #eea236; margin-left: 10px"
                                                                                      type="button" onclick="PF('dialogueAjouterUneEntiteAuMinistere').show()"/>
                                                                     </div>
                                                                 </div>
                                                                 <p:dialog resizable="false"
-                                                                          header="Détails d'un ministère"
-                                                                          widgetVar="dialogueDetailsMinistere" width="550"
+                                                                          header="Détails d'un ministère" position="center,left"
+                                                                          widgetVar="dialogueDetailsMinistere" width="auto"
                                                                           modal="true" hideEffect="clip"
                                                                           showEffect="clip"  dynamic="true">
 
-                                                                    <h:panelGrid columns="3" styleClass="panelLogin" cellspacing="30" cellpadding="30">
-                                                                        <h:graphicImage value="./resources/images/user.png" />
-                                                                        <h4 style="margin-left:10px; font-weight:bold; font-size: 16px" >Nom complet </h4>
-                                                                        <h:outputText style="margin-left:30px" value="#{parametres.userNomTemp}"/>
-                                                                        <h:graphicImage value="./resources/images/user.png" />
-                                                                        <h4 style="margin-left:10px; font-weight:bold; font-size: 16px">Abréviation </h4>
-                                                                        <h:outputText  size="55" style="margin-left:30px" value="#{parametres.userPrenomTemp}"/>
+                                                                    <h:panelGrid columns="2" styleClass="panelLogin" cellspacing="30" cellpadding="30">
+                                                                        <h4 style="margin-left:10px; margin-bottom: 5px; font-weight:bold; font-size: 14px" >Nom complet </h4>
+                                                                        <h:outputText style="margin-left:30px; margin-bottom: 5px" value="#{parametres.nomMinistereTemp}"/>
+                                                                        <h4 style="margin-left:10px; font-weight:bold; font-size: 14px">Abréviation </h4>
+                                                                        <h:outputText style="margin-left:30px" value="#{parametres.abreviationTemp}"/>
                                                                     </h:panelGrid>
 
                                                                     <p:separator/>
                                                                 </p:dialog>
                                                             </p:dataList>
                                                         </h:form>
+                                                    </p:panel>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <input type="radio" name="tabs" id="tabfour"/>
+                                        <label for="tabfour">Parametres du Courrier</label>
+
+                                        <div class="tab">
+                                            <div id="pageDesNonAdministrateursCourrier" style="display: block">
+                                                <p class="titresection">
+                                                    <h:graphicImage value="./resources/images/fichierconfidentiel.png" style="margin-left:10px"/>
+                                                    <h:outputText value="Votre profil ne vous permets pas d'acceder à ce contenu" style="font-size: 18px; font-weight: bold"/>
+                                                </p>
+                                            </div>
+                                            <div class="row" id="divPageParametresCourrier" style="display: none">
+                                                <div class="col-md-6">
+                                                    <p:panel header="Liste des types de courrier" toggleable="true" collapsed="true">
+                                                        <h:form>
+                                                            <p:commandButton value="Ajouter" iconPos="right" icon="fa fa-plus-square"
+                                                                             type="button" onclick="PF('dialogueAjouterUnTypeDeCourrier').show()"
+                                                                             style="margin-top: 10px"/>
+                                                            <p:separator style="margin-bottom: 10px; "/>
+                                                        </h:form>
+                                                        <h:form id="formListeTypesCourriers">
+                                                        <p:dataList type="unordered"
+                                                                    styleClass="noBorders"
+                                                                    first="#{parametres.first}"
+                                                                    emptyMessage="liste vide"
+                                                                    value="#{parametres.typeCourriers}"  var="courrier"
+                                                                    rows="#{parametres.rows}"
+                                                                    paginator="true" paginatorAlwaysVisible="false" paginatorPosition="bottom">
+
+                                                            <div class="ui-g">
+                                                                <div class="ui-g-10">
+                                                                    <i class="fa fa-window-minimize" aria-hidden="true" style="font-size: 8px; margin-right: 8px"/>
+                                                                    <h:outputText  style="margin-left:10px" value="#{courrier.typeCourrier}"/>
+                                                                </div>
+                                                                <div class="ui-g-2">
+                                                                    <p:commandButton icon="fa fa-pencil" style="background-color: #eea236; border-color: #eea236;"
+                                                                                     update="@form"
+                                                                                     onclick="PF('dialogueAjouterUneEntiteAuMinistere').show()">
+                                                                        <f:param value="#{courrier.typeCourrier}" name="typeCourrier"/>
+                                                                    </p:commandButton>
+                                                                </div>
+                                                            </div>
+                                                            <p:dialog resizable="false"
+                                                                      header="Détails d'un ministère" position="center,left"
+                                                                      widgetVar="dialogueDetailsMinistere" width="auto"
+                                                                      modal="true" hideEffect="clip"
+                                                                      showEffect="clip"  dynamic="true">
+
+                                                                <h:panelGrid columns="2" styleClass="panelLogin" cellspacing="30" cellpadding="30">
+                                                                    <h4 style="margin-left:10px; margin-bottom: 5px; font-weight:bold; font-size: 14px" >Nom complet </h4>
+                                                                    <h:outputText style="margin-left:30px; margin-bottom: 5px" value="#{parametres.nomMinistereTemp}"/>
+                                                                    <h4 style="margin-left:10px; font-weight:bold; font-size: 14px">Abréviation </h4>
+                                                                    <h:outputText style="margin-left:30px" value="#{parametres.abreviationTemp}"/>
+                                                                </h:panelGrid>
+
+                                                                <p:separator/>
+                                                            </p:dialog>
+                                                        </p:dataList>
+                                                    </h:form>
                                                     </p:panel>
                                                 </div>
                                             </div>
@@ -767,6 +827,41 @@
                                         </p:panel>
 
                                     </p:dialog>
+                                    <p:dialog id="dialogueTypeDeCourrier"
+                                              resizable="false"
+                                              header="Ajout d'une entité au Ministère"
+                                              widgetVar="dialogueAjouterUnTypeDeCourrier" width="auto"
+                                              modal="true" hideEffect="clip"
+                                              showEffect="clip"  dynamic="true" closable="true">
+
+                                        <p:panel widgetVar="paneltypecourrier" toggleable="true" closable="true" style="border-color: white">
+                                            <h:form id="formAjoutTypeCourrier">
+                                                <p:messages  showDetail="true" closable="true" for="messagesNomTypeCourrier"/>
+                                                <h:panelGrid style="width: 100%" columns="2" styleClass="panelLogin" cellspacing="30" cellpadding="30">
+                                                    <h4 style="font-weight:bold; font-size: 13px">Type de courrier :  </h4>
+                                                    <p:inputText id="nomTypeCourrier" style="margin-left: 10px;" size="45" value="#{parametres.typeDeCourrier}"/>
+                                                </h:panelGrid>
+
+                                                <p:commandButton value="valider"
+                                                                 style="margin-top: 12px; margin-right: 10px; float: right; background-color: #00a867; border-color: #00a867"
+                                                                 update="formAjoutTypeCourrier"
+                                                                 action="#{parametres.ajouterUnTypeDeCourrier}"/>
+                                            </h:form>
+                                        </p:panel>
+                                        <p:panel collapsed="true" widgetVar="paneltypecourrierloading" style="border-color: white; background-color: white" toggleable="true" closable="true">
+                                            <h:graphicImage value="./resources/images/loadingdiscussion.gif"/>
+                                            <p:outputLabel value="Veuillez patienter..." styleClass="messagePatienter"/>
+                                        </p:panel>
+                                        <p:panel collapsed="true" style="margin-top:10px; border-color: white"
+                                                 widgetVar="panelajouttypecourriervalide" toggleable="true" closable="true">
+                                            <p:outputLabel value="Ajout validée." styleClass="messagePatienter"/>
+                                            <p:commandButton value="Ok"
+                                                             type="button"
+                                                             onclick="rechargerLaPage()"
+                                                             style="margin-top: 20px; margin-right: 5px; float: right"/>
+                                        </p:panel>
+
+                                    </p:dialog>
                                 </div>
                             </div>
                         </div>
@@ -781,7 +876,9 @@
             var divPAsDAccesListeDesUsers = document.getElementById('divPasDAccesListeDesUsers');
             var divListeDesUsers = document.getElementById('divListeDesUsers');
             var divPageDesNonAdministrateurs = document.getElementById('pageDesNonAdministrateurs');
+            var divPageDesNonAdministrateursCourrier = document.getElementById('pageDesNonAdministrateursCourrier');
             var divPageParametresGeneraux = document.getElementById('divPageParametresGeneraux');
+            var divPageParametresCourrier = document.getElementById('divPageParametresCourrier');
             var admin = false;
             var simpleUser = false;
             var superUser = false;
@@ -793,6 +890,8 @@
                 divListeDesUsers.style.display='block';
                 divPageDesNonAdministrateurs.style.display='none';
                 divPageParametresGeneraux.style.display='block';
+                divPageDesNonAdministrateursCourrier.style.display='none';
+                divPageParametresCourrier.style.display='block';
             }
 
 

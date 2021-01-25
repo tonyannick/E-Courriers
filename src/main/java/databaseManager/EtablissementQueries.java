@@ -10,6 +10,8 @@ import java.util.List;
 
 public class EtablissementQueries {
 
+    public static String nomCompletMinistere;
+    public static String abreviationMinistere;
 
     /****Fonction qui récupère les Ministères (leurs abreviations)***/
     public static List<String> recupererLaListeDesMinisteres(){
@@ -97,5 +99,32 @@ public class EtablissementQueries {
         }
         return id;
     }
+
+    public static void recupererInfosMinistereParSonId(String idMinistere){
+        Connection connection =  DatabaseConnection.getConnexion();/** TODO à ameliorer**/
+        String requeteLoginSQL = "select * from `etablissement` where id_etablissement = '"+idMinistere+"' and  fk_type_etablissement = '1' ;";
+        ResultSet resultSet = null;
+        try {
+            resultSet = connection.createStatement().executeQuery(requeteLoginSQL);
+            if (resultSet.next()) {
+                abreviationMinistere = resultSet.getString("abreviation");
+                nomCompletMinistere = resultSet.getString("nom_etablissement");
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+            if (resultSet != null) {
+                try {
+                    resultSet.close();
+                } catch (SQLException e) { /* ignored */}
+            }
+            if (connection != null) {
+                try {
+                    connection.close();
+                } catch (SQLException e) { /* ignored */}
+            }
+        }
+    }
+
 
 }
