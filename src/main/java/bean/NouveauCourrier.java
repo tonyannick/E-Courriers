@@ -95,11 +95,8 @@ public class NouveauCourrier implements Serializable {
         tempListDestinataire.removeIf(e -> e.equals(user.getUserDirection()));
 
         PropertiesFilesReader.trouverLesDossiersDeLaDirectionDansAlfresco("dossiersAlfrescoMinistere.properties",user.getUserDirection());
-        dossierCourrierAlfresco = PropertiesFilesReader.mapDossiersDirectionDansAlfresco.get("courrier_"+user.getUserDirection().toLowerCase());
-        dossierAnnexeAlfresco = PropertiesFilesReader.mapDossiersDirectionDansAlfresco.get("annexe_"+user.getUserDirection().toLowerCase());
-        System.out.println("dossierCourrierAlfresco = " + dossierCourrierAlfresco);
-        System.out.println("dossierAnnexeAlfresco = " + dossierAnnexeAlfresco);
-
+        dossierCourrierAlfresco = user.getUserDirection().toLowerCase()+"/"+PropertiesFilesReader.mapDossiersDirectionDansAlfresco.get("courrier_"+user.getUserDirection().toLowerCase());
+        dossierAnnexeAlfresco = user.getUserDirection().toLowerCase()+"/"+PropertiesFilesReader.mapDossiersDirectionDansAlfresco.get("annexe_"+user.getUserDirection().toLowerCase());
     }
 
     public void checkIfAlfrescoIsOnline(){
@@ -145,14 +142,12 @@ public class NouveauCourrier implements Serializable {
         finalUniqueIDDestinataire = "destinataire" +"_"+randomDestinataireID.toString();
     }
 
-    public void recupererListeDirection(){
+    private void recupererListeDirection(){
         direction.setListeDirection(DirectionQueries.recupererLaListeDesDirections());
         direction.setListeDirectionEmetteur(DirectionQueries.recupererLaListeDesDirections());
         direction.setListeDirectionDestinataire(DirectionQueries.recupererLaListeDesDirections());
         tempListDestinataire.addAll(DirectionQueries.recupererLaListeDesDirections());
-       // tempListEmetteur.addAll(DataBaseQueries.recupererLaListeDesDirections());
     }
-
 
     public List<String> recupererListeFonctionsParDirectionDeLEmetteur(){
         fonction.setListeFonction(DataBaseQueries.recupererLaListeDesFonctionsParDirection(emetteur.getDirection()));
@@ -266,6 +261,7 @@ public class NouveauCourrier implements Serializable {
     public void afficherIndicationGenreCourrierAuClickSurLeTypeDEmetteur(){
         PrimeFaces.current().executeScript("afficherMessageEnFonctionDuTypeDEmetteur()");
     }
+
     public void retirerIndicationGenreCourrierAuClickSurLeTypeDEmetteur(){
         PrimeFaces.current().executeScript("retirerMessageEnFonctionDuTypeDEmetteur()");
     }
@@ -274,7 +270,6 @@ public class NouveauCourrier implements Serializable {
         HttpSession session = SessionUtils.getSession();
         idUser = (String) session.getAttribute("idUser");
         String idDirectionUser = (String) session.getAttribute( "idDirectionUser");
-        String courrierMinistre = "courrier_ministre";
         String idTypeDeCourrier = null;
         String idTypeDeDestinataire = null;
         String idTypeDetablissement = null;
@@ -367,7 +362,6 @@ public class NouveauCourrier implements Serializable {
                 }
             }
 
-
             String ajouterCourrierSQL = "insert into `ajouter_courrier` (`id_personne`,`id_courrier`) VALUES ('" + idUser +"',"+" (select id_courrier from `courrier` where date_reception ='"+ courrier.getDateDeReception()+"' and heure_reception ='"+ DateUtils.convertirHeureDeReceptionAuBonFormat(courrier.getHeureDeReception())+"' and objet = '"+courrier.getObjetCourrier().replaceAll("'"," ")+ "' and reference = '"+ courrier.getReferenceCourrier().replace("\\","/").replaceAll("'"," ")+ "' and nom_fichier = '"+ courrier.getNomCourrier().replaceAll("'","_") +"'))";
 
             String ajouterEtapeCourrierSQL = "insert into `etape` (`titre`, `etat`) VALUES ('" + EtatCourrier.courrierEnregistre +"',"+"'"+ EtatEtape.termine +"')";
@@ -447,12 +441,11 @@ public class NouveauCourrier implements Serializable {
 
                         recevoirCourrierSQL = "insert into recevoir_courrier (`favoris`,`archive`,`id_courrier`,`id_personne`,`accuse_reception`)  VALUES" +
                                 "('" + EtatCourrier.pasfavoris+"',"+"'"+EtatCourrier.archiveNonActive+"',"+  "(select id_courrier from `courrier` where date_reception ='"+ courrier.getDateDeReception()+"' and heure_reception ='"+ DateUtils.convertirHeureDeReceptionAuBonFormat(courrier.getHeureDeReception())+"' and objet = '"+courrier.getObjetCourrier().replaceAll("'"," ")+ "' and reference = '"+ courrier.getReferenceCourrier().replace("\\","/").replaceAll("'"," ")+ "' and nom_fichier = '"+ courrier.getNomCourrier().replaceAll("'","_") +"'),(select id_personne from `personne` where unique_id = '"+finalUniqueIDDestinataire+"') ,'"+EtatCourrier.accuseDeReceptionNon+"');";
-
                     }
 
                     if(courrier.getConfidentiel().equalsIgnoreCase("Non")){
-                        courrier.setIdAlfresco(ConnexionAlfresco.enregistrerFichierCourrierDansAlfresco(new File(courrier.getCheminCourrierSurPC()),FileManager.determinerTypeDeFichierParSonExtension(FileManager.recupererExtensionDUnFichierParSonNom(courrier.getNomCourrier())),courrierMinistre));
-                        updateCourrierAlfrescoSQL = "update `courrier` SET `dossier_alfresco_emetteur` = '"+courrierMinistre+"', `identifiant_alfresco` = '"+courrier.getIdAlfresco()+"' WHERE `courrier`.`id_courrier` = (select id_courrier from (select id_courrier from `courrier` where date_reception ='"+ courrier.getDateDeReception()+"' and heure_reception ='"+ DateUtils.convertirHeureDeReceptionAuBonFormat(courrier.getHeureDeReception())+"' and objet = '"+courrier.getObjetCourrier().replaceAll("'"," ")+ "' and reference = '"+ courrier.getReferenceCourrier().replace("\\","/").replaceAll("'"," ")+ "' and nom_fichier = '"+ courrier.getNomCourrier().replaceAll("'","_") +"') as temp)";
+                        courrier.setIdAlfresco(ConnexionAlfresco.enregistrerFichierCourrierDansAlfresco(new File(courrier.getCheminCourrierSurPC()),FileManager.determinerTypeDeFichierParSonExtension(FileManager.recupererExtensionDUnFichierParSonNom(courrier.getNomCourrier())),dossierCourrierAlfresco));
+                        updateCourrierAlfrescoSQL = "update `courrier` SET `dossier_alfresco_emetteur` = '"+dossierCourrierAlfresco+"', `identifiant_alfresco` = '"+courrier.getIdAlfresco()+"' WHERE `courrier`.`id_courrier` = (select id_courrier from (select id_courrier from `courrier` where date_reception ='"+ courrier.getDateDeReception()+"' and heure_reception ='"+ DateUtils.convertirHeureDeReceptionAuBonFormat(courrier.getHeureDeReception())+"' and objet = '"+courrier.getObjetCourrier().replaceAll("'"," ")+ "' and reference = '"+ courrier.getReferenceCourrier().replace("\\","/").replaceAll("'"," ")+ "' and nom_fichier = '"+ courrier.getNomCourrier().replaceAll("'","_") +"') as temp)";
                     }
 
                     try {
@@ -485,11 +478,11 @@ public class NouveauCourrier implements Serializable {
                         if(isAnnexe){
                             listeIdAlfrescoAnnexe.clear();
                             for (int a = 0; a < listeAnnexe.size() ; a++ ){
-                                listeIdAlfrescoAnnexe.add(ConnexionAlfresco.enregistrerFichierCourrierDansAlfresco(new File(listeAnnexe.get(a).getCheminAnnexeSurPC()),FileManager.determinerTypeDeFichierParSonExtension(FileManager.recupererExtensionDUnFichierParSonNom(listeAnnexe.get(a).getNomAnnexe())),courrierMinistre));
+                                listeIdAlfrescoAnnexe.add(ConnexionAlfresco.enregistrerFichierCourrierDansAlfresco(new File(listeAnnexe.get(a).getCheminAnnexeSurPC()),FileManager.determinerTypeDeFichierParSonExtension(FileManager.recupererExtensionDUnFichierParSonNom(listeAnnexe.get(a).getNomAnnexe())),dossierAnnexeAlfresco));
                             }
                             for (int a =0; a < listeAnnexe.size(); a++){
                                 ajouterAnnexeAlfrescoSQL = "insert into `annexe` (`titre`, `type_fichier`, `identifiant_alfresco_annexe`, `document_alfresco`, `id_courrier` ) VALUES" +
-                                        " ('" + listeAnnexe.get(a).getNomAnnexe()+"',"+"'" +listeAnnexe.get(a).getTypeDeFichierAnnexe()+"',"+"'"+ listeIdAlfrescoAnnexe.get(a) + "',"+"'" +courrierMinistre + "',"+ "(select id_courrier from `courrier` where date_reception ='"+ courrier.getDateDeReception()+"' and heure_reception ='"+ DateUtils.convertirHeureDeReceptionAuBonFormat(courrier.getHeureDeReception())+"' and objet = '"+courrier.getObjetCourrier().replaceAll("'"," ")+ "' and reference = '"+ courrier.getReferenceCourrier().replace("\\","/").replaceAll("'"," ")+ "' and nom_fichier = '"+ courrier.getNomCourrier().replaceAll("'","_") +"'))";
+                                        " ('" + listeAnnexe.get(a).getNomAnnexe()+"',"+"'" +listeAnnexe.get(a).getTypeDeFichierAnnexe()+"',"+"'"+ listeIdAlfrescoAnnexe.get(a) + "',"+"'" +dossierAnnexeAlfresco + "',"+ "(select id_courrier from `courrier` where date_reception ='"+ courrier.getDateDeReception()+"' and heure_reception ='"+ DateUtils.convertirHeureDeReceptionAuBonFormat(courrier.getHeureDeReception())+"' and objet = '"+courrier.getObjetCourrier().replaceAll("'"," ")+ "' and reference = '"+ courrier.getReferenceCourrier().replace("\\","/").replaceAll("'"," ")+ "' and nom_fichier = '"+ courrier.getNomCourrier().replaceAll("'","_") +"'))";
                                 statement.addBatch( ajouterAnnexeAlfrescoSQL);
                             }
                         }
@@ -525,10 +518,9 @@ public class NouveauCourrier implements Serializable {
 
 
                     if(courrier.getConfidentiel().equalsIgnoreCase("Non")){
-                        courrier.setIdAlfresco(ConnexionAlfresco.enregistrerFichierCourrierDansAlfresco(new File(courrier.getCheminCourrierSurPC()),FileManager.determinerTypeDeFichierParSonExtension(FileManager.recupererExtensionDUnFichierParSonNom(courrier.getNomCourrier())),courrierMinistre));
-                        updateCourrierAlfrescoSQL = "update `courrier` SET `dossier_alfresco_emetteur` = '"+courrierMinistre+"', `identifiant_alfresco` = '"+courrier.getIdAlfresco()+"' WHERE `courrier`.`id_courrier` = (select id_courrier from (select id_courrier from `courrier` where date_reception ='"+ courrier.getDateDeReception()+"' and heure_reception ='"+ DateUtils.convertirHeureDeReceptionAuBonFormat(courrier.getHeureDeReception())+"' and objet = '"+courrier.getObjetCourrier().replaceAll("'"," ")+ "' and reference = '"+ courrier.getReferenceCourrier().replace("\\","/").replaceAll("'"," ")+ "' and nom_fichier = '"+ courrier.getNomCourrier() +"') as temp)";
+                        courrier.setIdAlfresco(ConnexionAlfresco.enregistrerFichierCourrierDansAlfresco(new File(courrier.getCheminCourrierSurPC()),FileManager.determinerTypeDeFichierParSonExtension(FileManager.recupererExtensionDUnFichierParSonNom(courrier.getNomCourrier())),dossierCourrierAlfresco));
+                        updateCourrierAlfrescoSQL = "update `courrier` SET `dossier_alfresco_emetteur` = '"+dossierCourrierAlfresco+"', `identifiant_alfresco` = '"+courrier.getIdAlfresco()+"' WHERE `courrier`.`id_courrier` = (select id_courrier from (select id_courrier from `courrier` where date_reception ='"+ courrier.getDateDeReception()+"' and heure_reception ='"+ DateUtils.convertirHeureDeReceptionAuBonFormat(courrier.getHeureDeReception())+"' and objet = '"+courrier.getObjetCourrier().replaceAll("'"," ")+ "' and reference = '"+ courrier.getReferenceCourrier().replace("\\","/").replaceAll("'"," ")+ "' and nom_fichier = '"+ courrier.getNomCourrier() +"') as temp)";
                     }
-
 
                     try {
                         connection.setAutoCommit(false);
@@ -552,12 +544,12 @@ public class NouveauCourrier implements Serializable {
                         if(isAnnexe){
                              listeIdAlfrescoAnnexe.clear();
                             for (int a = 0; a < listeAnnexe.size() ; a++ ){
-                                listeIdAlfrescoAnnexe.add(ConnexionAlfresco.enregistrerFichierCourrierDansAlfresco(new File(listeAnnexe.get(a).getCheminAnnexeSurPC()),FileManager.determinerTypeDeFichierParSonExtension(FileManager.recupererExtensionDUnFichierParSonNom(listeAnnexe.get(a).getNomAnnexe())),courrierMinistre));
+                                listeIdAlfrescoAnnexe.add(ConnexionAlfresco.enregistrerFichierCourrierDansAlfresco(new File(listeAnnexe.get(a).getCheminAnnexeSurPC()),FileManager.determinerTypeDeFichierParSonExtension(FileManager.recupererExtensionDUnFichierParSonNom(listeAnnexe.get(a).getNomAnnexe())),dossierAnnexeAlfresco));
                             }
 
                             for (int a =0; a < listeAnnexe.size(); a++){
                                 ajouterAnnexeAlfrescoSQL = "insert into `annexe` (`titre`, `type_fichier`, `identifiant_alfresco_annexe`, `document_alfresco`, `id_courrier` ) VALUES" +
-                                        " ('" + listeAnnexe.get(a).getNomAnnexe()+"',"+"'" +listeAnnexe.get(a).getTypeDeFichierAnnexe()+"',"+"'"+ listeIdAlfrescoAnnexe.get(a) + "',"+"'" +courrierMinistre + "',"+ "(select id_courrier from `courrier` where date_reception ='"+ courrier.getDateDeReception()+"' and heure_reception ='"+ DateUtils.convertirHeureDeReceptionAuBonFormat(courrier.getHeureDeReception())+"' and objet = '"+courrier.getObjetCourrier().replaceAll("'"," ")+ "' and reference = '"+ courrier.getReferenceCourrier().replace("\\","/").replaceAll("'"," ")+ "' and nom_fichier = '"+ courrier.getNomCourrier().replaceAll("'"," ") +"'))";
+                                        " ('" + listeAnnexe.get(a).getNomAnnexe()+"',"+"'" +listeAnnexe.get(a).getTypeDeFichierAnnexe()+"',"+"'"+ listeIdAlfrescoAnnexe.get(a) + "',"+"'" +dossierAnnexeAlfresco + "',"+ "(select id_courrier from `courrier` where date_reception ='"+ courrier.getDateDeReception()+"' and heure_reception ='"+ DateUtils.convertirHeureDeReceptionAuBonFormat(courrier.getHeureDeReception())+"' and objet = '"+courrier.getObjetCourrier().replaceAll("'"," ")+ "' and reference = '"+ courrier.getReferenceCourrier().replace("\\","/").replaceAll("'"," ")+ "' and nom_fichier = '"+ courrier.getNomCourrier().replaceAll("'"," ") +"'))";
                                 statement.addBatch( ajouterAnnexeAlfrescoSQL);
                             }
                         }
@@ -595,8 +587,8 @@ public class NouveauCourrier implements Serializable {
 
 
                     if(courrier.getConfidentiel().equalsIgnoreCase("Non")){
-                        courrier.setIdAlfresco(ConnexionAlfresco.enregistrerFichierCourrierDansAlfresco(new File(courrier.getCheminCourrierSurPC()),FileManager.determinerTypeDeFichierParSonExtension(FileManager.recupererExtensionDUnFichierParSonNom(courrier.getNomCourrier())),courrierMinistre));
-                        updateCourrierAlfrescoSQL = "update `courrier` SET `dossier_alfresco_emetteur` = '"+courrierMinistre+"', `identifiant_alfresco` = '"+courrier.getIdAlfresco()+"' WHERE `courrier`.`id_courrier` = (select id_courrier from (select id_courrier from `courrier` where date_reception ='"+ courrier.getDateDeReception()+"' and heure_reception ='"+ DateUtils.convertirHeureDeReceptionAuBonFormat(courrier.getHeureDeReception())+"' and objet = '"+courrier.getObjetCourrier().replaceAll("'"," ")+ "' and reference = '"+ courrier.getReferenceCourrier().replace("\\","/").replaceAll("'"," ")+ "' and nom_fichier = '"+ courrier.getNomCourrier().replaceAll("'"," ") +"') as temp)";
+                        courrier.setIdAlfresco(ConnexionAlfresco.enregistrerFichierCourrierDansAlfresco(new File(courrier.getCheminCourrierSurPC()),FileManager.determinerTypeDeFichierParSonExtension(FileManager.recupererExtensionDUnFichierParSonNom(courrier.getNomCourrier())),dossierCourrierAlfresco));
+                        updateCourrierAlfrescoSQL = "update `courrier` SET `dossier_alfresco_emetteur` = '"+dossierCourrierAlfresco+"', `identifiant_alfresco` = '"+courrier.getIdAlfresco()+"' WHERE `courrier`.`id_courrier` = (select id_courrier from (select id_courrier from `courrier` where date_reception ='"+ courrier.getDateDeReception()+"' and heure_reception ='"+ DateUtils.convertirHeureDeReceptionAuBonFormat(courrier.getHeureDeReception())+"' and objet = '"+courrier.getObjetCourrier().replaceAll("'"," ")+ "' and reference = '"+ courrier.getReferenceCourrier().replace("\\","/").replaceAll("'"," ")+ "' and nom_fichier = '"+ courrier.getNomCourrier().replaceAll("'"," ") +"') as temp)";
                     }
 
                     try {
@@ -623,12 +615,12 @@ public class NouveauCourrier implements Serializable {
                         if(isAnnexe){
                              listeIdAlfrescoAnnexe.clear();
                             for (int a = 0; a < listeAnnexe.size() ; a++ ){
-                                listeIdAlfrescoAnnexe.add(ConnexionAlfresco.enregistrerFichierCourrierDansAlfresco(new File(listeAnnexe.get(a).getCheminAnnexeSurPC()),FileManager.determinerTypeDeFichierParSonExtension(FileManager.recupererExtensionDUnFichierParSonNom(listeAnnexe.get(a).getNomAnnexe())),courrierMinistre));
+                                listeIdAlfrescoAnnexe.add(ConnexionAlfresco.enregistrerFichierCourrierDansAlfresco(new File(listeAnnexe.get(a).getCheminAnnexeSurPC()),FileManager.determinerTypeDeFichierParSonExtension(FileManager.recupererExtensionDUnFichierParSonNom(listeAnnexe.get(a).getNomAnnexe())),dossierAnnexeAlfresco));
                             }
 
                             for (int a =0; a < listeAnnexe.size(); a++){
                                 ajouterAnnexeAlfrescoSQL = "insert into `annexe` (`titre`, `type_fichier`, `identifiant_alfresco_annexe`, `document_alfresco`, `id_courrier` ) VALUES" +
-                                        " ('" + listeAnnexe.get(a).getNomAnnexe()+"',"+"'" +listeAnnexe.get(a).getTypeDeFichierAnnexe()+"',"+"'"+ listeIdAlfrescoAnnexe.get(a) + "',"+"'" +courrierMinistre + "',"+ "(select id_courrier from `courrier` where date_reception ='"+ courrier.getDateDeReception()+"' and heure_reception ='"+ DateUtils.convertirHeureDeReceptionAuBonFormat(courrier.getHeureDeReception())+"' and objet = '"+courrier.getObjetCourrier().replaceAll("'"," ")+ "' and reference = '"+ courrier.getReferenceCourrier().replace("\\","/").replaceAll("'"," ")+ "' and nom_fichier = '"+ courrier.getNomCourrier().replaceAll("'"," ") +"'))";
+                                        " ('" + listeAnnexe.get(a).getNomAnnexe()+"',"+"'" +listeAnnexe.get(a).getTypeDeFichierAnnexe()+"',"+"'"+ listeIdAlfrescoAnnexe.get(a) + "',"+"'" +dossierAnnexeAlfresco + "',"+ "(select id_courrier from `courrier` where date_reception ='"+ courrier.getDateDeReception()+"' and heure_reception ='"+ DateUtils.convertirHeureDeReceptionAuBonFormat(courrier.getHeureDeReception())+"' and objet = '"+courrier.getObjetCourrier().replaceAll("'"," ")+ "' and reference = '"+ courrier.getReferenceCourrier().replace("\\","/").replaceAll("'"," ")+ "' and nom_fichier = '"+ courrier.getNomCourrier().replaceAll("'"," ") +"'))";
                                 statement.addBatch( ajouterAnnexeAlfrescoSQL);
                             }
                         }
@@ -666,8 +658,8 @@ public class NouveauCourrier implements Serializable {
 
 
                     if(courrier.getConfidentiel().equalsIgnoreCase("Non")){
-                        courrier.setIdAlfresco(ConnexionAlfresco.enregistrerFichierCourrierDansAlfresco(new File(courrier.getCheminCourrierSurPC()),FileManager.determinerTypeDeFichierParSonExtension(FileManager.recupererExtensionDUnFichierParSonNom(courrier.getNomCourrier())),courrierMinistre));
-                        updateCourrierAlfrescoSQL = "update `courrier` SET `dossier_alfresco_emetteur` = '"+courrierMinistre+"', `identifiant_alfresco` = '"+courrier.getIdAlfresco()+"' WHERE `courrier`.`id_courrier` = (select id_courrier from (select id_courrier from `courrier` where date_reception ='"+ courrier.getDateDeReception()+"' and heure_reception ='"+ DateUtils.convertirHeureDeReceptionAuBonFormat(courrier.getHeureDeReception())+"' and objet = '"+courrier.getObjetCourrier().replaceAll("'"," ")+ "' and reference = '"+ courrier.getReferenceCourrier().replace("\\","/").replaceAll("'"," ")+ "' and nom_fichier = '"+ courrier.getNomCourrier().replaceAll("'"," ") +"') as temp)";
+                        courrier.setIdAlfresco(ConnexionAlfresco.enregistrerFichierCourrierDansAlfresco(new File(courrier.getCheminCourrierSurPC()),FileManager.determinerTypeDeFichierParSonExtension(FileManager.recupererExtensionDUnFichierParSonNom(courrier.getNomCourrier())),dossierCourrierAlfresco));
+                        updateCourrierAlfrescoSQL = "update `courrier` SET `dossier_alfresco_emetteur` = '"+dossierCourrierAlfresco+"', `identifiant_alfresco` = '"+courrier.getIdAlfresco()+"' WHERE `courrier`.`id_courrier` = (select id_courrier from (select id_courrier from `courrier` where date_reception ='"+ courrier.getDateDeReception()+"' and heure_reception ='"+ DateUtils.convertirHeureDeReceptionAuBonFormat(courrier.getHeureDeReception())+"' and objet = '"+courrier.getObjetCourrier().replaceAll("'"," ")+ "' and reference = '"+ courrier.getReferenceCourrier().replace("\\","/").replaceAll("'"," ")+ "' and nom_fichier = '"+ courrier.getNomCourrier().replaceAll("'"," ") +"') as temp)";
 
                     }
 
@@ -695,12 +687,12 @@ public class NouveauCourrier implements Serializable {
                         if(isAnnexe){
                              listeIdAlfrescoAnnexe.clear();
                             for (int a = 0; a < listeAnnexe.size() ; a++ ){
-                                listeIdAlfrescoAnnexe.add(ConnexionAlfresco.enregistrerFichierCourrierDansAlfresco(new File(listeAnnexe.get(a).getCheminAnnexeSurPC()),FileManager.determinerTypeDeFichierParSonExtension(FileManager.recupererExtensionDUnFichierParSonNom(listeAnnexe.get(a).getNomAnnexe())),courrierMinistre));
+                                listeIdAlfrescoAnnexe.add(ConnexionAlfresco.enregistrerFichierCourrierDansAlfresco(new File(listeAnnexe.get(a).getCheminAnnexeSurPC()),FileManager.determinerTypeDeFichierParSonExtension(FileManager.recupererExtensionDUnFichierParSonNom(listeAnnexe.get(a).getNomAnnexe())),dossierAnnexeAlfresco));
                             }
 
                             for (int a =0; a < listeAnnexe.size(); a++){
                                 ajouterAnnexeAlfrescoSQL = "insert into `annexe` (`titre`, `type_fichier`, `identifiant_alfresco_annexe`, `document_alfresco`, `id_courrier` ) VALUES" +
-                                        " ('" + listeAnnexe.get(a).getNomAnnexe()+"',"+"'" +listeAnnexe.get(a).getTypeDeFichierAnnexe()+"',"+"'"+ listeIdAlfrescoAnnexe.get(a) + "',"+"'" +courrierMinistre + "',"+ "(select id_courrier from `courrier` where date_reception ='"+ courrier.getDateDeReception()+"' and heure_reception ='"+ DateUtils.convertirHeureDeReceptionAuBonFormat(courrier.getHeureDeReception())+"' and objet = '"+courrier.getObjetCourrier().replaceAll("'"," ")+ "' and reference = '"+ courrier.getReferenceCourrier().replace("\\","/").replaceAll("'"," ")+ "' and nom_fichier = '"+ courrier.getNomCourrier().replaceAll("'"," ") +"'))";
+                                        " ('" + listeAnnexe.get(a).getNomAnnexe()+"',"+"'" +listeAnnexe.get(a).getTypeDeFichierAnnexe()+"',"+"'"+ listeIdAlfrescoAnnexe.get(a) + "',"+"'" +dossierAnnexeAlfresco+ "',"+ "(select id_courrier from `courrier` where date_reception ='"+ courrier.getDateDeReception()+"' and heure_reception ='"+ DateUtils.convertirHeureDeReceptionAuBonFormat(courrier.getHeureDeReception())+"' and objet = '"+courrier.getObjetCourrier().replaceAll("'"," ")+ "' and reference = '"+ courrier.getReferenceCourrier().replace("\\","/").replaceAll("'"," ")+ "' and nom_fichier = '"+ courrier.getNomCourrier().replaceAll("'"," ") +"'))";
                                 statement.addBatch( ajouterAnnexeAlfrescoSQL);
                             }
                         }
@@ -729,8 +721,8 @@ public class NouveauCourrier implements Serializable {
                     recevoirCourrierSQL = "insert into recevoir_courrier (`favoris`,`archive`,`id_courrier`,`id_personne`,`accuse_reception`,`reference_interne`) VALUES  ('" + EtatCourrier.pasfavoris+"',"+"'"+EtatCourrier.archiveNonActive+"',"+  "(select id_courrier from `courrier` where date_reception ='"+ courrier.getDateDeReception()+"' and heure_reception ='"+ DateUtils.convertirHeureDeReceptionAuBonFormat(courrier.getHeureDeReception())+"' and objet = '"+courrier.getObjetCourrier().replaceAll("'"," ")+ "' and reference = '"+ courrier.getReferenceCourrier().replace("\\","/").replaceAll("'"," ")+ "' and nom_fichier = '"+ courrier.getNomCourrier().replaceAll("'"," ") +"'),(select id_personne from `personne` where unique_id = '"+finalUniqueIDDestinataire+"') ,'"+EtatCourrier.accuseDeReceptionNon+"',"+"'"+courrier.getReferenceCourrier().replace("\\","/").replaceAll("'"," ")+"');";
 
                     if(courrier.getConfidentiel().equalsIgnoreCase("Non")){
-                        courrier.setIdAlfresco(ConnexionAlfresco.enregistrerFichierCourrierDansAlfresco(new File(courrier.getCheminCourrierSurPC()),FileManager.determinerTypeDeFichierParSonExtension(FileManager.recupererExtensionDUnFichierParSonNom(courrier.getNomCourrier())),courrierMinistre));
-                        updateCourrierAlfrescoSQL = "update `courrier` SET `dossier_alfresco_emetteur` = '"+courrierMinistre+"', `identifiant_alfresco` = '"+courrier.getIdAlfresco()+"' WHERE `courrier`.`id_courrier` = (select id_courrier from (select id_courrier from `courrier` where date_reception ='"+ courrier.getDateDeReception()+"' and heure_reception ='"+ DateUtils.convertirHeureDeReceptionAuBonFormat(courrier.getHeureDeReception())+"' and objet = '"+courrier.getObjetCourrier().replaceAll("'"," ")+ "' and reference = '"+ courrier.getReferenceCourrier().replace("\\","/").replaceAll("'"," ")+ "' and nom_fichier = '"+ courrier.getNomCourrier().replaceAll("'"," ") +"') as temp)";
+                        courrier.setIdAlfresco(ConnexionAlfresco.enregistrerFichierCourrierDansAlfresco(new File(courrier.getCheminCourrierSurPC()),FileManager.determinerTypeDeFichierParSonExtension(FileManager.recupererExtensionDUnFichierParSonNom(courrier.getNomCourrier())),dossierCourrierAlfresco));
+                        updateCourrierAlfrescoSQL = "update `courrier` SET `dossier_alfresco_emetteur` = '"+dossierCourrierAlfresco+"', `identifiant_alfresco` = '"+courrier.getIdAlfresco()+"' WHERE `courrier`.`id_courrier` = (select id_courrier from (select id_courrier from `courrier` where date_reception ='"+ courrier.getDateDeReception()+"' and heure_reception ='"+ DateUtils.convertirHeureDeReceptionAuBonFormat(courrier.getHeureDeReception())+"' and objet = '"+courrier.getObjetCourrier().replaceAll("'"," ")+ "' and reference = '"+ courrier.getReferenceCourrier().replace("\\","/").replaceAll("'"," ")+ "' and nom_fichier = '"+ courrier.getNomCourrier().replaceAll("'"," ") +"') as temp)";
                     }
 
                     try {
@@ -754,12 +746,12 @@ public class NouveauCourrier implements Serializable {
                         if(isAnnexe){
                              listeIdAlfrescoAnnexe.clear();
                             for (int a = 0; a < listeAnnexe.size() ; a++ ){
-                                listeIdAlfrescoAnnexe.add(ConnexionAlfresco.enregistrerFichierCourrierDansAlfresco(new File(listeAnnexe.get(a).getCheminAnnexeSurPC()),FileManager.determinerTypeDeFichierParSonExtension(FileManager.recupererExtensionDUnFichierParSonNom(listeAnnexe.get(a).getNomAnnexe())),courrierMinistre));
+                                listeIdAlfrescoAnnexe.add(ConnexionAlfresco.enregistrerFichierCourrierDansAlfresco(new File(listeAnnexe.get(a).getCheminAnnexeSurPC()),FileManager.determinerTypeDeFichierParSonExtension(FileManager.recupererExtensionDUnFichierParSonNom(listeAnnexe.get(a).getNomAnnexe())),dossierAnnexeAlfresco));
                             }
 
                             for (int a =0; a < listeAnnexe.size(); a++){
                                 ajouterAnnexeAlfrescoSQL = "insert into `annexe` (`titre`, `type_fichier`, `identifiant_alfresco_annexe`, `document_alfresco`, `id_courrier` ) VALUES" +
-                                        " ('" + listeAnnexe.get(a).getNomAnnexe()+"',"+"'" +listeAnnexe.get(a).getTypeDeFichierAnnexe()+"',"+"'"+ listeIdAlfrescoAnnexe.get(a) + "',"+"'" +courrierMinistre + "',"+ "(select id_courrier from `courrier` where date_reception ='"+ courrier.getDateDeReception()+"' and heure_reception ='"+ DateUtils.convertirHeureDeReceptionAuBonFormat(courrier.getHeureDeReception())+"' and objet = '"+courrier.getObjetCourrier().replaceAll("'"," ")+ "' and reference = '"+ courrier.getReferenceCourrier().replace("\\","/").replaceAll("'"," ")+ "' and nom_fichier = '"+ courrier.getNomCourrier().replaceAll("'"," ") +"'))";
+                                        " ('" + listeAnnexe.get(a).getNomAnnexe()+"',"+"'" +listeAnnexe.get(a).getTypeDeFichierAnnexe()+"',"+"'"+ listeIdAlfrescoAnnexe.get(a) + "',"+"'" +dossierAnnexeAlfresco + "',"+ "(select id_courrier from `courrier` where date_reception ='"+ courrier.getDateDeReception()+"' and heure_reception ='"+ DateUtils.convertirHeureDeReceptionAuBonFormat(courrier.getHeureDeReception())+"' and objet = '"+courrier.getObjetCourrier().replaceAll("'"," ")+ "' and reference = '"+ courrier.getReferenceCourrier().replace("\\","/").replaceAll("'"," ")+ "' and nom_fichier = '"+ courrier.getNomCourrier().replaceAll("'"," ") +"'))";
                                 statement.addBatch( ajouterAnnexeAlfrescoSQL);
                             }
                         }
@@ -781,7 +773,7 @@ public class NouveauCourrier implements Serializable {
         }
     }
 
-    public void reinitialiserLeFormulaire(){
+    private void reinitialiserLeFormulaire(){
         courrier.setDateDeReception(null);
         courrier.setNomCourrier(null);
         courrier.setTypeCourrier(null);
