@@ -16,6 +16,7 @@ public class PropertiesFilesReader {
     public static String alfrescoTicketUrl;
     public static String alfresscoDownloadFileUrl;
     public static String reponseCourrierDossier;
+    public static String dossierPhotos;
     public static String alfresscoDeletedFileUrl;
     public static Map<String,String> mapDossiersDirectionDansAlfresco = new HashMap<>();
 
@@ -77,6 +78,9 @@ public class PropertiesFilesReader {
         mapDossiersDirectionDansAlfresco.put("annexe_"+nomDirectionUser,properties.getProperty("annexe_"+nomDirectionUser));
         mapDossiersDirectionDansAlfresco.put("discussion_"+nomDirectionUser,properties.getProperty("discussion_"+nomDirectionUser));
         reponseCourrierDossier = properties.getProperty("reponses_courriers");
+        dossierPhotos = properties.getProperty("photos");
 
     }
+
+
 }

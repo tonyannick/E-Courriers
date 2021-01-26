@@ -4,6 +4,7 @@ import alfresco.ConnexionAlfresco;
 import databaseManager.*;
 import dateAndTime.DateUtils;
 import fileManager.FileManager;
+import fileManager.PropertiesFilesReader;
 import mailManager.EmailValidation;
 import messages.FacesMessages;
 import model.*;
@@ -272,7 +273,7 @@ public class Parametres implements Serializable {
     }
 
     public void voirLahoto(){
-        user.setUserPhoto(ConnexionAlfresco.telechargerDocumentDansAlfresco(DataBaseQueries.photoUser));
+        user.setUserPhoto(ConnexionAlfresco.telechargerDocumentDansAlfresco(UsersQueries.photoUser));
     }
 
     public void ajouterUnUser(){
@@ -458,8 +459,11 @@ public class Parametres implements Serializable {
             PrimeFaces.current().executeScript("PF('panelloading').toggle()");
             HttpSession session = SessionUtils.getSession();
             String idUser = (String) session.getAttribute( "idUser");
+            String directionUser = session.getAttribute("directionUser").toString();
+            PropertiesFilesReader.trouverLesDossiersDeLaDirectionDansAlfresco("dossiersAlfrescoMinistere.properties",directionUser);
+
             String identifiantAlfresco = null;
-            identifiantAlfresco = ConnexionAlfresco.enregistrerFichierCourrierDansAlfresco(new File(cheminPhotoSurPC),FileManager.determinerTypeDeFichierParSonExtension(FileManager.recupererExtensionDUnFichierParSonNom(nomPhoto)),dossierPhoto);
+            identifiantAlfresco = ConnexionAlfresco.enregistrerFichierCourrierDansAlfresco(new File(cheminPhotoSurPC),FileManager.determinerTypeDeFichierParSonExtension(FileManager.recupererExtensionDUnFichierParSonNom(nomPhoto)),PropertiesFilesReader.dossierPhotos);
             if(identifiantAlfresco != null){
                 String updatePhotoUserSQL = "update `personne` set `id_alfresco_photo` = '"+identifiantAlfresco+"' where id_personne  = '"+idUser+"' ;";
                 Connection connection = DatabaseConnection.getConnexion();

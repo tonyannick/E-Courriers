@@ -24,7 +24,6 @@ public class DataBaseQueries {
 
     public static String directionUser;;
     public static String fonctionUser;
-    public static String photoUser;
     public static int nombreCourrierEnvoyesDuJour = 0;
     public static int nombreCourrierRecusDuJour = 0;
     public static int nombreCourrierUrgentDuJour = 0;
