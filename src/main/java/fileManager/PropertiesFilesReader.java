@@ -1,7 +1,6 @@
 package fileManager;
 
-import java.io.IOException;
-import java.io.InputStream;
+import java.io.*;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Properties;
@@ -82,5 +81,17 @@ public class PropertiesFilesReader {
 
     }
 
-
+    public static void ajoutDesProprietesDesDossiersDUneDirection(String nomFichier,String nomDirection){
+        Properties properties = new Properties();
+        properties.setProperty("property1", "value1");
+        properties.setProperty("property2", "value2");
+        properties.setProperty("property3", "value3");
+        //InputStream inputStream = PropertiesFilesReader.class.getClassLoader().getResourceAsStream(nomFichier);
+        OutputStream output = null;
+        try {
+            output = new FileOutputStream(nomFichier);
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        }
+    }
 }
