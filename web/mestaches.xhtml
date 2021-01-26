@@ -44,11 +44,36 @@
 
                         <h3 class="page-header"><h:graphicImage value="./resources/images/worker.png" style="margin-right :10px"/>#{mesTaches.titreDeLaPage}</h3>
 
-                        <div class="table-responsive" style="box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2);">
+                        <div class="table-responsive" >
                                 <p:messages for="messagerreurtache" showDetail="true" closable="true"/>
                                 <h:form id="form">
+
+                                    <p:toolbar style="margin-bottom: 15px; margin-top: 15px">
+                                        <f:facet name="left">
+                                            <div id="divBoutonFaireUnRecherche" style="float: left;">
+                                                <p:menuButton value="Recherche avancée" iconPos="right" icon="fa fa-search">
+                                                    <p:menuitem value="Recherche par date" onclick="PF('dialogueRechercherCourrierParDate').show()"  />
+                                                    <p:menuitem value="Recherche par mois" onclick="PF('dialogueRechercherCourrierParMois').show()"/>
+                                                    <p:menuitem value="Recherche par agent" onclick="PF('dialogueRechercherCourrierParTypeDeCourrier').show()"/>
+                                                </p:menuButton>
+                                            </div>
+
+                                            <div id="divBoutonAnnulerRecherche" style="float: left; display: none">
+                                                <p:commandButton style="background: #6872b4;margin-left: 10px;
+                                                         border-color:#6872b4; color: white; font-weight: bold;"
+                                                                 iconPos="right"
+                                                                 actionListener="#{courriersRecus.annulerUneRechercheAvancee}"
+                                                                 update="form:tableMesTaches"
+                                                                 value="Annuler la recherche" icon="fa fa-times" />
+                                            </div>
+                                        </f:facet>
+
+                                    </p:toolbar>
+
                                     <p:dataTable tableStyle="table-layout: auto"
                                                  scrollable="false"
+                                                 style="box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2);"
+                                                 id="tableMesTaches"
                                                  paginatorAlwaysVisible="false"
                                                  rows="#{mesTaches.rowsPerPage}"
                                                  first="#{mesTaches.first}"

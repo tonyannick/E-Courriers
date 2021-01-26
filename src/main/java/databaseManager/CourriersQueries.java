@@ -173,11 +173,9 @@ public class CourriersQueries {
         String requeteMesCourriersRecusFavorisSQL = null;
         HttpSession session = SessionUtils.getSession();
         String idDirection = (String) session.getAttribute("idDirectionUser");
-        // if(isResponsable){
+
         requeteMesCourriersEnvoyesFavorisSQL = "select * from `envoyer_courrier` inner join `courrier` on envoyer_courrier.id_courrier = courrier.id_courrier  left join correspondance_dossier_courrier on correspondance_dossier_courrier.id_courrier = courrier.id_courrier left join dossier on correspondance_dossier_courrier.id_dossier = dossier.id_dossier inner join personne on envoyer_courrier.id_personne = personne.id_personne inner join direction on personne.id_direction = direction.id_direction where direction.id_direction = '"+idDirection+"' and envoyer_courrier.favoris = '"+EtatCourrier.favoris+"' and envoyer_courrier.archive = '"+ EtatCourrier.archiveNonActive +"' order by courrier.id_courrier desc;";
-        /*}else{
-            requeteMesCourriersSQL = "select * from `ajouter_courrier` inner join `courrier` on ajouter_courrier.id_courrier = courrier.id_courrier left join dossier on courrier.fk_dossier = dossier.id_dossier where id_personne = '"+idUtilisateur+"'and favoris = '"+EtatCourrier.favoris+"' and archive = '"+ EtatCourrier.archiveNonActive +"' order by courrier.id_courrier desc;";
-        }*/
+
         requeteMesCourriersRecusFavorisSQL = "select * from `recevoir_courrier` inner join `courrier` on recevoir_courrier.id_courrier = courrier.id_courrier  left join correspondance_dossier_courrier on correspondance_dossier_courrier.id_courrier = courrier.id_courrier left join dossier on correspondance_dossier_courrier.id_dossier = dossier.id_dossier inner join personne on recevoir_courrier.id_personne = personne.id_personne inner join direction on personne.id_direction = direction.id_direction where direction.id_direction = '"+idDirection+"' and recevoir_courrier.favoris = '"+EtatCourrier.favoris+"' and recevoir_courrier.archive = '"+ EtatCourrier.archiveNonActive +"' order by courrier.id_courrier desc;";
 
         ResultSet resultSet1 = null;

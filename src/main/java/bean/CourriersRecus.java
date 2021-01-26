@@ -153,7 +153,6 @@ public class CourriersRecus implements Serializable {
 
             }
         }
-
     }
 
     public void faireUneRechercheAvanceeParReferenceInterne(){

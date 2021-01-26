@@ -27,7 +27,7 @@
     border: 1px solid #ccc;
     border-radius: 2px;
 }
-box {
+.box {
     position: absolute;
     top: 50%;
     left: 50%;
@@ -70,4 +70,18 @@ box {
 
 .box select option {
     padding: 30px;
+}
+/*****Select one menu*****/
+.ui-selectonemenu .ui-selectonemenu-trigger{
+    width: 40px !important;
+    padding-top: 0.2em;
+    background-color:#0062cc;
+}
+
+.ui-selectonemenu{
+    padding-right: 0px !important;
+}
+
+.ui-selectonemenu.ui-state-hover, .ui-selectonemenu.ui-state-focus {
+    background-color: transparent;
 }

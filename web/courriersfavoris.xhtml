@@ -5,6 +5,7 @@
       xmlns:p="http://primefaces.org/ui"
       xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
       xmlns:fn="http://xmlns.jcp.org/jsp/jstl/functions"
+      xmlns:pt="http://xmlns.jcp.org/jsf/passthrough"
       xmlns:f="http://xmlns.jcp.org/jsf/core">
 <f:view transient="true">
     <f:metadata>
@@ -64,10 +65,32 @@
                         </ul>
                         <h3 class="page-header"><h:graphicImage value="./resources/images/star.png" style="margin-right :10px"/>Courriers favoris</h3>
                         <h:form id="form">
+
+                            <p:toolbar style="margin-bottom: 15px; margin-top: 15px">
+                                <f:facet name="left">
+                                    <div id="divBoutonFaireUnRecherche" style="float: left;">
+                                        <p:menuButton value="Recherche avancée" iconPos="right" icon="fa fa-search">
+                                            <p:menuitem value="Recherche par date" onclick="PF('dialogueRechercherCourrierParDate').show()"  />
+                                            <p:menuitem value="Recherche par mois" onclick="PF('dialogueRechercherCourrierParMois').show()"/>
+                                        </p:menuButton>
+                                    </div>
+
+                                    <div id="divBoutonAnnulerRecherche" style="float: left; display: none">
+                                        <p:commandButton style="background: #6872b4;margin-left: 10px;
+                                                         border-color:#6872b4; color: white; font-weight: bold;"
+                                                         iconPos="right"
+                                                         actionListener="#{courriersRecus.annulerUneRechercheAvancee}"
+                                                         update="form:tableCourrierFavoris"
+                                                         value="Annuler la recherche" icon="fa fa-times" />
+                                    </div>
+                                </f:facet>
+                            </p:toolbar>
+
                             <p:dataTable tableStyle="table-layout: auto"
                                          widgetVar="tableauCourrierFavoris"
                                          paginatorPosition="top"
                                          var="courriers"
+                                         id="tableCourrierFavoris"
                                          style="box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2);"
                                          rows="#{courriersFavoris.rowsPerPage}"
                                          first="#{courriersFavoris.first}"
@@ -141,9 +164,78 @@
 
                     </div>
 
+                    <p:dialog id="dialogueRechercheParDate"
+                              resizable="false"
+                              header="Recherche par date"
+                              widgetVar="dialogueRechercherCourrierParDate" width="auto"
+                              modal="true" hideEffect="slide" height="auto"
+                              showEffect="slide"  dynamic="true" closable="true">
+                        <h:form >
+                            <p:messages  id="messageParDate" showDetail="true" closable="true" for="messagecourrierpardate"/>
+                            <h:panelGrid style="width: 100%" columns="2" styleClass="panelLogin" cellspacing="30" cellpadding="30">
+                                <h4 style="font-weight:bold; font-size: 13px">Renseignez une date :  </h4>
+                                <p:inputMask mask="99-99-9999" style="margin-left: 10px;" size="35" value="#{courriersFavoris.datePourRechercheAvancee}"
+                                             pt:placeholder="jj-mm-aaaa"/>
+                            </h:panelGrid>
+                            <h:outputText style="font-size: 13px; color: gray" value="***Ecrivez au format jj/mm/aaaa ***"/>
+                            <h:panelGrid columns="1" style="width: 100%">
+
+                                <p:commandButton value="valider"
+                                                 actionListener="#{courriersFavoris.faireUneRechercheAvanceeParDate}"
+                                                 style="margin-top: 12px; margin-right: 10px; float: right"
+                                                 update="@form form:tableCourrierFavoris messageParDate"/>
+                            </h:panelGrid>
+                        </h:form>
+                    </p:dialog>
+
+                    <p:dialog id="dialogueRechercheParMois"
+                              resizable="false"
+                              header="Recherche par mois"
+                              widgetVar="dialogueRechercherCourrierParMois" width="auto"
+                              modal="true" hideEffect="slide" height="auto"
+                              showEffect="slide"  dynamic="true" closable="true">
+                        <h:form >
+                            <p:messages  id="messageParMois" showDetail="true" closable="true" for="messagecourrierparmois"/>
+                            <h:outputText style="font-size: 13px; color: black" value="***Cette recherche concerne les mois de l'année en cours***"/>
+                            <h4 style="font-weight:bold;margin-top: 15px; font-size: 13px">Renseignez un mois :  </h4>
+                            <p:selectOneMenu effect="slide"
+                                             style="width: 100%"
+                                             value="#{courriersFavoris.moisPourRechercheAvancee}">
+                                <f:selectItem itemLabel="Choisissez un mois"/>
+                                <f:selectItems value="#{courriersFavoris.recupererLesMoisDeLAnnee()}"/>
+                                <p:ajax event="valueChange" listener="#{courriersFavoris.avoirDateEnFonctionDuMoisAuClick}" />
+                            </p:selectOneMenu>
+
+                            <h:panelGrid columns="1" style="width: 100%">
+                                <p:commandButton value="valider"
+                                                 actionListener="#{courriersFavoris.faireUneRechercheAvanceeParMois}"
+                                                 style="margin-top: 12px; margin-right: 10px; float: right"
+                                                 update="@form form:tableCourrierFavoris messageParMois"/>
+                            </h:panelGrid>
+                        </h:form>
+                    </p:dialog>
+
                 </div>
             </div>
         </div>
+        <script>
+            var divBoutonAnnulerRecherche = document.getElementById('divBoutonAnnulerRecherche');
+            var divBoutonFaireUnRecherche = document.getElementById('divBoutonFaireUnRecherche');
+
+            function afficherBoutonAnnulerRecherche(){
+                divBoutonAnnulerRecherche.style.display = 'block';
+                divBoutonFaireUnRecherche.style.display = 'none';
+            }
+            function afficherBoutonFaireUneRecherche(){
+                divBoutonAnnulerRecherche.style.display = 'none';
+                divBoutonFaireUnRecherche.style.display = 'block';
+            }
+            /***Rechargement simple de la page ***/
+            function rechargerLaPage(){
+                window.location.reload();
+            }
+
+        </script>
     </h:body>
 </f:view>
 </html>
