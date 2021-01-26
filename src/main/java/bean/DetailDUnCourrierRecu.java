@@ -1,10 +1,10 @@
 package bean;
 
 import alfresco.ConnexionAlfresco;
-import alfresco.NomDesDossiers;
 import databaseManager.*;
 import dateAndTime.DateUtils;
 import fileManager.FileManager;
+import fileManager.PropertiesFilesReader;
 import model.*;
 import org.primefaces.PrimeFaces;
 import org.primefaces.event.FileUploadEvent;
@@ -70,6 +70,9 @@ public class DetailDUnCourrierRecu implements Serializable {
     private boolean isResponsable = false;
     private String motAppercuDetailEtape;
     private boolean droitTransfererCourrier = false;
+    private String dossierDiscussionAlfresco;
+    private String dossierReponseAlfresco;
+
 
     @PostConstruct
     public void initialisation(){
@@ -303,6 +306,9 @@ public class DetailDUnCourrierRecu implements Serializable {
             String idCourrier = (String) session.getAttribute("courrierId");
             String idUser = (String) session.getAttribute( "idUser");
             String idDirectionUser = (String) session.getAttribute( "idDirectionUser");
+            String directionUser = session.getAttribute("directionUser").toString();
+            PropertiesFilesReader.trouverLesDossiersDeLaDirectionDansAlfresco("dossiersAlfrescoMinistere.properties",directionUser);
+
             String repondreSQL = "INSERT INTO `reponse_courrier` (`message_reponse_courrier`, `identifiant_unique_reponse`,`fk_courrier`, `fk_personne`) " +
                     "VALUES ( '"+reponseCourrier.getText().replaceAll("'", " ")+"','"+uniqueID+"' ,'"+idCourrier+"', '"+idUser+"');";
 
@@ -310,7 +316,7 @@ public class DetailDUnCourrierRecu implements Serializable {
             String updateNomFichierSQL = null;
 
             if(fichierReponseCourrierAjouter){
-                reponseCourrier.setIdentifiantAlfresco(ConnexionAlfresco.enregistrerFichierCourrierDansAlfresco(new File(reponseCourrier.getCheminFichierSurPC()),FileManager.determinerTypeDeFichierParSonExtension(FileManager.recupererExtensionDUnFichierParSonNom(reponseCourrier.getNomFichier())), "courrier_ministre"));
+                reponseCourrier.setIdentifiantAlfresco(ConnexionAlfresco.enregistrerFichierCourrierDansAlfresco(new File(reponseCourrier.getCheminFichierSurPC()),FileManager.determinerTypeDeFichierParSonExtension(FileManager.recupererExtensionDUnFichierParSonNom(reponseCourrier.getNomFichier())), PropertiesFilesReader.reponseCourrierDossier));
                 updateIdAlfrescoSQL = "update `reponse_courrier` set `identifiant_alfresco_reponse_courrier` = '"+reponseCourrier.getIdentifiantAlfresco()+"' where id_reponse_courrier  = (select id_reponse_courrier from (select id_reponse_courrier from reponse_courrier where identifiant_unique_reponse = '"+uniqueID+"' ) as temp)";
                 updateNomFichierSQL = "update `reponse_courrier` set `nom_fichier_reponse_courrier` = '"+reponseCourrier.getNomFichier()+"' where id_reponse_courrier  = (select id_reponse_courrier from (select id_reponse_courrier from reponse_courrier where identifiant_unique_reponse = '"+uniqueID+"' ) as temp)";
             }
@@ -1196,6 +1202,18 @@ public class DetailDUnCourrierRecu implements Serializable {
         String idUser = (String) session.getAttribute( "idUser");
         String idCourrier = (String) session.getAttribute( "courrierId");
         String idDirectionUser = (String) session.getAttribute( "idDirectionUser");
+        String directionUser = session.getAttribute("directionUser").toString();
+
+        PropertiesFilesReader.trouverLesDossiersDeLaDirectionDansAlfresco("dossiersAlfrescoMinistere.properties",directionUser);
+
+        if(directionUser.equalsIgnoreCase("sécrétariat générale adjoint")){
+            directionUser = "sga";
+        }
+        if(directionUser.equalsIgnoreCase("sécrétariat générale")){
+            directionUser = "sg";
+        }
+        dossierDiscussionAlfresco = directionUser.toLowerCase()+"/"+PropertiesFilesReader.mapDossiersDirectionDansAlfresco.get("discussion_"+directionUser.toLowerCase());
+
         Connection connection = DatabaseConnection.getConnexion();
         if(etape.getReponseTache() == null || etape.getReponseTache().isEmpty()){
             FacesContext.getCurrentInstance().addMessage("messageinfodiscussion", new FacesMessage(FacesMessage.SEVERITY_WARN, "Erreur", "Vous devez ecrire un message!!"));
@@ -1207,7 +1225,7 @@ public class DetailDUnCourrierRecu implements Serializable {
             String updateNomFichierDansDiscussionSQL = null;
 
             if(fichierDiscussionAjouter){
-                discussion.setIdAlfresco(ConnexionAlfresco.enregistrerFichierCourrierDansAlfresco(new File(discussion.getCheminFichierDiscussionSurPC()),FileManager.determinerTypeDeFichierParSonExtension(FileManager.recupererExtensionDUnFichierParSonNom(discussion.getNomFichierDiscussion())), NomDesDossiers.fichierDiscussion));
+                discussion.setIdAlfresco(ConnexionAlfresco.enregistrerFichierCourrierDansAlfresco(new File(discussion.getCheminFichierDiscussionSurPC()),FileManager.determinerTypeDeFichierParSonExtension(FileManager.recupererExtensionDUnFichierParSonNom(discussion.getNomFichierDiscussion())), dossierDiscussionAlfresco));
                 updateIdAlfrescoDansDiscussionSQL = "update `discussion_etape` set `identifiant_alfresco_discussion` = '"+discussion.getIdAlfresco()+"' where id_discussion_etape  = (select id_discussion_etape from (select id_discussion_etape from discussion_etape where etat_discussion = '"+EtatEtape.Ouvert+"' and message_discussion = '"+etape.getReponseTache().replaceAll("'", " ")+"' and id_etape = '"+etape.getId()+"' and id_personne = '"+idUser+"' ) as temp)";
                 updateNomFichierDansDiscussionSQL = "update `discussion_etape` set `nom_fichier_discussion` = '"+discussion.getNomFichierDiscussion()+"' where id_discussion_etape  = (select id_discussion_etape from (select id_discussion_etape from discussion_etape where etat_discussion = '"+EtatEtape.Ouvert+"' and message_discussion = '"+etape.getReponseTache().replaceAll("'", " ")+"' and id_etape = '"+etape.getId()+"' and id_personne = '"+idUser+"' ) as temp)";
             }

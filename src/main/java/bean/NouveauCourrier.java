@@ -74,7 +74,6 @@ public class NouveauCourrier implements Serializable {
         courrier.setConfidentiel("Non");
         courrier.setGenreCourrier(GenreDeCourrier.courrierInterne);
         HttpSession httpSession = SessionUtils.getSession();
-
         user.setUserDirection((httpSession.getAttribute("directionUser").toString()));
         Iterator<String> stringIterator = direction.getListeDirectionEmetteur().iterator();
         while(stringIterator.hasNext()){
@@ -83,7 +82,6 @@ public class NouveauCourrier implements Serializable {
                 stringIterator.remove();
            }
         }
-
         if(user.getUserDirection().equalsIgnoreCase("sécrétariat générale adjoint")){
             user.setUserDirection("sga");
         }
@@ -276,15 +274,12 @@ public class NouveauCourrier implements Serializable {
         String idTypeDEmetteur = null;
         String idFonctionEmetteur = null;
         String idFonctionDestinataire = null;
-        String idFonctionDestinataireAutreMinistere = null;
         String idDirectionEmetteur = null;
         String idDirectionDestinataire = null;
         String idEtablissementEmetteur = null;
         String idEtablissementDestinataire = null;
-        String idDirectionDestinataireAutreMinistere = null;
         String idEtablissementDestinataireAutreMinistere = null;
         String idEtablissementEmetteurAutreMinistere = null;
-        String idEtablissementDestinataireEntreprise = null;
         String updateCourrierAlfrescoSQL = null;
         String ajouterAnnexeAlfrescoSQL = null;
 
@@ -316,7 +311,6 @@ public class NouveauCourrier implements Serializable {
             String insertionCourrierSQL = null;
             String ajouterCorrespondanceEtapeCourrierSQL = null;
 
-
             if(courrier.getConfidentiel().equalsIgnoreCase("Oui")){
                 courrier.setObjetCourrier("Confidentiel");
                 courrier.setCommentairesCourrier("Confidentiel");
@@ -337,7 +331,6 @@ public class NouveauCourrier implements Serializable {
                             "'" + fichierConfidentiel + "'," + "'" + fichierConfidentiel + "'," + "'" +EtatCourrier.courrierEnregistre  + "'," + "'" + courrier.getGenreCourrier()+"',"+"'"+ idTypeDeCourrier +"')";
                     ajouterCorrespondanceEtapeCourrierSQL = "insert into `correspondance_etape_courrier` (`id_courrier`) VALUES" +
                             "((select id_courrier from `courrier` where date_reception ='"+ courrier.getDateDeReception()+"' and heure_reception ='"+ DateUtils.convertirHeureDeReceptionAuBonFormat(courrier.getHeureDeReception())+"' and objet = '"+courrier.getObjetCourrier().replaceAll("'"," ")+ "' and reference = '"+ courrier.getReferenceCourrier().replace("\\","/").replaceAll("'"," ")+ "' and nom_fichier = '"+ courrier.getNomCourrier().replaceAll("'","_") +"'));";
-
 
                 }
 
@@ -577,7 +570,7 @@ public class NouveauCourrier implements Serializable {
 
                     ajouterEmetteurSQL = "insert into `personne` (`unique_id`, `fk_type_personne`,`id_fonction`, `id_direction`, `id_etablissement`) VALUES" +
                             " ('" + finalUniqueIDEmetteur+"',"+"'"+idTypeDEmetteur+"',"+  "(select id_fonction from `fonction` where titre_fonction = '" + emetteur.getFonctionEntreprise().replaceAll("'"," ")  + "' order by id_fonction desc limit 1)" +"," +"(select id_direction from `direction` where nom_direction = '" + emetteur.getDirectionEntreprise().replaceAll("'"," ")  + "' order by id_direction desc limit 1)" + ","+ "(select id_etablissement from `etablissement` where nom_etablissement = '" + emetteur.getRaisonSocial().replaceAll("'"," ")  + "' and tel_etablissement  = '"+emetteur.getTelephoneEntreprise() +"' and mail_etablissement = '"+emetteur.getEmailEntreprise()+"'  and adresse_etablissement = '"+emetteur.getAdresseEntreprise().replaceAll("'"," ")  +"' order by id_etablissement desc limit 1)"+ ")";
-                    System.out.println("ajouterEmetteurSQL = " + ajouterEmetteurSQL);
+
                     ajouterDestinataireSQL = "insert into `personne` (`unique_id`, `fk_type_personne`, `id_fonction`, `id_direction` ,`id_etablissement`) VALUES" +
                             " ('" + finalUniqueIDDestinataire+"',"+"'"+idTypeDeDestinataire+"',"+"'"+ idFonctionDestinataire + "',"+"'" +idDirectionDestinataire + "',"+ "'" +idEtablissementDestinataire+ "')";
 
@@ -634,7 +627,6 @@ public class NouveauCourrier implements Serializable {
                         FacesContext.getCurrentInstance().addMessage("messagesErreur", new FacesMessage(FacesMessage.SEVERITY_ERROR, "Erreur", "Une erreur s'est produite lors de l'enregistrement du courrier"));
                         e.printStackTrace();
                     }
-
 
                     break;
                 case "Association":

@@ -1,10 +1,10 @@
 package bean;
 
 import alfresco.ConnexionAlfresco;
-import alfresco.NomDesDossiers;
 import databaseManager.*;
 import dateAndTime.DateUtils;
 import fileManager.FileManager;
+import fileManager.PropertiesFilesReader;
 import model.*;
 import org.primefaces.PrimeFaces;
 import org.primefaces.event.FileUploadEvent;
@@ -67,7 +67,7 @@ public class RepondreAUnCourrierRecu implements Serializable {
     private String dateAccusseDeReception;
     private String messageAccuseDeReception;
     private boolean isResponsable = false;
-
+    private String dossierDiscussionAlfresco;
 
     @PostConstruct
     public void initialisation(){
@@ -484,7 +484,6 @@ public class RepondreAUnCourrierRecu implements Serializable {
 
         String requeteDestinataireTacheSQL = "select nom,prenom from `etape` inner join `correspondance_personne_etape` on etape.id_etape = correspondance_personne_etape.id_etape inner join `personne` on correspondance_personne_etape.id_personne = personne.id_personne where etape.id_etape = '"+idTache+"' and correspondance_personne_etape.role_agent = '"+ TypeDePersonne.affecteurTache +"' order by etape.id_etape desc";
 
-
         Connection connection = DatabaseConnection.getConnexion();
         ResultSet resultSet = null;
         try{
@@ -583,6 +582,17 @@ public class RepondreAUnCourrierRecu implements Serializable {
         String idCourrier = (String) session.getAttribute("courrierId");
         String idDirectionUser = (String) session.getAttribute( "idDirectionUser");
         Connection connection = DatabaseConnection.getConnexion();
+        String directionUser = session.getAttribute("directionUser").toString();
+        PropertiesFilesReader.trouverLesDossiersDeLaDirectionDansAlfresco("dossiersAlfrescoMinistere.properties",directionUser);
+
+        if(directionUser.equalsIgnoreCase("sécrétariat générale adjoint")){
+            directionUser = "sga";
+        }
+        if(directionUser.equalsIgnoreCase("sécrétariat générale")){
+            directionUser = "sg";
+        }
+        dossierDiscussionAlfresco = directionUser.toLowerCase()+"/"+PropertiesFilesReader.mapDossiersDirectionDansAlfresco.get("discussion_"+directionUser.toLowerCase());
+
         if(etape.getReponseTache() == null || etape.getReponseTache().isEmpty()){
             FacesContext.getCurrentInstance().addMessage("messageinfodiscussion", new FacesMessage(FacesMessage.SEVERITY_WARN, "Erreur", "Vous devez ecrire un message!!"));
         }else{
@@ -593,7 +603,7 @@ public class RepondreAUnCourrierRecu implements Serializable {
             String updateNomFichierDansDiscussionSQL = null;
 
             if(fichierDiscussionAjouter){
-                discussion.setIdAlfresco(ConnexionAlfresco.enregistrerFichierCourrierDansAlfresco(new File(discussion.getCheminFichierDiscussionSurPC()),FileManager.determinerTypeDeFichierParSonExtension(FileManager.recupererExtensionDUnFichierParSonNom(discussion.getNomFichierDiscussion())), NomDesDossiers.fichierDiscussion));
+                discussion.setIdAlfresco(ConnexionAlfresco.enregistrerFichierCourrierDansAlfresco(new File(discussion.getCheminFichierDiscussionSurPC()),FileManager.determinerTypeDeFichierParSonExtension(FileManager.recupererExtensionDUnFichierParSonNom(discussion.getNomFichierDiscussion())), dossierDiscussionAlfresco));
                 updateIdAlfrescoDansDiscussionSQL = "update `discussion_etape` set `identifiant_alfresco_discussion` = '"+discussion.getIdAlfresco()+"' where id_discussion_etape  = (select id_discussion_etape from (select id_discussion_etape from discussion_etape where etat_discussion = '"+EtatEtape.Ouvert+"' and message_discussion = '"+etape.getReponseTache().replaceAll("'", " ")+"' and id_etape = '"+etape.getId()+"' and id_personne = '"+idUser+"' ) as temp)";
                 updateNomFichierDansDiscussionSQL = "update `discussion_etape` set `nom_fichier_discussion` = '"+discussion.getNomFichierDiscussion()+"' where id_discussion_etape  = (select id_discussion_etape from (select id_discussion_etape from discussion_etape where etat_discussion = '"+EtatEtape.Ouvert+"' and message_discussion = '"+etape.getReponseTache().replaceAll("'", " ")+"' and id_etape = '"+etape.getId()+"' and id_personne = '"+idUser+"' ) as temp)";
             }

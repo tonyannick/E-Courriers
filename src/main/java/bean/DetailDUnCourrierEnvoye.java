@@ -4,6 +4,7 @@ import alfresco.ConnexionAlfresco;
 import databaseManager.*;
 import dateAndTime.DateUtils;
 import fileManager.FileManager;
+import fileManager.PropertiesFilesReader;
 import model.*;
 import org.primefaces.PrimeFaces;
 import org.primefaces.event.FileUploadEvent;
@@ -45,7 +46,7 @@ public class DetailDUnCourrierEnvoye implements Serializable {
     private List<String> listeIdAnnexeAlfresco = new ArrayList<>();
     private String existenceDestinataireDeTransfer = "non";
     private boolean fichierReponseCourrierAjouter = false;
-
+    private String dossierReponseAlfresco;
 
     @PostConstruct
     public void initialisation(){
@@ -321,9 +322,11 @@ public class DetailDUnCourrierEnvoye implements Serializable {
 
             String updateIdAlfrescoSQL = null;
             String updateNomFichierSQL = null;
+            String directionUser = session.getAttribute("directionUser").toString();
+            PropertiesFilesReader.trouverLesDossiersDeLaDirectionDansAlfresco("dossiersAlfrescoMinistere.properties",directionUser);
 
             if(fichierReponseCourrierAjouter){
-                reponseCourrier.setIdentifiantAlfresco(ConnexionAlfresco.enregistrerFichierCourrierDansAlfresco(new File(reponseCourrier.getCheminFichierSurPC()), FileManager.determinerTypeDeFichierParSonExtension(FileManager.recupererExtensionDUnFichierParSonNom(reponseCourrier.getNomFichier())), "courrier_ministre"));
+                reponseCourrier.setIdentifiantAlfresco(ConnexionAlfresco.enregistrerFichierCourrierDansAlfresco(new File(reponseCourrier.getCheminFichierSurPC()), FileManager.determinerTypeDeFichierParSonExtension(FileManager.recupererExtensionDUnFichierParSonNom(reponseCourrier.getNomFichier())), PropertiesFilesReader.reponseCourrierDossier));
                 updateIdAlfrescoSQL = "update `reponse_courrier` set `identifiant_alfresco_reponse_courrier` = '"+reponseCourrier.getIdentifiantAlfresco()+"' where id_reponse_courrier  = (select id_reponse_courrier from (select id_reponse_courrier from reponse_courrier where identifiant_unique_reponse = '"+uniqueID+"' ) as temp)";
                 updateNomFichierSQL = "update `reponse_courrier` set `nom_fichier_reponse_courrier` = '"+reponseCourrier.getNomFichier()+"' where id_reponse_courrier  = (select id_reponse_courrier from (select id_reponse_courrier from reponse_courrier where identifiant_unique_reponse = '"+uniqueID+"' ) as temp)";
             }

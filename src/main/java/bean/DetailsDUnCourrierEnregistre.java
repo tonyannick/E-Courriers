@@ -4,6 +4,7 @@ import alfresco.ConnexionAlfresco;
 import databaseManager.*;
 import dateAndTime.DateUtils;
 import fileManager.FileManager;
+import fileManager.PropertiesFilesReader;
 import model.*;
 import org.primefaces.PrimeFaces;
 import org.primefaces.event.FileUploadEvent;
@@ -55,7 +56,8 @@ public class DetailsDUnCourrierEnregistre implements Serializable {
     private boolean isSecretaire = false;
     private Date dateFinalTemp = null;
     private boolean droitAjoutDestinataireExterne = false;
-
+    private String dossierCourrierAlfresco;
+    private String dossierDiscussionAlfresco;
 
     @PostConstruct
     public void initialisation(){
@@ -73,6 +75,16 @@ public class DetailsDUnCourrierEnregistre implements Serializable {
         recupererListeDirection();
         recupererListeMinisteres();
         recupererListeTypeDeCourrier();
+        HttpSession httpSession = SessionUtils.getSession();
+        user.setUserDirection((httpSession.getAttribute("directionUser").toString()));
+        if(user.getUserDirection().equalsIgnoreCase("sécrétariat générale adjoint")){
+            user.setUserDirection("sga");
+        }
+        if(user.getUserDirection().equalsIgnoreCase("sécrétariat générale")){
+            user.setUserDirection("sg");
+        }
+        PropertiesFilesReader.trouverLesDossiersDeLaDirectionDansAlfresco("dossiersAlfrescoMinistere.properties",user.getUserDirection());
+        dossierCourrierAlfresco = user.getUserDirection().toLowerCase()+"/"+PropertiesFilesReader.mapDossiersDirectionDansAlfresco.get("courrier_"+user.getUserDirection().toLowerCase());
     }
 
     public void checkIfAlfrescoIsOnline(){
@@ -718,8 +730,20 @@ public class DetailsDUnCourrierEnregistre implements Serializable {
     public void creerUneDiscussion(){/*TODO bloque un message vide*/
         HttpSession session = SessionUtils.getSession();
         String idUser = (String) session.getAttribute( "idUser");
+        String directionUser = session.getAttribute("directionUser").toString();
+        PropertiesFilesReader.trouverLesDossiersDeLaDirectionDansAlfresco("dossiersAlfrescoMinistere.properties",directionUser);
+
+        if(directionUser.equalsIgnoreCase("sécrétariat générale adjoint")){
+            directionUser = "sga";
+        }
+        if(directionUser.equalsIgnoreCase("sécrétariat générale")){
+            directionUser = "sg";
+        }
+
+        dossierCourrierAlfresco = directionUser.toLowerCase()+"/"+PropertiesFilesReader.mapDossiersDirectionDansAlfresco.get("courrier_"+directionUser.toLowerCase());
+        dossierDiscussionAlfresco = directionUser.toLowerCase()+"/"+PropertiesFilesReader.mapDossiersDirectionDansAlfresco.get("discussion_"+directionUser.toLowerCase());
         Connection connection = DatabaseConnection.getConnexion();
-        String courrierMinistre = "courrier_ministre";
+
         if(etape.getReponseTache() == null || etape.getReponseTache().isEmpty()){
             FacesContext.getCurrentInstance().addMessage("messageerreurdiscussion", new FacesMessage(FacesMessage.SEVERITY_WARN, "Erreur", "Vous devez ecrire un message!!"));
         }else{
@@ -730,7 +754,7 @@ public class DetailsDUnCourrierEnregistre implements Serializable {
             String updateNomFichierDansDiscussionSQL = null;
 
             if(fichierDiscussionAjouter){
-                discussion.setIdAlfresco(ConnexionAlfresco.enregistrerFichierCourrierDansAlfresco(new File(discussion.getCheminFichierDiscussionSurPC()),FileManager.determinerTypeDeFichierParSonExtension(FileManager.recupererExtensionDUnFichierParSonNom(discussion.getNomFichierDiscussion())), courrierMinistre));
+                discussion.setIdAlfresco(ConnexionAlfresco.enregistrerFichierCourrierDansAlfresco(new File(discussion.getCheminFichierDiscussionSurPC()),FileManager.determinerTypeDeFichierParSonExtension(FileManager.recupererExtensionDUnFichierParSonNom(discussion.getNomFichierDiscussion())), dossierDiscussionAlfresco));
                 updateIdAlfrescoDansDiscussionSQL = "update `discussion_etape` set `identifiant_alfresco_discussion` = '"+discussion.getIdAlfresco()+"' where id_discussion_etape  = (select id_discussion_etape from (select id_discussion_etape from discussion_etape where etat_discussion = '"+EtatEtape.Ouvert+"' and message_discussion = '"+etape.getReponseTache().replaceAll("'", " ")+"' and id_etape = '"+etape.getId()+"' and id_personne = '"+idUser+"' ) as temp)";
                 updateNomFichierDansDiscussionSQL = "update `discussion_etape` set `nom_fichier_discussion` = '"+discussion.getNomFichierDiscussion()+"' where id_discussion_etape  = (select id_discussion_etape from (select id_discussion_etape from discussion_etape where etat_discussion = '"+EtatEtape.Ouvert+"' and message_discussion = '"+etape.getReponseTache().replaceAll("'", " ")+"' and id_etape = '"+etape.getId()+"' and id_personne = '"+idUser+"' ) as temp)";
             }
