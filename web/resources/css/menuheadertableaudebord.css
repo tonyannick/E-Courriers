@@ -1,0 +1,29 @@
+.fixed-header{
+    width: 100%;
+    position: relative;
+    color: #fff;
+}
+nav a{
+    color: #fff;
+    text-decoration: none;
+    padding: 7px 10px;
+    float: right;
+    border-radius: 20px;
+    display: block;
+}
+nav a:hover{
+    text-decoration: none;
+    text-underline: none;
+    color: black;
+    font-size: 15px;
+    font-weight: bold;
+    background: #e6e6e0;
+    display: inline-block;
+
+    transition: 0.9s;
+}
+.container-header {
+    padding-right: 15px;
+    padding-left: 15px;
+    background: #5a86d0;
+}

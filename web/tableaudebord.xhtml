@@ -20,6 +20,19 @@
         <h:outputStylesheet name="chartjs/css/Chart.css" />
         <h:outputStylesheet name="chartjs/css/Chart.min.css" />
     </h:head>
+    <h:outputStylesheet>
+        .noBorders *{
+            border: none !important;
+        }
+        ul.ui-datalist-data {
+            padding-inline-start: 0px;
+            list-style-type: none;
+        }
+        ul .ui-datalist-item:hover{
+            background-color: #fbf35c;
+            font-weight: bold;
+        }
+    </h:outputStylesheet>
     <h:body>
         <div class="container-fluid" style="margin-bottom: 50px">
             <div class="row">
@@ -33,143 +46,164 @@
                         <ui:include src="footer.xhtml" />
                     </ui:insert>
                 </div>
-                <div class="main-overview" style="margin-bottom: 50px; margin-top: 10px">
-                    <div class="col-sm-10 col-md-12 main">
-                        <div class="column" style=" width: 15%">
-                            <ui:include src="sidebar.xhtml" />
-                        </div>
-                        <div class="column" style=" width:80%; margin-right: 10px">
-                            <h1 class="page-header"><h:graphicImage value="./resources/images/speedometer.png" />Tableau de bord</h1>
+                </div>
+                <div class="ui-g">
+                    <div class="ui-g-1" style="margin-bottom: 50px; margin-top: 10px"></div>
+                    <div class="ui-g-10">
+                        <div class="column" style=" width:100%; margin-right: 10px">
+                                <h1 class="page-header"><h:graphicImage value="./resources/images/speedometer.png" />Tableau de bord</h1>
 
-                            <div class="notice notice-success" style="margin-top: 10px">
-                                <strong>Vous êtes un agent de  : </strong> #{tableauDeBord.user.userDirection}
-                            </div>
-
-                            <div class="stylecourrierdujour">
-
-                                <div class="gridbox" style="background-color: #53A9F1">
-                                    <div class="gridbox_icon"><h:graphicImage value="./resources/images/courrierrecu.png" /></div>
-                                    <div class="gridbox_info"  style="color: white; font-size: 14px">Courriers reçu aujourd'hui : #{tableauDeBord.statistiques.nombreDeCourrierRecusDuJour}</div>
+                                <div class="notice notice-success" style="margin-top: 10px">
+                                    <strong>Vous êtes un agent de  : </strong> #{tableauDeBord.user.userDirection}
                                 </div>
 
-                                <div class="gridbox" style="background-color: #6FBC6F">
-                                    <div class="gridbox_icon"><h:graphicImage value="./resources/images/courrierenvoye.png" /></div>
-                                    <div class="gridbox_info" style="color: white; font-size: 14px">Courriers envoyés aujourdhui  : #{tableauDeBord.statistiques.nombreDeCourrierEnvoyesDuJour} </div>
-                                </div>
+                                <div class="stylecourrierdujour">
 
-                                <div class="gridbox" style="background-color: #F9AE2E">
-                                    <div class="gridbox_icon"><h:graphicImage value="./resources/images/important.png" /></div>
-                                    <div class="gridbox_info" style="color: white; font-size: 14px">Courriers urgent du jour :  #{tableauDeBord.statistiques.nombreDeCourrierUrgentDuJour}</div>
-                                </div>
+                                    <div class="gridbox" style="background-color: #53A9F1">
+                                        <div class="gridbox_icon"><h:graphicImage value="./resources/images/courrierrecu.png" /></div>
+                                        <div class="gridbox_info"  style="color: white; font-size: 14px">Courriers reçu du jour : <span style="font-size: 18px; margin-left: 5px">#{tableauDeBord.statistiques.nombreDeCourrierRecusDuJour}</span></div>
+                                    </div>
 
-                                <div class="gridbox" style="background-color: #F86B8F">
-                                    <div class="gridbox_icon"><h:graphicImage value="./resources/images/padlock.png" /></div>
-                                    <div class="gridbox_info" style="color: white; font-size: 14px">Courriers confidentiel du jour : #{tableauDeBord.statistiques.nombreDeCourrierConfidentielDuJour}</div>
-                                </div>
-                            </div>
+                                    <div class="gridbox" style="background-color: #6FBC6F">
+                                        <div class="gridbox_icon"><h:graphicImage value="./resources/images/courrierenvoye.png" /></div>
+                                        <div class="gridbox_info" style="color: white; font-size: 14px">Courriers envoyés du jour  :  <span style="font-size: 18px; margin-left: 5px">#{tableauDeBord.statistiques.nombreDeCourrierEnvoyesDuJour} </span></div>
+                                    </div>
 
-                            <div class="lignechart" style="margin-left: 10px; margin-top: 30px">
+                                    <div class="gridbox" style="background-color: #F9AE2E">
+                                        <div class="gridbox_icon"><h:graphicImage value="./resources/images/important.png" /></div>
+                                        <div class="gridbox_info" style="color: white; font-size: 14px">Courriers urgent du jour :   <span style="font-size: 18px; margin-left: 5px">#{tableauDeBord.statistiques.nombreDeCourrierUrgentDuJour}</span></div>
+                                    </div>
 
-                                <div class="chartbox">
-                                    <div class="chartboxcontent">
-                                        <h5 style="font-weight: bold; font-size: 13px">Nombre de courriers entrants et sortant traités le mois courant</h5>
-                                        <canvas id="courrierEntrantEtSortant" width="290" height="170"></canvas>
+                                    <div class="gridbox" style="background-color: #F86B8F">
+                                        <div class="gridbox_icon"><h:graphicImage value="./resources/images/padlock.png" /></div>
+                                        <div class="gridbox_info" style="color: white; font-size: 14px">Courriers confidentiel du jour :  <span style="font-size: 18px; margin-left: 5px">#{tableauDeBord.statistiques.nombreDeCourrierConfidentielDuJour}</span></div>
                                     </div>
                                 </div>
 
-                                <div class="chartbox">
-                                    <div class="chartboxcontent">
-                                        <h5 style="font-weight: bold; font-size: 13px">Nombre de courriers traités par priorité le mois courant</h5>
-                                        <canvas id="courriersTraitesParUrgence" width="290" height="170"></canvas>
+                                <div class="lignechart" style="margin-left: 10px; margin-top: 30px">
+
+                                    <div class="chartbox">
+                                        <div class="chartboxcontent">
+                                            <h5 style="font-weight: bold; font-size: 13px">Nombre de courriers entrants et sortant traités le mois courant</h5>
+                                            <canvas id="courrierEntrantEtSortant" width="290" height="170"></canvas>
+                                        </div>
                                     </div>
 
-                                </div>
+                                    <div class="chartbox">
+                                        <div class="chartboxcontent">
+                                            <h5 style="font-weight: bold; font-size: 13px">Nombre de courriers traités par priorité le mois courant</h5>
+                                            <canvas id="courriersTraitesParUrgence" width="290" height="170"></canvas>
+                                        </div>
 
-                                <div class="chartbox">
-                                    <div class="chartboxcontent">
-                                        <h5 style="font-weight: bold; font-size: 13px">Nombre de courriers traités par confidentialité le mois courant</h5>
-                                        <canvas id="courriersTraitesParType" width="290" height="170"></canvas>
                                     </div>
 
+                                    <div class="chartbox">
+                                        <div class="chartboxcontent">
+                                            <h5 style="font-weight: bold; font-size: 13px">Nombre de courriers traités par confidentialité le mois courant</h5>
+                                            <canvas id="courriersTraitesParType" width="290" height="170"></canvas>
+                                        </div>
+
+                                    </div>
                                 </div>
+
+                                <div class="lignechart" style="margin-left: 10px; margin-top: 30px">
+
+                                    <div class="discussionbox">
+                                        <p:panel collapsed="true" toggleable="true" header="Vos Dernieres taches en cours traitement">
+                                            <p:dataList  styleClass="noBorders" rows="5" emptyMessage="Aucunes taches"
+                                                         value="#{tableauDeBord.etape.listeDeMesTachesEnTraitement}"  var="etape">
+                                                <h:form>
+                                                    <div class="ui-g">
+                                                        <div class="ui-g-1">
+                                                            <h:graphicImage value="./resources/images/entraitement.png"  style=" margin-left: 5px;"/>
+                                                        </div>
+                                                        <div class="ui-g-9">
+                                                            <h:panelGrid columns="1" style="width: 100%">
+                                                                <h:outputText value="#{etape.message}" escape="false" style="font-size: 13px; color: #0f0f0f"/>
+                                                                <h:outputText style="color: #777777; font-size: 11px; margin-top: 5px" value="#{etape.date_debut}"/>
+                                                            </h:panelGrid>
+                                                        </div>
+
+                                                        <div class="ui-g-2">
+                                                            <p:commandButton  icon="fa fa-eye" action="#{tableauDeBord.voirUneTache}" ajax="false"
+                                                                              style="background: #496ea1; border: 1px #496ea1 solid; float: right"
+                                                                              title="Voir">
+                                                                <f:param name="etapeId" value="#{etape.id}" />
+                                                                <f:param name="natureEtape" value="#{etape.nature}" />
+                                                            </p:commandButton>
+                                                        </div>
+                                                        <p:separator/>
+                                                    </div>
+                                                </h:form>
+                                            </p:dataList>
+
+                                        </p:panel>
+                                    </div>
+
+                                    <div class="discussionbox">
+                                        <p:panel collapsed="true" toggleable="true" id="sports" header="Vos Dernieres disussions en cours">
+
+                                            <p:dataList styleClass="noBorders" rows="5" emptyMessage="Aucunes discussions"
+                                                        value="#{tableauDeBord.discussion.listeDiscussionsOuvertes}"
+                                                        var="discussionEtape">
+                                                <h:form>
+
+                                                    <div class="ui-g">
+                                                        <div class="ui-g-1">
+                                                            <h:graphicImage value="./resources/images/user.png"  style=" margin-left: 5px"/>
+                                                        </div>
+
+                                                        <div class="ui-g-9">
+                                                            <h:panelGrid columns="1" style="width: 100%">
+                                                                <h:outputText value="#{discussionEtape.messageDiscussion}" style="font-size: 13px; color: #0f0f0f"/>
+                                                                <h:outputText style="color: #777777; font-size: 11px; margin-top: 5px" value="#{discussionEtape.dateDiscussion}"/>
+                                                            </h:panelGrid>
+                                                        </div>
+                                                        <div class="ui-g-2">
+                                                            <p:commandButton  icon="fa fa-eye" ajax="false"
+                                                                              action="#{tableauDeBord.accederALEtapeDUneDiscussion}"
+                                                                              style="background: #496ea1; border: 1px #496ea1 solid; float: right"
+                                                                              title="Voir">
+                                                                <f:param name="idDiscussion" value="#{discussionEtape.idDiscussion}" />
+                                                                <f:param name="etatCorrespondanceEtape" value="#{discussionEtape.etatCorrespondanceEtape}" />
+                                                            </p:commandButton>
+                                                        </div>
+                                                        <p:separator/>
+                                                    </div>
+
+                                                </h:form>
+                                            </p:dataList>
+                                        </p:panel>
+                                    </div>
+                                </div>
+
+                                <p:dialog id="alfrescoMessage"
+                                          header="Erreur sur le serveur de fichier"
+                                          widgetVar="dialogueAlfrescoMessage"
+                                          modal="true" hideEffect="clip"
+                                          showEffect="clip"
+                                          resizable="false">
+                                    <div class="alertealfrescooffline" style="width: 100%">
+                                        <h:graphicImage value="./resources/images/alerteaccusedereception.png" style="margin-left:10px"/>
+                                        Le serveur de fichier Alfresco ne réponds pas ou n'est pas allumé,<br />
+                                        vous ne pourrez voir aucun fichier et/ou l'application risque de mal fonctionner
+                                    </div>
+                                    <p:separator/>
+                                    <h:form>
+                                        <p:commandButton value="Ok"
+                                                         type="button"
+                                                         onclick="PF('dialogueAlfrescoMessage').hide()"
+                                                         style="margin-top: 14px; margin-right: 10px"
+                                                         icon="fa fa-check-circle"/>
+                                    </h:form>
+                                </p:dialog>
+
                             </div>
-
-
-                            <div class="lignechart" style="margin-left: 10px; margin-top: 30px">
-                                <div class="discussionbox">
-                                    <p:panel toggleable="true" id="sports" header="Vos Dernieres disussions en cours">
-                                        <ui:repeat  value="#{tableauDeBord.discussion.listeDiscussionsOuvertes}"  var="discussionEtape">
-                                            <h:form >
-                                                <h:panelGrid columns="2" columnClasses="ui-grid-col-1, ui-grid-col-10" style="width:100%">
-                                                    <h:graphicImage value="./resources/images/user.png"  style=" margin-left: 5px; margin-top: -30px"/>
-                                                    <h:panelGrid columns="1" style="width: 100%">
-                                                        <h:outputText value="#{discussionEtape.messageDiscussion}" style="font-size: 13px; color: #0f0f0f"/>
-                                                        <h:outputText style="color: #777777; font-size: 11px; margin-top: 5px" value="#{discussionEtape.dateDiscussion}"/>
-                                                        <p:commandButton  icon="fa fa-eye" ajax="false"
-                                                                          action="#{tableauDeBord.accederALEtapeDUneDiscussion}"
-                                                                          style="background: #496ea1; border: 1px #496ea1 solid; float: right"
-                                                                          title="Voir">
-                                                            <f:param name="idDiscussion" value="#{discussionEtape.idDiscussion}" />
-                                                            <f:param name="etatCorrespondanceEtape" value="#{discussionEtape.etatCorrespondanceEtape}" />
-                                                        </p:commandButton>
-                                                    </h:panelGrid>
-                                                </h:panelGrid>
-                                                <p:separator/>
-                                            </h:form>
-                                        </ui:repeat>
-                                    </p:panel>
-                                </div>
-                                <div class="discussionbox">
-                                    <p:panel toggleable="true" header="Vos Dernieres taches en cours traitement">
-                                        <ui:repeat  value="#{tableauDeBord.etape.listeDeMesTachesEnTraitement}"  var="etape">
-                                            <h:form id="form">
-                                                <h:panelGrid columns="2" columnClasses="ui-grid-col-1, ui-grid-col-10" style="width:100%">
-                                                    <h:graphicImage value="./resources/images/entraitement.png"  style=" margin-left: 5px; margin-top: -30px"/>
-                                                    <h:panelGrid columns="1" style="width: 100%">
-                                                        <h:outputText value="#{etape.message}" escape="false" style="font-size: 13px; color: #0f0f0f"/>
-                                                        <h:outputText style="color: #777777; font-size: 11px; margin-top: 5px" value="#{etape.date_debut}"/>
-                                                        <p:commandButton  icon="fa fa-eye" action="#{tableauDeBord.voirUneTache}" ajax="false"
-                                                                          style="background: #496ea1; border: 1px #496ea1 solid; float: right"
-                                                                          title="Voir">
-                                                            <f:param name="etapeId" value="#{etape.id}" />
-                                                            <f:param name="natureEtape" value="#{etape.nature}" />
-                                                        </p:commandButton>
-                                                    </h:panelGrid>
-                                                </h:panelGrid>
-                                            <p:separator/>
-                                            </h:form>
-                                        </ui:repeat>
-                                    </p:panel>
-                                </div>
-                            </div>
-
-                            <p:dialog id="alfrescoMessage"
-                                      header="Erreur sur le serveur de fichier"
-                                      widgetVar="dialogueAlfrescoMessage"
-                                      modal="true" hideEffect="clip"
-                                      showEffect="clip"
-                                      resizable="false">
-                                <div class="alertealfrescooffline" style="width: 100%">
-                                    <h:graphicImage value="./resources/images/alerteaccusedereception.png" style="margin-left:10px"/>
-                                    Le serveur de fichier Alfresco ne réponds pas ou n'est pas allumé,<br />
-                                    vous ne pourrez voir aucun fichier et/ou l'application risque de mal fonctionner
-                                </div>
-                                <p:separator/>
-                                <h:form>
-                                    <p:commandButton value="Ok"
-                                                     type="button"
-                                                     onclick="PF('dialogueAlfrescoMessage').hide()"
-                                                     style="margin-top: 14px; margin-right: 10px"
-                                                     icon="fa fa-check-circle"/>
-                                </h:form>
-                            </p:dialog>
-
-                        </div>
-
                     </div>
+                    <div class="ui-g-1"></div>
                 </div>
             </div>
-        </div>
+
         <script>
 
             var courriersTraitesParUrgence = document.getElementById('courriersTraitesParUrgence');

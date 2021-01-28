@@ -1413,7 +1413,7 @@ a.bg-danger:focus {
   margin: 5px 0 10px;
   font-weight: bold;
   font-size: 22px;
-  border-bottom: 1px solid #428BCA;
+  border-bottom: 2px solid #428BCA;
 }
 
 /**Ajout perso**/
@@ -1612,7 +1612,7 @@ pre code {
 }
 @media (min-width: 1200px) {
   .container {
-    width: 1170px;
+    width: 1190px;
   }
 }
 .container-fluid {

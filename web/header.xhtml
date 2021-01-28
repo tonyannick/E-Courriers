@@ -11,6 +11,7 @@
             <h:outputStylesheet name="css/header.css" />
             <h:outputScript name="/sweetalert/js/sweetalert.min.js"/>
             <h:outputStylesheet name="/sweetalert/css/sweetalert.css"/>
+            <h:outputStylesheet name="css/menuheadertableaudebord.css"/>
                    <div class="header">
                        <h:form>
                         <h:outputLabel href="#" style="margin-left: 8px; padding-right: 25px; color : dodgerblue; font-size:18px; border-right: 3px solid #2b669a; color: black; font-weight: bold"> E-Courrier</h:outputLabel>
@@ -27,8 +28,56 @@
                            </div>
                        </h:form>
                    </div>
+                    <div class="fixed-header">
+                        <div class="ui-g-12 container-header">
+                            <nav>
+                                <h:outputLink value="statistiques.xhtml">
+                                    <h:graphicImage  width="15px" height="15px" value="./resources/images/diagram.png" style="margin-right: 10px; "/>
+                                    Statistiques
+                                </h:outputLink>
 
+                                <h:outputLink value="mesdossiers.xhtml">
+                                    <h:graphicImage  width="15px" height="15px" value="./resources/images/folders.png" style="margin-right: 10px; "/>
+                                    Mes dossiers
+                                </h:outputLink>
 
+                                <p:commandLink action="#{tableauDeBord.naviguerVersUneListeDesCourriers}">
+                                    <f:param name="url" value="courriersarchives.xhtml" />
+                                    <h:graphicImage  width="15px" height="15px" value="./resources/images/archive.png" style="margin-right: 10px; "/>
+                                    Archives
+                                </p:commandLink>
+
+                                <p:commandLink action="#{tableauDeBord.naviguerVersUneListeDesCourriers}">
+                                    <f:param name="url" value="courriersrecus.xhtml" />
+                                    <h:graphicImage  width="15px" height="15px" value="./resources/images/courrierrecu.png" style="margin-right: 10px; "/>
+                                    Courriers reçus
+                                </p:commandLink>
+
+                                <p:commandLink action="#{tableauDeBord.naviguerVersUneListeDesCourriers}">
+                                    <f:param name="url" value="courriersenvoyes.xhtml" />
+                                    <h:graphicImage  width="15px" height="15px" value="./resources/images/courrierenvoye.png" style="margin-right: 10px; "/>
+                                    Courriers envoyés
+                                </p:commandLink>
+
+                                <p:commandLink action="#{tableauDeBord.afficherPagePourAjouterUnNouveauCourrier}">
+                                    <h:graphicImage  width="15px" height="15px" value="./resources/images/nouveaucourrier.png" style="margin-right: 10px;"/>
+                                    Nouveau courrier
+                                </p:commandLink>
+
+                                <p:commandLink action="#{tableauDeBord.naviguerVersUneListeDesCourriers}">
+                                    <f:param name="url" value="courriersfavoris.xhtml" />
+                                    <h:graphicImage  width="15px" height="15px" value="./resources/images/star.png" style="margin-right: 10px;"/>
+                                    Favoris
+                                </p:commandLink>
+
+                                <h:outputLink class="sidebaractive" value="tableaudebord.xhtml">
+                                    <h:graphicImage width="15px" height="15px" value="./resources/images/home.png" style="margin-right: 10px;"/>
+                                    Accueil
+                                </h:outputLink>
+
+                            </nav>
+                        </div>
+                    </div>
             <h:form>
                 <p:confirmDialog global="true"  showEffect="slide" hideEffect="fade">
                     <p:commandButton value="Deconnecter" type="button"  styleClass="ui-confirmdialog-yes" icon="fa fa-close" />
