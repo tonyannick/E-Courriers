@@ -8,6 +8,7 @@ nav a{
     text-decoration: none;
     padding: 7px 10px;
     float: right;
+    font-size: 14px;
     border-radius: 20px;
     display: block;
 }
@@ -19,8 +20,7 @@ nav a:hover{
     font-weight: bold;
     background: #e6e6e0;
     display: inline-block;
-
-    transition: 0.9s;
+    transition: 1s;
 }
 .container-header {
     padding-right: 15px;
