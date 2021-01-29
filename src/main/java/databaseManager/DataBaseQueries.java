@@ -27,7 +27,9 @@ public class DataBaseQueries {
     public static int nombreCourrierEnvoyesDuJour = 0;
     public static int nombreCourrierRecusDuJour = 0;
     public static int nombreCourrierUrgentDuJour = 0;
+    public static int nombreCourrierPasUrgentDuJour = 0;
     public static int nombreCourrierConfidentielDuJour = 0;
+    public static int nombreCourrierPasConfidentielDuJour = 0;
     public static int nombreCourrierEnvoyesDuMois = 0;
     public static int nombreCourrierRecusDuMois = 0;
     public static int nombreCourrierRecusDeLaSemaine = 0;
@@ -69,9 +71,13 @@ public class DataBaseQueries {
         listeCourriersEnvoyes.clear();
         listeCourriersRecus.clear();
         int tempCourrierUrgentRecu = 0;
+        int tempCourrierPasUrgentRecu = 0;
         int tempCourrierUrgentEnvoye =0;
+        int tempCourrierPasUrgentEnvoye =0;
         int tempCourrierConfidentielRecu = 0;
         int tempCourrierConfidentielEnvoye =0;
+        int tempCourrierPasConfidentielRecu = 0;
+        int tempCourrierPasConfidentielEnvoye =0;
 
         HttpSession session = SessionUtils.getSession();
         String idDirection = (String) session.getAttribute("idDirectionUser");
@@ -86,6 +92,7 @@ public class DataBaseQueries {
         nombreCourrierEnvoyesDuJour = 0;
         nombreCourrierUrgentDuJour = 0;
         nombreCourrierConfidentielDuJour = 0;
+        nombreCourrierPasConfidentielDuJour = 0;
         nombreCourrierUrgentDeLaSemaine = 0;
         nombreCourrierConfidentielDeLaSemaine = 0;
         nombreCourrierEnvoyesDuMois= 0;
@@ -131,8 +138,6 @@ public class DataBaseQueries {
             resultSetCourriersRecus = connectionCourrierRecus.createStatement().executeQuery(nombreDeCourrierRecusSQL);
             resultSetCourriersEnvoyes = connectionCourrierEnvoyes.createStatement().executeQuery(nombreDeCourrierEnvoyesSQL);
 
-
-
             while (resultSetCourriersRecus.next()) {
                 listeCourriersRecus.add(new Courrier(
                         resultSetCourriersRecus.getString("date_enregistrement"),
@@ -161,9 +166,13 @@ public class DataBaseQueries {
                         nombreCourrierRecusDuJour++;
                         if (listeCourriersRecus.get(i).getPrioriteCourrier().equalsIgnoreCase("Urgent")) {
                             tempCourrierUrgentRecu++;
+                        }else if(listeCourriersRecus.get(i).getPrioriteCourrier().equalsIgnoreCase("Normal")){
+                            tempCourrierPasUrgentRecu++;
                         }
-                        if (listeCourriersRecus.get(i).getPrioriteCourrier().equalsIgnoreCase("Oui")) {
+                        if (listeCourriersRecus.get(i).getConfidentiel().equalsIgnoreCase("Oui")) {
                             tempCourrierConfidentielRecu++;
+                        }else if(listeCourriersRecus.get(i).getConfidentiel().equalsIgnoreCase("Non")){
+                            tempCourrierPasConfidentielRecu++;
                         }
                     }
 
@@ -212,11 +221,15 @@ public class DataBaseQueries {
                 for (int i = 0; i < listeCourriersEnvoyes.size(); i++) {
                     if (listeCourriersEnvoyes.get(i).getDateDEnregistrement().equals(dateDuJour)) {
                         nombreCourrierEnvoyesDuJour++;
-                        if (listeCourriersEnvoyes.get(i).getPrioriteCourrier().equalsIgnoreCase("Oui")) {
+                        if (listeCourriersEnvoyes.get(i).getPrioriteCourrier().equalsIgnoreCase("Normal")) {
                             tempCourrierUrgentEnvoye++;
+                        }else if(listeCourriersEnvoyes.get(i).getPrioriteCourrier().equalsIgnoreCase("Urgent")){
+                            tempCourrierPasUrgentEnvoye++;
                         }
-                        if (listeCourriersEnvoyes.get(i).getPrioriteCourrier().equalsIgnoreCase("Oui")) {
+                        if (listeCourriersEnvoyes.get(i).getConfidentiel().equalsIgnoreCase("Oui")) {
                             tempCourrierConfidentielEnvoye++;
+                        }else if(listeCourriersEnvoyes.get(i).getConfidentiel().equalsIgnoreCase("Non")){
+                            tempCourrierPasConfidentielEnvoye++;
                         }
                     }
 
@@ -264,7 +277,9 @@ public class DataBaseQueries {
             nombreCourrierUrgentDuMois = nombreCourrierUrgentRecusDuMois + nombreCourrierUrgentEnvoyesDuMois;
             nombreCourrierPasUrgentDuMois = nombreCourrierPasUrgentRecusDuMois + nombreCourrierPasUrgentEnvoyesDuMois;
             nombreCourrierUrgentDuJour = tempCourrierUrgentEnvoye + tempCourrierUrgentRecu;
+            nombreCourrierPasUrgentDuJour = tempCourrierPasUrgentEnvoye + tempCourrierPasUrgentRecu;
             nombreCourrierConfidentielDuJour = tempCourrierConfidentielEnvoye + tempCourrierConfidentielRecu;
+            nombreCourrierPasConfidentielDuJour = tempCourrierPasConfidentielEnvoye + tempCourrierPasConfidentielRecu;
             nombreCourrierConfidentielDuMois = nombreCourrierConfidentielEnvoyesDuMois + nombreCourrierConfidentielRecusDuMois;
             nombreCourrierUrgentDeLaSemaine = nombreCourrierUrgentEnvoyesDeLaSemaine + nombreCourrierUrgentRecusDeLaSemaine;
             nombreCourrierConfidentielDeLaSemaine = nombreCourrierConfidentielEnvoyesDeLaSemaine + nombreCourrierConfidentielRecusDeLaSemaine;

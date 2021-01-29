@@ -69,7 +69,6 @@ public class DateUtils {
         Date date = new Date();
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy");
         String anneeEnCours = simpleDateFormat.format(date);
-        System.out.println("anneeEnCours = " + anneeEnCours);
         return anneeEnCours;
     }
 

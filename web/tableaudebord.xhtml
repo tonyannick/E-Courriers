@@ -52,51 +52,51 @@
                             <div id="navigationHeader" class="ui-g-12 container-header">
                                 <nav>
                                     <h:outputLink value="statistiques.xhtml">
-                                        <h:graphicImage  width="15px" height="15px" value="./resources/images/diagram.png" style="margin-right: 10px; "/>
-                                        Statistiques
+                                        <h:graphicImage  width="16px" height="16px" value="./resources/images/rising.png" style="margin-right: 5px; margin-top: -4px "/>
+                                        <span style="font-size: 16px">Statistiques</span>
                                     </h:outputLink>
 
                                     <h:outputLink value="mesdossiers.xhtml">
-                                        <h:graphicImage  width="15px" height="15px" value="./resources/images/folders.png" style="margin-right: 10px; "/>
-                                        Mes dossiers
+                                        <h:graphicImage  width="16px" height="16px" value="./resources/images/folders.png" style="margin-right: 5px; margin-top: -4px "/>
+                                        <span style="font-size: 16px">Mes dossiers</span>
                                     </h:outputLink>
 
                                     <p:commandLink action="#{tableauDeBord.naviguerVersUneListeDesCourriers}">
                                         <f:param name="url" value="courriersarchives.xhtml" />
-                                        <h:graphicImage  width="15px" height="15px" value="./resources/images/archive.png" style="margin-right: 10px; "/>
-                                        Archives
+                                        <h:graphicImage  width="16px" height="16px" value="./resources/images/archive.png" style="margin-right: 5px; margin-top: -4px "/>
+                                        <span style="font-size: 16px">Archives</span>
                                     </p:commandLink>
 
                                     <p:commandLink action="#{tableauDeBord.naviguerVersUneListeDesCourriers}">
                                         <f:param name="url" value="courriersrecus.xhtml" />
-                                        <h:graphicImage  width="15px" height="15px" value="./resources/images/courrierrecu.png" style="margin-right: 10px; "/>
-                                        Courriers reçus
+                                        <h:graphicImage  width="16px" height="16px" value="./resources/images/courrierrecu.png" style="margin-right: 5px; margin-top: -4px "/>
+                                        <span style="font-size: 16px"> Courriers reçus</span>
                                     </p:commandLink>
 
                                     <p:commandLink action="#{tableauDeBord.naviguerVersUneListeDesCourriers}">
                                         <f:param name="url" value="courriersenvoyes.xhtml" />
-                                        <h:graphicImage  width="15px" height="15px" value="./resources/images/courrierenvoye.png" style="margin-right: 10px; "/>
-                                        Courriers envoyés
+                                        <h:graphicImage  width="16px" height="16px" value="./resources/images/courrierenvoye.png" style="margin-right: 5px; margin-top: -4px "/>
+                                        <span style="font-size: 16px">Courriers envoyés</span>
                                     </p:commandLink>
 
                                     <p:commandLink action="#{tableauDeBord.naviguerVersUneListeDesCourriers}">
                                         <f:param name="url" value="courriersfavoris.xhtml" />
-                                        <h:graphicImage  width="15px" height="15px" value="./resources/images/star.png" style="margin-right: 10px;"/>
-                                        Favoris
+                                        <h:graphicImage  width="16px" height="16px" value="./resources/images/star.png" style="margin-right: 5px; margin-top: -4px"/>
+                                        <span style="font-size: 16px">Favoris</span>
                                     </p:commandLink>
 
                                     <p:commandLink action="#{tableauDeBord.afficherPagePourAjouterUnNouveauCourrier}">
-                                        <h:graphicImage  width="15px" height="15px" value="./resources/images/nouveaucourrier.png" style="margin-right: 10px;"/>
-                                        Nouveau courrier
+                                        <h:graphicImage  width="16px" height="16px" value="./resources/images/nouveaucourrier.png" style="margin-right: 5px; margin-top: -4px"/>
+                                        <span style="font-size: 16px">Nouveau courrier</span>
                                     </p:commandLink>
 
                                 </nav>
                             </div>
                         </div>
-                        <div class="ui-g-1" style="margin-bottom: 50px; margin-top: 10px"></div>
+                        <div class="ui-g-1" style="margin-bottom: 50px; margin-top: 10px"/>
                             <div class="ui-g-10">
                                 <div class="column" style=" width:100%; margin-right: 10px">
-                                        <h1 class="page-header"><h:graphicImage value="./resources/images/speedometer.png" />Tableau de bord</h1>
+                                        <h1 class="page-header"><h:graphicImage value="./resources/images/analysis.png" />Tableau de bord</h1>
 
                                         <div class="notice notice-success" style="margin-top: 10px">
                                             <strong>Vous êtes un agent de  : </strong> #{tableauDeBord.user.userDirection}
@@ -104,24 +104,24 @@
 
                                         <div class="stylecourrierdujour">
 
-                                            <div class="gridbox" style="background-color: #53A9F1">
-                                                <div class="gridbox_icon"><h:graphicImage value="./resources/images/courrierrecu.png" /></div>
-                                                <div class="gridbox_info"  style="color: white; font-size: 14px">Courriers reçu du jour : <span style="font-size: 18px; margin-left: 5px">#{tableauDeBord.statistiques.nombreDeCourrierRecusDuJour}</span></div>
+                                            <div class="gridbox" style="background-color: rgba(83, 169,241, 0.5); border: none">
+                                                <div class="gridbox_icon"><h:graphicImage value="./resources/images/receive-mail.png" /></div>
+                                                <div class="gridbox_info" style="color: black; font-size: 15px">Courriers reçu du jour : <span style="font-size: 18px; margin-left: 5px">#{tableauDeBord.statistiques.nombreDeCourrierRecusDuJour}</span></div>
                                             </div>
 
-                                            <div class="gridbox" style="background-color: #6FBC6F">
-                                                <div class="gridbox_icon"><h:graphicImage value="./resources/images/courrierenvoye.png" /></div>
-                                                <div class="gridbox_info" style="color: white; font-size: 14px">Courriers envoyés du jour  :  <span style="font-size: 18px; margin-left: 5px">#{tableauDeBord.statistiques.nombreDeCourrierEnvoyesDuJour} </span></div>
+                                            <div class="gridbox" style="background-color: rgba(249, 174, 46, 0.5); border: none">
+                                                <div class="gridbox_icon"><h:graphicImage value="./resources/images/send.png" /></div>
+                                                <div class="gridbox_info" style="color: black; font-size: 15px">Courriers envoyés du jour  :  <span style="font-size: 18px; margin-left: 5px">#{tableauDeBord.statistiques.nombreDeCourrierEnvoyesDuJour} </span></div>
                                             </div>
 
-                                            <div class="gridbox" style="background-color: #F9AE2E">
+                                            <div class="gridbox" style="background-color: rgba(83, 169,241, 0.5); border: none">
                                                 <div class="gridbox_icon"><h:graphicImage value="./resources/images/important.png" /></div>
-                                                <div class="gridbox_info" style="color: white; font-size: 14px">Courriers urgent du jour :   <span style="font-size: 18px; margin-left: 5px">#{tableauDeBord.statistiques.nombreDeCourrierUrgentDuJour}</span></div>
+                                                <div class="gridbox_info" style="color: black; font-size: 15px">Courriers urgent du jour :   <span style="font-size: 18px; margin-left: 5px">#{tableauDeBord.statistiques.nombreDeCourrierUrgentDuJour}</span></div>
                                             </div>
 
-                                            <div class="gridbox" style="background-color: #F86B8F">
+                                            <div class="gridbox" style="background-color: rgba(249, 174, 46, 0.5); border: none">
                                                 <div class="gridbox_icon"><h:graphicImage value="./resources/images/padlock.png" /></div>
-                                                <div class="gridbox_info" style="color: white; font-size: 14px">Courriers confidentiel du jour :  <span style="font-size: 18px; margin-left: 5px">#{tableauDeBord.statistiques.nombreDeCourrierConfidentielDuJour}</span></div>
+                                                <div class="gridbox_info" style="color: black; font-size: 15px">Courriers confidentiel du jour :  <span style="font-size: 18px; margin-left: 5px">#{tableauDeBord.statistiques.nombreDeCourrierConfidentielDuJour}</span></div>
                                             </div>
                                         </div>
 
@@ -244,7 +244,7 @@
 
                                 </div>
                             </div>
-                        <div class="ui-g-1"></div>
+                        <div class="ui-g-1"/>
                     </div>
                 </div>
         </div> </div>

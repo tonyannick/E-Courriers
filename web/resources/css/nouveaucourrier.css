@@ -29,7 +29,7 @@
     text-align: justify;
     background-color: rgba(255, 253, 253, 0.43);
     border: 1px solid #ccc;
-    border-radius: 2px;
+    border-radius: 20px;
 }
 .titresection{
     font-family: "Seaweed Script";
@@ -39,6 +39,7 @@
     font-size: 18px;
     position: relative;
     margin:0;
+    border-radius: 20px;
     background-color:#428bca;
     -webkit-box-shadow: 5px 4px 0px 0px rgb(209, 212, 213);
     -moz-box-shadow: 5px 4px 0px 0px rgb(209, 212, 213);

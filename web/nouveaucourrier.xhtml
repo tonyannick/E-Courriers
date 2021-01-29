@@ -53,7 +53,7 @@
                             <h:inputText value="#{nouveauCourrier.user.userFonction}" id="userFonction" style="display: none;"/>
                             <p:messages id="messagevalidation" for="messagevalidation" showDetail="true" closable="true"/>
                             <div class="line" style=" margin-top: 20px">
-                                <div class="colonneDouble">
+                                <div class="colonnefullpage">
                                     <div class="colonnecontent">
 
                                         <p:growl id="messageconfidentiel" for="messageconfidentiel" showDetail="true" life="4000"/>
@@ -61,7 +61,7 @@
                                         <p:selectOneMenu widgetVar="selectOneMenuConfidentiel"
                                                          autoWidth="true" effect="slide" onchange="checkIfCourrierIsConfidentiel()"
                                                          value="#{nouveauCourrier.courrier.confidentiel}"
-                                                         style="margin-left:10px; width: 40%; margin-top: 3px">
+                                                         style="margin-left:10px; width: 30%; margin-top: 3px">
                                             <f:selectItem itemLabel="Choisissez une valeur" itemValue=""/>
                                             <f:selectItem itemLabel="Oui" itemValue="Oui"/>
                                             <f:selectItem itemLabel="Non" itemValue="Non"/>
@@ -72,7 +72,7 @@
                             </div>
 
                             <div class="line" style=" margin-top: 20px">
-                                <div class="colonneDouble">
+                                <div class="colonnefullpage">
                                     <div class="colonnecontent">
                                         <h:panelGrid columns="2"  styleClass="panelLogin" cellspacing="30" cellpadding="30">
                                             <h4 style="font-weight:bold; margin-right:5px; font-size: 14px" >Date de réception*</h4>

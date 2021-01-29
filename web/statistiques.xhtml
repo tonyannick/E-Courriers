@@ -16,6 +16,7 @@
         <title>Statistiques</title>
         <meta http-equiv="Content-Type" content="text/html;charset=UTF8" />
         <h:outputStylesheet name="css/tableaudebord.css" />
+        <h:outputStylesheet name="css/statistiques.css" />
         <h:outputScript name="bootstrap/js/bootstrap.js" />
         <h:outputStylesheet name="bootstrap/css/bootstrap.css" />
         <h:outputScript name="chartjs/js/Chart.js"/>
@@ -42,277 +43,68 @@
                         <ui:include src="footer.xhtml" />
                     </ui:insert>
                 </div>
-                <div class="main-overview" style="margin-bottom: 50px; margin-top: 10px">
+                <div style="width:100%; margin-bottom: 50px; margin-top: 10px">
 
-                    <div class="row">
-                        <div class="col-lg-offset-12 center">
-                            <div class="column" style=" width:100%; margin-right: 10px">
-                                <ul class="breadcrumb">
-                                    <li><h:outputLink value="tableaudebord.xhtml" title="Accueil">Accueil</h:outputLink></li>
-                                    <li>Statistiques</li>
-                                </ul>
+                    <div style=" width:100%;">
+                        <div class="ui-g-1"/>
+                        <div  class="ui-g-10">
+                            <ul class="breadcrumb">
+                                <li><h:outputLink value="tableaudebord.xhtml" title="Accueil">Accueil</h:outputLink></li>
+                                <li>Statistiques</li>
+                            </ul>
 
-                                <h1 class="page-header"><h:graphicImage value="./resources/images/graph.png" style="margin-right :10px"/>Statistiques</h1>
+                            <h1 class="page-header">
+                                <h:graphicImage value="./resources/images/graph.png" style="margin-right :10px"/>Statistiques
+                            </h1>
+                            <div class="colonnecontent">
+                                <div class="tabs">
 
-                                <div class="col-md-3">
+                                    <input type="radio" name="tabs" id="tabJour" checked="checked"/>
+                                    <label for="tabJour">Statistiques du jour</label>
+                                    <div class="tab" style="background-color: #90CAF9;">
 
-                                    <p:panel toggleable="true" header="statistiques du jour">
+                                        <div class="lignechart" style="margin-top: 20px; margin-left: 2px">
+                                                <div class="chartbox" style="background-color: white;">
+                                                    <p:barChart model="#{statistiques.barModelParPrioriteDuJour}" style="width: 90%; height: 300px;"/>
 
-                                        <h:panelGrid columns="3" styleClass="panelLogin" cellspacing="30" cellpadding="30">
+                                                </div>
+                                                <div class="chartbox" style="background-color: white;;margin-left: 26px">
+                                                    <p:barChart model="#{statistiques.barModelParConfidentialiteDuJour}"  style="width: 90%; height: 300px;"/>
+                                                </div>
 
-                                            <h:graphicImage value="./resources/images/square.png" style="margin-right:5px; width: 10px; height: 5px"/>
-                                            <h4 style="margin-left:10px; font-weight:bold; color: #0D47A1; font-size: 15px">Total courriers traités </h4>
-                                            <h:outputText style="font-weight:bold; margin-left:10px; color: #0D47A1"
-                                                          value="#{statistiques.totalCourrierTraitesParJour}"/>
+                                                <div class="chartbox1" style="background-color: white;;margin-left: 29px">
+                                                    <p:barChart model="#{statistiques.hbarModel}" widgetVar="chartDuJour" style="width: 90%; height: 300px;"/>
+                                                </div>
+                                        </div>
+                                     </div>
 
-                                            <h:graphicImage value="./resources/images/squareblack.png" style="margin-right:5px; width: 10px; height: 5px"/>
-                                            <h4 style="margin-left:10px; font-weight:bold; font-size: 14px" >Nbre de courriers reçus</h4>
-                                            <h:outputText style="margin-left:10px"
-                                                          value="#{statistiques.statistiques.nombreDeCourrierRecusDuJour}"/>
-
-                                            <h:graphicImage value="./resources/images/squareblack.png" style="margin-right:5px; width: 10px; height: 5px"/>
-                                            <h4 style="margin-left:10px; font-weight:bold; font-size: 14px">Nbre de courriers envoyés </h4>
-                                            <h:outputText  size="55" style="margin-left:10px"
-                                                           value="#{statistiques.statistiques.nombreDeCourrierEnvoyesDuJour}"/>
-
-                                            <h:graphicImage value="./resources/images/squareblack.png" style="margin-right:5px; width: 10px; height: 5px"/>
-                                            <h4 style="margin-left:10px; font-weight:bold; font-size: 14px">Nbre de courriers urgent </h4>
-                                            <h:outputText style="margin-left:10px"
-                                                          value="#{statistiques.statistiques.nombreDeCourrierUrgentDuJour}"/>
-
-                                            <h:graphicImage value="./resources/images/squareblack.png" style="margin-right:5px; width: 10px; height: 5px"/>
-                                            <h4 style="margin-left:10px; font-weight:bold; font-size: 14px">Nbre de courriers confidentiel </h4>
-                                            <h:outputText style="margin-left:10px"
-                                                          value="#{statistiques.statistiques.nombreDeCourrierConfidentielDuJour}"/>
-
-                                        </h:panelGrid>
-
-                                    </p:panel>
-
-                                </div>
-                                <div class="col-md-5">
-                                    <p:panel toggleable="true" header="statistiques de la semaine du : #{statistiques.statistiques.debutDeSemaine}
-                                                      au #{statistiques.statistiques.finDeSemaine}">
-
-                                        <h:panelGrid columns="3" styleClass="panelLogin" cellspacing="30" cellpadding="30">
-
-                                            <h:graphicImage value="./resources/images/square.png" style="margin-right:5px; width: 10px; height: 5px"/>
-                                            <h4 style="margin-left:10px; font-weight:bold; color: #0D47A1; font-size: 15px">Total courriers traités </h4>
-                                            <h:outputText style="font-weight:bold; margin-left:10px; color: #0D47A1"
-                                                          value="#{statistiques.totalCourrierTraitesParSemaine}"/>
-
-                                            <h:graphicImage value="./resources/images/squareblack.png" style="margin-right:5px; width: 10px; height: 5px"/>
-                                            <h4 style="margin-left:10px; font-weight:bold; font-size: 14px" >Nbre de courriers reçus</h4>
-                                            <h:outputText style="margin-left:10px"
-                                                          value="#{statistiques.statistiques.nombreDeCourrierRecusDeLaSemaine}"/>
-
-                                            <h:graphicImage value="./resources/images/squareblack.png" style="margin-right:5px; width: 10px; height: 5px"/>
-                                            <h4 style="margin-left:10px; font-weight:bold; font-size: 14px">Nbre de courriers envoyés </h4>
-                                            <h:outputText  size="55" style="margin-left:10px"
-                                                           value="#{statistiques.statistiques.nombreDeCourrierEnvoyesDeLaSemaine}"/>
-
-                                            <h:graphicImage value="./resources/images/squareblack.png" style="margin-right:5px; width: 10px; height: 5px"/>
-                                            <h4 style="margin-left:10px; font-weight:bold; font-size: 14px">Nbre de courriers urgent </h4>
-                                            <h:outputText style="margin-left:10px"
-                                                          value="#{statistiques.statistiques.nombreDeCourrierUrgentDeLaSemaine}"/>
-
-                                            <h:graphicImage value="./resources/images/squareblack.png" style="margin-right:5px; width: 10px; height: 5px"/>
-                                            <h4 style="margin-left:10px; font-weight:bold; font-size: 14px">Nbre de courriers confidentiel </h4>
-                                            <h:outputText style="margin-left:10px"
-                                                          value="#{statistiques.statistiques.nombreDeCourrierConfidentielDeLaSemaine}"/>
-
-                                        </h:panelGrid>
-
-                                    </p:panel>
-
-                                </div>
-                                <div class="col-md-4">
-
-                                    <p:panel toggleable="true" header="statistiques du mois en cours">
-
-                                        <h:panelGrid columns="3" styleClass="panelLogin" cellspacing="30" cellpadding="30">
-
-                                            <h:graphicImage value="./resources/images/square.png" style="margin-right:5px; width: 10px; height: 5px"/>
-                                            <h4 style="margin-left:10px; font-weight:bold; color: #0D47A1; font-size: 15px">Total courriers traités </h4>
-                                            <h:outputText style="font-weight:bold; margin-left:10px; color: #0D47A1"
-                                                          value="#{statistiques.totalCourrierTraitesParMois}"/>
-
-                                            <h:graphicImage value="./resources/images/squareblack.png" style="margin-right:5px; width: 10px; height: 5px"/>
-                                            <h4 style="margin-left:10px; font-weight:bold; font-size: 14px" >Nbre de courriers reçus</h4>
-                                            <h:outputText style="margin-left:10px"
-                                                          value="#{statistiques.statistiques.nombreDeCourrierRecusDuMois}"/>
-
-                                            <h:graphicImage value="./resources/images/squareblack.png" style="margin-right:5px; width: 10px; height: 5px"/>
-                                            <h4 style="margin-left:10px; font-weight:bold; font-size: 14px">Nbre de courriers envoyés </h4>
-                                            <h:outputText  size="55" style="margin-left:10px"
-                                                           value="#{statistiques.statistiques.nombreDeCourrierEnvoyesDuMois}"/>
-
-                                            <h:graphicImage value="./resources/images/squareblack.png" style="margin-right:5px; width: 10px; height: 5px"/>
-                                            <h4 style="margin-left:10px; font-weight:bold; font-size: 14px">Nbre de courriers urgent </h4>
-                                            <h:outputText style="margin-left:10px"
-                                                          value="#{statistiques.statistiques.nombreDeCourrierUrgentDuMois}"/>
-
-                                            <h:graphicImage value="./resources/images/squareblack.png" style="margin-right:5px; width: 10px; height: 5px"/>
-                                            <h4 style="margin-left:10px; font-weight:bold; font-size: 14px">Nbre de courriers confidentiel </h4>
-                                            <h:outputText style="margin-left:10px"
-                                                          value="#{statistiques.statistiques.nombreDeCourrierConfidentielDuMois}"/>
-
-                                        </h:panelGrid>
-
-                                    </p:panel>
-
-                                </div>
-
-                            </div>
-                            <div class="column" style=" width:100%; margin-right: 10px">
-                                <div class="col-md-8">
-                                     <p:panel toggleable="true" header="statistiques des courriers traités par mois pour l'année en cours">
-                                            <canvas id="courriersTraitesParMois" width="490" height="120"></canvas>
-                                    </p:panel>
-                                </div>
-
-                                <div class="col-md-4">
-                                    <p:panel toggleable="true" header="statistiques des courriers traités genre le mois courant">
-                                        <canvas id="courriersTraitesParGenre" width="290" height="153"></canvas>
-                                    </p:panel>
+                                    <input type="radio" name="tabs" id="tabSemaine"/>
+                                    <label for="tabSemaine">Statistiques de la semaine</label>
+                                    <input type="radio" name="tabs" id="tabMois"/>
+                                    <label for="tabMois">Statistiques du mois</label>
+                                    <input type="radio" name="tabs" id="tabAnnee"/>
+                                    <label for="tabAnnee">Statistiques annuelles</label>
                                 </div>
                             </div>
-
-                            <div class="column" style=" width:100%; margin-right: 10px">
-                                <div class="col-md-12">
-                                    <p:panel toggleable="true" header="Nombre de courriers traités par types le mois courant">
-                                        <p:chart type="bar" model="#{statistiques.barModelTypeDeCourrier}" style="height:300px"/>
-                                    </p:panel>
-                                </div>
-                            </div>
-
-                            <div class="column" style=" width:100%; margin-right: 10px">
-                                <div class="col-md-6">
-                                    <p:panel toggleable="true" header="statistiques total des courriers recus par direction du Ministère">
-                                        <p:chart type="bar" model="#{statistiques.barModel}" style="height:300px"/>
-                                    </p:panel>
-                                </div>
-                                <div class="col-md-6">
-                                    <p:panel toggleable="true" header="statistiques total des courriers envoyés par direction du Ministère">
-                                        <p:chart type="bar" model="#{statistiques.barModelEnvoyes}" style="height:300px">
-                                            <p:ajax event="itemSelect" listener="#{statistiques.clickSurBarChat}" />
-                                        </p:chart>
-                                    </p:panel>
-                                </div>
-
-                            </div>
-
 
 
                         </div>
-
-
+                        <div class="ui-g-1"/>
                     </div>
+
                 </div>
             </div>
         </div>
         <script>
 
 
-            var courriersTraitesParMois = document.getElementById('courriersTraitesParMois');
-            var courriersTraitesParGenre = document.getElementById('courriersTraitesParGenre');
-            var courriersTraitesParDirection = document.getElementById('courriersTraitesParDirection');
 
-            var chartParMois = new Chart(courriersTraitesParMois, {
-                type: 'bar',
-                data: {
-                    labels: ['Janvier', 'Fevrier', 'Mars', 'Avril', 'Mai', 'Juin','Juillet','Aout','Septembre','Octobre','Novembre','Décembre'],
 
-                    datasets: [{
-                        label: '',
-                        data: ['#{statistiques.nombreDeCourrierTraitesJanvier}', '#{statistiques.nombreDeCourrierTraitesFevrier}', '#{statistiques.nombreDeCourrierTraitesMars}',
-                            '#{statistiques.nombreDeCourrierTraitesAvril}', '#{statistiques.nombreDeCourrierTraitesMai}', '#{statistiques.nombreDeCourrierTraitesJuin}',
-                            '#{statistiques.nombreDeCourrierTraitesJuillet}', '#{statistiques.nombreDeCourrierTraitesAout}', '#{statistiques.nombreDeCourrierTraitesSeptembre}',
-                            '#{statistiques.nombreDeCourrierTraitesOctobre}', '#{statistiques.nombreDeCourrierTraitesNovembre}', '#{statistiques.nombreDeCourrierTraitesDecembre}'],
-                        backgroundColor: [
-                            'rgba(255, 99, 132, 0.4)',
-                            'rgba(54, 162, 235, 0.4)',
-                            'rgba(255, 206, 86, 0.4)',
-                            'rgba(75, 192, 192, 0.4)',
-                            'rgba(153, 102, 255, 0.4)',
-                            'rgba(255, 159, 64, 0.4)',
-
-                            'rgba(255, 64, 0, 0.4)',
-                            'rgba(64, 0, 128, 0.4)',
-                            'rgba(0, 64, 64, 0.4)',
-                            'rgba(75, 192, 192, 0.4)',
-                            'rgba(0,255, 255, 0.4)',
-                            'rgba(128, 128, 128, 0.4)'
-                        ],
-                        borderColor: [
-                            'rgba(255, 99, 132, 1)',
-                            'rgba(54, 162, 235, 1)',
-                            'rgba(255, 206, 86, 1)',
-                            'rgba(75, 192, 192, 1)',
-                            'rgba(153, 102, 255, 1)',
-                            'rgba(255, 159, 64, 1)',
-
-                            'rgba(255, 64, 0, 1)',
-                            'rgba(64, 0, 128, 1)',
-                            'rgba(0, 64, 64, 1)',
-                            'rgba(75, 192, 192, 1)',
-                            'rgba(0,255, 255, 1)',
-                            'rgba(128, 128, 128, 1)'
-                        ],
-                        borderWidth:2,
-                        hoverBorderWidth : 3,
-                        hoverBorderColor : '#fef3ce'
-                    }]
-                },
-                options: {
-                    scales: {
-                        yAxes: [{
-                            ticks: {
-                                beginAtZero: true
-                            }
-                        }]
-                    },
-                    legend : {
-                        display:false
-                    },
-                    tooltip: {
-                        enable:true
-                    }
-                }
-            });
-            var chartParGenre = new Chart(courriersTraitesParGenre, {
-                type: 'doughnut',
-                data: {
-                    labels: ['Courriers interne au ministère', 'Courriers externe au ministère'],
-                    datasets: [{
-                        label: '',
-                        data: ['#{statistiques.nombreDeCourrierInterneDuMois}', '#{statistiques. nombreDeCourrierExterneDuMois}'],
-                        backgroundColor: [
-                            'rgba(93, 142,254, 0.5)',
-                            'rgba(230 ,143, 0, 0.5)'
-                        ],
-                        borderColor: [
-                            'rgba(238, 238,238, 1)',
-                            'rgba(238, 238,238, 1)'
-                        ],
-                        borderWidth:2,
-                        hoverBorderWidth : 3,
-                        hoverBorderColor : '#fef3ce'
-                    }]
-                },
-                options: {
-                    scales: {
-                        yAxes: [{
-                            ticks: {
-                                display:false
-                            }
-                        }], legend : {
-                            display:false
-                        },
-                    }
-                }
-            });
-
+            function skinBar() {
+                Chart.defaults.global.defaultFontFamily = 'Helvetica';
+                Chart.defaults.global.defaultFontSize = '12';
+                Chart.defaults.global.defaultFontColor = '#000000';
+            }
 
         </script>
 
