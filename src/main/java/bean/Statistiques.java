@@ -15,6 +15,8 @@ import org.primefaces.model.charts.axes.cartesian.linear.CartesianLinearAxes;
 import org.primefaces.model.charts.axes.cartesian.linear.CartesianLinearTicks;
 import org.primefaces.model.charts.bar.BarChartDataSet;
 import org.primefaces.model.charts.bar.BarChartOptions;
+import org.primefaces.model.charts.donut.DonutChartDataSet;
+import org.primefaces.model.charts.donut.DonutChartModel;
 import org.primefaces.model.charts.hbar.HorizontalBarChartDataSet;
 import org.primefaces.model.charts.hbar.HorizontalBarChartModel;
 import org.primefaces.model.charts.optionconfig.legend.Legend;
@@ -40,10 +42,12 @@ public class Statistiques implements Serializable {
 
     private static final long serialVersionUID = -5729086590993362739L;
     private HorizontalBarChartModel hbarModel;
-    private PieChartModel chartCourriersParUrgence;
     private PieChartModel chartCourriersParConfidentialite;
-    private org.primefaces.model.charts.bar.BarChartModel barModelParPrioriteDuJour;
-    private org.primefaces.model.charts.bar.BarChartModel barModelParConfidentialiteDuJour;
+    private DonutChartModel donutChartCourriersParPrioriteDuJour;
+    private DonutChartModel donutChartCourriersConfidentielDuJour;
+    private org.primefaces.model.charts.bar.BarChartModel barModelCourrierParJourDeLaSemaine;
+    private DonutChartModel donutChartModelParUrgenceDeLaSemaine;
+    private DonutChartModel donutChartModelCourriersEntrantEtSortantDeLaSemaine;
     private BarChartModel barModelRecus;
     private BarChartModel barModelEnvoyes;
     private BarChartModel barModelTypeDeCourrier;
@@ -74,7 +78,6 @@ public class Statistiques implements Serializable {
         barModelEnvoyes = new BarChartModel();
         barModelTypeDeCourrier = new BarChartModel();
         hbarModel = new HorizontalBarChartModel();
-       // chartCourriersParUrgence = new PieChartModel();
         barModelEnvoyes.setTitle("Nombre de courriers envoyés par directions");
         barModelRecus.setTitle("Nombre de courriers reçus par directions");
         barModelRecus.setSeriesColors("53A9F1");
@@ -98,18 +101,15 @@ public class Statistiques implements Serializable {
         totalCourrierTraitesParJour = String.valueOf(Integer.parseInt(statistiques.getNombreDeCourrierRecusDuJour()) + Integer.parseInt(statistiques.getNombreDeCourrierEnvoyesDuJour()));
         nombreDeCourrierInterneDuMois = DataBaseQueries.nombreCourrierInterneDuMois;
         nombreDeCourrierExterneDuMois = DataBaseQueries.nombreCourrierExterneDuMois;
-
         creerGraphiqueCourriersTraitesParJour();
-        creerGraphiquePrioriteParJour();
-        creerGraphiqueConfidentielParJour();
-
-
+        creerGraphiqueCourriersParPrioriteDuJour();
+        creerGraphiqueCourriersConfidentielParJour();
     }
 
     private void creerGraphiqueCourriersTraitesParJour(){
         ChartData dataHorizontalBar = new ChartData();
         HorizontalBarChartDataSet hbarDataSet = new HorizontalBarChartDataSet();
-        hbarModel.setExtender("skinBar");
+       // hbarModel.setExtender("skinBar");
         List<Number> values = new ArrayList<>();
         remplirValeursGraphique(Integer.valueOf(String.valueOf(DataBaseQueries.nombreCourrierRecusDuJour)),values);
         remplirValeursGraphique(Integer.valueOf(String.valueOf(DataBaseQueries.nombreCourrierEnvoyesDuJour)),values);
@@ -135,77 +135,154 @@ public class Statistiques implements Serializable {
                 .setOptions(GraphicsManager.creerOptionsDAffichageDuGraphique(options,false,true,"",false));
     }
 
-    private void creerGraphiquePrioriteParJour() {
-        barModelParPrioriteDuJour = new org.primefaces.model.charts.bar.BarChartModel();
+    private void creerGraphiqueCourriersParPrioriteDuJour() {
+        donutChartCourriersParPrioriteDuJour = new DonutChartModel();
         ChartData data = new ChartData();
-        data.setLabels(null);
-        BarChartDataSet barDataSet = new BarChartDataSet();
-        barModelParPrioriteDuJour.setExtender("skinBar");
+        DonutChartDataSet dataSet = new DonutChartDataSet();
         List<Number> values = new ArrayList<>();
         remplirValeursGraphique(Integer.valueOf(String.valueOf(DataBaseQueries.nombreCourrierUrgentDuJour)),values);
         remplirValeursGraphique(Integer.valueOf(String.valueOf(DataBaseQueries.nombreCourrierPasUrgentDuJour)),values);
 
-        List<String> bgColor = new ArrayList<>();
-        remplirListeBackgroundColorGraphique("rgba(255, 205, 86, 0.7)",bgColor);
-        remplirListeBackgroundColorGraphique("rgba(75, 192, 192, 0.7)",bgColor);
-
-        List<String> borderColor = new ArrayList<>();
-        remplirListeBorderColorGraphique("rgb(255,255,255)",borderColor);
-        remplirListeBorderColorGraphique("rgb(255,255,255)",borderColor);
+        List<String> bgColors = new ArrayList<>();
+        remplirListeBackgroundColorGraphique("rgb(255, 205, 86)",bgColors);
+        remplirListeBackgroundColorGraphique("rgb(54, 162, 235)",bgColors);
 
         List<String> labels = new ArrayList<>();
-        remplirListeLabelsGraphique("Courriers urgent",labels);
+        remplirListeLabelsGraphique("Courriers urgents",labels);
         remplirListeLabelsGraphique("Courriers normaux",labels);
 
-        BarChartOptions options = new BarChartOptions();
-
-        barModelParPrioriteDuJour.setOptions(options);
-        GraphicsManager.creerGraphiqueBarVertical(barModelParPrioriteDuJour, barDataSet,values,bgColor,2,borderColor,labels,data)
-                .setOptions(GraphicsManager.creerOptionsDAffichageDuGraphiqueVertical(options,true,true,"Nombre de courriers traités par priorité",
-                        "top","bold","#2980B9",false));
+        GraphicsManager.creerGraphiqueDonut( donutChartCourriersParPrioriteDuJour,dataSet,values,bgColors,labels,data);
     }
 
-    private void creerGraphiqueConfidentielParJour() {
-        barModelParConfidentialiteDuJour = new org.primefaces.model.charts.bar.BarChartModel();
+    private void creerGraphiqueCourriersConfidentielParJour() {
+
+        donutChartCourriersConfidentielDuJour = new DonutChartModel();
         ChartData data = new ChartData();
-        data.setLabels(null);
-        BarChartDataSet barDataSet = new BarChartDataSet();
-        barModelParConfidentialiteDuJour.setExtender("skinBar");
+        DonutChartDataSet dataSet = new DonutChartDataSet();
+
         List<Number> values = new ArrayList<>();
         remplirValeursGraphique(Integer.valueOf(String.valueOf(DataBaseQueries.nombreCourrierConfidentielDuJour)),values);
         remplirValeursGraphique(Integer.valueOf(String.valueOf(DataBaseQueries.nombreCourrierPasConfidentielDuJour)),values);
 
+        List<String> bgColors = new ArrayList<>();
+        remplirListeBackgroundColorGraphique("rgba(197, 0, 10, 0.7)",bgColors);
+        remplirListeBackgroundColorGraphique("rgba(75, 192, 192, 0.7)",bgColors);
+
+        List<String> labels = new ArrayList<>();
+        remplirListeLabelsGraphique("Courriers confidentiels",labels);
+        remplirListeLabelsGraphique("Courriers normaux",labels);
+
+        GraphicsManager.creerGraphiqueDonut(donutChartCourriersConfidentielDuJour,dataSet,values,bgColors,labels,data);
+    }
+
+    private void creerGraphiqueCourriersParJourDeLaSemaine(){
+
+        barModelCourrierParJourDeLaSemaine = new org.primefaces.model.charts.bar.BarChartModel();
+        ChartData data = new ChartData();
+        data.setLabels(null);
+        BarChartDataSet barDataSet = new BarChartDataSet();
+       // barModelCourrierParJourDeLaSemaine.setExtender("skinBar");
+        List<Number> values = new ArrayList<>();
+        remplirValeursGraphique(Integer.valueOf(String.valueOf(StatistiquesQueries.nombreCourrierLundiDeLaSemaine)),values);
+        remplirValeursGraphique(Integer.valueOf(String.valueOf(StatistiquesQueries.nombreCourrierMardiDeLaSemaine)),values);
+        remplirValeursGraphique(Integer.valueOf(String.valueOf(StatistiquesQueries.nombreCourrierMercrediDeLaSemaine)),values);
+        remplirValeursGraphique(Integer.valueOf(String.valueOf(StatistiquesQueries.nombreCourrierJeudiDeLaSemaine)),values);
+        remplirValeursGraphique(Integer.valueOf(String.valueOf(StatistiquesQueries.nombreCourrierVendrediDeLaSemaine)),values);
+        remplirValeursGraphique(Integer.valueOf(String.valueOf(StatistiquesQueries.nombreCourrierSamediDeLaSemaine)),values);
+        remplirValeursGraphique(Integer.valueOf(String.valueOf(StatistiquesQueries.nombreCourrierDimancheDeLaSemaine)),values);
+
         List<String> bgColor = new ArrayList<>();
-        remplirListeBackgroundColorGraphique("rgba(197, 0, 10, 0.7)",bgColor);
+        remplirListeBackgroundColorGraphique("rgba(255, 99, 132, 0.7)",bgColor);
+        remplirListeBackgroundColorGraphique("rgba(255, 159, 64, 0.7)",bgColor);
+        remplirListeBackgroundColorGraphique("rgba(255, 205, 86, 0.7)",bgColor);
         remplirListeBackgroundColorGraphique("rgba(75, 192, 192, 0.7)",bgColor);
+        remplirListeBackgroundColorGraphique("rgba(54, 162, 235, 0.7)",bgColor);
+        remplirListeBackgroundColorGraphique("rgba(153, 102, 255, 0.7)",bgColor);
+        remplirListeBackgroundColorGraphique("rgba(201, 203, 207, 0.7)",bgColor);
 
         List<String> borderColor = new ArrayList<>();
         remplirListeBorderColorGraphique("rgb(255,255,255)",borderColor);
         remplirListeBorderColorGraphique("rgb(255,255,255)",borderColor);
+        remplirListeBorderColorGraphique("rgb(255,255,255)",borderColor);
+        remplirListeBorderColorGraphique("rgb(255,255,255)",borderColor);
+        remplirListeBorderColorGraphique("rgb(255,255,255)",borderColor);
+        remplirListeBorderColorGraphique("rgb(255,255,255)",borderColor);
+        remplirListeBorderColorGraphique("rgb(255,255,255)",borderColor);
 
         List<String> labels = new ArrayList<>();
-        remplirListeLabelsGraphique("Courriers confidentiel",labels);
-        remplirListeLabelsGraphique("Courriers normaux",labels);
+        remplirListeLabelsGraphique("Lundi",labels);
+        remplirListeLabelsGraphique("Mardi",labels);
+        remplirListeLabelsGraphique("Mercredi",labels);
+        remplirListeLabelsGraphique("Jeudi",labels);
+        remplirListeLabelsGraphique("Vendredi",labels);
+        remplirListeLabelsGraphique("Samedi",labels);
+        remplirListeLabelsGraphique("Dimanche",labels);
 
         BarChartOptions options = new BarChartOptions();
-
-        barModelParConfidentialiteDuJour.setOptions(options);
-        GraphicsManager.creerGraphiqueBarVertical( barModelParConfidentialiteDuJour, barDataSet,values,bgColor,2,borderColor,labels,data)
-                .setOptions(GraphicsManager.creerOptionsDAffichageDuGraphiqueVertical(options,true,true,"Nombre de courriers traités par confidentialité",
+        barModelCourrierParJourDeLaSemaine.setOptions(options);
+        GraphicsManager.creerGraphiqueBarVertical(barModelCourrierParJourDeLaSemaine, barDataSet,values,bgColor,2,borderColor,labels,data)
+                .setOptions(GraphicsManager.creerOptionsDAffichageDuGraphiqueVertical(options,true,true,"Nombre de courriers traités par jours",
                         "top","bold","#2980B9",false));
+
     }
 
+    private void creerGraphiqueCourriersParPrioriteParSemaine() {
+        donutChartModelParUrgenceDeLaSemaine = new DonutChartModel();
+        ChartData data = new ChartData();
+        DonutChartDataSet dataSet = new DonutChartDataSet();
+        List<Number> values = new ArrayList<>();
+        remplirValeursGraphique(Integer.parseInt(String.valueOf(StatistiquesQueries.nombreCourrierUrgentDeLaSemaine)),values);
+        remplirValeursGraphique(Integer.parseInt(String.valueOf(StatistiquesQueries.nombreCourrierPasUrgentDeLaSemaine)),values);
+
+        List<String> bgColors = new ArrayList<>();
+        remplirListeBackgroundColorGraphique("rgb(255, 205, 86)",bgColors);
+        remplirListeBackgroundColorGraphique("rgb(54, 162, 235)",bgColors);
+
+        List<String> labels = new ArrayList<>();
+        remplirListeLabelsGraphique("Courriers urgents",labels);
+        remplirListeLabelsGraphique("Courriers normaux",labels);
+
+        GraphicsManager.creerGraphiqueDonut( donutChartModelParUrgenceDeLaSemaine,dataSet,values,bgColors,labels,data);
+    }
+
+    private void creerGraphiqueCourriersEntrantEtSortantParSemaine() {
+        donutChartModelCourriersEntrantEtSortantDeLaSemaine = new DonutChartModel();
+        ChartData data = new ChartData();
+        DonutChartDataSet dataSet = new DonutChartDataSet();
+        List<Number> values = new ArrayList<>();
+        remplirValeursGraphique(Integer.parseInt(String.valueOf(StatistiquesQueries.nombreCourrierRecusDeLaSemaine)),values);
+        remplirValeursGraphique(Integer.parseInt(String.valueOf(StatistiquesQueries.nombreCourrierEnvoyesDeLaSemaine)),values);
+
+        List<String> bgColors = new ArrayList<>();
+        remplirListeBackgroundColorGraphique("rgb(83, 169,241)",bgColors);
+        remplirListeBackgroundColorGraphique("rgb(113, 199, 170)",bgColors);
+
+        List<String> labels = new ArrayList<>();
+        remplirListeLabelsGraphique("Courriers reçus",labels);
+        remplirListeLabelsGraphique("Courriers envoyés",labels);
+
+        GraphicsManager.creerGraphiqueDonut( donutChartModelCourriersEntrantEtSortantDeLaSemaine,dataSet,values,bgColors,labels,data);
+    }
 
     public void recupererStatistiquesDeLaSemaine(){
         DateUtils.recupererLePremierEtLeDernierJourDelaSemaine();
         DateUtils.recupererTousLesMoisDeLAnnee();
+        DateUtils.recupererTousLesJoursDeLaSemaineEnCours();
+        HttpSession session = SessionUtils.getSession();
+        String idDirection = (String) session.getAttribute("idDirectionUser");
+        StatistiquesQueries.calculerLesStatistiquesDeLaSemainesPourUneDirection(idDirection);
+
         statistiques.setDebutDeSemaine(DateUtils.premierJourDeLaSemaine);
         statistiques.setFinDeSemaine(DateUtils.dernierJourDeLaSemaine);
-        statistiques.setNombreDeCourrierConfidentielDeLaSemaine(String.valueOf(DataBaseQueries.nombreCourrierConfidentielDeLaSemaine));
-        statistiques.setNombreDeCourrierUrgentDeLaSemaine(String.valueOf(DataBaseQueries.nombreCourrierUrgentDeLaSemaine));
-        statistiques.setNombreDeCourrierEnvoyesDeLaSemaine(String.valueOf(DataBaseQueries.nombreCourrierEnvoyesDeLaSemaine));
-        statistiques.setNombreDeCourrierRecusDeLaSemaine(String.valueOf(DataBaseQueries.nombreCourrierRecusDeLaSemaine));
+        statistiques.setNombreDeCourrierConfidentielDeLaSemaine(String.valueOf(StatistiquesQueries.nombreCourrierConfidentielDeLaSemaine));
+        statistiques.setNombreDeCourrierUrgentDeLaSemaine(String.valueOf(StatistiquesQueries.nombreCourrierUrgentDeLaSemaine));
+        statistiques.setNombreDeCourrierEnvoyesDeLaSemaine(String.valueOf(StatistiquesQueries.nombreCourrierEnvoyesDeLaSemaine));
+        statistiques.setNombreDeCourrierRecusDeLaSemaine(String.valueOf(StatistiquesQueries.nombreCourrierRecusDeLaSemaine));
         totalCourrierTraitesParSemaine = String.valueOf(Integer.parseInt(statistiques.getNombreDeCourrierRecusDeLaSemaine()) + Integer.parseInt(statistiques.getNombreDeCourrierEnvoyesDeLaSemaine()));
+
+        creerGraphiqueCourriersParJourDeLaSemaine();
+        creerGraphiqueCourriersParPrioriteParSemaine();
+        creerGraphiqueCourriersEntrantEtSortantParSemaine();
     }
 
     public void recupererStatistiquesDuMoisEnCours(){
@@ -459,14 +536,6 @@ public class Statistiques implements Serializable {
         return serialVersionUID;
     }
 
-    public PieChartModel getChartCourriersParUrgence() {
-        return chartCourriersParUrgence;
-    }
-
-    public void setChartCourriersParUrgence(PieChartModel chartCourriersParUrgence) {
-        this.chartCourriersParUrgence = chartCourriersParUrgence;
-    }
-
     public PieChartModel getChartCourriersParConfidentialite() {
         return chartCourriersParConfidentialite;
     }
@@ -475,19 +544,43 @@ public class Statistiques implements Serializable {
         this.chartCourriersParConfidentialite = chartCourriersParConfidentialite;
     }
 
-    public org.primefaces.model.charts.bar.BarChartModel getBarModelParPrioriteDuJour() {
-        return barModelParPrioriteDuJour;
+    public DonutChartModel getDonutChartCourriersParPrioriteDuJour() {
+        return donutChartCourriersParPrioriteDuJour;
     }
 
-    public void setBarModelParPrioriteDuJour(org.primefaces.model.charts.bar.BarChartModel barModelParPrioriteDuJour) {
-        this.barModelParPrioriteDuJour = barModelParPrioriteDuJour;
+    public void setDonutChartCourriersParPrioriteDuJour(DonutChartModel donutChartCourriersParPrioriteDuJour) {
+        this.donutChartCourriersParPrioriteDuJour = donutChartCourriersParPrioriteDuJour;
     }
 
-    public org.primefaces.model.charts.bar.BarChartModel getBarModelParConfidentialiteDuJour() {
-        return barModelParConfidentialiteDuJour;
+    public org.primefaces.model.charts.bar.BarChartModel getBarModelCourrierParJourDeLaSemaine() {
+        return barModelCourrierParJourDeLaSemaine;
     }
 
-    public void setBarModelParConfidentialiteDuJour(org.primefaces.model.charts.bar.BarChartModel barModelParConfidentialiteDuJour) {
-        this.barModelParConfidentialiteDuJour = barModelParConfidentialiteDuJour;
+    public void setBarModelCourrierParJourDeLaSemaine(org.primefaces.model.charts.bar.BarChartModel barModelCourrierParJourDeLaSemaine) {
+        this.barModelCourrierParJourDeLaSemaine = barModelCourrierParJourDeLaSemaine;
+    }
+
+    public DonutChartModel getDonutChartModelParUrgenceDeLaSemaine() {
+        return donutChartModelParUrgenceDeLaSemaine;
+    }
+
+    public void setDonutChartModelParUrgenceDeLaSemaine(DonutChartModel donutChartModelParUrgenceDeLaSemaine) {
+        this.donutChartModelParUrgenceDeLaSemaine = donutChartModelParUrgenceDeLaSemaine;
+    }
+
+    public DonutChartModel getDonutChartModelCourriersEntrantEtSortantDeLaSemaine() {
+        return donutChartModelCourriersEntrantEtSortantDeLaSemaine;
+    }
+
+    public void setDonutChartModelCourriersEntrantEtSortantDeLaSemaine(DonutChartModel donutChartModelCourriersEntrantEtSortantDeLaSemaine) {
+        this.donutChartModelCourriersEntrantEtSortantDeLaSemaine = donutChartModelCourriersEntrantEtSortantDeLaSemaine;
+    }
+
+    public DonutChartModel getDonutChartCourriersConfidentielDuJour() {
+        return donutChartCourriersConfidentielDuJour;
+    }
+
+    public void setDonutChartCourriersConfidentielDuJour(DonutChartModel donutChartCourriersConfidentielDuJour) {
+        this.donutChartCourriersConfidentielDuJour = donutChartCourriersConfidentielDuJour;
     }
 }

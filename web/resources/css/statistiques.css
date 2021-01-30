@@ -45,7 +45,7 @@ flex-grow: 1;
 }
 
 .colonnecontent {
-    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
+    box-shadow: 0 4px 8px 0 rgba(255, 255, 255, 0.2);
     padding: 16px;
     overflow-x: auto;
     text-align: justify;
@@ -54,12 +54,28 @@ flex-grow: 1;
 }
 .chartbox{
     float: left;
-    width: 25%;
+    width: 23%;
     padding: 0 7px;
 }
 .chartbox1{
     float: left;
-    width: 45%;
+    width: 50%;
+    padding: 0 7px;
+}
+
+.chartboxquartpage{
+    float: left;
+    width: 25%;
+    padding: 0 7px;
+}
+.chartboxhalfpage{
+    float: left;
+    width: 52%;
+    padding: 0 7px;
+}
+.chartboxfullpage{
+    float: left;
+    width: 93%;
     padding: 0 7px;
 }
 .lignechart{

@@ -32,6 +32,12 @@
             background-color: #fbf35c;
             font-weight: bold;
         }
+        .navheader a:visited {
+            color: white;
+            text-underline: none;
+            text-decoration: none;
+            font-weight: bold;
+        }
     </h:outputStylesheet>
     <h:body>
         <div class="container-fluid" style="margin-bottom: 50px">
@@ -50,7 +56,7 @@
                     <div class="ui-g">
                         <div class="fixed-header">
                             <div id="navigationHeader" class="ui-g-12 container-header">
-                                <nav>
+                                <nav class="navheader">
                                     <h:outputLink value="statistiques.xhtml">
                                         <h:graphicImage  width="16px" height="16px" value="./resources/images/rising.png" style="margin-right: 5px; margin-top: -4px "/>
                                         <span style="font-size: 16px">Statistiques</span>

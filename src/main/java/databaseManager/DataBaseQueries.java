@@ -15,8 +15,6 @@ import java.sql.Statement;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.*;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 public class DataBaseQueries {
 
@@ -32,10 +30,9 @@ public class DataBaseQueries {
     public static int nombreCourrierPasConfidentielDuJour = 0;
     public static int nombreCourrierEnvoyesDuMois = 0;
     public static int nombreCourrierRecusDuMois = 0;
-    public static int nombreCourrierRecusDeLaSemaine = 0;
-    public static int nombreCourrierUrgentDeLaSemaine = 0;
-    public static int nombreCourrierConfidentielDeLaSemaine = 0;
-    public static int nombreCourrierEnvoyesDeLaSemaine = 0;
+
+
+
     public static int nombreCourrierUrgentDuMois = 0;
     public static int nombreCourrierInterneDuMois = 0;
     public static int nombreCourrierExterneDuMois = 0;
@@ -93,20 +90,13 @@ public class DataBaseQueries {
         nombreCourrierUrgentDuJour = 0;
         nombreCourrierConfidentielDuJour = 0;
         nombreCourrierPasConfidentielDuJour = 0;
-        nombreCourrierUrgentDeLaSemaine = 0;
-        nombreCourrierConfidentielDeLaSemaine = 0;
+
         nombreCourrierEnvoyesDuMois= 0;
         nombreCourrierRecusDuMois = 0;
-        nombreCourrierRecusDeLaSemaine = 0;
-        nombreCourrierEnvoyesDeLaSemaine = 0;
 
         int nombreCourrierUrgentRecusDuMois = 0;
         int nombreCourrierPasUrgentRecusDuMois = 0;
         int nombreCourrierUrgentEnvoyesDuMois  = 0;
-        int nombreCourrierUrgentEnvoyesDeLaSemaine  = 0;
-        int nombreCourrierUrgentRecusDeLaSemaine  = 0;
-        int nombreCourrierConfidentielEnvoyesDeLaSemaine  = 0;
-        int nombreCourrierConfidentielRecusDeLaSemaine = 0;
         int nombreCourrierPasUrgentEnvoyesDuMois = 0;
         int nombreCourrierConfidentielEnvoyesDuMois  = 0;
         int nombreCourrierConfidentielRecusDuMois = 0;
@@ -126,9 +116,6 @@ public class DataBaseQueries {
         premierDuMois = firstMonthOfCalendar.getTime();
         dernierDuMois = lastMonthOfCalendar.getTime();
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
-
-        /***Récupération des jours de la semaine***/
-        DateUtils.recupererLePremierEtLeDernierJourDelaSemaine();
 
         String dateDuJour = DateUtils.recupererSimpleDateEnCours();
         ResultSet resultSetCourriersRecus = null;
@@ -155,7 +142,6 @@ public class DataBaseQueries {
                         resultSetCourriersEnvoyes.getString("id_courrier"),
                         resultSetCourriersEnvoyes.getString("genre")));
             }
-
 
 
 
@@ -201,16 +187,6 @@ public class DataBaseQueries {
                         }
 
 
-                        if (date1.after(DateUtils.convertirStringEnDateAuFormatUS(DateUtils.premierJourDeLaSemaineFormatUS)) &&
-                                date1.before(DateUtils.convertirStringEnDateAuFormatUS(DateUtils.dernierJourDeLaSemaineFormatUS))) {
-                            nombreCourrierRecusDeLaSemaine++;
-                            if(listeCourriersRecus.get(i).getPrioriteCourrier().equals("Urgent")){
-                                nombreCourrierUrgentRecusDeLaSemaine++;
-                            }
-                            if(listeCourriersRecus.get(i).getConfidentiel().equals("Oui")){
-                                nombreCourrierConfidentielRecusDeLaSemaine++;
-                            }
-                        }
                     } catch (ParseException e) {
                         e.printStackTrace();
                     }
@@ -258,16 +234,6 @@ public class DataBaseQueries {
 
                         }
 
-                        if (date1.after(DateUtils.convertirStringEnDateAuFormatUS(DateUtils.premierJourDeLaSemaineFormatUS)) &&
-                                date1.before(DateUtils.convertirStringEnDateAuFormatUS(DateUtils.dernierJourDeLaSemaineFormatUS))) {
-                            nombreCourrierEnvoyesDeLaSemaine++;
-                            if(listeCourriersEnvoyes.get(i).getPrioriteCourrier().equals("Urgent")){
-                                nombreCourrierUrgentEnvoyesDeLaSemaine++;
-                            }
-                            if(listeCourriersEnvoyes.get(i).getConfidentiel().equals("Oui")){
-                                nombreCourrierConfidentielEnvoyesDeLaSemaine++;
-                            }
-                        }
                     } catch (ParseException e) {
                         e.printStackTrace();
                     }
@@ -281,8 +247,6 @@ public class DataBaseQueries {
             nombreCourrierConfidentielDuJour = tempCourrierConfidentielEnvoye + tempCourrierConfidentielRecu;
             nombreCourrierPasConfidentielDuJour = tempCourrierPasConfidentielEnvoye + tempCourrierPasConfidentielRecu;
             nombreCourrierConfidentielDuMois = nombreCourrierConfidentielEnvoyesDuMois + nombreCourrierConfidentielRecusDuMois;
-            nombreCourrierUrgentDeLaSemaine = nombreCourrierUrgentEnvoyesDeLaSemaine + nombreCourrierUrgentRecusDeLaSemaine;
-            nombreCourrierConfidentielDeLaSemaine = nombreCourrierConfidentielEnvoyesDeLaSemaine + nombreCourrierConfidentielRecusDeLaSemaine;
             nombreCourrierInterneDuMois = nombreCourrierInterneEnvoyesDuMois + nombreCourrierInterneRecusDuMois;
             nombreCourrierExterneDuMois = nombreCourrierExterneEnvoyesDuMois + nombreCourrierExterneRecusDuMois;
 

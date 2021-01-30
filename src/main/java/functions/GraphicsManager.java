@@ -8,6 +8,8 @@ import org.primefaces.model.charts.axes.cartesian.linear.CartesianLinearTicks;
 import org.primefaces.model.charts.bar.BarChartDataSet;
 import org.primefaces.model.charts.bar.BarChartModel;
 import org.primefaces.model.charts.bar.BarChartOptions;
+import org.primefaces.model.charts.donut.DonutChartDataSet;
+import org.primefaces.model.charts.donut.DonutChartModel;
 import org.primefaces.model.charts.hbar.HorizontalBarChartDataSet;
 import org.primefaces.model.charts.hbar.HorizontalBarChartModel;
 import org.primefaces.model.charts.optionconfig.legend.Legend;
@@ -114,5 +116,17 @@ public class GraphicsManager {
         data.setLabels(labels);
         pieChartModel.setData(data);
         return pieChartModel;
+    }
+
+    public static DonutChartModel creerGraphiqueDonut(@NotNull DonutChartModel donutChartModel, DonutChartDataSet dataSet, List<Number> values, List<String> bgColors,
+                                                      List<String> labels, ChartData data){
+
+        dataSet.setData(values);
+        dataSet.setBackgroundColor(bgColors);
+        data.addChartDataSet(dataSet);
+        data.setLabels(labels);
+        donutChartModel.setData(data);
+        return donutChartModel;
+
     }
 }

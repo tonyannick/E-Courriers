@@ -31,6 +31,18 @@ public class StatistiquesQueries {
     public static int nombreCourrierPasUrgentDuMois = 0;
     public static int nombreCourrierConfidentielDuMois = 0;
     public static int nombreCourrierPasConfidentielDuMois = 0;
+    public static int nombreCourrierRecusDeLaSemaine;
+    public static int nombreCourrierEnvoyesDeLaSemaine;
+    public static int nombreCourrierUrgentDeLaSemaine;
+    public static int nombreCourrierPasUrgentDeLaSemaine;
+    public static int nombreCourrierConfidentielDeLaSemaine;
+    public static int nombreCourrierLundiDeLaSemaine;
+    public static int nombreCourrierMardiDeLaSemaine;
+    public static int nombreCourrierMercrediDeLaSemaine;
+    public static int nombreCourrierJeudiDeLaSemaine;
+    public static int nombreCourrierVendrediDeLaSemaine;
+    public static int nombreCourrierSamediDeLaSemaine;
+    public static int nombreCourrierDimancheDeLaSemaine;
     public static Map<String, Integer> myMapCourrierRecusParDirection = new HashMap<>();
     public static Map<String, Integer> myMapCourrierEnvoyesParDirection = new HashMap<>();
     public static Map<String, Integer> mapNombreCourrierParTypeDuMoisEnCours = new HashMap<>();
@@ -489,6 +501,159 @@ public class StatistiquesQueries {
 
         } catch (SQLException e) {
             e.printStackTrace();
+        }
+
+    }
+
+    /***Fonction qui calcul le nombre de courrier envoyés et recus pour la semaine***/
+    public static void calculerLesStatistiquesDeLaSemainesPourUneDirection(String idDirection){
+
+        nombreCourrierRecusDeLaSemaine = 0;
+        nombreCourrierEnvoyesDeLaSemaine = 0;
+        nombreCourrierUrgentDeLaSemaine = 0;
+        nombreCourrierPasUrgentDeLaSemaine = 0;
+        nombreCourrierConfidentielDeLaSemaine = 0;
+
+        nombreCourrierLundiDeLaSemaine = 0;
+        nombreCourrierMardiDeLaSemaine = 0;
+        nombreCourrierMercrediDeLaSemaine = 0;
+        nombreCourrierJeudiDeLaSemaine = 0;
+        nombreCourrierVendrediDeLaSemaine = 0;
+        nombreCourrierSamediDeLaSemaine = 0;
+        nombreCourrierDimancheDeLaSemaine = 0;
+
+        List<Courrier> listeCourriersRecus = new ArrayList<>();
+        List<Courrier> listeCourriersEnvoyes = new ArrayList<>();
+        Connection connectionCourrierRecus =  DatabaseConnection.getConnexion();
+        Connection connectionCourrierEnvoyes =  DatabaseConnection.getConnexion();
+        String nombreDeCourrierRecusSQL = "select * from `recevoir_courrier` inner join `courrier` on recevoir_courrier.id_courrier = courrier.id_courrier inner join personne on recevoir_courrier.id_personne = personne.id_personne inner join direction on personne.id_direction = direction.id_direction inner join type_courrier on type_courrier.id_type_courrier =	courrier.fk_type_courrier where direction.id_direction = '"+idDirection+"' and courrier.etat = '"+EtatCourrier.courrierEnvoye+"' group by courrier.id_courrier order by courrier.id_courrier desc ";
+        String nombreDeCourrierEnvoyesSQL = "select * from `envoyer_courrier` inner join `courrier` on envoyer_courrier.id_courrier = courrier.id_courrier inner join personne on envoyer_courrier.id_personne = personne.id_personne inner join direction on personne.id_direction = direction.id_direction inner join type_courrier on type_courrier.id_type_courrier = courrier.fk_type_courrier where direction.id_direction = '"+idDirection+"' and courrier.etat = '"+EtatCourrier.courrierEnvoye+"' group by courrier.id_courrier order by courrier.id_courrier desc ";
+
+        ResultSet resultSetCourriersRecus = null;
+        ResultSet resultSetCourriersEnvoyes = null;
+
+        try {
+            resultSetCourriersRecus = connectionCourrierRecus.createStatement().executeQuery(nombreDeCourrierRecusSQL);
+            resultSetCourriersEnvoyes = connectionCourrierEnvoyes.createStatement().executeQuery(nombreDeCourrierEnvoyesSQL);
+
+            while (resultSetCourriersRecus.next()) {
+                listeCourriersRecus.add(new Courrier(
+                        resultSetCourriersRecus.getString("date_enregistrement"),
+                        resultSetCourriersRecus.getString("priorite"),
+                        resultSetCourriersRecus.getString("confidentiel"),
+                        resultSetCourriersRecus.getString("id_courrier"),
+                        resultSetCourriersRecus.getString("genre")));
+            }
+
+            while (resultSetCourriersEnvoyes.next()) {
+                listeCourriersEnvoyes.add(new Courrier(
+                        resultSetCourriersEnvoyes.getString("date_enregistrement"),
+                        resultSetCourriersEnvoyes.getString("priorite"),
+                        resultSetCourriersEnvoyes.getString("confidentiel"),
+                        resultSetCourriersEnvoyes.getString("id_courrier"),
+                        resultSetCourriersEnvoyes.getString("genre")));
+            }
+
+            DateUtils.recupererLePremierEtLeDernierJourDelaSemaine();
+            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+            for (int a = 0; a < listeCourriersRecus.size(); a++) {
+                try {
+                    Date dateAConsiderer = sdf.parse(listeCourriersRecus.get(a).getDateDEnregistrement());
+                    if (dateAConsiderer.after(DateUtils.convertirStringEnDateAuFormatUS(DateUtils.premierJourDeLaSemaineFormatUS)) &&
+                            dateAConsiderer.before(DateUtils.convertirStringEnDateAuFormatUS(DateUtils.dernierJourDeLaSemaineFormatUS))) {
+                        nombreCourrierRecusDeLaSemaine++;
+                    }
+                } catch (ParseException e) {
+                    e.printStackTrace();
+                }
+            }
+
+            for (int a = 0; a < listeCourriersEnvoyes.size(); a++) {
+                try {
+                    Date dateAConsiderer = sdf.parse(listeCourriersEnvoyes.get(a).getDateDEnregistrement());
+                    if (dateAConsiderer.after(DateUtils.convertirStringEnDateAuFormatUS(DateUtils.premierJourDeLaSemaineFormatUS)) &&
+                            dateAConsiderer.before(DateUtils.convertirStringEnDateAuFormatUS(DateUtils.dernierJourDeLaSemaineFormatUS))) {
+                        nombreCourrierEnvoyesDeLaSemaine++;
+                    }
+
+                } catch (ParseException e) {
+                    e.printStackTrace();
+                }
+            }
+
+            List<Courrier> listeDeTousLesCourriersDeLaSemaine =  Stream.of(listeCourriersEnvoyes, listeCourriersRecus).flatMap(x -> x.stream()).collect(Collectors.toList());
+
+            for (int a = 0; a < listeDeTousLesCourriersDeLaSemaine.size(); a++) {
+                try {
+                    Date dateAConsiderer = sdf.parse(listeDeTousLesCourriersDeLaSemaine.get(a).getDateDEnregistrement());
+                    if (dateAConsiderer.after(DateUtils.convertirStringEnDateAuFormatUS(DateUtils.premierJourDeLaSemaineFormatUS)) &&
+                            dateAConsiderer.before(DateUtils.convertirStringEnDateAuFormatUS(DateUtils.dernierJourDeLaSemaineFormatUS))) {
+                       // System.out.println("listeDeTousLesCourriersDeLaSemaine.get(a).getDateDEnregistrement() = " + listeDeTousLesCourriersDeLaSemaine.get(a).getDateDEnregistrement());
+                        if(listeDeTousLesCourriersDeLaSemaine.get(a).getPrioriteCourrier().equals("Urgent")){
+                            nombreCourrierUrgentDeLaSemaine++;
+                        }else if(listeDeTousLesCourriersDeLaSemaine.get(a).getPrioriteCourrier().equals("Normal")){
+                            nombreCourrierPasUrgentDeLaSemaine++;
+                        }
+                        if(listeDeTousLesCourriersDeLaSemaine.get(a).getConfidentiel().equals("Oui")){
+                            nombreCourrierConfidentielDeLaSemaine++;
+                        }
+
+                        for (Map.Entry<String,String> entry :  DateUtils.recupererTousLesJoursDeLaSemaineEnCours().entrySet()){
+                            if(listeDeTousLesCourriersDeLaSemaine.get(a).getDateDEnregistrement().equalsIgnoreCase(entry.getValue())){
+                                if(entry.getKey().equals("Lundi")){
+                                    nombreCourrierLundiDeLaSemaine++;
+                                }
+                                if(entry.getKey().equals("Mardi")){
+                                    nombreCourrierMardiDeLaSemaine++;
+                                }
+                                if(entry.getKey().equals("Mercredi")){
+                                    nombreCourrierMercrediDeLaSemaine++;
+                                }
+                                if(entry.getKey().equals("Jeudi")){
+                                    nombreCourrierJeudiDeLaSemaine++;
+                                }
+                                if(entry.getKey().equals("Vendredi")){
+                                    nombreCourrierVendrediDeLaSemaine++;
+                                }
+                                if(entry.getKey().equals("Samedi")){
+                                    nombreCourrierSamediDeLaSemaine++;
+                                }
+                                if(entry.getKey().equals("Dimanche")){
+                                    nombreCourrierDimancheDeLaSemaine++;
+                                }
+                            }
+                        }
+
+                    }
+                } catch (ParseException e) {
+                    e.printStackTrace();
+                }
+            }
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }finally {
+            if (resultSetCourriersRecus != null) {
+                try {
+                    resultSetCourriersRecus.close();
+                } catch (SQLException e) { /* ignored */}
+            }
+            if (resultSetCourriersEnvoyes != null) {
+                try {
+                    resultSetCourriersEnvoyes.close();
+                } catch (SQLException e) { /* ignored */}
+            }
+            if (connectionCourrierRecus != null) {
+                try {
+                    connectionCourrierRecus.close();
+                } catch (SQLException e) { /* ignored */}
+            }
+            if (connectionCourrierEnvoyes != null) {
+                try {
+                    connectionCourrierEnvoyes.close();
+                } catch (SQLException e) { /* ignored */}
+            }
+
         }
 
     }

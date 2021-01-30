@@ -29,6 +29,8 @@
             margin: 0 auto;
             width: 80%;
         }
+
+
     </style>
     <h:body>
         <div class="container-fluid" style="margin-bottom: 50px">
@@ -57,34 +59,118 @@
                                 <h:graphicImage value="./resources/images/graph.png" style="margin-right :10px"/>Statistiques
                             </h1>
                             <div class="colonnecontent">
-                                <div class="tabs">
+                                    <p:tabView>
+                                        <p:tab title="Statistiques du jour">
+                                            <p:panel style="background-color: floralwhite; border-bottom-left-radius: 20px; border-bottom-right-radius: 20px"
+                                                     toggleable="true" header="Chiffres du jour">
 
-                                    <input type="radio" name="tabs" id="tabJour" checked="checked"/>
-                                    <label for="tabJour">Statistiques du jour</label>
-                                    <div class="tab" style="background-color: #90CAF9;">
+                                                <h:panelGrid columns="3" styleClass="panelLogin" cellspacing="30" cellpadding="30" >
 
-                                        <div class="lignechart" style="margin-top: 20px; margin-left: 2px">
-                                                <div class="chartbox" style="background-color: white;">
-                                                    <p:barChart model="#{statistiques.barModelParPrioriteDuJour}" style="width: 90%; height: 300px;"/>
+                                                    <h:graphicImage value="./resources/images/square.png" style="margin-right:5px; width: 10px; height: 5px"/>
+                                                    <h4 style="margin-left:10px; font-weight:bold; color: #0D47A1; font-size: 15px">Total courriers traités </h4>
+                                                    <h:outputText style="font-weight:bold; margin-left:10px; color: #0D47A1"
+                                                                  value="#{statistiques.totalCourrierTraitesParJour}"/>
 
+                                                    <h:graphicImage value="./resources/images/squareblack.png" style="margin-right:5px; width: 10px; height: 5px"/>
+                                                    <h4 style="margin-left:10px; font-weight:bold; font-size: 14px" >Nbre de courriers reçus</h4>
+                                                    <h:outputText style="margin-left:10px"
+                                                                  value="#{statistiques.statistiques.nombreDeCourrierRecusDuJour}"/>
+
+                                                    <h:graphicImage value="./resources/images/squareblack.png" style="margin-right:5px; width: 10px; height: 5px"/>
+                                                    <h4 style="margin-left:10px; font-weight:bold; font-size: 14px">Nbre de courriers envoyés </h4>
+                                                    <h:outputText  size="55" style="margin-left:10px"
+                                                                   value="#{statistiques.statistiques.nombreDeCourrierEnvoyesDuJour}"/>
+
+                                                    <h:graphicImage value="./resources/images/squareblack.png" style="margin-right:5px; width: 10px; height: 5px"/>
+                                                    <h4 style="margin-left:10px; font-weight:bold; font-size: 14px">Nbre de courriers urgent </h4>
+                                                    <h:outputText style="margin-left:10px"
+                                                                  value="#{statistiques.statistiques.nombreDeCourrierUrgentDuJour}"/>
+
+                                                    <h:graphicImage value="./resources/images/squareblack.png" style="margin-right:5px; width: 10px; height: 5px"/>
+                                                    <h4 style="margin-left:10px; font-weight:bold; font-size: 14px">Nbre de courriers confidentiel </h4>
+                                                    <h:outputText style="margin-left:10px"
+                                                                  value="#{statistiques.statistiques.nombreDeCourrierConfidentielDuJour}"/>
+                                                </h:panelGrid>
+
+                                            </p:panel>
+
+                                            <div class="lignechart" style="margin-top: 20px; margin-left: 2px">
+                                                <div class="chartbox" style="background-color: floralwhite;box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2);border-radius: 20px">
+                                                    <p:donutChart  model="#{statistiques.donutChartCourriersParPrioriteDuJour}" style="width: 90%; height: 250px;"/>
                                                 </div>
-                                                <div class="chartbox" style="background-color: white;;margin-left: 26px">
-                                                    <p:barChart model="#{statistiques.barModelParConfidentialiteDuJour}"  style="width: 90%; height: 300px;"/>
+                                                <div class="chartbox" style="background-color: floralwhite;margin-left: 22px;box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2);border-radius: 20px">
+                                                    <p:donutChart model="#{statistiques.donutChartCourriersConfidentielDuJour}"  style="width: 90%; height: 250px;"/>
+                                                </div>
+                                                <div class="chartbox1" style="background-color: floralwhite;margin-left: 20px;box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2);border-radius: 20px">
+                                                    <p:barChart model="#{statistiques.hbarModel}" style="width: 90%; height: 250px;"/>
                                                 </div>
 
-                                                <div class="chartbox1" style="background-color: white;;margin-left: 29px">
-                                                    <p:barChart model="#{statistiques.hbarModel}" widgetVar="chartDuJour" style="width: 90%; height: 300px;"/>
-                                                </div>
-                                        </div>
-                                     </div>
+                                            </div>
+                                        </p:tab>
+                                        <p:tab title="Statistiques de la semaine en cours">
+                                            <p:panel style="background-color: floralwhite; border-bottom-left-radius: 20px; border-bottom-right-radius: 20px"
+                                                     toggleable="true" header="Chiffres du : #{statistiques.statistiques.debutDeSemaine}
+                                                                au #{statistiques.statistiques.finDeSemaine}">
+                                                <h:panelGrid columns="3" styleClass="panelLogin" cellspacing="30" cellpadding="30">
 
-                                    <input type="radio" name="tabs" id="tabSemaine"/>
-                                    <label for="tabSemaine">Statistiques de la semaine</label>
-                                    <input type="radio" name="tabs" id="tabMois"/>
-                                    <label for="tabMois">Statistiques du mois</label>
-                                    <input type="radio" name="tabs" id="tabAnnee"/>
-                                    <label for="tabAnnee">Statistiques annuelles</label>
-                                </div>
+                                                    <h:graphicImage value="./resources/images/square.png" style="margin-right:5px; width: 10px; height: 5px"/>
+                                                    <h4 style="margin-left:10px; font-weight:bold; color: #0D47A1; font-size: 15px">Total courriers traités </h4>
+                                                    <h:outputText style="font-weight:bold; margin-left:10px; color: #0D47A1"
+                                                                  value="#{statistiques.totalCourrierTraitesParSemaine}"/>
+
+                                                    <h:graphicImage value="./resources/images/squareblack.png" style="margin-right:5px; width: 10px; height: 5px"/>
+                                                    <h4 style="margin-left:10px; font-weight:bold; font-size: 14px" >Nbre de courriers reçus</h4>
+                                                    <h:outputText style="margin-left:10px"
+                                                                  value="#{statistiques.statistiques.nombreDeCourrierRecusDeLaSemaine}"/>
+
+                                                    <h:graphicImage value="./resources/images/squareblack.png" style="margin-right:5px; width: 10px; height: 5px"/>
+                                                    <h4 style="margin-left:10px; font-weight:bold; font-size: 14px">Nbre de courriers envoyés </h4>
+                                                    <h:outputText  size="55" style="margin-left:10px"
+                                                                   value="#{statistiques.statistiques.nombreDeCourrierEnvoyesDeLaSemaine}"/>
+
+                                                    <h:graphicImage value="./resources/images/squareblack.png" style="margin-right:5px; width: 10px; height: 5px"/>
+                                                    <h4 style="margin-left:10px; font-weight:bold; font-size: 14px">Nbre de courriers urgent </h4>
+                                                    <h:outputText style="margin-left:10px"
+                                                                  value="#{statistiques.statistiques.nombreDeCourrierUrgentDeLaSemaine}"/>
+
+                                                    <h:graphicImage value="./resources/images/squareblack.png" style="margin-right:5px; width: 10px; height: 5px"/>
+                                                    <h4 style="margin-left:10px; font-weight:bold; font-size: 14px">Nbre de courriers confidentiel </h4>
+                                                    <h:outputText style="margin-left:10px"
+                                                                  value="#{statistiques.statistiques.nombreDeCourrierConfidentielDeLaSemaine}"/>
+
+                                                </h:panelGrid>
+                                            </p:panel>
+
+                                            <div class="lignechart" style="margin-top: 20px; margin-left: -20px">
+
+                                                <div class="chartbox" style="background-color: floralwhite;margin-left: 20px;box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2);border-radius: 20px">
+                                                    <p:donutChart  model="#{statistiques.donutChartModelParUrgenceDeLaSemaine}" style="width: 90%; height: 250px;"/>
+                                                </div>
+                                                <div class="chartbox" style="background-color: floralwhite;margin-left: 20px;box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2);border-radius: 20px">
+                                                    <p:donutChart  model="#{statistiques.donutChartModelCourriersEntrantEtSortantDeLaSemaine}" style="width: 90%; height: 250px;"/>
+                                                </div>
+                                                <div class="chartbox1" style="background-color: floralwhite;margin-left: 20px;box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2);border-radius: 20px">
+                                                    <p:barChart model="#{statistiques.barModelCourrierParJourDeLaSemaine}" style="width: 90%; height: 250px;"/>
+                                                </div>
+
+                                            </div>
+                                        </p:tab>
+                                        <p:tab title="Statistiques du mois en cours">
+                                            <div class="lignechart" style="margin-top: 20px; margin-left: -20px">
+
+                                                <div class="chartbox" style="background-color: floralwhite;margin-left: 20px;box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2);border-radius: 20px">
+                                                    <p:donutChart  model="#{statistiques.donutChartModelParUrgenceDeLaSemaine}" style="width: 90%; height: 250px;"/>
+                                                </div>
+                                                <div class="chartbox" style="background-color: floralwhite;margin-left: 20px;box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2);border-radius: 20px">
+                                                    <p:donutChart  model="#{statistiques.donutChartModelCourriersEntrantEtSortantDeLaSemaine}" style="width: 90%; height: 250px;"/>
+                                                </div>
+                                                <div class="chartbox1" style="background-color: floralwhite;margin-left: 20px;box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2);border-radius: 20px">
+                                                    <p:barChart model="#{statistiques.barModelCourrierParJourDeLaSemaine}" style="width: 90%; height: 250px;"/>
+                                                </div>
+
+                                            </div>
+                                        </p:tab>
+                                    </p:tabView>
                             </div>
 
 
@@ -96,9 +182,6 @@
             </div>
         </div>
         <script>
-
-
-
 
             function skinBar() {
                 Chart.defaults.global.defaultFontFamily = 'Helvetica';

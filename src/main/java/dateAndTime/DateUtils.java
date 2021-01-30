@@ -17,6 +17,13 @@ public class DateUtils {
     public static String dernierJourDeLaSemaineFormatUS;
     public static Date premierJourDuMoisAPartirDUneDate;
     public static Date dernierJourDuMoisAPartirDUneDate;
+    public static String lundiDeLaSemaine;
+    public static String mardiDeLaSemaine;
+    public static String mercrediDeLaSemaine;
+    public static String jeudiDeLaSemaine;
+    public static String vendrediDeLaSemaine;
+    public static String samediDeLaSemaine;
+    public static String dimancheDeLaSemaine;
     public static final DateFormatSymbols french_dfs = new DateFormatSymbols(Locale.FRENCH);
 
 
@@ -84,6 +91,35 @@ public class DateUtils {
         }
         dernierJourDeLaSemaine = dateformat.format(semaineDuMois.getTime());
         dernierJourDeLaSemaineFormatUS = dateFormatUS.format(semaineDuMois.getTime());
+    }
+
+    public static Map<String,String> recupererTousLesJoursDeLaSemaineEnCours(){
+        Calendar semaineEnCours = Calendar.getInstance(Locale.FRANCE);
+        semaineEnCours.set(Calendar.DAY_OF_WEEK,Calendar.MONDAY);
+        SimpleDateFormat dateformat = new SimpleDateFormat("yyyy/dd/MM");
+        lundiDeLaSemaine = dateformat.format(semaineEnCours.getTime());
+        Date[] daysOfWeek = new Date[7];
+        Map<String,String> mapJoursDeLaSemaine = new HashMap<>();
+        String[] tableauDesJoursDeLaSemaine = {"Lundi", "Mardi", "Mercredi","Jeudi","Vendredi","Samedi","Dimanche"};
+        for (int i = 0; i < 7; i++) {
+            daysOfWeek[i] = semaineEnCours.getTime();
+            mapJoursDeLaSemaine.put( tableauDesJoursDeLaSemaine[i],convertirDateEnString(daysOfWeek[i]));
+            semaineEnCours.add(Calendar.DAY_OF_MONTH, 1);
+        }
+        /*for (Map.Entry<String,String> entry :  mapJoursDeLaSemaine.entrySet())
+            System.out.println("Key = " + entry.getKey() + ", Value = " + entry.getValue());*/
+
+        return mapJoursDeLaSemaine;
+    }
+
+
+
+    public static int trouverLeNombreDElementEntreDeuxDate(Date dateDebut, Date dateFin, Date dateAConsiderer){
+        int compteur = 0;
+        if (dateAConsiderer.after(dateDebut) && dateAConsiderer.before(dateFin)) {
+          compteur++;
+        }
+        return compteur;
     }
 
     public static String recupererFullDateEnCours(){
