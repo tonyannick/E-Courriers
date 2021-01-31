@@ -31,21 +31,25 @@ public class StatistiquesQueries {
     public static int nombreCourrierPasUrgentDuMois = 0;
     public static int nombreCourrierConfidentielDuMois = 0;
     public static int nombreCourrierPasConfidentielDuMois = 0;
-    public static int nombreCourrierRecusDeLaSemaine;
-    public static int nombreCourrierEnvoyesDeLaSemaine;
-    public static int nombreCourrierUrgentDeLaSemaine;
-    public static int nombreCourrierPasUrgentDeLaSemaine;
-    public static int nombreCourrierConfidentielDeLaSemaine;
-    public static int nombreCourrierLundiDeLaSemaine;
-    public static int nombreCourrierMardiDeLaSemaine;
-    public static int nombreCourrierMercrediDeLaSemaine;
-    public static int nombreCourrierJeudiDeLaSemaine;
-    public static int nombreCourrierVendrediDeLaSemaine;
-    public static int nombreCourrierSamediDeLaSemaine;
-    public static int nombreCourrierDimancheDeLaSemaine;
-    public static Map<String, Integer> myMapCourrierRecusParDirection = new HashMap<>();
-    public static Map<String, Integer> myMapCourrierEnvoyesParDirection = new HashMap<>();
+    public static int nombreCourrierRecusDeLaSemaine = 0;
+    public static int nombreCourrierEnvoyesDeLaSemaine = 0;
+    public static int nombreCourrierUrgentDeLaSemaine = 0;
+    public static int nombreCourrierPasUrgentDeLaSemaine = 0;
+    public static int nombreCourrierConfidentielDeLaSemaine = 0;
+    public static int nombreCourrierLundiDeLaSemaine = 0;
+    public static int nombreCourrierMardiDeLaSemaine = 0;
+    public static int nombreCourrierMercrediDeLaSemaine = 0;
+    public static int nombreCourrierJeudiDeLaSemaine = 0;
+    public static int nombreCourrierVendrediDeLaSemaine = 0;
+    public static int nombreCourrierSamediDeLaSemaine = 0;
+    public static int nombreCourrierDimancheDeLaSemaine = 0;
+    public static int nombreCourrierEnvoyesDuMois = 0;
+    public static int nombreCourrierRecusDuMois = 0;
     public static Map<String, Integer> mapNombreCourrierParTypeDuMoisEnCours = new HashMap<>();
+    public static Map<String, Integer> mapNombreCourrierRecusParDirectionDuMoisEnCours = new HashMap<>();
+    public static Map<String, Integer> mapNombreCourrierEnvoyesParDirectionDuMoisEnCours = new HashMap<>();
+    private static List<Courrier> listeCourriersRecus = new ArrayList<>();
+    private static List<Courrier> listeCourriersEnvoyes = new ArrayList<>();
 
     /***Fonction de récuperation du nombre de courrier traités par mois***/
     public static void recupererLeNombreDeCourrierTraitesParMoisPourLAnneeEnCours(String nomDirection) {
@@ -178,199 +182,85 @@ public class StatistiquesQueries {
     }
 
     /***Fonction qui recupere le nombre de courrier reçu par direction par mois***/
-    public static void recupererLeNombreDeCourrierRecusParDirection(String nomDirection){
-
-        int nombreDeCourrierTempRecuDCSI = 0;
-        int nombreDeCourrierTempRecuDCAF = 0;
-        int nombreDeCourrierTempRecuDCRH = 0;
-        int nombreDeCourrierTempRecuDGBFIP = 0;
-        int nombreDeCourrierTempRecuTRESOR = 0;
-        int nombreDeCourrierTempRecuIGS = 0;
-        int nombreDeCourrierTempRecuAJE = 0;
-        int nombreDeCourrierTempRecuCPPF = 0;
-        int nombreDeCourrierTempRecuSGA = 0;
-        int nombreDeCourrierTempRecuSG = 0;
-        int nombreDeCourrierTempRecuCabinetMinistre = 0;
-        int nombreDeCourrierTempRecuCabinetMinistreAdjoint = 0;
-        int nombreDeCourrierTempRecuMinistre = 0;
-        int nombreDeCourrierTempRecuMinistreDelegue = 0;
-
-        List<String> listeIdCourriersRecus = new ArrayList<>();
+    public static void calculerLeNombreDeCourrierRecusParDirectionLeMoisCourant(String nomDirection){
+        mapNombreCourrierRecusParDirectionDuMoisEnCours.clear();
+        List<Courrier> listeIdCourriersRecus = new ArrayList<>();
+        List<Courrier> finalListeCourriers = new ArrayList<>();
         ResultSet resultSetIdRecus = null;
         Connection connectionCourrierIdRecus =  DatabaseConnection.getConnexion();
-        String requeteIdCourriersRecusSQL = "select courrier.id_courrier from `recevoir_courrier` inner join `courrier` on recevoir_courrier.id_courrier = courrier.id_courrier inner join personne on recevoir_courrier.id_personne = personne.id_personne inner join direction on personne.id_direction = direction.id_direction where direction.nom_direction = '"+nomDirection+"' and recevoir_courrier.archive = '"+ EtatCourrier.archiveNonActive +"' and recevoir_courrier.favoris = '"+EtatCourrier.pasfavoris+"' and etat = '"+EtatCourrier.courrierEnvoye+"'";
+        String requeteIdCourriersRecusSQL = "select courrier.id_courrier,date_enregistrement from `recevoir_courrier` inner join `courrier` on recevoir_courrier.id_courrier = courrier.id_courrier inner join personne on recevoir_courrier.id_personne = personne.id_personne inner join direction on personne.id_direction = direction.id_direction where direction.nom_direction = '"+nomDirection+"' and etat = '"+EtatCourrier.courrierEnvoye+"'";
 
         try {
             resultSetIdRecus = connectionCourrierIdRecus.createStatement().executeQuery(requeteIdCourriersRecusSQL);
             while (resultSetIdRecus.next()){
-                listeIdCourriersRecus.add(resultSetIdRecus.getString("courrier.id_courrier"));
+                listeIdCourriersRecus.add(new Courrier(resultSetIdRecus.getString("date_enregistrement"),resultSetIdRecus.getString("courrier.id_courrier")));
             }
 
-            for(int a =0; a < listeIdCourriersRecus.size(); a++){
-                String valeur = recupererLaDirectionDeLEmetteurDUnCourrierParIdDuCourrier(listeIdCourriersRecus.get(a));
-                if(valeur != null){
-                    switch (valeur) {
-                        case "DCSI":
-                            nombreDeCourrierTempRecuDCSI++;
-                            break;
-                        case "DCAF":
-                            nombreDeCourrierTempRecuDCAF++;
-                            break;
-                        case "DCRH":
-                            nombreDeCourrierTempRecuDCRH++;
-                            break;
-                        case "Sécrétariat Générale":
-                            nombreDeCourrierTempRecuSG++;
-                            break;
-                        case "Sécrétariat Générale Adjoint":
-                            nombreDeCourrierTempRecuSGA++;
-                            break;
-                        case "AJE":
-                            nombreDeCourrierTempRecuAJE++;
-                            break;
-                        case "CPPF":
-                            nombreDeCourrierTempRecuCPPF++;
-                            break;
-                        case "DGBFIP":
-                            nombreDeCourrierTempRecuDGBFIP++;
-                            break;
-                        case "IGS":
-                            nombreDeCourrierTempRecuIGS++;
-                            break;
-                        case "TRESOR":
-                            nombreDeCourrierTempRecuTRESOR++;
-                            break;
-                        case "Cabinet du Ministre Délégué":
-                            nombreDeCourrierTempRecuCabinetMinistreAdjoint++;
-                            break;
-                        case "Cabinet du Ministre":
-                            nombreDeCourrierTempRecuCabinetMinistre++;
-                            break;
-                        case "Ministre Délégué":
-                            nombreDeCourrierTempRecuMinistreDelegue++;
-                            break;
-                        case "Ministre":
-                            nombreDeCourrierTempRecuMinistre++;
+            DateUtils.recupererLePremierEtLeDernierJourDuMoisEnCours();
+            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+
+            for (int a = 0; a < listeIdCourriersRecus.size(); a++) {
+                Date currentDate = null;
+                try {
+                    currentDate = sdf.parse(listeIdCourriersRecus.get(a).getDateDEnregistrement());
+                    if (currentDate.after(DateUtils.premierJourDuMois) && currentDate.before(DateUtils.dernierJourDuMois)) {
+                        finalListeCourriers.add(listeIdCourriersRecus.get(a));
                     }
+                } catch (ParseException e) {
+                    e.printStackTrace();
                 }
             }
 
-            myMapCourrierRecusParDirection.put("DCSI",nombreDeCourrierTempRecuDCSI);
-            myMapCourrierRecusParDirection.put("DCRH",nombreDeCourrierTempRecuDCRH);
-            myMapCourrierRecusParDirection.put("DCAF",nombreDeCourrierTempRecuDCAF);
-            myMapCourrierRecusParDirection.put("IGS",nombreDeCourrierTempRecuIGS);
-            myMapCourrierRecusParDirection.put("SG",nombreDeCourrierTempRecuSG);
-            myMapCourrierRecusParDirection.put("SGA",nombreDeCourrierTempRecuSGA);
-            myMapCourrierRecusParDirection.put("Min D",nombreDeCourrierTempRecuMinistreDelegue);
-            myMapCourrierRecusParDirection.put("Min",nombreDeCourrierTempRecuMinistre);
-            myMapCourrierRecusParDirection.put("Cab Min D",nombreDeCourrierTempRecuCabinetMinistreAdjoint);
-            myMapCourrierRecusParDirection.put("Cab Min",nombreDeCourrierTempRecuCabinetMinistre);
-            myMapCourrierRecusParDirection.put("DGBFIP",nombreDeCourrierTempRecuDGBFIP);
-            myMapCourrierRecusParDirection.put("TRESOR",nombreDeCourrierTempRecuTRESOR);
-            myMapCourrierRecusParDirection.put("AJE",nombreDeCourrierTempRecuAJE);
-            myMapCourrierRecusParDirection.put("CPPF",nombreDeCourrierTempRecuCPPF);
+            for(int a =0; a <  finalListeCourriers.size(); a++){
+                String direction = recupererLaDirectionDeLEmetteurDUnCourrierParIdDuCourrier( finalListeCourriers.get(a).getTypeCourrier());
+                int valueOfKey = mapNombreCourrierRecusParDirectionDuMoisEnCours.containsKey(direction) ? mapNombreCourrierRecusParDirectionDuMoisEnCours.get(direction) : 0;
+                valueOfKey++;
+                mapNombreCourrierRecusParDirectionDuMoisEnCours.put(direction,valueOfKey);
+            }
 
-            myMapCourrierRecusParDirection.remove(nomDirection);
+            mapNombreCourrierRecusParDirectionDuMoisEnCours.remove(nomDirection);
         } catch (SQLException e) {
             e.printStackTrace();
         }
     }
 
     /***Fonction qui recupere le nombre de courrier envoyés par direction par mois***/
-    public static void recupererLeNombreDeCourrierEnvoyesParDirection(String nomDirection){
+    public static void calculerLeNombreDeCourrierEnvoyesParDirectionLeMoisCourant(String nomDirection){
 
-        int nombreDeCourrierTempEnvoyesDCSI = 0;
-        int nombreDeCourrierTempEnvoyesDCAF = 0;
-        int nombreDeCourrierTempEnvoyesDCRH = 0;
-        int nombreDeCourrierTempEnvoyesDGBFIP = 0;
-        int nombreDeCourrierTempEnvoyesTRESOR = 0;
-        int nombreDeCourrierTempEnvoyesIGS = 0;
-        int nombreDeCourrierTempEnvoyesAJE = 0;
-        int nombreDeCourrierTempEnvoyesCPPF = 0;
-        int nombreDeCourrierTempEnvoyesSGA = 0;
-        int nombreDeCourrierTempEnvoyesSG = 0;
-        int nombreDeCourrierTempEnvoyesCabinetMinistre = 0;
-        int nombreDeCourrierTempEnvoyesCabinetMinistreAdjoint = 0;
-        int nombreDeCourrierTempEnvoyesMinistre = 0;
-        int nombreDeCourrierTempEnvoyesMinistreDelegue = 0;
-
-        List<String> listeIdCourriersEnvoyes = new ArrayList<>();
+        mapNombreCourrierEnvoyesParDirectionDuMoisEnCours.clear();
+        List<Courrier> listeIdCourriersEnvoyes = new ArrayList<>();
+        List<Courrier> finalListeCourriers = new ArrayList<>();
         ResultSet resultSetIdEnvoyes = null;
-        Connection connectionCourrierIdEnvoyes =  DatabaseConnection.getConnexion();
-        String requeteIdCourriersEnvoyesSQL = "select courrier.id_courrier from `envoyer_courrier` inner join `courrier` on envoyer_courrier.id_courrier = courrier.id_courrier inner join personne on envoyer_courrier.id_personne = personne.id_personne inner join direction on personne.id_direction = direction.id_direction where direction.nom_direction = '"+nomDirection+"' and courrier.etat = '"+EtatCourrier.courrierEnvoye+"' and envoyer_courrier.favoris = '"+EtatCourrier.pasfavoris+"' and envoyer_courrier.archive =  '"+ EtatCourrier.archiveNonActive +"' order by courrier.id_courrier desc;";
-
+        Connection connectionCourrierIdRecus =  DatabaseConnection.getConnexion();
+        String requeteIdCourriersEnvoyesSQL = "select courrier.id_courrier,date_enregistrement from `envoyer_courrier` inner join `courrier` on envoyer_courrier.id_courrier = courrier.id_courrier inner join personne on envoyer_courrier.id_personne = personne.id_personne inner join direction on personne.id_direction = direction.id_direction where direction.nom_direction = '"+nomDirection+"' and etat = '"+EtatCourrier.courrierEnvoye+"'";
         try {
-            resultSetIdEnvoyes = connectionCourrierIdEnvoyes.createStatement().executeQuery(requeteIdCourriersEnvoyesSQL);
+            resultSetIdEnvoyes = connectionCourrierIdRecus.createStatement().executeQuery(requeteIdCourriersEnvoyesSQL);
             while (resultSetIdEnvoyes.next()){
-                listeIdCourriersEnvoyes.add(resultSetIdEnvoyes.getString("courrier.id_courrier"));
+                listeIdCourriersEnvoyes.add(new Courrier(resultSetIdEnvoyes.getString("date_enregistrement"),resultSetIdEnvoyes.getString("courrier.id_courrier")));
             }
 
-            for(int a = 0; a < listeIdCourriersEnvoyes.size(); a++){
-                String valeur = recupererLaDirectionDuReceveurDUnCourrierParIdDuCourrier(listeIdCourriersEnvoyes.get(a));
-                if(valeur != null) {
-                    switch (valeur) {
-                        case "DCSI":
-                            nombreDeCourrierTempEnvoyesDCSI++;
-                            break;
-                        case "DCAF":
-                            nombreDeCourrierTempEnvoyesDCAF++;
-                            break;
-                        case "DCRH":
-                            nombreDeCourrierTempEnvoyesDCRH++;
-                            break;
-                        case "Sécrétariat Générale":
-                            nombreDeCourrierTempEnvoyesSG++;
-                            break;
-                        case "Sécrétariat Générale Adjoint":
-                            nombreDeCourrierTempEnvoyesSGA++;
-                            break;
-                        case "AJE":
-                            nombreDeCourrierTempEnvoyesAJE++;
-                            break;
-                        case "CPPF":
-                            nombreDeCourrierTempEnvoyesCPPF++;
-                            break;
-                        case "DGBFIP":
-                            nombreDeCourrierTempEnvoyesDGBFIP++;
-                            break;
-                        case "IGS":
-                            nombreDeCourrierTempEnvoyesIGS++;
-                            break;
-                        case "TRESOR":
-                            nombreDeCourrierTempEnvoyesTRESOR++;
-                            break;
-                        case "Cabinet du Ministre Délégué":
-                            nombreDeCourrierTempEnvoyesCabinetMinistreAdjoint++;
-                            break;
-                        case "Cabinet du Ministre":
-                            nombreDeCourrierTempEnvoyesCabinetMinistre++;
-                            break;
-                        case "Ministre Délégué":
-                            nombreDeCourrierTempEnvoyesMinistreDelegue++;
-                            break;
-                        case "Ministre":
-                            nombreDeCourrierTempEnvoyesMinistre++;
+            DateUtils.recupererLePremierEtLeDernierJourDuMoisEnCours();
+            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+
+            for (int a = 0; a < listeIdCourriersEnvoyes.size(); a++) {
+                Date currentDate = null;
+                try {
+                    currentDate = sdf.parse(listeIdCourriersEnvoyes.get(a).getDateDEnregistrement());
+                    if (currentDate.after(DateUtils.premierJourDuMois) && currentDate.before(DateUtils.dernierJourDuMois)) {
+                        finalListeCourriers.add(listeIdCourriersEnvoyes.get(a));
                     }
+                } catch (ParseException e) {
+                    e.printStackTrace();
                 }
-
             }
 
-            myMapCourrierEnvoyesParDirection.put("DCSI",nombreDeCourrierTempEnvoyesDCSI);
-            myMapCourrierEnvoyesParDirection.put("DCRH",nombreDeCourrierTempEnvoyesDCRH);
-            myMapCourrierEnvoyesParDirection.put("DCAF",nombreDeCourrierTempEnvoyesDCAF);
-            myMapCourrierEnvoyesParDirection.put("IGS",nombreDeCourrierTempEnvoyesIGS);
-            myMapCourrierEnvoyesParDirection.put("SG",nombreDeCourrierTempEnvoyesSG);
-            myMapCourrierEnvoyesParDirection.put("SGA",nombreDeCourrierTempEnvoyesSGA);
-            myMapCourrierEnvoyesParDirection.put("Min D",nombreDeCourrierTempEnvoyesMinistreDelegue);
-            myMapCourrierEnvoyesParDirection.put("Min",nombreDeCourrierTempEnvoyesMinistre);
-            myMapCourrierEnvoyesParDirection.put("Cab Min D",nombreDeCourrierTempEnvoyesCabinetMinistreAdjoint);
-            myMapCourrierEnvoyesParDirection.put("Cab Min",nombreDeCourrierTempEnvoyesCabinetMinistre);
-            myMapCourrierEnvoyesParDirection.put("DGBFIP",nombreDeCourrierTempEnvoyesDGBFIP);
-            myMapCourrierEnvoyesParDirection.put("TRESOR",nombreDeCourrierTempEnvoyesTRESOR);
-            myMapCourrierEnvoyesParDirection.put("AJE",nombreDeCourrierTempEnvoyesAJE);
-            myMapCourrierEnvoyesParDirection.put("CPPF",nombreDeCourrierTempEnvoyesCPPF);
+            for(int a =0; a <  finalListeCourriers.size(); a++){
+                String direction = recupererLaDirectionDuReceveurDUnCourrierParIdDuCourrier( finalListeCourriers.get(a).getTypeCourrier());
+                int valueOfKey = mapNombreCourrierEnvoyesParDirectionDuMoisEnCours.containsKey(direction) ? mapNombreCourrierEnvoyesParDirectionDuMoisEnCours.get(direction) : 0;
+                valueOfKey++;
+                mapNombreCourrierEnvoyesParDirectionDuMoisEnCours.put(direction,valueOfKey);
+            }
 
-            myMapCourrierEnvoyesParDirection.remove(nomDirection);
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -513,7 +403,6 @@ public class StatistiquesQueries {
         nombreCourrierUrgentDeLaSemaine = 0;
         nombreCourrierPasUrgentDeLaSemaine = 0;
         nombreCourrierConfidentielDeLaSemaine = 0;
-
         nombreCourrierLundiDeLaSemaine = 0;
         nombreCourrierMardiDeLaSemaine = 0;
         nombreCourrierMercrediDeLaSemaine = 0;
@@ -522,8 +411,6 @@ public class StatistiquesQueries {
         nombreCourrierSamediDeLaSemaine = 0;
         nombreCourrierDimancheDeLaSemaine = 0;
 
-        List<Courrier> listeCourriersRecus = new ArrayList<>();
-        List<Courrier> listeCourriersEnvoyes = new ArrayList<>();
         Connection connectionCourrierRecus =  DatabaseConnection.getConnexion();
         Connection connectionCourrierEnvoyes =  DatabaseConnection.getConnexion();
         String nombreDeCourrierRecusSQL = "select * from `recevoir_courrier` inner join `courrier` on recevoir_courrier.id_courrier = courrier.id_courrier inner join personne on recevoir_courrier.id_personne = personne.id_personne inner join direction on personne.id_direction = direction.id_direction inner join type_courrier on type_courrier.id_type_courrier =	courrier.fk_type_courrier where direction.id_direction = '"+idDirection+"' and courrier.etat = '"+EtatCourrier.courrierEnvoye+"' group by courrier.id_courrier order by courrier.id_courrier desc ";
@@ -658,96 +545,71 @@ public class StatistiquesQueries {
 
     }
 
-    public static void calculDuNombreDeCourrierTraitesParPrioriteEtParConfidentielaiteLeMoisCourant(String nomDirection){
+    public static void calculerLesStatistiquesDuMoisEnCoursPourUneDirection(String idDirection){
 
-        nombreCourrierUrgentDuMois = 0;
-        nombreCourrierPasUrgentDuMois = 0;
-        nombreCourrierConfidentielDuMois = 0;
-        nombreCourrierPasConfidentielDuMois = 0;
+        int tempCourrierEnvoyesDuMois = 0;
+        int tempCourrierRecusDuMois =0;
+        int tempCourrierUrgentEnvoye =0;
+        int tempCourrierPasUrgentEnvoye =0;
 
-        List<Courrier> listeCourriersRecus = new ArrayList<>();
-        List<Courrier> listeCourriersEnvoyes = new ArrayList<>();
-
-        listeCourriersRecus.clear();
-        listeCourriersEnvoyes.clear();
-
-        Connection connectionCourrierRecus = DatabaseConnection.getConnexion();
-        Connection connectionCourrierEnvoyes = DatabaseConnection.getConnexion();
-
-        String nombreDeCourrierRecusSQL = "select courrier.id_courrier,nom_direction,courrier.date_enregistrement,confidentiel,priorite,genre from `recevoir_courrier` inner join `courrier` on recevoir_courrier.id_courrier = courrier.id_courrier inner join personne on recevoir_courrier.id_personne = personne.id_personne inner join direction on personne.id_direction = direction.id_direction where direction.nom_direction = '" + nomDirection + "'  and courrier.etat = '" + EtatCourrier.courrierEnvoye + "' group by courrier.id_courrier order by courrier.id_courrier desc";
-        String nombreDeCourrierEnvoyesSQL = "select courrier.id_courrier,nom_direction,courrier.date_enregistrement,confidentiel,priorite,genre from `envoyer_courrier` inner join `courrier` on envoyer_courrier.id_courrier = courrier.id_courrier inner join personne on  envoyer_courrier.id_personne = personne.id_personne inner join direction on personne.id_direction = direction.id_direction where direction.nom_direction = '" + nomDirection + "'  and courrier.etat = '" + EtatCourrier.courrierEnvoye + "' group by courrier.id_courrier order by courrier.id_courrier desc";
-        ResultSet resultSetCourriersRecus = null;
-        ResultSet resultSetCourriersEnvoyes = null;
-
-        try {
-            resultSetCourriersRecus = connectionCourrierRecus.createStatement().executeQuery(nombreDeCourrierRecusSQL);
-            resultSetCourriersEnvoyes = connectionCourrierEnvoyes.createStatement().executeQuery(nombreDeCourrierEnvoyesSQL);
-
-            while (resultSetCourriersRecus.next()) {
-                listeCourriersRecus.add(new Courrier(
-                        resultSetCourriersRecus.getString("courrier.date_enregistrement"),
-                        resultSetCourriersRecus.getString("priorite"),
-                        resultSetCourriersRecus.getString("confidentiel"),
-                        resultSetCourriersRecus.getString("courrier.id_courrier"),
-                        resultSetCourriersRecus.getString("genre")));
-            }
-
-            while (resultSetCourriersEnvoyes.next()) {
-
-                listeCourriersEnvoyes.add(new Courrier(
-                        resultSetCourriersEnvoyes.getString("courrier.date_enregistrement"),
-                        resultSetCourriersEnvoyes.getString("priorite"),
-                        resultSetCourriersEnvoyes.getString("confidentiel"),
-                        resultSetCourriersEnvoyes.getString("courrier.id_courrier"),
-                        resultSetCourriersEnvoyes.getString("genre")));
-            }
-
-            List<Courrier> listeCourriersTraites = Stream.of(listeCourriersEnvoyes, listeCourriersRecus).flatMap(x -> x.stream()).collect(Collectors.toList());
-            DateUtils.recupererLePremierEtLeDernierJourDuMoisEnCours();
-            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
-            if(listeCourriersTraites.size() > 0){
-                Date currentDate = null;
-                for (int a = 0; a <listeCourriersTraites.size(); a++) {
-                    try {
-                        currentDate = sdf.parse(listeCourriersTraites.get(a).getDateDEnregistrement());
-                        if (currentDate.after(DateUtils.premierJourDuMois) && currentDate.before(DateUtils.dernierJourDuMois)){
-                            if (listeCourriersTraites.get(a).getPrioriteCourrier().equalsIgnoreCase("Urgent")) {
-                                nombreCourrierUrgentDuMois++;
-                            }
-                            if(listeCourriersTraites.get(a).getPrioriteCourrier().equals("Normal")){
-                                nombreCourrierPasUrgentDuMois++;
-                            }
-                            if(listeCourriersTraites.get(a).getConfidentiel().equals("Oui")){
-                                nombreCourrierConfidentielDuMois++;
-                            }
-                            if(listeCourriersTraites.get(a).getConfidentiel().equals("Non")){
-                                nombreCourrierPasConfidentielDuMois++;
-                            }
-                        }
-                    } catch (ParseException e) {
-                        e.printStackTrace();
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+        DateUtils.recupererLePremierEtLeDernierJourDuMoisEnCours();
+        if(listeCourriersRecus.size() > 0){
+            for (int i = 0; i < listeCourriersRecus.size(); i++) {
+                try {
+                    Date date = sdf.parse(listeCourriersRecus.get(i).getDateDEnregistrement());
+                    if (date.after(DateUtils.premierJourDuMois) && date.before(DateUtils.dernierJourDuMois)) {
+                        tempCourrierRecusDuMois++ ;
                     }
+                } catch (ParseException e) {
+                    e.printStackTrace();
                 }
             }
-
-
-        } catch (SQLException e) {
-            e.printStackTrace();
-        } finally {
-            if (resultSetCourriersRecus != null) {
+        }
+        if(listeCourriersEnvoyes.size() > 0){
+            for (int i = 0; i < listeCourriersEnvoyes.size(); i++) {
                 try {
-                    resultSetCourriersRecus.close();
-                } catch (SQLException e) { /* ignored */}
+                    Date date = sdf.parse(listeCourriersEnvoyes.get(i).getDateDEnregistrement());
+                    if (date.after(DateUtils.premierJourDuMois) && date.before(DateUtils.dernierJourDuMois)) {
+                        tempCourrierEnvoyesDuMois++ ;
+                    }
+                } catch (ParseException e) {
+                    e.printStackTrace();
+                }
             }
-            if (resultSetCourriersEnvoyes != null) {
-                try {
-                    resultSetCourriersEnvoyes.close();
-                } catch (SQLException e) { /* ignored */}
-            }
-
         }
 
+        List<Courrier> listeCourriersTraites = Stream.of(listeCourriersEnvoyes, listeCourriersRecus).flatMap(x -> x.stream()).collect(Collectors.toList());
+        if(listeCourriersTraites.size() > 0){
+            Date currentDate = null;
+            for (int a = 0; a <listeCourriersTraites.size(); a++) {
+                try {
+                    currentDate = sdf.parse(listeCourriersTraites.get(a).getDateDEnregistrement());
+                    if (currentDate.after(DateUtils.premierJourDuMois) && currentDate.before(DateUtils.dernierJourDuMois)){
+
+                        if (listeCourriersTraites.get(a).getPrioriteCourrier().equalsIgnoreCase("Urgent")) {
+                            nombreCourrierUrgentDuMois++;
+                        }
+                        if(listeCourriersTraites.get(a).getPrioriteCourrier().equals("Normal")){
+                            nombreCourrierPasUrgentDuMois++;
+                        }
+                        if(listeCourriersTraites.get(a).getConfidentiel().equals("Oui")){
+                            nombreCourrierConfidentielDuMois++;
+                        }
+                        if(listeCourriersTraites.get(a).getConfidentiel().equals("Non")){
+                            nombreCourrierPasConfidentielDuMois++;
+                        }
+                    }
+                } catch (ParseException e) {
+                    e.printStackTrace();
+                }
+            }
         }
+
+        nombreCourrierRecusDuMois = tempCourrierRecusDuMois;
+        nombreCourrierEnvoyesDuMois = tempCourrierEnvoyesDuMois;
+    }
+
 
     /****Fonction qui calcul du nombre de courrier recu par direction du SG****/
     public static void recupererLeNombreDeCourrierParDirectionDuSecreteriatGeneral(){

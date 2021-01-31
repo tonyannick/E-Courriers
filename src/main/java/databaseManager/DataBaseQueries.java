@@ -19,7 +19,6 @@ import java.util.*;
 public class DataBaseQueries {
 
 
-
     public static String directionUser;;
     public static String fonctionUser;
     public static int nombreCourrierEnvoyesDuJour = 0;
@@ -28,16 +27,9 @@ public class DataBaseQueries {
     public static int nombreCourrierPasUrgentDuJour = 0;
     public static int nombreCourrierConfidentielDuJour = 0;
     public static int nombreCourrierPasConfidentielDuJour = 0;
-    public static int nombreCourrierEnvoyesDuMois = 0;
-    public static int nombreCourrierRecusDuMois = 0;
 
-
-
-    public static int nombreCourrierUrgentDuMois = 0;
     public static int nombreCourrierInterneDuMois = 0;
     public static int nombreCourrierExterneDuMois = 0;
-    public static int nombreCourrierPasUrgentDuMois = 0;
-    public static int nombreCourrierConfidentielDuMois = 0;
 
     public static int nombreDeTacheDunAgentSurCourrier= 0;
     public static int nombreDActionEnCoursDuCourrier= 0;
@@ -90,9 +82,6 @@ public class DataBaseQueries {
         nombreCourrierUrgentDuJour = 0;
         nombreCourrierConfidentielDuJour = 0;
         nombreCourrierPasConfidentielDuJour = 0;
-
-        nombreCourrierEnvoyesDuMois= 0;
-        nombreCourrierRecusDuMois = 0;
 
         int nombreCourrierUrgentRecusDuMois = 0;
         int nombreCourrierPasUrgentRecusDuMois = 0;
@@ -165,7 +154,6 @@ public class DataBaseQueries {
                     try {
                         Date date1 = sdf.parse(listeCourriersRecus.get(i).getDateDEnregistrement());
                         if (date1.after(premierDuMois) && date1.before(dernierDuMois)) {
-                            nombreCourrierRecusDuMois++;
                             if(listeCourriersRecus.get(i).getPrioriteCourrier().equals("Normal")){
                                 nombreCourrierPasUrgentRecusDuMois++;
                             }else if(listeCourriersRecus.get(i).getPrioriteCourrier().equals("Urgent")){
@@ -212,7 +200,6 @@ public class DataBaseQueries {
                     try {
                         Date date1 = sdf.parse(listeCourriersEnvoyes.get(i).getDateDEnregistrement());
                         if (date1.after(premierDuMois) && date1.before(dernierDuMois)) {
-                            nombreCourrierEnvoyesDuMois++;
                             if(listeCourriersEnvoyes.get(i).getPrioriteCourrier().equals("Normal")){
                                 nombreCourrierPasUrgentEnvoyesDuMois++;
                             }else if(listeCourriersEnvoyes.get(i).getPrioriteCourrier().equals("Urgent")){
@@ -240,13 +227,11 @@ public class DataBaseQueries {
                 }
             }
 
-            nombreCourrierUrgentDuMois = nombreCourrierUrgentRecusDuMois + nombreCourrierUrgentEnvoyesDuMois;
-            nombreCourrierPasUrgentDuMois = nombreCourrierPasUrgentRecusDuMois + nombreCourrierPasUrgentEnvoyesDuMois;
+
             nombreCourrierUrgentDuJour = tempCourrierUrgentEnvoye + tempCourrierUrgentRecu;
             nombreCourrierPasUrgentDuJour = tempCourrierPasUrgentEnvoye + tempCourrierPasUrgentRecu;
             nombreCourrierConfidentielDuJour = tempCourrierConfidentielEnvoye + tempCourrierConfidentielRecu;
             nombreCourrierPasConfidentielDuJour = tempCourrierPasConfidentielEnvoye + tempCourrierPasConfidentielRecu;
-            nombreCourrierConfidentielDuMois = nombreCourrierConfidentielEnvoyesDuMois + nombreCourrierConfidentielRecusDuMois;
             nombreCourrierInterneDuMois = nombreCourrierInterneEnvoyesDuMois + nombreCourrierInterneRecusDuMois;
             nombreCourrierExterneDuMois = nombreCourrierExterneEnvoyesDuMois + nombreCourrierExterneRecusDuMois;
 
@@ -404,64 +389,6 @@ public class DataBaseQueries {
             resultSet = connection.createStatement().executeQuery(recupererIdTypeDePersonneSQL);
             if (resultSet.next()) {
                 id = resultSet.getString("id_type_de_personne");
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
-        } finally {
-            if (resultSet != null) {
-                try {
-                    resultSet.close();
-                } catch (SQLException e) { }
-            }
-            if (connection != null) {
-                try {
-                    connection.close();
-                } catch (SQLException e) {}
-            }
-
-        }
-        return id;
-    }
-
-    /***Fonction qui recuperer  l'id de la direction par son nom***/
-    public static String recupererIdDirectionParSonNom(String direction) {
-        String id = null;
-        String recupererIdDirectionSQL = "select id_direction from `direction` where nom_direction = '" + direction + "'";
-        Connection connection = DatabaseConnection.getConnexion();
-        ResultSet resultSet = null;
-        try {
-            resultSet = connection.createStatement().executeQuery(recupererIdDirectionSQL);
-            if (resultSet.next()) {
-                id = resultSet.getString("id_direction");
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
-        } finally {
-            if (resultSet != null) {
-                try {
-                    resultSet.close();
-                } catch (SQLException e) { }
-            }
-            if (connection != null) {
-                try {
-                    connection.close();
-                } catch (SQLException e) {}
-            }
-
-        }
-        return id;
-    }
-
-    /***Fonction qui recuperer  l'id de la fonction par son titre et son type***/
-    public static String recupererIdFonctionParSonTitreEtSonType(String titreFonction, String typeFonction) {
-        String id = null;
-        String recupererIdFonctionSQL = "select id_fonction from `fonction` where titre_fonction = '" + titreFonction + "' and type_fonction = '"+typeFonction+"' ; ";
-        Connection connection = DatabaseConnection.getConnexion();
-        ResultSet resultSet = null;
-        try {
-            resultSet = connection.createStatement().executeQuery(recupererIdFonctionSQL);
-            if (resultSet.next()) {
-                id = resultSet.getString("id_fonction");
             }
         } catch (SQLException e) {
             e.printStackTrace();

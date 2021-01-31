@@ -1340,7 +1340,7 @@ public class DetailDUnCourrierRecu implements Serializable {
     public void recupererIdDirectionParSonNomAuClick(){
 
         if(!direction.getTitreDirection().equalsIgnoreCase("rien")){
-            idDirectionATransfererLeCourrier = DataBaseQueries.recupererIdDirectionParSonNom(direction.getTitreDirection());
+            idDirectionATransfererLeCourrier = DirectionQueries.recupererIdDirectionParSonNom(direction.getTitreDirection());
         }
     }
 
@@ -1385,7 +1385,7 @@ public class DetailDUnCourrierRecu implements Serializable {
         String ajouterEtapeCourrierSQL = null;
         genererUniqueIDPourDestinataire();
         String idTypeDeDestinataire = DataBaseQueries.recupererIdTypeDePersonneParTitre("Agent du Ministere");
-        String idFonctionDestinataire = DataBaseQueries.recupererIdFonctionParSonTitreEtSonType("Directeur", TypeDeFonctions.interne);
+        String idFonctionDestinataire = DirectionQueries.recupererIdFonctionParSonTitreEtSonType("Directeur", TypeDeFonctions.interne);
         String idEtablissementDestinataire = EtablissementQueries.recupererIdEtablissementParSonAbreviation(Ministere.MinistereDuBudget);
         String ajouterDestinataireSQL = "insert into `personne` (`unique_id`, `fk_type_personne`,`id_fonction`, `id_direction`, `id_etablissement`) VALUES" + " ('" + finalUniqueIDDestinataire+"',"+"'"+idTypeDeDestinataire+"',"+"'"+ idFonctionDestinataire + "',"+"'" + idDirectionATransfererLeCourrier + "',"+ "'" +idEtablissementDestinataire+ "')";
 

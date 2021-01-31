@@ -845,8 +845,8 @@ public class DetailsDUnCourrierEnregistre implements Serializable {
                 String ajouterDestinataireSQL;
                 String recevoirCourrierSQL;
                 String idTypeDeDestinataire = DataBaseQueries.recupererIdTypeDePersonneParTitre("Agent du Ministere");
-                String idFonctionDestinataire = DataBaseQueries.recupererIdFonctionParSonTitreEtSonType(destinataire.getFonction(), TypeDeFonctions.interne);
-                String idDirectionDestinataire = DataBaseQueries.recupererIdDirectionParSonNom(destinataire.getDirection());
+                String idFonctionDestinataire = DirectionQueries.recupererIdFonctionParSonTitreEtSonType(destinataire.getFonction(), TypeDeFonctions.interne);
+                String idDirectionDestinataire = DirectionQueries.recupererIdDirectionParSonNom(destinataire.getDirection());
                 String idEtablissementDestinataire = EtablissementQueries.recupererIdEtablissementParSonAbreviation(Ministere.MinistereDuBudget);
 
                 ajouterDestinataireSQL = "insert into `personne` (`unique_id`, `fk_type_personne`,`id_fonction`, `id_direction`, `id_etablissement`) VALUES" +

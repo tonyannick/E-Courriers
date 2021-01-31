@@ -112,4 +112,62 @@ public class DirectionQueries {
         }
         return list;
     }
+
+    /***Fonction qui recuperer  l'id de la direction par son nom***/
+    public static String recupererIdDirectionParSonNom(String direction) {
+        String id = null;
+        String recupererIdDirectionSQL = "select id_direction from `direction` where nom_direction = '" + direction + "'";
+        Connection connection = DatabaseConnection.getConnexion();
+        ResultSet resultSet = null;
+        try {
+            resultSet = connection.createStatement().executeQuery(recupererIdDirectionSQL);
+            if (resultSet.next()) {
+                id = resultSet.getString("id_direction");
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+            if (resultSet != null) {
+                try {
+                    resultSet.close();
+                } catch (SQLException e) { }
+            }
+            if (connection != null) {
+                try {
+                    connection.close();
+                } catch (SQLException e) {}
+            }
+
+        }
+        return id;
+    }
+
+    /***Fonction qui recuperer  l'id de la fonction par son titre et son type***/
+    public static String recupererIdFonctionParSonTitreEtSonType(String titreFonction, String typeFonction) {
+        String id = null;
+        String recupererIdFonctionSQL = "select id_fonction from `fonction` where titre_fonction = '" + titreFonction + "' and type_fonction = '"+typeFonction+"' ; ";
+        Connection connection = DatabaseConnection.getConnexion();
+        ResultSet resultSet = null;
+        try {
+            resultSet = connection.createStatement().executeQuery(recupererIdFonctionSQL);
+            if (resultSet.next()) {
+                id = resultSet.getString("id_fonction");
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+            if (resultSet != null) {
+                try {
+                    resultSet.close();
+                } catch (SQLException e) { }
+            }
+            if (connection != null) {
+                try {
+                    connection.close();
+                } catch (SQLException e) {}
+            }
+
+        }
+        return id;
+    }
 }

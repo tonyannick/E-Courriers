@@ -298,15 +298,15 @@ public class NouveauCourrier implements Serializable {
             idTypeDeCourrier = CourriersQueries.recupererIdTypeDeCourrierParTitre(courrier.getTypeCourrier().replaceAll("'"," "));
             idTypeDEmetteur = DataBaseQueries.recupererIdTypeDePersonneParTitre(emetteur.getTypeDEmetteur());
             idTypeDeDestinataire = DataBaseQueries.recupererIdTypeDePersonneParTitre(destinataire.getTypeDestinataire());
-            idDirectionEmetteur = DataBaseQueries.recupererIdDirectionParSonNom(emetteur.getDirection());
-            idDirectionDestinataire = DataBaseQueries.recupererIdDirectionParSonNom(destinataire.getDirection());
+            idDirectionEmetteur = DirectionQueries.recupererIdDirectionParSonNom(emetteur.getDirection());
+            idDirectionDestinataire = DirectionQueries.recupererIdDirectionParSonNom(destinataire.getDirection());
             idEtablissementDestinataireAutreMinistere = EtablissementQueries.recupererIdEtablissementParSonAbreviation(destinataire.getMinistere());
             idEtablissementEmetteur = EtablissementQueries.recupererIdEtablissementParSonAbreviation(Ministere.MinistereDuBudget);
             idEtablissementEmetteurAutreMinistere = EtablissementQueries.recupererIdEtablissementParSonAbreviation(emetteur.getMinistereAutreMinistere());
             idEtablissementDestinataire = EtablissementQueries.recupererIdEtablissementParSonAbreviation(Ministere.MinistereDuBudget);
             idTypeDetablissement= EtablissementQueries.recupererIdTypeDEtablissementParTitre(TypeDEtablissement.entreprisePrivee);
-            idFonctionEmetteur = DataBaseQueries.recupererIdFonctionParSonTitreEtSonType(emetteur.getFonction(), TypeDeFonctions.interne);
-            idFonctionDestinataire = DataBaseQueries.recupererIdFonctionParSonTitreEtSonType(destinataire.getFonction(), TypeDeFonctions.interne);
+            idFonctionEmetteur = DirectionQueries.recupererIdFonctionParSonTitreEtSonType(emetteur.getFonction(), TypeDeFonctions.interne);
+            idFonctionDestinataire = DirectionQueries.recupererIdFonctionParSonTitreEtSonType(destinataire.getFonction(), TypeDeFonctions.interne);
            
             String insertionCourrierSQL = null;
             String ajouterCorrespondanceEtapeCourrierSQL = null;

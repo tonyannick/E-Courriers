@@ -99,12 +99,6 @@ public class GraphicsManager {
         legend.setLabels(legendLabels);
         barChartOptions.setLegend(legend);
 
-
-        // disable animation
-        /*Animation animation = new Animation();
-        animation.setDuration(0);
-        options.setAnimation(animation);*/
-
         return barChartOptions;
     }
 

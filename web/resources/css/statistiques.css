@@ -57,12 +57,23 @@ flex-grow: 1;
     width: 23%;
     padding: 0 7px;
 }
+
 .chartbox1{
     float: left;
     width: 50%;
     padding: 0 7px;
 }
 
+.chartbox2{
+    float: left;
+    width: 48%;
+    padding: 0 7px;
+}
+.chartbox3{
+    float: left;
+    width: 24%;
+    padding: 0 7px;
+}
 .chartboxquartpage{
     float: left;
     width: 25%;

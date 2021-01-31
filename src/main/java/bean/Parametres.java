@@ -295,8 +295,8 @@ public class Parametres implements Serializable {
                         PrimeFaces.current().executeScript("PF('panelajoutuser').close()");
                         PrimeFaces.current().executeScript("PF('paneluserloading').toggle()");
                         String idType = EtablissementQueries.recupererIdEtablissementParSonAbreviation(Ministere.MinistereDuBudget);
-                        String idFonction = DataBaseQueries.recupererIdFonctionParSonTitreEtSonType(userFonctionPourAjoutTemp, TypeDeFonctions.interne);
-                        String idDirection = DataBaseQueries.recupererIdDirectionParSonNom(userDirectionPourAjoutTemp);
+                        String idFonction = DirectionQueries.recupererIdFonctionParSonTitreEtSonType(userFonctionPourAjoutTemp, TypeDeFonctions.interne);
+                        String idDirection = DirectionQueries.recupererIdDirectionParSonNom(userDirectionPourAjoutTemp);
                         String idEtablissement = EtablissementQueries.recupererIdEtablissementParSonAbreviation(Ministere.MinistereDuBudget);
                         String  ajouterUserSQL = "insert into `personne` (`fk_type_personne`, `nom`, `prenom`,`tel`, `mail`, `id_fonction`,`id_profil`,`etat_du_compte`,`id_direction` ,`id_etablissement`) VALUES" +
                                 " ('" +idType+"',"+"'"+userNomPourAjoutTemp.trim().replaceAll("'"," ")+"',"+"'"+userPrenomPourAjoutTemp.trim().replaceAll("'"," ")+"',"+"'"+userTelPourAjoutTemp.trim()+"',"+"'"+userMailPourAjoutTemp.trim()+"',"+"'"+ idFonction+ "',"+"'"+profilUtilisateur+"',"+"'"+EtatCompteUser.enAttente+"',"+"'" +idDirection+ "',"+ "'" +idEtablissement+ "')";
