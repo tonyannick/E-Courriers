@@ -2,16 +2,13 @@ package databaseManager;
 
 import dateAndTime.DateUtils;
 import model.*;
-import org.primefaces.PrimeFaces;
 import sessionManager.SessionUtils;
 import variables.*;
 
-import javax.faces.context.FacesContext;
 import javax.servlet.http.HttpSession;
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.Statement;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.*;
@@ -21,16 +18,6 @@ public class DataBaseQueries {
 
     public static String directionUser;;
     public static String fonctionUser;
-    public static int nombreCourrierEnvoyesDuJour = 0;
-    public static int nombreCourrierRecusDuJour = 0;
-    public static int nombreCourrierUrgentDuJour = 0;
-    public static int nombreCourrierPasUrgentDuJour = 0;
-    public static int nombreCourrierConfidentielDuJour = 0;
-    public static int nombreCourrierPasConfidentielDuJour = 0;
-
-    public static int nombreCourrierInterneDuMois = 0;
-    public static int nombreCourrierExterneDuMois = 0;
-
     public static int nombreDeTacheDunAgentSurCourrier= 0;
     public static int nombreDActionEnCoursDuCourrier= 0;
     public static String dateDeReception;
@@ -47,211 +34,6 @@ public class DataBaseQueries {
     public static String heureDEnregistrement;
     public static boolean isResponsable = false;
     public static boolean isSecretaire = false;
-    private static Date premierDuMois;
-    private static Date dernierDuMois;
-    public static List<Courrier> listeCourriersRecus = new ArrayList<>();
-    public static List<Courrier> listeCourriersEnvoyes = new ArrayList<>();
-    private static List<Statistiques> listeNombreDeCourrierParType = new ArrayList<>();
-    public static Map<String, Integer> mapNombreCourrierParType = new HashMap<>();
-
-    /***Fonction de récuperation des statistiques de la page d'accueil***/
-    public static void recupererLesStatistiquesPourLaPageDAccueil() {
-
-        listeCourriersEnvoyes.clear();
-        listeCourriersRecus.clear();
-        int tempCourrierUrgentRecu = 0;
-        int tempCourrierPasUrgentRecu = 0;
-        int tempCourrierUrgentEnvoye =0;
-        int tempCourrierPasUrgentEnvoye =0;
-        int tempCourrierConfidentielRecu = 0;
-        int tempCourrierConfidentielEnvoye =0;
-        int tempCourrierPasConfidentielRecu = 0;
-        int tempCourrierPasConfidentielEnvoye =0;
-
-        HttpSession session = SessionUtils.getSession();
-        String idDirection = (String) session.getAttribute("idDirectionUser");
-
-        Connection connectionCourrierRecus =  DatabaseConnection.getConnexion();
-        Connection connectionCourrierEnvoyes =  DatabaseConnection.getConnexion();
-
-        String nombreDeCourrierRecusSQL = "select * from `recevoir_courrier` inner join `courrier` on recevoir_courrier.id_courrier = courrier.id_courrier inner join personne on recevoir_courrier.id_personne = personne.id_personne inner join direction on personne.id_direction = direction.id_direction inner join type_courrier on type_courrier.id_type_courrier =	courrier.fk_type_courrier where direction.id_direction = '"+idDirection+"' and courrier.etat = '"+EtatCourrier.courrierEnvoye+"' group by courrier.id_courrier order by courrier.id_courrier desc ";
-        String nombreDeCourrierEnvoyesSQL = "select * from `envoyer_courrier` inner join `courrier` on envoyer_courrier.id_courrier = courrier.id_courrier inner join personne on envoyer_courrier.id_personne = personne.id_personne inner join direction on personne.id_direction = direction.id_direction inner join type_courrier on type_courrier.id_type_courrier = courrier.fk_type_courrier where direction.id_direction = '"+idDirection+"' and courrier.etat = '"+EtatCourrier.courrierEnvoye+"' group by courrier.id_courrier order by courrier.id_courrier desc ";
-
-        nombreCourrierRecusDuJour = 0;
-        nombreCourrierEnvoyesDuJour = 0;
-        nombreCourrierUrgentDuJour = 0;
-        nombreCourrierConfidentielDuJour = 0;
-        nombreCourrierPasConfidentielDuJour = 0;
-
-        int nombreCourrierUrgentRecusDuMois = 0;
-        int nombreCourrierPasUrgentRecusDuMois = 0;
-        int nombreCourrierUrgentEnvoyesDuMois  = 0;
-        int nombreCourrierPasUrgentEnvoyesDuMois = 0;
-        int nombreCourrierConfidentielEnvoyesDuMois  = 0;
-        int nombreCourrierConfidentielRecusDuMois = 0;
-        int nombreCourrierInterneRecusDuMois = 0;
-        int nombreCourrierExterneRecusDuMois = 0;
-        int nombreCourrierInterneEnvoyesDuMois = 0;
-        int nombreCourrierExterneEnvoyesDuMois = 0;
-
-
-        Calendar firstMonthOfCalendar = Calendar.getInstance(Locale.FRANCE);
-        Calendar lastMonthOfCalendar = Calendar.getInstance(Locale.FRANCE);
-        /*Dernier jour du mois en cours*/
-        lastMonthOfCalendar.set(Calendar.DAY_OF_MONTH, lastMonthOfCalendar.getActualMaximum(Calendar.DAY_OF_MONTH));
-        /*Premier jour du mois en cours*/
-        firstMonthOfCalendar.set(Calendar.DAY_OF_MONTH, firstMonthOfCalendar.getActualMinimum(Calendar.DAY_OF_MONTH));
-
-        premierDuMois = firstMonthOfCalendar.getTime();
-        dernierDuMois = lastMonthOfCalendar.getTime();
-        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
-
-        String dateDuJour = DateUtils.recupererSimpleDateEnCours();
-        ResultSet resultSetCourriersRecus = null;
-        ResultSet resultSetCourriersEnvoyes = null;
-
-        try {
-            resultSetCourriersRecus = connectionCourrierRecus.createStatement().executeQuery(nombreDeCourrierRecusSQL);
-            resultSetCourriersEnvoyes = connectionCourrierEnvoyes.createStatement().executeQuery(nombreDeCourrierEnvoyesSQL);
-
-            while (resultSetCourriersRecus.next()) {
-                listeCourriersRecus.add(new Courrier(
-                        resultSetCourriersRecus.getString("date_enregistrement"),
-                        resultSetCourriersRecus.getString("priorite"),
-                        resultSetCourriersRecus.getString("confidentiel"),
-                        resultSetCourriersRecus.getString("id_courrier"),
-                        resultSetCourriersRecus.getString("genre")));
-            }
-
-            while (resultSetCourriersEnvoyes.next()) {
-                listeCourriersEnvoyes.add(new Courrier(
-                        resultSetCourriersEnvoyes.getString("date_enregistrement"),
-                        resultSetCourriersEnvoyes.getString("priorite"),
-                        resultSetCourriersEnvoyes.getString("confidentiel"),
-                        resultSetCourriersEnvoyes.getString("id_courrier"),
-                        resultSetCourriersEnvoyes.getString("genre")));
-            }
-
-
-
-            if(listeCourriersRecus.size() > 0){
-
-                for (int i = 0; i < listeCourriersRecus.size(); i++) {
-                    if (listeCourriersRecus.get(i).getDateDEnregistrement().equals(dateDuJour)) {
-                        nombreCourrierRecusDuJour++;
-                        if (listeCourriersRecus.get(i).getPrioriteCourrier().equalsIgnoreCase("Urgent")) {
-                            tempCourrierUrgentRecu++;
-                        }else if(listeCourriersRecus.get(i).getPrioriteCourrier().equalsIgnoreCase("Normal")){
-                            tempCourrierPasUrgentRecu++;
-                        }
-                        if (listeCourriersRecus.get(i).getConfidentiel().equalsIgnoreCase("Oui")) {
-                            tempCourrierConfidentielRecu++;
-                        }else if(listeCourriersRecus.get(i).getConfidentiel().equalsIgnoreCase("Non")){
-                            tempCourrierPasConfidentielRecu++;
-                        }
-                    }
-
-                    try {
-                        Date date1 = sdf.parse(listeCourriersRecus.get(i).getDateDEnregistrement());
-                        if (date1.after(premierDuMois) && date1.before(dernierDuMois)) {
-                            if(listeCourriersRecus.get(i).getPrioriteCourrier().equals("Normal")){
-                                nombreCourrierPasUrgentRecusDuMois++;
-                            }else if(listeCourriersRecus.get(i).getPrioriteCourrier().equals("Urgent")){
-                                nombreCourrierUrgentRecusDuMois++;
-                            }
-                            if(listeCourriersRecus.get(i).getConfidentiel().equals("Oui")){
-                                nombreCourrierConfidentielRecusDuMois++;
-                            }
-
-                            if(listeCourriersRecus.get(i).getGenreCourrier() != null){
-                                if(listeCourriersRecus.get(i).getGenreCourrier().equalsIgnoreCase(GenreDeCourrier.courrierInterne)){
-                                    nombreCourrierInterneRecusDuMois++;
-                                }
-                                if(listeCourriersRecus.get(i).getGenreCourrier().equalsIgnoreCase(GenreDeCourrier.courrierExterne)){
-                                    nombreCourrierExterneRecusDuMois++;
-                                }
-                            }
-
-                        }
-
-
-                    } catch (ParseException e) {
-                        e.printStackTrace();
-                    }
-                }
-            }
-
-            if(listeCourriersEnvoyes.size() > 0) {
-                for (int i = 0; i < listeCourriersEnvoyes.size(); i++) {
-                    if (listeCourriersEnvoyes.get(i).getDateDEnregistrement().equals(dateDuJour)) {
-                        nombreCourrierEnvoyesDuJour++;
-                        if (listeCourriersEnvoyes.get(i).getPrioriteCourrier().equalsIgnoreCase("Normal")) {
-                            tempCourrierUrgentEnvoye++;
-                        }else if(listeCourriersEnvoyes.get(i).getPrioriteCourrier().equalsIgnoreCase("Urgent")){
-                            tempCourrierPasUrgentEnvoye++;
-                        }
-                        if (listeCourriersEnvoyes.get(i).getConfidentiel().equalsIgnoreCase("Oui")) {
-                            tempCourrierConfidentielEnvoye++;
-                        }else if(listeCourriersEnvoyes.get(i).getConfidentiel().equalsIgnoreCase("Non")){
-                            tempCourrierPasConfidentielEnvoye++;
-                        }
-                    }
-
-                    try {
-                        Date date1 = sdf.parse(listeCourriersEnvoyes.get(i).getDateDEnregistrement());
-                        if (date1.after(premierDuMois) && date1.before(dernierDuMois)) {
-                            if(listeCourriersEnvoyes.get(i).getPrioriteCourrier().equals("Normal")){
-                                nombreCourrierPasUrgentEnvoyesDuMois++;
-                            }else if(listeCourriersEnvoyes.get(i).getPrioriteCourrier().equals("Urgent")){
-                                nombreCourrierUrgentEnvoyesDuMois++;
-                            }
-
-                            if(listeCourriersEnvoyes.get(i).getConfidentiel().equals("Oui")){
-                                nombreCourrierConfidentielEnvoyesDuMois++;
-                            }
-
-                            if(listeCourriersEnvoyes.get(i).getGenreCourrier() != null){
-                                if(listeCourriersEnvoyes.get(i).getGenreCourrier().equalsIgnoreCase(GenreDeCourrier.courrierInterne)){
-                                    nombreCourrierInterneEnvoyesDuMois++;
-                                }
-                                if(listeCourriersEnvoyes.get(i).getGenreCourrier().equalsIgnoreCase(GenreDeCourrier.courrierExterne)){
-                                    nombreCourrierExterneEnvoyesDuMois++;
-                                }
-                            }
-
-                        }
-
-                    } catch (ParseException e) {
-                        e.printStackTrace();
-                    }
-                }
-            }
-
-
-            nombreCourrierUrgentDuJour = tempCourrierUrgentEnvoye + tempCourrierUrgentRecu;
-            nombreCourrierPasUrgentDuJour = tempCourrierPasUrgentEnvoye + tempCourrierPasUrgentRecu;
-            nombreCourrierConfidentielDuJour = tempCourrierConfidentielEnvoye + tempCourrierConfidentielRecu;
-            nombreCourrierPasConfidentielDuJour = tempCourrierPasConfidentielEnvoye + tempCourrierPasConfidentielRecu;
-            nombreCourrierInterneDuMois = nombreCourrierInterneEnvoyesDuMois + nombreCourrierInterneRecusDuMois;
-            nombreCourrierExterneDuMois = nombreCourrierExterneEnvoyesDuMois + nombreCourrierExterneRecusDuMois;
-
-
-        } catch (SQLException e) {
-            e.printStackTrace();
-        } finally {
-            if (resultSetCourriersRecus != null) {
-                try {
-                    resultSetCourriersRecus.close();
-                } catch (SQLException e) { /* ignored */}
-            }
-            if (connectionCourrierRecus != null) {
-                try {
-                    connectionCourrierRecus.close();
-                } catch (SQLException e) { /* ignored */}
-            }
-
-        }
-    }
 
     /***Fonction de récuperation des disucssions ouvertes d'un user***/
     public static List<Discussion> recupererLesDiscusssionsDUnUserEnCours(String idUser){

@@ -10,7 +10,6 @@
         <f:viewAction action="#{statistiques.recupererStatistiquesDuJour}" onPostBack="true"/>
         <f:viewAction action="#{statistiques.recupererStatistiquesDeLaSemaine}" onPostBack="true"/>
         <f:viewAction action="#{statistiques.recupererStatistiquesDuMoisEnCours}" onPostBack="true"/>
-        <f:viewAction action="#{statistiques.recupererLesStatistiquesParMois}" onPostBack="true"/>
     </f:metadata>
     <h:head>
         <title>Statistiques</title>
@@ -29,8 +28,6 @@
             margin: 0 auto;
             width: 80%;
         }
-
-
     </style>
     <h:body>
         <div class="container-fluid" style="margin-bottom: 50px">
@@ -207,10 +204,17 @@
                                                 <div class="chartbox2" style="background-color: floralwhite;margin-left: 20px;box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2);border-radius: 20px">
                                                     <p:barChart model="#{statistiques.barModelNombreDeCourrierRecusParDirectionDuMois}" style="width: 90%; height: 250px;"/>
                                                 </div>
-                                                <div class="chartbox2" style="background-color: floralwhite;margin-left: 20px;box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2);border-radius: 20px">
+                                                <div class="chartbox1" style="background-color: floralwhite;margin-left: 10px;box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2);border-radius: 20px">
                                                     <p:barChart model="#{statistiques.barModelNombreDeCourrierEnvoyesParDirectionDuMois}" style="width: 90%; height: 250px;"/>
                                                 </div>
 
+                                            </div>
+                                        </p:tab>
+                                        <p:tab title="Statistiques de cette année">
+                                            <div class="lignechart" style="margin-top: 20px; margin-left: -20px">
+                                                <div class="chartboxfullpage" style="background-color: floralwhite;margin-left: 10px;box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2);border-radius: 20px">
+                                                    <p:barChart model="#{statistiques.barModelNombreDeCourrierParMoisPourLAnnee}" style="width: 90%; height: 250px;"/>
+                                                </div>
                                             </div>
                                         </p:tab>
                                     </p:tabView>

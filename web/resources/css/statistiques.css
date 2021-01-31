@@ -86,7 +86,7 @@ flex-grow: 1;
 }
 .chartboxfullpage{
     float: left;
-    width: 93%;
+    width: 100%;
     padding: 0 7px;
 }
 .lignechart{

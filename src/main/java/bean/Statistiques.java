@@ -32,7 +32,6 @@ public class Statistiques implements Serializable {
 
     private static final long serialVersionUID = -5729086590993362739L;
     private HorizontalBarChartModel hbarModel;
-    private PieChartModel chartCourriersParConfidentialite;
     private DonutChartModel donutChartCourriersParPrioriteDuJour;
     private DonutChartModel donutChartCourriersConfidentielDuJour;
     private BarChartModel barModelCourrierParJourDeLaSemaine;
@@ -41,27 +40,13 @@ public class Statistiques implements Serializable {
     private DonutChartModel donutChartModelCourriersEntrantEtSortantDeLaSemaine;
     private DonutChartModel donutChartModelCourriersEntrantEtSortantDuMois;
     private BarChartModel barModelNombreDeCourrierParTypeDuMois;
+    private BarChartModel barModelNombreDeCourrierParMoisPourLAnnee;
     private BarChartModel barModelNombreDeCourrierRecusParDirectionDuMois;
     private BarChartModel barModelNombreDeCourrierEnvoyesParDirectionDuMois;
     private model.Statistiques statistiques;
     private String totalCourrierTraitesParJour;
     private String totalCourrierTraitesParSemaine;
     private String totalCourrierTraitesParMois;
-    private int nombreDeCourrierTraitesJanvier;
-    private int nombreDeCourrierTraitesFevrier;
-    private int nombreDeCourrierTraitesMars;
-    private int nombreDeCourrierTraitesAvril;
-    private int nombreDeCourrierTraitesMai;
-    private int nombreDeCourrierTraitesJuin;
-    private int nombreDeCourrierTraitesJuillet;
-    private int nombreDeCourrierTraitesAout;
-    private int nombreDeCourrierTraitesSeptembre;
-    private int nombreDeCourrierTraitesOctobre;
-    private int nombreDeCourrierTraitesNovembre;
-    private int nombreDeCourrierTraitesDecembre;
-    private int nombreDeCourrierInterneDuMois;
-    private int nombreDeCourrierExterneDuMois;
-
 
     @PostConstruct
     public void initialisation(){
@@ -70,17 +55,58 @@ public class Statistiques implements Serializable {
     }
 
     public void recupererStatistiquesDuJour(){
-        DataBaseQueries.recupererLesStatistiquesPourLaPageDAccueil();
-        statistiques.setNombreDeCourrierRecusDuJour(String.valueOf(DataBaseQueries.nombreCourrierRecusDuJour));
-        statistiques.setNombreDeCourrierEnvoyesDuJour(String.valueOf(DataBaseQueries.nombreCourrierEnvoyesDuJour));
-        statistiques.setNombreDeCourrierUrgentDuJour(String.valueOf(DataBaseQueries.nombreCourrierUrgentDuJour));
-        statistiques.setNombreDeCourrierConfidentielDuJour(String.valueOf(DataBaseQueries.nombreCourrierConfidentielDuJour));
+        StatistiquesQueries.recupererLesStatistiquesDuJour();
+        statistiques.setNombreDeCourrierRecusDuJour(String.valueOf( StatistiquesQueries.nombreCourrierRecusDuJour));
+        statistiques.setNombreDeCourrierEnvoyesDuJour(String.valueOf( StatistiquesQueries.nombreCourrierEnvoyesDuJour));
+        statistiques.setNombreDeCourrierUrgentDuJour(String.valueOf( StatistiquesQueries.nombreCourrierUrgentDuJour));
+        statistiques.setNombreDeCourrierConfidentielDuJour(String.valueOf( StatistiquesQueries.nombreCourrierConfidentielDuJour));
         totalCourrierTraitesParJour = String.valueOf(Integer.parseInt(statistiques.getNombreDeCourrierRecusDuJour()) + Integer.parseInt(statistiques.getNombreDeCourrierEnvoyesDuJour()));
-        nombreDeCourrierInterneDuMois = DataBaseQueries.nombreCourrierInterneDuMois;
-        nombreDeCourrierExterneDuMois = DataBaseQueries.nombreCourrierExterneDuMois;
         creerGraphiqueCourriersTraitesParJour();
         creerGraphiqueCourriersParPrioriteDuJour();
         creerGraphiqueCourriersConfidentielParJour();
+    }
+
+    public void recupererStatistiquesDeLaSemaine(){
+        DateUtils.recupererLePremierEtLeDernierJourDelaSemaine();
+        DateUtils.recupererTousLesMoisDeLAnnee();
+        DateUtils.recupererTousLesJoursDeLaSemaineEnCours();
+        HttpSession session = SessionUtils.getSession();
+        String idDirection = (String) session.getAttribute("idDirectionUser");
+        StatistiquesQueries.calculerLesStatistiquesDeLaSemainesPourUneDirection(idDirection);
+
+        statistiques.setDebutDeSemaine(DateUtils.premierJourDeLaSemaine);
+        statistiques.setFinDeSemaine(DateUtils.dernierJourDeLaSemaine);
+        statistiques.setNombreDeCourrierConfidentielDeLaSemaine(String.valueOf(StatistiquesQueries.nombreCourrierConfidentielDeLaSemaine));
+        statistiques.setNombreDeCourrierUrgentDeLaSemaine(String.valueOf(StatistiquesQueries.nombreCourrierUrgentDeLaSemaine));
+        statistiques.setNombreDeCourrierEnvoyesDeLaSemaine(String.valueOf(StatistiquesQueries.nombreCourrierEnvoyesDeLaSemaine));
+        statistiques.setNombreDeCourrierRecusDeLaSemaine(String.valueOf(StatistiquesQueries.nombreCourrierRecusDeLaSemaine));
+        totalCourrierTraitesParSemaine = String.valueOf(Integer.parseInt(statistiques.getNombreDeCourrierRecusDeLaSemaine()) + Integer.parseInt(statistiques.getNombreDeCourrierEnvoyesDeLaSemaine()));
+
+        creerGraphiqueCourriersParJourDeLaSemaine();
+        creerGraphiqueCourriersParPrioriteParSemaine();
+        creerGraphiqueCourriersEntrantEtSortantParSemaine();
+    }
+
+    public void recupererStatistiquesDuMoisEnCours(){
+        HttpSession session = SessionUtils.getSession();
+        String nomDirection = session.getAttribute("directionUser").toString();
+        String idDirection = session.getAttribute("idDirectionUser").toString();
+        StatistiquesQueries.calculerLeNombreDeCourrierRecusParDirectionLeMoisCourant(nomDirection);
+        StatistiquesQueries.calculerLeNombreDeCourrierEnvoyesParDirectionLeMoisCourant(nomDirection);
+        StatistiquesQueries.recupererLeNombreDeCourrierTraitesParMoisPourLAnneeEnCours(nomDirection);
+        StatistiquesQueries.calculerLesStatistiquesDuMoisEnCoursPourUneDirection(nomDirection);
+        StatistiquesQueries.calculerLesStatistiquesDesCourriersTraitesParTypesDeCourrierDuMoisEnCours(idDirection);
+        creerGraphiqueCourriersParPrioriteDuMois();
+        creerGraphiqueCourriersEntrantEtSortantDuMois();
+        creerGraphiqueNombreDeCourriersParTypeLeMoisEnCours();
+        creerGraphiqueNombreDeCourriersRecusParDirectionLeMoisEnCours();
+        creerGraphiqueNombreDeCourriersEnvoyesParDirectionLeMoisEnCours();
+        creerGraphiqueNombreDeCourriersParMoisPourLAnneeEnCours();
+        statistiques.setNombreDeCourrierConfidentielDuMois(String.valueOf(StatistiquesQueries.nombreCourrierConfidentielDuMois));
+        statistiques.setNombreDeCourrierUrgentDuMois(String.valueOf(StatistiquesQueries.nombreCourrierUrgentDuMois));
+        statistiques.setNombreDeCourrierEnvoyesDuMois(String.valueOf(StatistiquesQueries.nombreCourrierEnvoyesDuMois));
+        statistiques.setNombreDeCourrierRecusDuMois(String.valueOf(StatistiquesQueries.nombreCourrierRecusDuMois));
+        totalCourrierTraitesParMois = String.valueOf(Integer.parseInt(statistiques.getNombreDeCourrierRecusDuMois()) + Integer.parseInt(statistiques.getNombreDeCourrierEnvoyesDuMois()));
     }
 
     private void creerGraphiqueCourriersTraitesParJour(){
@@ -88,8 +114,8 @@ public class Statistiques implements Serializable {
         HorizontalBarChartDataSet hbarDataSet = new HorizontalBarChartDataSet();
        // hbarModel.setExtender("skinBar");
         List<Number> values = new ArrayList<>();
-        remplirValeursGraphique(Integer.valueOf(String.valueOf(DataBaseQueries.nombreCourrierRecusDuJour)),values);
-        remplirValeursGraphique(Integer.valueOf(String.valueOf(DataBaseQueries.nombreCourrierEnvoyesDuJour)),values);
+        remplirValeursGraphique(Integer.valueOf(String.valueOf(StatistiquesQueries.nombreCourrierRecusDuJour)),values);
+        remplirValeursGraphique(Integer.valueOf(String.valueOf(StatistiquesQueries.nombreCourrierEnvoyesDuJour)),values);
         remplirValeursGraphique(Integer.valueOf(String.valueOf(Integer.parseInt(statistiques.getNombreDeCourrierRecusDuJour()) + Integer.parseInt(statistiques.getNombreDeCourrierEnvoyesDuJour()))),values);
 
         List<String> bgColor = new ArrayList<>();
@@ -117,8 +143,8 @@ public class Statistiques implements Serializable {
         ChartData data = new ChartData();
         DonutChartDataSet dataSet = new DonutChartDataSet();
         List<Number> values = new ArrayList<>();
-        remplirValeursGraphique(Integer.valueOf(String.valueOf(DataBaseQueries.nombreCourrierUrgentDuJour)),values);
-        remplirValeursGraphique(Integer.valueOf(String.valueOf(DataBaseQueries.nombreCourrierPasUrgentDuJour)),values);
+        remplirValeursGraphique(Integer.valueOf(String.valueOf(StatistiquesQueries.nombreCourrierUrgentDuJour)),values);
+        remplirValeursGraphique(Integer.valueOf(String.valueOf(StatistiquesQueries.nombreCourrierPasUrgentDuJour)),values);
 
         List<String> bgColors = new ArrayList<>();
         remplirListeBackgroundColorGraphique("rgb(255, 205, 86)",bgColors);
@@ -138,8 +164,8 @@ public class Statistiques implements Serializable {
         DonutChartDataSet dataSet = new DonutChartDataSet();
 
         List<Number> values = new ArrayList<>();
-        remplirValeursGraphique(Integer.valueOf(String.valueOf(DataBaseQueries.nombreCourrierConfidentielDuJour)),values);
-        remplirValeursGraphique(Integer.valueOf(String.valueOf(DataBaseQueries.nombreCourrierPasConfidentielDuJour)),values);
+        remplirValeursGraphique(Integer.valueOf(String.valueOf(StatistiquesQueries.nombreCourrierConfidentielDuJour)),values);
+        remplirValeursGraphique(Integer.valueOf(String.valueOf(StatistiquesQueries.nombreCourrierPasConfidentielDuJour)),values);
 
         List<String> bgColors = new ArrayList<>();
         remplirListeBackgroundColorGraphique("rgba(197, 0, 10, 0.7)",bgColors);
@@ -344,26 +370,15 @@ public class Statistiques implements Serializable {
         List<String> borderColor = new ArrayList<>();
         List<String> labels = new ArrayList<>();
         List<Number> values = new ArrayList<>();
-        System.out.println("a------------------------------------------");
         ColorsRandomGenerator colorsRandomGenerator = new ColorsRandomGenerator();
 
         for (Map.Entry<String, Integer> entry : StatistiquesQueries.mapNombreCourrierEnvoyesParDirectionDuMoisEnCours.entrySet()) {
             labels.add(entry.getKey());
             values.add(entry.getValue());
-            System.out.println("entry.getKey() = " + entry.getKey());
-            System.out.println("entry.getValue() = " + entry.getValue());
             bgColor.add(colorsRandomGenerator.creerUneCouleurAleatoireAuFormatRGB());
             borderColor.add("rgb(255,255,255)");
         }
 
-        System.out.println("-b-----------------------------------------");
-        for(int a = 0; a < labels.size(); a++){
-            System.out.println("labels.get(a) = " + labels.get(a));
-        }
-        System.out.println("------------------------------------------");
-        for(int a = 0; a < values.size(); a++){
-            System.out.println("values.get(a) = " + values.get(a));
-        }
         BarChartOptions options = new BarChartOptions();
         barModelNombreDeCourrierEnvoyesParDirectionDuMois.setOptions(options);
         GraphicsManager.creerGraphiqueBarVertical(  barModelNombreDeCourrierEnvoyesParDirectionDuMois, barDataSet,values,bgColor,2,borderColor,labels,data)
@@ -372,63 +387,78 @@ public class Statistiques implements Serializable {
 
     }
 
-    public void recupererStatistiquesDeLaSemaine(){
-        DateUtils.recupererLePremierEtLeDernierJourDelaSemaine();
-        DateUtils.recupererTousLesMoisDeLAnnee();
-        DateUtils.recupererTousLesJoursDeLaSemaineEnCours();
-        HttpSession session = SessionUtils.getSession();
-        String idDirection = (String) session.getAttribute("idDirectionUser");
-        StatistiquesQueries.calculerLesStatistiquesDeLaSemainesPourUneDirection(idDirection);
+    private void creerGraphiqueNombreDeCourriersParMoisPourLAnneeEnCours(){
 
-        statistiques.setDebutDeSemaine(DateUtils.premierJourDeLaSemaine);
-        statistiques.setFinDeSemaine(DateUtils.dernierJourDeLaSemaine);
-        statistiques.setNombreDeCourrierConfidentielDeLaSemaine(String.valueOf(StatistiquesQueries.nombreCourrierConfidentielDeLaSemaine));
-        statistiques.setNombreDeCourrierUrgentDeLaSemaine(String.valueOf(StatistiquesQueries.nombreCourrierUrgentDeLaSemaine));
-        statistiques.setNombreDeCourrierEnvoyesDeLaSemaine(String.valueOf(StatistiquesQueries.nombreCourrierEnvoyesDeLaSemaine));
-        statistiques.setNombreDeCourrierRecusDeLaSemaine(String.valueOf(StatistiquesQueries.nombreCourrierRecusDeLaSemaine));
-        totalCourrierTraitesParSemaine = String.valueOf(Integer.parseInt(statistiques.getNombreDeCourrierRecusDeLaSemaine()) + Integer.parseInt(statistiques.getNombreDeCourrierEnvoyesDeLaSemaine()));
+        barModelNombreDeCourrierParMoisPourLAnnee = new BarChartModel();
+        ChartData data = new ChartData();
+        data.setLabels(null);
+        BarChartDataSet barDataSet = new BarChartDataSet();
 
-        creerGraphiqueCourriersParJourDeLaSemaine();
-        creerGraphiqueCourriersParPrioriteParSemaine();
-        creerGraphiqueCourriersEntrantEtSortantParSemaine();
-    }
+        List<String> bgColor = new ArrayList<>();
+        remplirListeBackgroundColorGraphique("rgba(255, 99, 132, 0.7)",bgColor);
+        remplirListeBackgroundColorGraphique("rgba(255, 159, 64, 0.7)",bgColor);
+        remplirListeBackgroundColorGraphique("rgba(255, 205, 86, 0.7)",bgColor);
+        remplirListeBackgroundColorGraphique("rgba(75, 192, 192, 0.7)",bgColor);
+        remplirListeBackgroundColorGraphique("rgba(54, 162, 235, 0.7)",bgColor);
+        remplirListeBackgroundColorGraphique("rgba(153, 102, 255, 0.7)",bgColor);
+        remplirListeBackgroundColorGraphique("rgba(201, 203, 207, 0.7)",bgColor);
+        remplirListeBackgroundColorGraphique("rgba(75, 203, 207, 0.7)",bgColor);
+        remplirListeBackgroundColorGraphique("rgba(201, 20, 207, 0.7)",bgColor);
+        remplirListeBackgroundColorGraphique("rgba(201, 203, 10, 0.7)",bgColor);
+        remplirListeBackgroundColorGraphique("rgba(89, 203, 207, 0.7)",bgColor);
+        remplirListeBackgroundColorGraphique("rgba(201, 58, 34, 0.7)",bgColor);
 
-    public void recupererStatistiquesDuMoisEnCours(){
-        HttpSession session = SessionUtils.getSession();
-        String nomDirection = session.getAttribute("directionUser").toString();
-        StatistiquesQueries.calculerLeNombreDeCourrierRecusParDirectionLeMoisCourant(nomDirection);
-        StatistiquesQueries.calculerLeNombreDeCourrierEnvoyesParDirectionLeMoisCourant(nomDirection);
-        creerGraphiqueCourriersParPrioriteDuMois();
-        creerGraphiqueCourriersEntrantEtSortantDuMois();
-        creerGraphiqueNombreDeCourriersParTypeLeMoisEnCours();
-        creerGraphiqueNombreDeCourriersRecusParDirectionLeMoisEnCours();
-        creerGraphiqueNombreDeCourriersEnvoyesParDirectionLeMoisEnCours();
-        statistiques.setNombreDeCourrierConfidentielDuMois(String.valueOf(StatistiquesQueries.nombreCourrierConfidentielDuMois));
-        statistiques.setNombreDeCourrierUrgentDuMois(String.valueOf(StatistiquesQueries.nombreCourrierUrgentDuMois));
-        statistiques.setNombreDeCourrierEnvoyesDuMois(String.valueOf(StatistiquesQueries.nombreCourrierEnvoyesDuMois));
-        statistiques.setNombreDeCourrierRecusDuMois(String.valueOf(StatistiquesQueries.nombreCourrierRecusDuMois));
-        totalCourrierTraitesParMois = String.valueOf(Integer.parseInt(statistiques.getNombreDeCourrierRecusDuMois()) + Integer.parseInt(statistiques.getNombreDeCourrierEnvoyesDuMois()));
-    }
 
-    public void recupererLesStatistiquesParMois(){
-        HttpSession session = SessionUtils.getSession();
-        String nomDirection = session.getAttribute("directionUser").toString();
-        String idDirection = session.getAttribute("idDirectionUser").toString();
-        StatistiquesQueries.recupererLeNombreDeCourrierTraitesParMoisPourLAnneeEnCours(nomDirection);
+        List<String> borderColor = new ArrayList<>();
+        remplirListeBorderColorGraphique("rgb(255,255,255)",borderColor);
+        remplirListeBorderColorGraphique("rgb(255,255,255)",borderColor);
+        remplirListeBorderColorGraphique("rgb(255,255,255)",borderColor);
+        remplirListeBorderColorGraphique("rgb(255,255,255)",borderColor);
+        remplirListeBorderColorGraphique("rgb(255,255,255)",borderColor);
+        remplirListeBorderColorGraphique("rgb(255,255,255)",borderColor);
+        remplirListeBorderColorGraphique("rgb(255,255,255)",borderColor);
+        remplirListeBorderColorGraphique("rgb(255,255,255)",borderColor);
+        remplirListeBorderColorGraphique("rgb(255,255,255)",borderColor);
+        remplirListeBorderColorGraphique("rgb(255,255,255)",borderColor);
+        remplirListeBorderColorGraphique("rgb(255,255,255)",borderColor);
+        remplirListeBorderColorGraphique("rgb(255,255,255)",borderColor);
 
-        StatistiquesQueries.calculerLesStatistiquesDesCourriersTraitesParTypesDeCourrierDuMoisEnCours(idDirection);
-        nombreDeCourrierTraitesJanvier = StatistiquesQueries.nombreDeCourrierJanvier;
-        nombreDeCourrierTraitesFevrier = StatistiquesQueries.nombreDeCourrierFevrier;
-        nombreDeCourrierTraitesMars = StatistiquesQueries.nombreDeCourrierMars;
-        nombreDeCourrierTraitesAvril = StatistiquesQueries.nombreDeCourrierAvril;
-        nombreDeCourrierTraitesMai = StatistiquesQueries.nombreDeCourrierMai;
-        nombreDeCourrierTraitesJuin = StatistiquesQueries.nombreDeCourrierJuin;
-        nombreDeCourrierTraitesJuillet = StatistiquesQueries.nombreDeCourrierJuillet;
-        nombreDeCourrierTraitesAout = StatistiquesQueries.nombreDeCourrierAout;
-        nombreDeCourrierTraitesSeptembre = StatistiquesQueries.nombreDeCourrierSeptembre;
-        nombreDeCourrierTraitesOctobre = StatistiquesQueries.nombreDeCourrierOctobre;
-        nombreDeCourrierTraitesNovembre = StatistiquesQueries.nombreDeCourrierNovembre;
-        nombreDeCourrierTraitesDecembre = StatistiquesQueries.nombreDeCourrierDecembre;
+
+        List<String> labels = new ArrayList<>();
+        remplirListeLabelsGraphique("Janvier",labels);
+        remplirListeLabelsGraphique("Fevrier",labels);
+        remplirListeLabelsGraphique("Mars",labels);
+        remplirListeLabelsGraphique("Avril",labels);
+        remplirListeLabelsGraphique("Mai",labels);
+        remplirListeLabelsGraphique("Juin",labels);
+        remplirListeLabelsGraphique("Juillet",labels);
+        remplirListeLabelsGraphique("Aout",labels);
+        remplirListeLabelsGraphique("Septembre",labels);
+        remplirListeLabelsGraphique("Octobre",labels);
+        remplirListeLabelsGraphique("Novembre",labels);
+        remplirListeLabelsGraphique("Décembre",labels);
+
+        List<Number> values = new ArrayList<>();
+        remplirValeursGraphique(Integer.valueOf(String.valueOf(StatistiquesQueries.nombreDeCourrierJanvier)),values);
+        remplirValeursGraphique(Integer.valueOf(String.valueOf(StatistiquesQueries.nombreDeCourrierFevrier)),values);
+        remplirValeursGraphique(Integer.valueOf(String.valueOf(StatistiquesQueries.nombreDeCourrierMars)),values);
+        remplirValeursGraphique(Integer.valueOf(String.valueOf(StatistiquesQueries.nombreDeCourrierAvril)),values);
+        remplirValeursGraphique(Integer.valueOf(String.valueOf(StatistiquesQueries.nombreDeCourrierMai)),values);
+        remplirValeursGraphique(Integer.valueOf(String.valueOf(StatistiquesQueries.nombreDeCourrierJuin)),values);
+        remplirValeursGraphique(Integer.valueOf(String.valueOf(StatistiquesQueries.nombreDeCourrierJuillet)),values);
+        remplirValeursGraphique(Integer.valueOf(String.valueOf(StatistiquesQueries.nombreDeCourrierAout)),values);
+        remplirValeursGraphique(Integer.valueOf(String.valueOf(StatistiquesQueries.nombreDeCourrierSeptembre)),values);
+        remplirValeursGraphique(Integer.valueOf(String.valueOf(StatistiquesQueries.nombreDeCourrierOctobre)),values);
+        remplirValeursGraphique(Integer.valueOf(String.valueOf(StatistiquesQueries.nombreDeCourrierNovembre)),values);
+        remplirValeursGraphique(Integer.valueOf(String.valueOf(StatistiquesQueries.nombreDeCourrierDecembre)),values);
+
+
+        BarChartOptions options = new BarChartOptions();
+        barModelNombreDeCourrierParMoisPourLAnnee.setOptions(options);
+        GraphicsManager.creerGraphiqueBarVertical( barModelNombreDeCourrierParMoisPourLAnnee, barDataSet,values,bgColor,2,borderColor,labels,data)
+                .setOptions(GraphicsManager.creerOptionsDAffichageDuGraphiqueVertical(options,true,true,"Nombre de courriers traités par mois de l'année en cours",
+                        "top","bold","#2980B9",false));
+
     }
 
     private void remplirListeBackgroundColorGraphique( String couleur, List<String> bgColor){
@@ -479,118 +509,6 @@ public class Statistiques implements Serializable {
         this.totalCourrierTraitesParMois = totalCourrierTraitesParMois;
     }
 
-    public int getNombreDeCourrierTraitesJanvier() {
-        return nombreDeCourrierTraitesJanvier;
-    }
-
-    public void setNombreDeCourrierTraitesJanvier(int nombreDeCourrierTraitesJanvier) {
-        this.nombreDeCourrierTraitesJanvier = nombreDeCourrierTraitesJanvier;
-    }
-
-    public int getNombreDeCourrierTraitesFevrier() {
-        return nombreDeCourrierTraitesFevrier;
-    }
-
-    public void setNombreDeCourrierTraitesFevrier(int nombreDeCourrierTraitesFevrier) {
-        this.nombreDeCourrierTraitesFevrier = nombreDeCourrierTraitesFevrier;
-    }
-
-    public int getNombreDeCourrierTraitesMars() {
-        return nombreDeCourrierTraitesMars;
-    }
-
-    public void setNombreDeCourrierTraitesMars(int nombreDeCourrierTraitesMars) {
-        this.nombreDeCourrierTraitesMars = nombreDeCourrierTraitesMars;
-    }
-
-    public int getNombreDeCourrierTraitesAvril() {
-        return nombreDeCourrierTraitesAvril;
-    }
-
-    public void setNombreDeCourrierTraitesAvril(int nombreDeCourrierTraitesAvril) {
-        this.nombreDeCourrierTraitesAvril = nombreDeCourrierTraitesAvril;
-    }
-
-    public int getNombreDeCourrierTraitesMai() {
-        return nombreDeCourrierTraitesMai;
-    }
-
-    public void setNombreDeCourrierTraitesMai(int nombreDeCourrierTraitesMai) {
-        this.nombreDeCourrierTraitesMai = nombreDeCourrierTraitesMai;
-    }
-
-    public int getNombreDeCourrierTraitesJuin() {
-        return nombreDeCourrierTraitesJuin;
-    }
-
-    public void setNombreDeCourrierTraitesJuin(int nombreDeCourrierTraitesJuin) {
-        this.nombreDeCourrierTraitesJuin = nombreDeCourrierTraitesJuin;
-    }
-
-    public int getNombreDeCourrierTraitesJuillet() {
-        return nombreDeCourrierTraitesJuillet;
-    }
-
-    public void setNombreDeCourrierTraitesJuillet(int nombreDeCourrierTraitesJuillet) {
-        this.nombreDeCourrierTraitesJuillet = nombreDeCourrierTraitesJuillet;
-    }
-
-    public int getNombreDeCourrierTraitesAout() {
-        return nombreDeCourrierTraitesAout;
-    }
-
-    public void setNombreDeCourrierTraitesAout(int nombreDeCourrierTraitesAout) {
-        this.nombreDeCourrierTraitesAout = nombreDeCourrierTraitesAout;
-    }
-
-    public int getNombreDeCourrierTraitesSeptembre() {
-        return nombreDeCourrierTraitesSeptembre;
-    }
-
-    public void setNombreDeCourrierTraitesSeptembre(int nombreDeCourrierTraitesSeptembre) {
-        this.nombreDeCourrierTraitesSeptembre = nombreDeCourrierTraitesSeptembre;
-    }
-
-    public int getNombreDeCourrierTraitesOctobre() {
-        return nombreDeCourrierTraitesOctobre;
-    }
-
-    public void setNombreDeCourrierTraitesOctobre(int nombreDeCourrierTraitesOctobre) {
-        this.nombreDeCourrierTraitesOctobre = nombreDeCourrierTraitesOctobre;
-    }
-
-    public int getNombreDeCourrierTraitesNovembre() {
-        return nombreDeCourrierTraitesNovembre;
-    }
-
-    public void setNombreDeCourrierTraitesNovembre(int nombreDeCourrierTraitesNovembre) {
-        this.nombreDeCourrierTraitesNovembre = nombreDeCourrierTraitesNovembre;
-    }
-
-    public int getNombreDeCourrierTraitesDecembre() {
-        return nombreDeCourrierTraitesDecembre;
-    }
-
-    public void setNombreDeCourrierTraitesDecembre(int nombreDeCourrierTraitesDecembre) {
-        this.nombreDeCourrierTraitesDecembre = nombreDeCourrierTraitesDecembre;
-    }
-
-    public int getNombreDeCourrierInterneDuMois() {
-        return nombreDeCourrierInterneDuMois;
-    }
-
-    public void setNombreDeCourrierInterneDuMois(int nombreDeCourrierInterneDuMois) {
-        this.nombreDeCourrierInterneDuMois = nombreDeCourrierInterneDuMois;
-    }
-
-    public int getNombreDeCourrierExterneDuMois() {
-        return nombreDeCourrierExterneDuMois;
-    }
-
-    public void setNombreDeCourrierExterneDuMois(int nombreDeCourrierExterneDuMois) {
-        this.nombreDeCourrierExterneDuMois = nombreDeCourrierExterneDuMois;
-    }
-
     public HorizontalBarChartModel getHbarModel() {
         return hbarModel;
     }
@@ -601,14 +519,6 @@ public class Statistiques implements Serializable {
 
     public static long getSerialVersionUID() {
         return serialVersionUID;
-    }
-
-    public PieChartModel getChartCourriersParConfidentialite() {
-        return chartCourriersParConfidentialite;
-    }
-
-    public void setChartCourriersParConfidentialite(PieChartModel chartCourriersParConfidentialite) {
-        this.chartCourriersParConfidentialite = chartCourriersParConfidentialite;
     }
 
     public DonutChartModel getDonutChartCourriersParPrioriteDuJour() {
@@ -689,5 +599,13 @@ public class Statistiques implements Serializable {
 
     public void setBarModelNombreDeCourrierEnvoyesParDirectionDuMois(BarChartModel barModelNombreDeCourrierEnvoyesParDirectionDuMois) {
         this.barModelNombreDeCourrierEnvoyesParDirectionDuMois = barModelNombreDeCourrierEnvoyesParDirectionDuMois;
+    }
+
+    public BarChartModel getBarModelNombreDeCourrierParMoisPourLAnnee() {
+        return barModelNombreDeCourrierParMoisPourLAnnee;
+    }
+
+    public void setBarModelNombreDeCourrierParMoisPourLAnnee(BarChartModel barModelNombreDeCourrierParMoisPourLAnnee) {
+        this.barModelNombreDeCourrierParMoisPourLAnnee = barModelNombreDeCourrierParMoisPourLAnnee;
     }
 }

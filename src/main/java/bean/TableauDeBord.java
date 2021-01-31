@@ -30,7 +30,6 @@ public class TableauDeBord implements Serializable {
     private Discussion discussion;
     private Etape etape;
     private boolean isResponsable = false;
-    private List<Statistiques> statistiquesList = new ArrayList<>();
     private int courrierConfidentiel;
     private int courrierPasConfidentiel;
 
@@ -185,22 +184,23 @@ public class TableauDeBord implements Serializable {
         HttpSession httpSession = SessionUtils.getSession();
         String idUser = (String)httpSession.getAttribute("idUser");
         String idDirection = httpSession.getAttribute("idDirectionUser").toString();
-        DataBaseQueries.recupererLesStatistiquesPourLaPageDAccueil();
-        StatistiquesQueries.calculerLesStatistiquesDeLaSemainesPourUneDirection(idDirection);
+        StatistiquesQueries.recupererLesStatistiquesDuJour();
         StatistiquesQueries.calculerLesStatistiquesDuMoisEnCoursPourUneDirection(idDirection);
         courrierConfidentiel = StatistiquesQueries.nombreCourrierConfidentielDuMois;
         courrierPasConfidentiel = StatistiquesQueries.nombreCourrierPasConfidentielDuMois;
-        statistiques.setNombreDeCourrierRecusDuJour(String.valueOf(DataBaseQueries.nombreCourrierRecusDuJour));
-        statistiques.setNombreDeCourrierEnvoyesDuJour(String.valueOf(DataBaseQueries.nombreCourrierEnvoyesDuJour));
-        statistiques.setNombreDeCourrierUrgentDuJour(String.valueOf(DataBaseQueries.nombreCourrierUrgentDuJour));
-        statistiques.setNombreDeCourrierConfidentielDuJour(String.valueOf(DataBaseQueries.nombreCourrierConfidentielDuJour));
+
+        statistiques.setNombreDeCourrierRecusDuJour(String.valueOf( StatistiquesQueries.nombreCourrierRecusDuJour));
+        statistiques.setNombreDeCourrierEnvoyesDuJour(String.valueOf( StatistiquesQueries.nombreCourrierEnvoyesDuJour));
+        statistiques.setNombreDeCourrierUrgentDuJour(String.valueOf( StatistiquesQueries.nombreCourrierUrgentDuJour));
+        statistiques.setNombreDeCourrierConfidentielDuJour(String.valueOf( StatistiquesQueries.nombreCourrierConfidentielDuJour));
+
+
         statistiques.setNombreDeCourrierEnvoyesDuMois(String.valueOf(StatistiquesQueries.nombreCourrierEnvoyesDuMois));
         statistiques.setNombreDeCourrierRecusDuMois(String.valueOf(StatistiquesQueries.nombreCourrierRecusDuMois));
         statistiques.setNombreDeCourrierUrgentDuMois(String.valueOf(StatistiquesQueries.nombreCourrierUrgentDuMois));
         statistiques.setNombreDeCourrierPasUrgentDuMois(String.valueOf(StatistiquesQueries.nombreCourrierPasUrgentDuMois));
         statistiques.setNombreDeCourrierConfidentielDuMois(String.valueOf(StatistiquesQueries.nombreCourrierConfidentielDuMois));
 
-        DataBaseQueries.mapNombreCourrierParType.forEach((key,value) -> statistiquesList.add(new Statistiques(key,String.valueOf(value))));
         discussion.setListeDiscussionsOuvertes(DataBaseQueries.recupererLesDiscusssionsDUnUserEnCours(idUser));
         HttpSession session = SessionUtils.getSession();
         isResponsable = (Boolean) session.getAttribute("isResponsable");
