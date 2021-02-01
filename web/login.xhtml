@@ -10,6 +10,7 @@
 <f:view transient="true">
     <f:metadata>
         <f:viewAction action="#{login.cliquerSurSeSouvenir}" onPostBack="true"/>
+        <f:viewAction action="#{login.actualiserImageCaptcha}" onPostBack="true"/>
     </f:metadata>
     <h:head>
         <title>Login</title>
@@ -17,6 +18,8 @@
         <h:outputScript name="bootstrap/js/bootstrap.js" />
         <h:outputStylesheet name="bootstrap/css/bootstrap.css" />
         <h:outputStylesheet name="css/login.css" />
+        <h:outputScript name="/sweetalert/js/sweetalert.min.js"/>
+        <h:outputStylesheet name="/sweetalert/css/sweetalert.css"/>
     </h:head>
     <h:body>
         <div class="container-fluid" style="margin-bottom: 50px">
@@ -25,18 +28,48 @@
                     <div class="row">
                         <h1 class="loginTitle">Connexion</h1>
                         <h:form id="login-form" >
-                            <h:panelGrid columns="2" style="border:none; width: 100%; margin-bottom:20px; margin-top: 30px; " styleClass="panelLogin">
-                                <h:graphicImage value="./resources/images/login.png"/>
-                                <p:inputText id="userLogin" pt:placeholder="Identifiant" style="width: 80%;margin-left: -30px" value="#{login.user.userlogin}"/>
-                                <h:graphicImage value="./resources/images/motdepasse.png" style="margin-top: 10px;"/>
-                                <p:password id="userPassword" redisplay="true" pt:placeholder="Mot de passe" style="width: 80%;margin-top: 10px; margin-left: -30px" value="#{login.user.userPassword}"/>
+
+                            <div class="ui-g">
+                                <div class="ui-g-2">
+                                    <h:graphicImage value="./resources/images/login.png"/>
+                                </div>
+                                <div class="ui-g-10">
+                                    <p:inputText id="userLogin" autocomplete="off" pt:placeholder="Identifiant" style="width: 90%;margin-left: -30px" value="#{login.user.userlogin}"/>
+                                </div>
+                            </div>
+                            <div class="ui-g">
+                                <div class="ui-g-2">
+                                    <h:graphicImage value="./resources/images/motdepasse.png" style="margin-top: 10px;"/>
+                                </div>
+                                <div class="ui-g-10">
+                                    <p:password id="userPassword" redisplay="true" pt:placeholder="Mot de passe"
+                                                style="width: 90%;margin-top: 10px; margin-left: -30px" value="#{login.user.userPassword}"/>
+                                </div>
+                            </div>
+
+                            <h:panelGrid columns="2" style="margin-left:10px; margin-top: 10px; border:none; color: white; cursor: hand; width: 85%" styleClass="panelLogin">
+                                <p:selectBooleanCheckbox itemLabel="Se souvenir de moi ?"  style=" float: left" value="#{login.user.seSouvenir}"/>
                             </h:panelGrid>
-                            <h:panelGrid columns="2" style="border:none; color: white; margin-left: 5px; cursor: hand; width: 85%" styleClass="panelLogin">
-                                <p:selectBooleanCheckbox itemLabel="Se souvenir de moi"  style="margin-top: 15px; float: left" value="#{login.user.seSouvenir}"/>
-                            </h:panelGrid>
-                            <p:commandButton   value="Valider" ajax="false" style="margin-bottom: 10px; margin-left:70px; margin-top: 20px;
-                                               width: 100px; alignment: center; align-items: center; alignment-baseline: center"
+
+                            <p:panel header="Captcha" style="width: 72%;margin-left:60px; margin-top: 10px">
+                                    <h:panelGrid columns="1" columnClasses="ui-grid-col-2, ui-grid-col-7" style=" border:none; width: 100%; " styleClass="panelLogin">
+                                        <h:panelGrid columns="2"  style=" border:none;margin-bottom: 10px" styleClass="panelLogin">
+                                            <p:graphicImage cache="false" id="captcha" value="#{login.imageCaptcha}"/>
+                                            <p:commandButton style=" color: white; padding: 3px 15px; font-size:14px; margin-left:10px; background:#d1ac3f; border-color:#d1ac3f;"
+                                                             icon="fa fa-refresh"
+                                                             update="login-form:captcha"
+                                                             actionListener="#{login.actualiserImageCaptcha}"/>
+                                        </h:panelGrid>
+                                        <h:outputText value="Taper le code ci-dessus" style="color: #286090; font-size: 13px"/>
+                                        <p:inputText autocomplete="off" id="valeurCaptcha" value="#{login.valeurCaptcha}" pt:placeholder="Taper le code ici" size="20"/>
+                                    </h:panelGrid>
+                            </p:panel>
+
+                            <p:commandButton   value="Valider" ajax="false" style="margin-bottom: 10px; margin-left:60px; margin-top: 30px;
+                                               width: 100px; alignment: center; align-items: center; alignment-baseline: center;
+                                               background-color: green; border-color: green; padding: 3px 15px; font-size: 13px"
                                                action="#{login.cliquerSurValider}" />
+
                             <p:messages id="messagesLogin" for="messagesLogin" showDetail="true" closable="true"/>
                             <p:spacer height="7px"/>
                             <p:separator style="background-color: white; color: white"/>
