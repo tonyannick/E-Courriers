@@ -4,6 +4,7 @@ import cookieManager.CookiesUtils;
 import databaseManager.UsersQueries;
 import messages.FacesMessages;
 import model.User;
+import org.primefaces.PrimeFaces;
 import org.primefaces.model.DefaultStreamedContent;
 import org.primefaces.model.StreamedContent;
 import securityManager.Captcha;
@@ -102,7 +103,8 @@ public class Login implements Serializable {
                 return "login?faces-redirect=true";
             }
         }else{
-            System.out.println("je suis la");
+            FacesContext context = FacesContext.getCurrentInstance();
+            context.getExternalContext().getFlash().setKeepMessages(true);
             FacesMessages.errorMessage("messagesLogin","Erreur!!!","Le texte du captcha n'est pas correcte");
             return "login?faces-redirect=true";
         }
