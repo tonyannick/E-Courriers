@@ -450,6 +450,7 @@
     width:30%;
     margin-bottom: 80px;
     margin-left: 40px;
+    box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2);
     -webkit-animation-name: slideInModal;
     -webkit-animation-duration: 0.4s;
     animation-name: slideInModal;

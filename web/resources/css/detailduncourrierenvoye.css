@@ -183,6 +183,7 @@
     bottom: 0;
     border: 1px #dfa574 solid;
     background-color: #f1f1f1;
+    box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2);
     width:30%;
     margin-bottom: 80px;
     margin-left: 40px;

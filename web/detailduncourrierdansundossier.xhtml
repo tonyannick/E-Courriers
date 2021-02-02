@@ -86,360 +86,364 @@
                         <ui:include src="footer.xhtml" />
                     </ui:insert>
                 </div>
-                <div class="main-overview" style="margin-bottom: 90px; margin-top: 10px">
-                    <div class="col-sm-9 col-sm-offset-3 col-md-9 col-md-offset-2 main">
-                        <ul class="breadcrumb" style="width:100%;">
-                            <li><h:outputLink value="tableaudebord.xhtml" title="Accueil">Accueil</h:outputLink></li>
-                            <li><h:outputLink value="mesdossiers.xhtml" title="Mess dossiers">Mes dossiers</h:outputLink></li>
-                            <li><h:outputLink value="detaildundossier.xhtml" title="Accueil">Contenu d'un dossier</h:outputLink></li>
-                            <li>Details d'un courrier</li>
-                        </ul>
+                <div style="width:100%; margin-bottom: 90px; margin-top: 10px;overflow-y: auto">
+                    <div class="ui-g" style=" width:100%;">
+                        <div class="ui-g-1"/>
+                        <div  class="ui-g-10 ui-md-10">
+                            <ul class="breadcrumb" style="width:100%;">
+                                <li><h:outputLink value="tableaudebord.xhtml" title="Accueil">Accueil</h:outputLink></li>
+                                <li><h:outputLink value="mesdossiers.xhtml" title="Mess dossiers">Mes dossiers</h:outputLink></li>
+                                <li><h:outputLink value="detaildundossier.xhtml" title="Accueil">Contenu d'un dossier</h:outputLink></li>
+                                <li>Details d'un courrier</li>
+                            </ul>
 
-                        <p:toolbar style="margin-bottom: 15px; margin-top: 15px">
-                            <f:facet name="left">
-                                <p:commandButton type="button"
-                                                 style="background: #8b2421; border-color: #8b2421;
-                                                        color: white; font-weight: bold; padding: 3px 4px"
-                                                 onclick="PF('dialogueConfirmationSuppression').show()" iconPos="right"
-                                                 value="retirer le courrier du dossier" icon="fa fa-window-close" />
-                            </f:facet>
+                            <p:toolbar style="margin-bottom: 15px; margin-top: 15px">
+                                <f:facet name="left">
+                                    <p:commandButton type="button"
+                                                     style="background: #8b2421; border-color: #8b2421;
+                                                            color: white; font-weight: bold; padding: 3px 4px"
+                                                            onclick="PF('dialogueConfirmationSuppression').show()" iconPos="right"
+                                                            value="retirer le courrier du dossier" icon="fa fa-window-close" />
+                                </f:facet>
 
-                        </p:toolbar>
+                            </p:toolbar>
 
-                        <div class="tab">
-                            <button class="tablinks" onclick="openTab(event, 'FichierDuCourrier')" id="defaultOpen">Fichier joint</button>
-                            <button class="tablinks" onclick="openTab(event, 'Annexe')">Annexe(s)</button>
-                            <button class="tablinks" onclick="openTab(event, 'InformationsGenerales')" >Informations générales</button>
-                            <button class="tablinks" onclick="openTab(event, 'Destinataires')">Destinataires</button>
-                            <button class="tablinks" onclick="openTab(event, 'Annotations')">Annotations</button>
-                        </div>
+                            <div class="tab">
+                                <button class="tablinks" onclick="openTab(event, 'FichierDuCourrier')" id="defaultOpen">Fichier joint</button>
+                                <button class="tablinks" onclick="openTab(event, 'Annexe')">Annexe(s)</button>
+                                <button class="tablinks" onclick="openTab(event, 'InformationsGenerales')" >Informations générales</button>
+                                <button class="tablinks" onclick="openTab(event, 'Destinataires')">Destinataires</button>
+                                <button class="tablinks" onclick="openTab(event, 'Annotations')">Annotations</button>
+                            </div>
 
-                        <div id="InformationsGenerales" class="tabcontent">
-                            <button class="accordionDetailCourrier"><h:graphicImage value="./resources/images/one.png" style="margin-right:10px; width: 15px; height: 15px;"/>Emetteur du courrier</button>
-                            <div class="panelInfoCourrier" id="agentDuMinistere">
+                            <div id="InformationsGenerales" class="tabcontent">
+                                <button class="accordionDetailCourrier"><h:graphicImage value="./resources/images/one.png" style="margin-right:10px; width: 15px; height: 15px;"/>Emetteur du courrier</button>
+                                <div class="panelInfoCourrier" id="agentDuMinistere">
 
-                                <div id="blockTypeEmetteurSimple">
-                                    <p:panelGrid  columns="2" columnClasses="ui-grid-col-2 gridcol2, ui-grid-col-10" style="width: 100%; margin-top: 15px; margin-bottom:15px; border: 1px #888 solid; background-color: white;">
-                                        <h:outputLabel value="Emetteur " style="font-weight: bold;font-size: 14px; color: black" />
-                                        <p:outputLabel value="#{detailDUnCourrierDansUnDossier.emetteur.typeDEmetteur}" style="font-size: 14px;font-weight: normal"/>
-                                    </p:panelGrid>
+                                    <div id="blockTypeEmetteurSimple">
+                                        <p:panelGrid  columns="2" columnClasses="ui-grid-col-2 gridcol2, ui-grid-col-10" style="width: 100%; margin-top: 15px; margin-bottom:15px; border: 1px #888 solid; background-color: white;">
+                                            <h:outputLabel value="Emetteur " style="font-weight: bold;font-size: 14px; color: black" />
+                                            <p:outputLabel value="#{detailDUnCourrierDansUnDossier.emetteur.typeDEmetteur}" style="font-size: 14px;font-weight: normal"/>
+                                        </p:panelGrid>
+                                    </div>
+
+                                    <div id="blockTypeEmetteurAutreMinistere" style="display: none;">
+                                        <p:panelGrid  columns="2" columnClasses="ui-grid-col-2 gridcol2, ui-grid-col-10" style="width: 100%; margin-top: 15px; margin-bottom:15px; border: 1px #888 solid; background-color: white;">
+                                            <h:outputLabel value="Emetteur " style="font-weight: bold;font-size: 14px; color: black" />
+                                            <p:outputLabel value="Agent d'un autre Ministère" style="font-size: 14px;font-weight: normal"/>
+                                        </p:panelGrid>
+                                    </div>
+
+                                    <div id="blockAgentDuMinistere" style="display: none;">
+                                        <p:panelGrid  columns="2" columnClasses="ui-grid-col-2 gridcol2, ui-grid-col-10" style="width: 100%; margin-top: 15px; margin-bottom:15px; border: 1px #888 solid; background-color: white;">
+                                            <h:outputLabel value="Ministère " style="font-weight: bold;font-size: 14px; color:  black;" />
+                                            <h:outputLabel value="#{detailDUnCourrierDansUnDossier.emetteur.ministere}" style="font-size: 14px;font-weight: normal"/>
+                                            <h:outputLabel value="Direction " style="font-weight: bold;font-size: 14px; color:  black;"/>
+                                            <h:outputLabel value="#{detailDUnCourrierDansUnDossier.emetteur.direction}" style="font-size: 14px;font-weight: normal" />
+                                            <h:outputLabel value="Fonction " style="font-weight: bold;font-size: 14px; color:  black;"/>
+                                            <h:outputLabel value="#{detailDUnCourrierDansUnDossier.emetteur.fonction}" style="font-size: 14px;font-weight: normal" />
+                                        </p:panelGrid>
+                                    </div>
+
+                                    <div id="blockAgentDUnAutreMinistere" style="display: none;">
+                                        <p:panelGrid  columns="2" columnClasses="ui-grid-col-2 gridcol2, ui-grid-col-10" style="width: 100%; margin-top: 15px; margin-bottom:15px; border: 1px #888 solid; background-color: white;">
+                                            <h:outputLabel value="Ministère " style="font-weight: bold;font-size: 14px; color: black" />
+                                            <h:outputLabel value="#{detailDUnCourrierDansUnDossier.emetteur.ministereAutreMinistere}" style="font-size: 14px;font-weight: normal"/>
+                                            <h:outputLabel value="Direction " style="font-weight: bold;font-size: 14px; color:  black;" />
+                                            <h:outputLabel value="#{detailDUnCourrierDansUnDossier.emetteur.directionAutreMinistere}" style="font-size: 14px;font-weight: normal"/>
+                                            <h:outputLabel value="Fonction " style="font-weight: bold;font-size: 14px; color:  black;"/>
+                                            <h:outputLabel value="#{detailDUnCourrierDansUnDossier.emetteur.fonctionAutreMinistere}" style="font-size: 14px;font-weight: normal" />
+                                        </p:panelGrid>
+                                    </div>
+
+                                    <div id="blockParticulier" style="display: none;">
+                                        <p:panelGrid  columns="2" columnClasses="ui-grid-col-2 gridcol2, ui-grid-col-10" style="width: 100%; margin-top: 15px; margin-bottom:15px; border: 1px #888 solid; background-color: white;">
+                                            <h:outputLabel value="Nom et prénom " style="font-weight: bold;font-size: 14px; color: black" />
+                                            <h:outputLabel value="#{detailDUnCourrierDansUnDossier.emetteur.nomParticulier}" style="font-size: 14px;font-weight: normal"/>
+                                            <h:outputLabel value="Téléphone " style="font-weight: bold;font-size: 14px; color:  black;" />
+                                            <h:outputLabel value="#{detailDUnCourrierDansUnDossier.emetteur.telephoneParticulier}" style="font-size: 14px;font-weight: normal"/>
+                                            <h:outputLabel value="Email " style="font-weight: bold;font-size: 14px; color:  black;"/>
+                                            <h:outputLabel value="#{detailDUnCourrierDansUnDossier.emetteur.emailParticulier}" style="font-size: 14px;font-weight: normal" />
+                                        </p:panelGrid>
+                                    </div>
+
+                                    <div id="blockEntreprise" style="display: none;">
+                                        <p:panelGrid  columns="2" columnClasses="ui-grid-col-2 gridcol2, ui-grid-col-10" style="width: 100%; margin-top: 15px; margin-bottom:15px; border: 1px #888 solid; background-color: white;">
+                                            <h:outputLabel value="Raison sociale " style="font-weight: bold;font-size: 14px; color: black" />
+                                            <h:outputLabel value="#{detailDUnCourrierDansUnDossier.emetteur.raisonSocial}" style="font-size: 14px;font-weight: normal"/>
+                                            <h:outputLabel value="Adresse" style="font-weight: bold;font-size: 14px; color:  black;"/>
+                                            <h:outputLabel value="#{detailDUnCourrierDansUnDossier.emetteur.adresseEntreprise}" style="font-size: 14px;font-weight: normal" />
+                                            <h:outputLabel value="Téléphone " style="font-weight: bold;font-size: 14px; color:  black;"/>
+                                            <h:outputLabel value="#{detailDUnCourrierDansUnDossier.emetteur.telephoneEntreprise}" style="font-size: 14px;font-weight: normal" />
+                                            <h:outputLabel value="Email " style="font-weight: bold;font-size: 14px; color:  black;"/>
+                                            <h:outputLabel value="#{detailDUnCourrierDansUnDossier.emetteur.emailEntreprise}" style="font-size: 14px;font-weight: normal" />
+                                            <h:outputLabel value="Direction" style="font-weight: bold;font-size: 14px; color:  black;"/>
+                                            <h:outputLabel value="#{detailDUnCourrierDansUnDossier.emetteur.directionEntreprise}" style="font-size: 14px;font-weight: normal" />
+                                            <h:outputLabel value="Fonction " style="font-weight: bold;font-size: 14px; color:  black;"/>
+                                            <h:outputLabel value="#{detailDUnCourrierDansUnDossier.emetteur.fonctionEntreprise}" style="font-size: 14px;font-weight: normal" />
+                                        </p:panelGrid>
+                                    </div>
+
                                 </div>
 
-                                <div id="blockTypeEmetteurAutreMinistere" style="display: none;">
-                                    <p:panelGrid  columns="2" columnClasses="ui-grid-col-2 gridcol2, ui-grid-col-10" style="width: 100%; margin-top: 15px; margin-bottom:15px; border: 1px #888 solid; background-color: white;">
-                                        <h:outputLabel value="Emetteur " style="font-weight: bold;font-size: 14px; color: black" />
-                                        <p:outputLabel value="Agent d'un autre Ministère" style="font-size: 14px;font-weight: normal"/>
-                                    </p:panelGrid>
-                                </div>
+                                <button class="accordionDetailCourrier"><h:graphicImage value="./resources/images/two.png" style="margin-right:10px; width: 15px; height: 15px;"/>Eléménts du courrier</button>
+                                <div class="panelInfoCourrier">
 
-                                <div id="blockAgentDuMinistere" style="display: none;">
-                                    <p:panelGrid  columns="2" columnClasses="ui-grid-col-2 gridcol2, ui-grid-col-10" style="width: 100%; margin-top: 15px; margin-bottom:15px; border: 1px #888 solid; background-color: white;">
-                                        <h:outputLabel value="Ministère " style="font-weight: bold;font-size: 14px; color:  black;" />
-                                        <h:outputLabel value="#{detailDUnCourrierDansUnDossier.emetteur.ministere}" style="font-size: 14px;font-weight: normal"/>
-                                        <h:outputLabel value="Direction " style="font-weight: bold;font-size: 14px; color:  black;"/>
-                                        <h:outputLabel value="#{detailDUnCourrierDansUnDossier.emetteur.direction}" style="font-size: 14px;font-weight: normal" />
-                                        <h:outputLabel value="Fonction " style="font-weight: bold;font-size: 14px; color:  black;"/>
-                                        <h:outputLabel value="#{detailDUnCourrierDansUnDossier.emetteur.fonction}" style="font-size: 14px;font-weight: normal" />
+                                    <p:panelGrid columns="2" columnClasses="ui-grid-col-2 gridcol2, ui-grid-col-10"  style="border: 1px #888 solid; width: 100%; margin-bottom:15px; margin-top: 15px ">
+                                        <h:outputLabel value="Heure d'enregistrement" style="font-weight: bold; color:black; font-size: 14px"/>
+                                        <h:outputLabel value="#{detailDUnCourrierDansUnDossier.courrier.heureDEnregistrement}" style="font-size: 12px;"/>
+                                        <h:outputLabel value="Date d'enregistrement" style="font-weight: bold; color:black; font-size: 14px"/>
+                                        <h:outputLabel value="#{detailDUnCourrierDansUnDossier.courrier.dateDEnregistrement}" style="font-size: 14px" />
+                                        <h:outputLabel value="Date de réception " style="font-weight: bold; font-size: 14px; color:black"/>
+                                        <h:outputLabel value="#{detailDUnCourrierDansUnDossier.courrier.dateDeReception}" style="font-size: 12px"/>
+                                        <h:outputLabel value="Heure de réception  " style="font-weight: bold; font-size: 14px; color:black"/>
+                                        <h:outputLabel value="#{detailDUnCourrierDansUnDossier.courrier.heureDeReception}" style="font-size: 12px"/>
                                     </p:panelGrid>
-                                </div>
 
-                                <div id="blockAgentDUnAutreMinistere" style="display: none;">
-                                    <p:panelGrid  columns="2" columnClasses="ui-grid-col-2 gridcol2, ui-grid-col-10" style="width: 100%; margin-top: 15px; margin-bottom:15px; border: 1px #888 solid; background-color: white;">
-                                        <h:outputLabel value="Ministère " style="font-weight: bold;font-size: 14px; color: black" />
-                                        <h:outputLabel value="#{detailDUnCourrierDansUnDossier.emetteur.ministereAutreMinistere}" style="font-size: 14px;font-weight: normal"/>
-                                        <h:outputLabel value="Direction " style="font-weight: bold;font-size: 14px; color:  black;" />
-                                        <h:outputLabel value="#{detailDUnCourrierDansUnDossier.emetteur.directionAutreMinistere}" style="font-size: 14px;font-weight: normal"/>
-                                        <h:outputLabel value="Fonction " style="font-weight: bold;font-size: 14px; color:  black;"/>
-                                        <h:outputLabel value="#{detailDUnCourrierDansUnDossier.emetteur.fonctionAutreMinistere}" style="font-size: 14px;font-weight: normal" />
-                                    </p:panelGrid>
-                                </div>
+                                    <p:panelGrid columns="2" columnClasses="ui-grid-col-2 gridcol2, ui-grid-col-10" style="width: 100%; margin-top: 15px; margin-bottom:15px; border: 1px #888 solid;">
 
-                                <div id="blockParticulier" style="display: none;">
-                                    <p:panelGrid  columns="2" columnClasses="ui-grid-col-2 gridcol2, ui-grid-col-10" style="width: 100%; margin-top: 15px; margin-bottom:15px; border: 1px #888 solid; background-color: white;">
-                                        <h:outputLabel value="Nom et prénom " style="font-weight: bold;font-size: 14px; color: black" />
-                                        <h:outputLabel value="#{detailDUnCourrierDansUnDossier.emetteur.nomParticulier}" style="font-size: 14px;font-weight: normal"/>
-                                        <h:outputLabel value="Téléphone " style="font-weight: bold;font-size: 14px; color:  black;" />
-                                        <h:outputLabel value="#{detailDUnCourrierDansUnDossier.emetteur.telephoneParticulier}" style="font-size: 14px;font-weight: normal"/>
-                                        <h:outputLabel value="Email " style="font-weight: bold;font-size: 14px; color:  black;"/>
-                                        <h:outputLabel value="#{detailDUnCourrierDansUnDossier.emetteur.emailParticulier}" style="font-size: 14px;font-weight: normal" />
-                                    </p:panelGrid>
-                                </div>
+                                        <h:outputLabel value="Type de courrier " style="font-weight: bold; color: black; font-size: 14px"/>
+                                        <h:outputLabel value="#{detailDUnCourrierDansUnDossier.courrier.typeCourrier}" style="font-size: 14px;"/>
 
-                                <div id="blockEntreprise" style="display: none;">
-                                    <p:panelGrid  columns="2" columnClasses="ui-grid-col-2 gridcol2, ui-grid-col-10" style="width: 100%; margin-top: 15px; margin-bottom:15px; border: 1px #888 solid; background-color: white;">
-                                        <h:outputLabel value="Raison sociale " style="font-weight: bold;font-size: 14px; color: black" />
-                                        <h:outputLabel value="#{detailDUnCourrierDansUnDossier.emetteur.raisonSocial}" style="font-size: 14px;font-weight: normal"/>
-                                        <h:outputLabel value="Adresse" style="font-weight: bold;font-size: 14px; color:  black;"/>
-                                        <h:outputLabel value="#{detailDUnCourrierDansUnDossier.emetteur.adresseEntreprise}" style="font-size: 14px;font-weight: normal" />
-                                        <h:outputLabel value="Téléphone " style="font-weight: bold;font-size: 14px; color:  black;"/>
-                                        <h:outputLabel value="#{detailDUnCourrierDansUnDossier.emetteur.telephoneEntreprise}" style="font-size: 14px;font-weight: normal" />
-                                        <h:outputLabel value="Email " style="font-weight: bold;font-size: 14px; color:  black;"/>
-                                        <h:outputLabel value="#{detailDUnCourrierDansUnDossier.emetteur.emailEntreprise}" style="font-size: 14px;font-weight: normal" />
-                                        <h:outputLabel value="Direction" style="font-weight: bold;font-size: 14px; color:  black;"/>
-                                        <h:outputLabel value="#{detailDUnCourrierDansUnDossier.emetteur.directionEntreprise}" style="font-size: 14px;font-weight: normal" />
-                                        <h:outputLabel value="Fonction " style="font-weight: bold;font-size: 14px; color:  black;"/>
-                                        <h:outputLabel value="#{detailDUnCourrierDansUnDossier.emetteur.fonctionEntreprise}" style="font-size: 14px;font-weight: normal" />
+                                        <h:outputLabel value="Référence  " style="font-weight: bold; font-size: 14px;color: black"/>
+                                        <h:outputLabel value="#{detailDUnCourrierDansUnDossier.courrier.referenceCourrier}" style="font-size: 14px"/>
+
+                                        <h:outputLabel value="Objet  " style="font-weight: bold; font-size: 14px; color: black"/>
+                                        <h:outputLabel value="#{detailDUnCourrierDansUnDossier.courrier.objetCourrier}" style="font-size: 14px"/>
+
+                                        <h:outputLabel value="Priorité  " style="font-weight: bold; font-size: 14px; color: black" />
+                                        <h:outputLabel value="#{detailDUnCourrierDansUnDossier.courrier.prioriteCourrier}" style="font-size: 14px"/>
+
+                                        <h:outputLabel value="Confidentiel  " style="font-weight: bold; font-size: 14px; color: black"/>
+                                        <h:outputLabel value="#{detailDUnCourrierDansUnDossier.courrier.confidentiel}" style="font-size: 14px"/>
+
+                                        <h:outputLabel value="Comentaires " style="font-weight: bold; font-size: 14px; color: black"/>
+                                        <h:outputLabel value="#{detailDUnCourrierDansUnDossier.courrier.commentairesCourrier}" style="font-size: 14px" />
                                     </p:panelGrid>
+
+
                                 </div>
 
                             </div>
 
-                            <button class="accordionDetailCourrier"><h:graphicImage value="./resources/images/two.png" style="margin-right:10px; width: 15px; height: 15px;"/>Eléménts du courrier</button>
-                            <div class="panelInfoCourrier">
-
-                                <p:panelGrid columns="2" columnClasses="ui-grid-col-2 gridcol2, ui-grid-col-10"  style="border: 1px #888 solid; width: 100%; margin-bottom:15px; margin-top: 15px ">
-                                    <h:outputLabel value="Heure d'enregistrement" style="font-weight: bold; color:black; font-size: 14px"/>
-                                    <h:outputLabel value="#{detailDUnCourrierDansUnDossier.courrier.heureDEnregistrement}" style="font-size: 12px;"/>
-                                    <h:outputLabel value="Date d'enregistrement" style="font-weight: bold; color:black; font-size: 14px"/>
-                                    <h:outputLabel value="#{detailDUnCourrierDansUnDossier.courrier.dateDEnregistrement}" style="font-size: 14px" />
-                                    <h:outputLabel value="Date de réception " style="font-weight: bold; font-size: 14px; color:black"/>
-                                    <h:outputLabel value="#{detailDUnCourrierDansUnDossier.courrier.dateDeReception}" style="font-size: 12px"/>
-                                    <h:outputLabel value="Heure de réception  " style="font-weight: bold; font-size: 14px; color:black"/>
-                                    <h:outputLabel value="#{detailDUnCourrierDansUnDossier.courrier.heureDeReception}" style="font-size: 12px"/>
-                                </p:panelGrid>
-
-                                <p:panelGrid columns="2" columnClasses="ui-grid-col-2 gridcol2, ui-grid-col-10" style="width: 100%; margin-top: 15px; margin-bottom:15px; border: 1px #888 solid;">
-
-                                    <h:outputLabel value="Type de courrier " style="font-weight: bold; color: black; font-size: 14px"/>
-                                    <h:outputLabel value="#{detailDUnCourrierDansUnDossier.courrier.typeCourrier}" style="font-size: 14px;"/>
-
-                                    <h:outputLabel value="Référence  " style="font-weight: bold; font-size: 14px;color: black"/>
-                                    <h:outputLabel value="#{detailDUnCourrierDansUnDossier.courrier.referenceCourrier}" style="font-size: 14px"/>
-
-                                    <h:outputLabel value="Objet  " style="font-weight: bold; font-size: 14px; color: black"/>
-                                    <h:outputLabel value="#{detailDUnCourrierDansUnDossier.courrier.objetCourrier}" style="font-size: 14px"/>
-
-                                    <h:outputLabel value="Priorité  " style="font-weight: bold; font-size: 14px; color: black" />
-                                    <h:outputLabel value="#{detailDUnCourrierDansUnDossier.courrier.prioriteCourrier}" style="font-size: 14px"/>
-
-                                    <h:outputLabel value="Confidentiel  " style="font-weight: bold; font-size: 14px; color: black"/>
-                                    <h:outputLabel value="#{detailDUnCourrierDansUnDossier.courrier.confidentiel}" style="font-size: 14px"/>
-
-                                    <h:outputLabel value="Comentaires " style="font-weight: bold; font-size: 14px; color: black"/>
-                                    <h:outputLabel value="#{detailDUnCourrierDansUnDossier.courrier.commentairesCourrier}" style="font-size: 14px" />
-                                </p:panelGrid>
-
-
-                            </div>
-
-                        </div>
-
-                        <div id="Destinataires" class="tabcontent">
-                            <h:panelGrid columns="2" style="border:none; margin-bottom:10px; margin-top: 10px " styleClass="panelLogin">
-                                <h:outputLabel value ="Nombre de destinataire : " style="font-weight: bold;font-size: 14px; color:#000000;" />
-                                <h:outputLabel style="font-size: 13px; margin-left: 10px" value="#{detailDUnCourrierDansUnDossier.destinataire.nombreDeDestinataire}"/>
-                            </h:panelGrid>
-
-                            <h:form>
-                                <p:dataTable tableStyle="table-layout: auto"
-                                             var="destinataires"
-                                             paginator="true" rows="15"
-                                             emptyMessage="Aucun destinataire"
-                                             value="#{detailDUnCourrierDansUnDossier.destinataire.listeDestinataire}"
-                                             paginatorAlwaysVisible="false"
-                                             paginatorPosition="top" style="margin-top: 5px; margin-bottom: 15px"
-                                             rowIndexVar="rowIndex" border="2">
-
-                                    <p:column style="width: 180px; text-align: center" styleClass="#{destinataires.typeDestinataire eq 'Aucun' ? 'aucun' : null}">
-                                        <f:facet name="header">Type de destinataire </f:facet>
-                                        <h:outputText value="#{destinataires.typeDestinataire}" />
-                                    </p:column>
-                                    <p:column style="text-align: center"  styleClass="#{destinataires.ministere eq 'Aucun' ? 'cellulevide' : null}">
-                                        <f:facet name="header">Etablissement </f:facet>
-                                        <h:outputText style = "font-size: 12px;" value="#{destinataires.ministere}" />
-                                    </p:column>
-                                    <p:column  style="text-align: center" styleClass="#{destinataires.direction eq 'Aucun' ? 'cellulevide' : null}">
-                                        <f:facet name="header">Direction </f:facet>
-                                        <h:outputText value="#{destinataires.direction}" />
-                                    </p:column>
-                                    <p:column style="text-align: center" styleClass="#{destinataires.fonction eq 'Aucun' ? 'cellulevide' : null}">
-                                        <f:facet name="header">Fonction </f:facet>
-                                        <h:outputText  value="#{destinataires.fonction}" />
-                                    </p:column>
-                                    <p:column style="text-align: center"
-                                              styleClass="#{(destinataires.accuseDeReception eq 'oui') ? 'receptionok' : (destinataires.accuseDeReception eq 'non') ? 'receptionpasok' : null}">
-                                        <f:facet name="header">Confirmation de reception </f:facet>
-                                        <h:outputText  value="#{destinataires.accuseDeReception}" />
-                                    </p:column>
-                                    <p:column style="text-align: center">
-                                        <p:commandButton  icon="fa fa-eye"
-                                                          update="@form"
-                                                          actionListener="#{detailDUnCourrierDansUnDossier.afficherLesDetailsDuDestinataireDUnCourrier}"
-                                                          style="background: #496ea1; border: 1px #496ea1 solid"
-                                                          title="details">
-                                            <f:param name="destinataireId" value="#{destinataires.idDestinataire}" />
-                                            <f:param name="typeDestinataireId" value="#{destinataires.typeDestinataire}" />
-                                        </p:commandButton>
-                                    </p:column>
-
-                                </p:dataTable>
-                                <p:dialog id="dialogueDetailParticulier"
-                                          resizable="false"
-                                          header="Détails d'un destinataire"
-                                          widgetVar="detailsDestinataireParticulier" width="550"
-                                          modal="true" hideEffect="clip"
-                                          showEffect="clip"  dynamic="true" closable="true">
-                                    <h:panelGrid columns="2" styleClass="panelLogin" cellspacing="30" cellpadding="30">
-                                        <h4 style="font-weight:bold; font-size: 13px">Nom :</h4>
-                                        <p:outputLabel style="margin-left:15px"
-                                                       value="#{detailDUnCourrierDansUnDossier.destinataire.nomParticulier}"/>
-                                        <h4 style="font-weight:bold; font-size: 13px">Prénom :</h4>
-                                        <p:outputLabel  style="margin-left:15px"
-                                                        value="#{detailDUnCourrierDansUnDossier.destinataire.prenomParticulier}"/>
-                                        <h4 style="font-weight:bold; font-size: 13px">Téléphone :</h4>
-                                        <p:outputLabel style="margin-left:15px"
-                                                       value="#{detailDUnCourrierDansUnDossier.destinataire.telephoneParticulier}"/>
-                                        <h4 style="font-weight:bold; font-size: 13px">Email :</h4>
-                                        <p:outputLabel  style="margin-left:15px"
-                                                        value="#{detailDUnCourrierDansUnDossier.destinataire.emailParticulier}"/>
-                                    </h:panelGrid>
-                                </p:dialog>
-                                <p:dialog id="dialogueDetailDestinataireAgentAutreMinistere"
-                                          resizable="false"
-                                          header="Détails d'un destinataire"
-                                          widgetVar="detailsDestinataireAutreMinistere" width="auto"
-                                          modal="true" hideEffect="clip"
-                                          showEffect="clip" dynamic="true" closable="true">
-
-                                    <h:form  style="width: 95%" styleClass="">
-                                        <h:panelGrid columns="2">
-                                            <h4 style="font-weight:bold;  font-size: 13px;" >Ministère : </h4>
-                                            <p:outputLabel value="#{detailDUnCourrierDansUnDossier.destinataire.ministereAutreMinistere}" style="margin-left:15px"/>
-                                            <h4 style="font-weight:bold;  font-size: 13px">Direction  : </h4>
-                                            <p:outputLabel value="#{detailDUnCourrierDansUnDossier.destinataire.raisonSocial}" style="margin-left:15px"/>
-                                            <h4 style="font-weight:bold;  font-size: 13px">Direction  : </h4>
-                                            <p:outputLabel value="#{detailDUnCourrierDansUnDossier.destinataire.directionEntreprise}" style="margin-left:15px"/>
-                                            <h4 style="font-weight:bold; font-size: 13px">Fonction : </h4>
-                                            <p:outputLabel value="#{detailDUnCourrierDansUnDossier.destinataire.fonctionEntreprise}" style="margin-left:15px"/>
-                                            <h4 style="font-weight:bold; font-size: 13px">Téléphone : </h4>
-                                            <p:outputLabel value="#{detailDUnCourrierDansUnDossier.destinataire.telephoneEntreprise}" style="margin-left:15px"/>
-                                            <h4 style="font-weight:bold; font-size: 13px">Email : </h4>
-                                            <p:outputLabel value="#{detailDUnCourrierDansUnDossier.destinataire.direction}" style="margin-left:15px"/>
-                                            <h4 style="font-weight:bold; font-size: 13px">Fonction : </h4>
-                                            <p:outputLabel value="#{detailDUnCourrierDansUnDossier.destinataire.fonction}" style="margin-left:15px"/>
-                                        </h:panelGrid>
-                                    </h:form>
-                                </p:dialog>
-                            </h:form>
-                        </div>
-
-                        <div id="FichierDuCourrier" class="tabcontent">
-                            <div class="notice" id="telechargerledocument" style="margin-top: 10px; display: none;">
-                                <i class="fa fa-exclamation-triangle" style="color:  #428BCA;" aria-hidden="true"></i>
-                                <strong>Ce document ne peut pas s'afficher, cliquer sur le bouton pour le telecharger  : </strong>
-                                <p:commandButton value="télécharger" icon="fa fa-download"></p:commandButton>
-                            </div>
-                            <div  id="fichierPdfDuCourrier" style="margin-top: 10px;">
-                                <p:media value="#{detailDUnCourrierDansUnDossier.courrier.streamedContentAlfresco}" cache="false" width="100%" player="pdf"  height="800"/>
-                            </div>
-                        </div>
-
-                        <div id="Annexe" class="tabcontent">
-                            <p:panel widgetVar="panelannexe" toggleable="true" style="margin-top: 15px; width: 100%">
-                                <h:panelGrid columns="4" id="gridAnnexe" style="border:none;" styleClass="panelLogin">
-                                    <p:commandButton id="annexe1" styleClass="annexeBouton" value="Annexe 1" update="message" actionListener="#{detailDUnCourrierDansUnDossier.voirAnnexe}">
-                                        <f:param name="annexeACliquer" value="annexeUn"/>
-                                    </p:commandButton>
-                                    <p:commandButton id="annexe2" styleClass="annexeBouton" value="Annexe 2" update="message" actionListener="#{detailDUnCourrierDansUnDossier.voirAnnexe}">
-                                        <f:param name="annexeACliquer" value="annexeDeux"/>
-                                    </p:commandButton>
-                                    <p:commandButton id="annexe3" styleClass="annexeBouton" value="Annexe 3" update="message" actionListener="#{detailDUnCourrierDansUnDossier.voirAnnexe}">
-                                        <f:param name="annexeACliquer" value="annexeTrois"/>
-                                    </p:commandButton>
-                                    <p:commandButton id="annexe4" styleClass="annexeBouton" value="Annexe 4" update="message" actionListener="#{detailDUnCourrierDansUnDossier.voirAnnexe}">
-                                        <f:param name="annexeACliquer" value="annexeQuatre"/>
-                                    </p:commandButton>
+                            <div id="Destinataires" class="tabcontent">
+                                <h:panelGrid columns="2" style="border:none; margin-bottom:10px; margin-top: 10px " styleClass="panelLogin">
+                                    <h:outputLabel value ="Nombre de destinataire : " style="font-weight: bold;font-size: 14px; color:#000000;" />
+                                    <h:outputLabel style="font-size: 13px; margin-left: 10px" value="#{detailDUnCourrierDansUnDossier.destinataire.nombreDeDestinataire}"/>
                                 </h:panelGrid>
-                            </p:panel>
-                            <p:messages id="message" for="message" showDetail="true" closable="true"/>
-                            <div id="mediaAnnexeUn"  style="display: none;">
-                                <p:media id="annexeun" value="#{detailDUnCourrierDansUnDossier.annexe.streamAnnexeUn}" cache="false" width="100%" player="pdf"  height="800"/>
+
+                                <h:form>
+                                    <p:dataTable tableStyle="table-layout: auto"
+                                                 var="destinataires"
+                                                 paginator="true" rows="15"
+                                                 emptyMessage="Aucun destinataire"
+                                                 value="#{detailDUnCourrierDansUnDossier.destinataire.listeDestinataire}"
+                                                 paginatorAlwaysVisible="false"
+                                                 paginatorPosition="top" style="margin-top: 5px; margin-bottom: 15px"
+                                                 rowIndexVar="rowIndex" border="2">
+
+                                        <p:column style="width: 180px; text-align: center" styleClass="#{destinataires.typeDestinataire eq 'Aucun' ? 'aucun' : null}">
+                                            <f:facet name="header">Type de destinataire </f:facet>
+                                            <h:outputText value="#{destinataires.typeDestinataire}" />
+                                        </p:column>
+                                        <p:column style="text-align: center"  styleClass="#{destinataires.ministere eq 'Aucun' ? 'cellulevide' : null}">
+                                            <f:facet name="header">Etablissement </f:facet>
+                                            <h:outputText style = "font-size: 12px;" value="#{destinataires.ministere}" />
+                                        </p:column>
+                                        <p:column  style="text-align: center" styleClass="#{destinataires.direction eq 'Aucun' ? 'cellulevide' : null}">
+                                            <f:facet name="header">Direction </f:facet>
+                                            <h:outputText value="#{destinataires.direction}" />
+                                        </p:column>
+                                        <p:column style="text-align: center" styleClass="#{destinataires.fonction eq 'Aucun' ? 'cellulevide' : null}">
+                                            <f:facet name="header">Fonction </f:facet>
+                                            <h:outputText  value="#{destinataires.fonction}" />
+                                        </p:column>
+                                        <p:column style="text-align: center"
+                                                  styleClass="#{(destinataires.accuseDeReception eq 'oui') ? 'receptionok' : (destinataires.accuseDeReception eq 'non') ? 'receptionpasok' : null}">
+                                            <f:facet name="header">Confirmation de reception </f:facet>
+                                            <h:outputText  value="#{destinataires.accuseDeReception}" />
+                                        </p:column>
+                                        <p:column style="text-align: center">
+                                            <p:commandButton  icon="fa fa-eye"
+                                                              update="@form"
+                                                              actionListener="#{detailDUnCourrierDansUnDossier.afficherLesDetailsDuDestinataireDUnCourrier}"
+                                                              style="background: #496ea1; border: 1px #496ea1 solid"
+                                                              title="details">
+                                                <f:param name="destinataireId" value="#{destinataires.idDestinataire}" />
+                                                <f:param name="typeDestinataireId" value="#{destinataires.typeDestinataire}" />
+                                            </p:commandButton>
+                                        </p:column>
+
+                                    </p:dataTable>
+                                    <p:dialog id="dialogueDetailParticulier"
+                                              resizable="false"
+                                              header="Détails d'un destinataire"
+                                              widgetVar="detailsDestinataireParticulier" width="550"
+                                              modal="true" hideEffect="clip"
+                                              showEffect="clip"  dynamic="true" closable="true">
+                                        <h:panelGrid columns="2" styleClass="panelLogin" cellspacing="30" cellpadding="30">
+                                            <h4 style="font-weight:bold; font-size: 13px">Nom :</h4>
+                                            <p:outputLabel style="margin-left:15px"
+                                                           value="#{detailDUnCourrierDansUnDossier.destinataire.nomParticulier}"/>
+                                            <h4 style="font-weight:bold; font-size: 13px">Prénom :</h4>
+                                            <p:outputLabel  style="margin-left:15px"
+                                                            value="#{detailDUnCourrierDansUnDossier.destinataire.prenomParticulier}"/>
+                                            <h4 style="font-weight:bold; font-size: 13px">Téléphone :</h4>
+                                            <p:outputLabel style="margin-left:15px"
+                                                           value="#{detailDUnCourrierDansUnDossier.destinataire.telephoneParticulier}"/>
+                                            <h4 style="font-weight:bold; font-size: 13px">Email :</h4>
+                                            <p:outputLabel  style="margin-left:15px"
+                                                            value="#{detailDUnCourrierDansUnDossier.destinataire.emailParticulier}"/>
+                                        </h:panelGrid>
+                                    </p:dialog>
+                                    <p:dialog id="dialogueDetailDestinataireAgentAutreMinistere"
+                                              resizable="false"
+                                              header="Détails d'un destinataire"
+                                              widgetVar="detailsDestinataireAutreMinistere" width="auto"
+                                              modal="true" hideEffect="clip"
+                                              showEffect="clip" dynamic="true" closable="true">
+
+                                        <h:form  style="width: 95%" styleClass="">
+                                            <h:panelGrid columns="2">
+                                                <h4 style="font-weight:bold;  font-size: 13px;" >Ministère : </h4>
+                                                <p:outputLabel value="#{detailDUnCourrierDansUnDossier.destinataire.ministereAutreMinistere}" style="margin-left:15px"/>
+                                                <h4 style="font-weight:bold;  font-size: 13px">Direction  : </h4>
+                                                <p:outputLabel value="#{detailDUnCourrierDansUnDossier.destinataire.raisonSocial}" style="margin-left:15px"/>
+                                                <h4 style="font-weight:bold;  font-size: 13px">Direction  : </h4>
+                                                <p:outputLabel value="#{detailDUnCourrierDansUnDossier.destinataire.directionEntreprise}" style="margin-left:15px"/>
+                                                <h4 style="font-weight:bold; font-size: 13px">Fonction : </h4>
+                                                <p:outputLabel value="#{detailDUnCourrierDansUnDossier.destinataire.fonctionEntreprise}" style="margin-left:15px"/>
+                                                <h4 style="font-weight:bold; font-size: 13px">Téléphone : </h4>
+                                                <p:outputLabel value="#{detailDUnCourrierDansUnDossier.destinataire.telephoneEntreprise}" style="margin-left:15px"/>
+                                                <h4 style="font-weight:bold; font-size: 13px">Email : </h4>
+                                                <p:outputLabel value="#{detailDUnCourrierDansUnDossier.destinataire.direction}" style="margin-left:15px"/>
+                                                <h4 style="font-weight:bold; font-size: 13px">Fonction : </h4>
+                                                <p:outputLabel value="#{detailDUnCourrierDansUnDossier.destinataire.fonction}" style="margin-left:15px"/>
+                                            </h:panelGrid>
+                                        </h:form>
+                                    </p:dialog>
+                                </h:form>
                             </div>
 
-                            <div id="mediaAnnexeDeux" style="display: none">
-                                <p:media id="annexedeux" value="#{detailDUnCourrierDansUnDossier.annexe.streamAnnexeDeux}"  cache="false" width="100%" player="pdf"  height="800"/>
+                            <div id="FichierDuCourrier" class="tabcontent">
+                                <div class="notice" id="telechargerledocument" style="margin-top: 10px; display: none;">
+                                    <i class="fa fa-exclamation-triangle" style="color:  #428BCA;" aria-hidden="true"></i>
+                                    <strong>Ce document ne peut pas s'afficher, cliquer sur le bouton pour le telecharger  : </strong>
+                                    <p:commandButton value="télécharger" icon="fa fa-download"></p:commandButton>
+                                </div>
+                                <div  id="fichierPdfDuCourrier" style="margin-top: 10px;">
+                                    <p:media value="#{detailDUnCourrierDansUnDossier.courrier.streamedContentAlfresco}" cache="false" width="100%" player="pdf"  height="800"/>
+                                </div>
                             </div>
 
-                            <div id="mediaAnnexeTrois" style="display: none">
-                                <p:media id="annexetrois" value="#{detailDUnCourrierDansUnDossier.annexe.streamAnnexeTrois}"  cache="false" width="100%" player="pdf"  height="800"/>
+                            <div id="Annexe" class="tabcontent">
+                                <p:panel widgetVar="panelannexe" toggleable="true" style="margin-top: 15px; width: 100%">
+                                    <h:panelGrid columns="4" id="gridAnnexe" style="border:none;" styleClass="panelLogin">
+                                        <p:commandButton id="annexe1" styleClass="annexeBouton" value="Annexe 1" update="message" actionListener="#{detailDUnCourrierDansUnDossier.voirAnnexe}">
+                                            <f:param name="annexeACliquer" value="annexeUn"/>
+                                        </p:commandButton>
+                                        <p:commandButton id="annexe2" styleClass="annexeBouton" value="Annexe 2" update="message" actionListener="#{detailDUnCourrierDansUnDossier.voirAnnexe}">
+                                            <f:param name="annexeACliquer" value="annexeDeux"/>
+                                        </p:commandButton>
+                                        <p:commandButton id="annexe3" styleClass="annexeBouton" value="Annexe 3" update="message" actionListener="#{detailDUnCourrierDansUnDossier.voirAnnexe}">
+                                            <f:param name="annexeACliquer" value="annexeTrois"/>
+                                        </p:commandButton>
+                                        <p:commandButton id="annexe4" styleClass="annexeBouton" value="Annexe 4" update="message" actionListener="#{detailDUnCourrierDansUnDossier.voirAnnexe}">
+                                            <f:param name="annexeACliquer" value="annexeQuatre"/>
+                                        </p:commandButton>
+                                    </h:panelGrid>
+                                </p:panel>
+                                <p:messages id="message" for="message" showDetail="true" closable="true"/>
+                                <div id="mediaAnnexeUn"  style="display: none;">
+                                    <p:media id="annexeun" value="#{detailDUnCourrierDansUnDossier.annexe.streamAnnexeUn}" cache="false" width="100%" player="pdf"  height="800"/>
+                                </div>
+
+                                <div id="mediaAnnexeDeux" style="display: none">
+                                    <p:media id="annexedeux" value="#{detailDUnCourrierDansUnDossier.annexe.streamAnnexeDeux}"  cache="false" width="100%" player="pdf"  height="800"/>
+                                </div>
+
+                                <div id="mediaAnnexeTrois" style="display: none">
+                                    <p:media id="annexetrois" value="#{detailDUnCourrierDansUnDossier.annexe.streamAnnexeTrois}"  cache="false" width="100%" player="pdf"  height="800"/>
+                                </div>
+
+                                <div id="mediaAnnexeQuatre" style="display: none">
+                                    <p:media id="annexequatre" value="#{detailDUnCourrierDansUnDossier.annexe.streamAnnexeQuatre}"  cache="false" width="100%" player="pdf"  height="800"/>
+                                </div>
+
+                                <div class="info" id="info">
+                                    <p style="font-size: 15px"><strong>Ce courrier n'a pas d'annexe(s)!</strong></p>
+                                </div>
                             </div>
 
-                            <div id="mediaAnnexeQuatre" style="display: none">
-                                <p:media id="annexequatre" value="#{detailDUnCourrierDansUnDossier.annexe.streamAnnexeQuatre}"  cache="false" width="100%" player="pdf"  height="800"/>
-                            </div>
+                            <div id="Annotations" class="tabcontent">
 
-                            <div class="info" id="info">
-                                <p style="font-size: 15px"><strong>Ce courrier n'a pas d'annexe(s)!</strong></p>
-                            </div>
-                        </div>
-
-                        <div id="Annotations" class="tabcontent">
-
-                            <p:scrollPanel mode="native" style="height:510px; margin-bottom: 20px">
-                                <ui:repeat value="#{detailDUnCourrierDansUnDossier.annotation.listeDesAnnotations}" var="annotation">
-                                    <div class="chat_list">
-                                        <div class="chat_people">
-                                            <div class="chat_img" style="margin-right: 10px">
-                                                <h:graphicImage style="width: 17px; height: 17px" value="./resources/images/user.png"/>
-                                            </div>
-                                            <div >
-                                                    <span class="chat_date">
-                                                        <h:outputText value="#{annotation.auteur}" escape="false" style="font-size: 12px; color: #0f0f0f"/>
-                                                    </span>
-                                            </div>
-                                            <div class="chat_img" style="margin-right: 10px; margin-top: 10px">
-                                                <h:graphicImage style="width: 20px; height: 20px" value="./resources/images/comment.png"/>
-                                            </div>
-                                            <div style="margin-top: 10px">
-                                                    <span class="chat_date">
-                                                        <h:outputText value="#{annotation.messageNote}" escape="false" style="font-size: 15px; color: #0f0f0f"/>
-                                                    </span>
-                                                <p>
-                                                    <h:outputText style="font-size: 11px; color: #777777; margin-right: 20px; float: left" value="#{annotation.dateNote}"/>
-                                                    <h:outputText style="font-size: 11px; color: #777777; float: left" value="#{annotation.heureNote}"/>
-                                                </p>
+                                <p:scrollPanel mode="native" style="height:510px; margin-bottom: 20px">
+                                    <ui:repeat value="#{detailDUnCourrierDansUnDossier.annotation.listeDesAnnotations}" var="annotation">
+                                        <div class="chat_list">
+                                            <div class="chat_people">
+                                                <div class="chat_img" style="margin-right: 10px">
+                                                    <h:graphicImage style="width: 17px; height: 17px" value="./resources/images/user.png"/>
+                                                </div>
+                                                <div >
+                                                        <span class="chat_date">
+                                                            <h:outputText value="#{annotation.auteur}" escape="false" style="font-size: 12px; color: #0f0f0f"/>
+                                                        </span>
+                                                </div>
+                                                <div class="chat_img" style="margin-right: 10px; margin-top: 10px">
+                                                    <h:graphicImage style="width: 20px; height: 20px" value="./resources/images/comment.png"/>
+                                                </div>
+                                                <div style="margin-top: 10px">
+                                                        <span class="chat_date">
+                                                            <h:outputText value="#{annotation.messageNote}" escape="false" style="font-size: 15px; color: #0f0f0f"/>
+                                                        </span>
+                                                    <p>
+                                                        <h:outputText style="font-size: 11px; color: #777777; margin-right: 20px; float: left" value="#{annotation.dateNote}"/>
+                                                        <h:outputText style="font-size: 11px; color: #777777; float: left" value="#{annotation.heureNote}"/>
+                                                    </p>
+                                                </div>
                                             </div>
                                         </div>
-                                    </div>
-                                </ui:repeat>
-                            </p:scrollPanel>
+                                    </ui:repeat>
+                                </p:scrollPanel>
+                            </div>
+
+                            <p:dialog id="confirmationRetirerCourrierDuDossier"
+                                      header="Retirer le courrier du dossier ?"
+                                      widgetVar="dialogueConfirmationSuppression"
+                                      modal="true" hideEffect="clip"
+                                      showEffect="clip"
+                                      resizable="false">
+
+                                <h:form>
+                                    <p:messages for="messages" showDetail="true" closable="true"/>
+                                    <p:commandButton value="Retirer"
+                                                     style="margin-top: 14px; margin-right: 10px"
+                                                     icon="fa fa-check-circle"
+                                                     update="@form"
+                                                     actionListener="#{detailDUnCourrierDansUnDossier.retirerUnCourrierDUnDossier}"/>
+                                </h:form>
+                            </p:dialog>
+
+                            <p:dialog id="retourALaListeDesCourriersDuDossier"
+                                      header="Supprimer le dossier ?"
+                                      width="auto"
+                                      widgetVar="dialogueRetourAuxCourriersDuDossiers"
+                                      modal="true" hideEffect="clip"
+                                      showEffect="clip"
+                                      resizable="false">
+                                <h:form>
+                                    <h:outputText value="Le courrier à été retirer du dossier vous allez etre redirigé vers la liste des courriers du dossiers" />
+
+                                    <p:separator/>
+                                    <p:commandButton value="Ok"
+                                                     style="background: #8b2421; border: 1px #8b2421 solid; color: white"
+                                                     icon="fa fa-window-close"
+                                                     ajax="false"
+                                                     action="#{detailDUnCourrierDansUnDossier.retourALaListeDesCourriersDuDossiers}"/>
+                                </h:form>
+                            </p:dialog>
                         </div>
-
-                        <p:dialog id="confirmationRetirerCourrierDuDossier"
-                                  header="Retirer le courrier du dossier ?"
-                                  widgetVar="dialogueConfirmationSuppression"
-                                  modal="true" hideEffect="clip"
-                                  showEffect="clip"
-                                  resizable="false">
-
-                            <h:form>
-                                <p:messages for="messages" showDetail="true" closable="true"/>
-                                <p:commandButton value="Retirer"
-                                                 style="margin-top: 14px; margin-right: 10px"
-                                                 icon="fa fa-check-circle"
-                                                 update="@form"
-                                                 actionListener="#{detailDUnCourrierDansUnDossier.retirerUnCourrierDUnDossier}"/>
-                            </h:form>
-                        </p:dialog>
-
-                        <p:dialog id="retourALaListeDesCourriersDuDossier"
-                                  header="Supprimer le dossier ?"
-                                  width="auto"
-                                  widgetVar="dialogueRetourAuxCourriersDuDossiers"
-                                  modal="true" hideEffect="clip"
-                                  showEffect="clip"
-                                  resizable="false">
-                            <h:form>
-                                <h:outputText value="Le courrier à été retirer du dossier vous allez etre redirigé vers la liste des courriers du dossiers" />
-
-                                <p:separator/>
-                                <p:commandButton value="Ok"
-                                                 style="background: #8b2421; border: 1px #8b2421 solid; color: white"
-                                                 icon="fa fa-window-close"
-                                                 ajax="false"
-                                                 action="#{detailDUnCourrierDansUnDossier.retourALaListeDesCourriersDuDossiers}"/>
-                            </h:form>
-                        </p:dialog>
+                        <div class="ui-g-1"/>
                     </div>
                 </div>
             </div>

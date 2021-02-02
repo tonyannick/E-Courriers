@@ -88,19 +88,19 @@
                                         </f:facet>
                                         <p:column style="width:100px">
                                             <f:facet name="header">Date</f:facet>
-                                            <h:outputText style="font-size: 12px" value="#{etape.date_debut}"/>
+                                            <h:outputText style="font-size: 14px" value="#{etape.date_debut}"/>
                                         </p:column>
                                         <p:column>
                                             <f:facet name="header">Message</f:facet>
-                                            <h:outputText  value="#{etape.message}" escape="false"/>
+                                            <h:outputText  style="font-size: 14px" value="#{etape.message}" escape="false"/>
                                         </p:column>
                                         <p:column style="width:120px;" styleClass="#{etape.date_fin eq 'Aucun' ? 'cellulevide' : null}">
                                             <f:facet name="header">Date butoir</f:facet>
-                                            <h:outputText value="#{etape.date_fin}" style="font-size: 12px"/>
+                                            <h:outputText value="#{etape.date_fin}" style="font-size: 14px"/>
                                         </p:column>
                                         <p:column styleClass="#{(etape.etat eq 'En retard') ? 'en-retard' : (etape.etat eq 'En traitement') ? 'en-traitement' : (etape.etat eq 'Terminé') ? 'terminee' : 'null'}" style="width:140px;">
                                             <f:facet name="header">Etat</f:facet>
-                                            <h:outputText  value="#{etape.etat}" />
+                                            <h:outputText  style="font-size: 14px" value="#{etape.etat}" />
                                         </p:column>
                                         <p:column style="width:30px;">
                                             <p:commandButton  icon="fa fa-eye"
