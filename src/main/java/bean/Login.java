@@ -51,7 +51,7 @@ public class Login implements Serializable {
             BufferedImage bufferedImage = new BufferedImage(width, height, BufferedImage.OPAQUE);
             Graphics graphics = bufferedImage.createGraphics();
             graphics.setFont(new Font("Arial", Font.BOLD, 20));
-            graphics.setColor(new Color(169, 169, 169));
+            graphics.setColor(new Color(130, 130, 130));
             graphics.fillRect(0, 0, width, height);
             graphics.setColor(new Color(255, 255, 255));
             graphics.drawString(captcha, 20, 25);
@@ -73,7 +73,6 @@ public class Login implements Serializable {
     public String cliquerSurValider(){
 
         if(verifierCaptcha()){
-            System.out.println("je suis ici");
             if(UsersQueries.verifierUserLogin(user.getUserlogin(),user.getUserPassword())){
                 userSessionUniqueId = UUID.randomUUID().toString();
                 HttpSession session = SessionUtils.getSession();
@@ -105,7 +104,7 @@ public class Login implements Serializable {
         }else{
             FacesContext context = FacesContext.getCurrentInstance();
             context.getExternalContext().getFlash().setKeepMessages(true);
-            FacesMessages.errorMessage("messagesLogin","Erreur!!!","Le texte du captcha n'est pas correcte");
+            FacesMessages.errorMessage("messagesLogin","Erreur!!!","Le texte du captcha n'est pas correct");
             return "login?faces-redirect=true";
         }
     }
@@ -115,7 +114,6 @@ public class Login implements Serializable {
         if(valeurCaptcha.equals(captcha)){
             isOk = true;
         }
-        System.out.println("isOk = " + isOk);
         return isOk;
     }
 

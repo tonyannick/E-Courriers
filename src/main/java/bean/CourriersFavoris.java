@@ -132,9 +132,6 @@ public class CourriersFavoris implements Serializable {
     private void gestionDeLAffichageDesBoutonsDeRecherche(){
         PrimeFaces.current().executeScript("PF('dialogueRechercherCourrierParDate').hide()");
         PrimeFaces.current().executeScript("PF('dialogueRechercherCourrierParMois').hide()");
-        PrimeFaces.current().executeScript("PF('dialogueRechercherCourrierParMotsCles').hide()");
-        PrimeFaces.current().executeScript("PF('dialogueRechercherCourrierParTypeDeCourrier').hide()");
-        PrimeFaces.current().executeScript("PF('dialogueRechercherCourrierParDirection').hide()");
         PrimeFaces.current().executeScript("afficherBoutonAnnulerRecherche()");
     }
 

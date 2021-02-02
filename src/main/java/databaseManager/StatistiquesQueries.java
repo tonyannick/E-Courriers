@@ -464,11 +464,14 @@ public class StatistiquesQueries {
             }
 
             for (int a = 0; a < listeCourriersEnvoyes.size(); a++) {
+                System.out.println("listeCourriersEnvoyes = " + listeCourriersEnvoyes.get(a).getDateDEnregistrement());
                 try {
                     Date dateAConsiderer = sdf.parse(listeCourriersEnvoyes.get(a).getDateDEnregistrement());
+                    System.out.println("dateAConsiderer = " + dateAConsiderer);
                     if (dateAConsiderer.after(DateUtils.convertirStringEnDateAuFormatUS(DateUtils.premierJourDeLaSemaineFormatUS)) &&
                             dateAConsiderer.before(DateUtils.convertirStringEnDateAuFormatUS(DateUtils.dernierJourDeLaSemaineFormatUS))) {
                         tempNombreCourrierEnvoyesDeLaSemaine++;
+                        System.out.println("good");
                     }
 
                 } catch (ParseException e) {
@@ -538,6 +541,20 @@ public class StatistiquesQueries {
             nombreCourrierDimancheDeLaSemaine = tempNombreCourrierDimancheDeLaSemaine;
 
 
+          /*  System.out.println("listeDeTousLesCourriersDeLaSemaine = " +nombreCourrierRecusDeLaSemaine );
+            System.out.println("listeDeTousLesCourriersDeLaSemaine = " +nombreCourrierEnvoyesDeLaSemaine );
+            System.out.println("listeDeTousLesCourriersDeLaSemaine = " +nombreCourrierUrgentDeLaSemaine );
+            System.out.println("listeDeTousLesCourriersDeLaSemaine = " +nombreCourrierPasUrgentDeLaSemaine );
+            System.out.println("listeDeTousLesCourriersDeLaSemaine = " +nombreCourrierConfidentielDeLaSemaine );
+            System.out.println("listeDeTousLesCourriersDeLaSemaine = " +nombreCourrierLundiDeLaSemaine );
+            System.out.println("listeDeTousLesCourriersDeLaSemaine = " +nombreCourrierMardiDeLaSemaine );
+            System.out.println("listeDeTousLesCourriersDeLaSemaine = " +nombreCourrierMercrediDeLaSemaine );
+            System.out.println("listeDeTousLesCourriersDeLaSemaine = " +nombreCourrierJeudiDeLaSemaine );
+            System.out.println("listeDeTousLesCourriersDeLaSemaine = " +nombreCourrierVendrediDeLaSemaine );
+            System.out.println("listeDeTousLesCourriersDeLaSemaine = " +nombreCourrierSamediDeLaSemaine );
+            System.out.println("listeDeTousLesCourriersDeLaSemaine = " +nombreCourrierDimancheDeLaSemaine );*/
+
+
         } catch (SQLException e) {
             e.printStackTrace();
         }finally {
@@ -570,8 +587,68 @@ public class StatistiquesQueries {
 
         int tempCourrierEnvoyesDuMois = 0;
         int tempCourrierRecusDuMois =0;
-        int tempCourrierUrgentEnvoye =0;
-        int tempCourrierPasUrgentEnvoye =0;
+
+        List<Courrier> listeCourriersRecus = new ArrayList<>();
+        List<Courrier> listeCourriersEnvoyes = new ArrayList<>();
+
+        listeCourriersRecus.clear();
+        listeCourriersEnvoyes.clear();
+
+        Connection connectionCourrierRecus =  DatabaseConnection.getConnexion();
+        Connection connectionCourrierEnvoyes =  DatabaseConnection.getConnexion();
+        String nombreDeCourrierRecusSQL = "select * from `recevoir_courrier` inner join `courrier` on recevoir_courrier.id_courrier = courrier.id_courrier inner join personne on recevoir_courrier.id_personne = personne.id_personne inner join direction on personne.id_direction = direction.id_direction inner join type_courrier on type_courrier.id_type_courrier =	courrier.fk_type_courrier where direction.id_direction = '"+idDirection+"' and courrier.etat = '"+EtatCourrier.courrierEnvoye+"' group by courrier.id_courrier order by courrier.id_courrier desc ";
+        String nombreDeCourrierEnvoyesSQL = "select * from `envoyer_courrier` inner join `courrier` on envoyer_courrier.id_courrier = courrier.id_courrier inner join personne on envoyer_courrier.id_personne = personne.id_personne inner join direction on personne.id_direction = direction.id_direction inner join type_courrier on type_courrier.id_type_courrier = courrier.fk_type_courrier where direction.id_direction = '"+idDirection+"' and courrier.etat = '"+EtatCourrier.courrierEnvoye+"' group by courrier.id_courrier order by courrier.id_courrier desc ";
+
+        ResultSet resultSetCourriersRecus = null;
+        ResultSet resultSetCourriersEnvoyes = null;
+
+        try {
+            resultSetCourriersRecus = connectionCourrierRecus.createStatement().executeQuery(nombreDeCourrierRecusSQL);
+            resultSetCourriersEnvoyes = connectionCourrierEnvoyes.createStatement().executeQuery(nombreDeCourrierEnvoyesSQL);
+
+            while (resultSetCourriersRecus.next()) {
+                listeCourriersRecus.add(new Courrier(
+                        resultSetCourriersRecus.getString("date_enregistrement"),
+                        resultSetCourriersRecus.getString("priorite"),
+                        resultSetCourriersRecus.getString("confidentiel"),
+                        resultSetCourriersRecus.getString("id_courrier"),
+                        resultSetCourriersRecus.getString("genre")));
+            }
+
+            while (resultSetCourriersEnvoyes.next()) {
+                listeCourriersEnvoyes.add(new Courrier(
+                        resultSetCourriersEnvoyes.getString("date_enregistrement"),
+                        resultSetCourriersEnvoyes.getString("priorite"),
+                        resultSetCourriersEnvoyes.getString("confidentiel"),
+                        resultSetCourriersEnvoyes.getString("id_courrier"),
+                        resultSetCourriersEnvoyes.getString("genre")));
+            }
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }finally {
+            if (resultSetCourriersRecus != null) {
+                try {
+                    resultSetCourriersRecus.close();
+                } catch (SQLException e) { /* ignored */}
+            }
+            if (resultSetCourriersEnvoyes != null) {
+                try {
+                    resultSetCourriersEnvoyes.close();
+                } catch (SQLException e) { /* ignored */}
+            }
+            if (connectionCourrierRecus != null) {
+                try {
+                    connectionCourrierRecus.close();
+                } catch (SQLException e) { /* ignored */}
+            }
+            if (connectionCourrierEnvoyes != null) {
+                try {
+                    connectionCourrierEnvoyes.close();
+                } catch (SQLException e) { /* ignored */}
+            }
+
+        }
 
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
         DateUtils.recupererLePremierEtLeDernierJourDuMoisEnCours();
@@ -713,9 +790,9 @@ public class StatistiquesQueries {
                     if (listeCourriersEnvoyes.get(i).getDateDEnregistrement().equals(dateDuJour)) {
                         nombreCourrierEnvoyesDuJour++;
                         if (listeCourriersEnvoyes.get(i).getPrioriteCourrier().equalsIgnoreCase("Normal")) {
-                            tempCourrierUrgentEnvoye++;
-                        }else if(listeCourriersEnvoyes.get(i).getPrioriteCourrier().equalsIgnoreCase("Urgent")){
                             tempCourrierPasUrgentEnvoye++;
+                        }else if(listeCourriersEnvoyes.get(i).getPrioriteCourrier().equalsIgnoreCase("Urgent")){
+                            tempCourrierUrgentEnvoye++;
                         }
                         if (listeCourriersEnvoyes.get(i).getConfidentiel().equalsIgnoreCase("Oui")) {
                             tempCourrierConfidentielEnvoye++;

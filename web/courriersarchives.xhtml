@@ -28,6 +28,12 @@
         }
         .ui-datatable .ui-datatable-header {
             text-align: right !important;
+            border-top-left-radius: 20px;
+            border-top-right-radius: 20px;
+        }
+        .ui-datatable .ui-datatable-footer {
+            border-bottom-left-radius: 20px;
+            border-bottom-right-radius: 20px;
         }
     </style>
     <h:body>
@@ -43,109 +49,113 @@
                         <ui:include src="footer.xhtml" />
                     </ui:insert>
                 </div>
-                <div class="main-overview" style="margin-bottom: 90px; margin-top: 10px; overflow-y: auto">
-                    <div class="col-sm-9 col-sm-offset-3 col-md-9 col-md-offset-2 main">
-                        <ul class="breadcrumb" style="width:100%;">
-                            <li><h:outputLink value="tableaudebord.xhtml" title="Accueil">Accueil</h:outputLink></li>
-                            <li>Courriers archivés</li>
-                        </ul>
-                        <h3 class="page-header"><h:graphicImage value="./resources/images/archive.png" style="margin-right :10px"/>Courriers archivés</h3>
-                        <h:form id="form">
+                <div style="width:100%; margin-bottom: 90px; margin-top: 10px;overflow-y: auto">
+                    <div class="ui-g" style=" width:100%;">
+                        <div class="ui-g-2"/>
+                        <div  class="ui-g-8">
+                            <ul class="breadcrumb" style="width:100%;">
+                                <li><h:outputLink value="tableaudebord.xhtml" title="Accueil">Accueil</h:outputLink></li>
+                                <li>Courriers archivés</li>
+                            </ul>
+                            <h3 class="page-header"><h:graphicImage value="./resources/images/archive.png" style="margin-right :10px"/>Courriers archivés</h3>
+                            <h:form id="form">
 
-                            <p:toolbar style="margin-bottom: 15px; margin-top: 15px">
-                                <f:facet name="left">
-                                    <div id="divBoutonFaireUnRecherche" style="float: left;">
-                                        <p:menuButton value="Recherche avancée" iconPos="right" icon="fa fa-search">
-                                            <p:menuitem value="Recherche par date" onclick="PF('dialogueRechercherCourrierParDate').show()"  />
-                                            <p:menuitem value="Recherche par mois" onclick="PF('dialogueRechercherCourrierParMois').show()"/>
-                                        </p:menuButton>
-                                    </div>
+                                <p:toolbar style="margin-bottom: 15px; margin-top: 15px;">
+                                    <f:facet name="left">
+                                        <div id="divBoutonFaireUnRecherche" style="float: left;">
+                                            <p:menuButton value="Recherche avancée" iconPos="right" icon="fa fa-search">
+                                                <p:menuitem value="Recherche par date" onclick="PF('dialogueRechercherCourrierParDate').show()"  />
+                                                <p:menuitem value="Recherche par mois" onclick="PF('dialogueRechercherCourrierParMois').show()"/>
+                                            </p:menuButton>
+                                        </div>
 
-                                    <div id="divBoutonAnnulerRecherche" style="float: left; display: none">
-                                        <p:commandButton style="background: #6872b4;margin-left: 10px;
-                                                         border-color:#6872b4; color: white; font-weight: bold;"
-                                                         iconPos="right"
-                                                         actionListener="#{courriersRecus.annulerUneRechercheAvancee}"
-                                                         update="form:tableCourrierArchives"
-                                                         value="Annuler la recherche" icon="fa fa-times" />
-                                    </div>
-                                </f:facet>
-                            </p:toolbar>
+                                        <div id="divBoutonAnnulerRecherche" style="float: left; display: none">
+                                            <p:commandButton style="background: #6872b4;margin-left: 10px;
+                                                             border-color:#6872b4; color: white; font-weight: bold;"
+                                                             iconPos="right"
+                                                             actionListener="#{courriersRecus.annulerUneRechercheAvancee}"
+                                                             update="form:tableCourrierArchives"
+                                                             value="Annuler la recherche" icon="fa fa-times" />
+                                        </div>
+                                    </f:facet>
+                                </p:toolbar>
 
-                            <p:dataTable tableStyle="table-layout: auto"
-                                         widgetVar="tableauCourrierArchives"
-                                         paginatorPosition="top"
-                                         id="tableCourrierArchives"
-                                         var="courriers" paginator="true"
-                                         paginatorAlwaysVisible="false"
-                                         rows="#{courriersArchives.rowsPerPage}"
-                                         first="#{courriersArchives.first}"
-                                         rowsPerPageTemplate="15,25,35"
-                                         value="#{courriersArchives.courrier.listeDesCouriersArchives}"
-                                         scrollable="false"
-                                         emptyMessage="Aucun courrier archivé"
-                                         rowIndexVar="index" border="2">
+                                <p:dataTable tableStyle="table-layout: auto"
+                                             widgetVar="tableauCourrierArchives"
+                                             paginatorPosition="top"
+                                             id="tableCourrierArchives"
+                                             var="courriers" paginator="true"
+                                             paginatorAlwaysVisible="false"
+                                             rows="#{courriersArchives.rowsPerPage}"
+                                             first="#{courriersArchives.first}"
+                                             rowsPerPageTemplate="15,25,35"
+                                             value="#{courriersArchives.courrier.listeDesCouriersArchives}"
+                                             scrollable="false"
+                                             emptyMessage="Aucun courrier archivé"
+                                             rowIndexVar="index" border="2">
 
-                                <f:facet name="header">
-                                    <p:outputPanel >
-                                        <h:outputText  value="Recherche globale : " />
-                                        <p:inputText id="globalFilter" onkeyup="PF('tableauCourrierArchives').filter()" placeholder="Recherche ..."
-                                                     style="width:300px; background-color: #fff; border-radius: 5px; border: 1px #d3d6d6 solid;" />
-                                    </p:outputPanel>
-                                </f:facet>
+                                    <f:facet name="header">
+                                        <p:outputPanel >
+                                            <h:outputText  value="Recherche globale : " />
+                                            <p:inputText id="globalFilter" onkeyup="PF('tableauCourrierArchives').filter()" placeholder="Recherche ..."
+                                                         style="width:300px; background-color: #fff; border-radius: 5px; border: 1px #d3d6d6 solid;" />
+                                        </p:outputPanel>
+                                    </f:facet>
 
-                                <p:column>
-                                    <f:facet name="header">N°</f:facet>
-                                    <h:outputText value="#{index + 1}" />
-                                </p:column>
+                                    <p:column>
+                                        <f:facet name="header">N°</f:facet>
+                                        <h:outputText value="#{index + 1}" />
+                                    </p:column>
 
-                                <p:column style="width: 140px; text-align: center"
-                                        filterStyle="background-color: white; width: 100px;
+                                    <p:column style="width: 140px; text-align: center"
+                                            filterStyle="background-color: white; width: 100px;
+                                            border-radius: 5px;
+                                            border: 1px #d3d6d6 solid"
+                                              filterBy="#{courriers.dateDeReception}">
+                                        <f:facet name="header" >Date de réception</f:facet>
+                                        <h:outputText style="font-size: 13px; alignment: center; " value="#{courriers.dateDeReception}"/>
+                                    </p:column>
+                                    <p:column style="text-align: center"
+                                            filterStyle="background-color: white;  width: 200px;
+                                            border-radius: 5px;
+                                            border: 1px #d3d6d6 solid" filterBy="#{courriers.referenceCourrier}">
+                                        <f:facet name="header">Référence</f:facet>
+                                        <h:outputText style="font-size: 13px; alignment: center;" value="#{courriers.referenceCourrier}"/>
+                                    </p:column>
+                                    <p:column style="text-align: center"
+                                            filterStyle="background-color: white; width: 150px;
+                                            border-radius: 5px;
+                                            border: 1px #d3d6d6 solid" filterBy="#{courriers.objetCourrier}">
+                                        <f:facet name="header">Objet</f:facet>
+                                        <h:outputText style="font-size: 13px; alignment: center;" value="#{courriers.objetCourrier}"/>
+                                    </p:column>
+                                    <p:column
+                                            styleClass="#{courriers.prioriteCourrier eq 'Urgent' ? 'courrierurgent' : null}"
+                                            style="width: 100px; text-align: center"
+                                            filterStyle="background-color: white; width: 100px;
                                         border-radius: 5px;
-                                        border: 1px #d3d6d6 solid"
-                                          filterBy="#{courriers.dateDeReception}">
-                                    <f:facet name="header" >Date de réception</f:facet>
-                                    <h:outputText style="font-size: 13px; alignment: center; " value="#{courriers.dateDeReception}"/>
-                                </p:column>
-                                <p:column style="text-align: center"
-                                        filterStyle="background-color: white;  width: 200px;
-                                        border-radius: 5px;
-                                        border: 1px #d3d6d6 solid" filterBy="#{courriers.referenceCourrier}">
-                                    <f:facet name="header">Référence</f:facet>
-                                    <h:outputText style="font-size: 13px; alignment: center;" value="#{courriers.referenceCourrier}"/>
-                                </p:column>
-                                <p:column style="text-align: center"
-                                        filterStyle="background-color: white; width: 150px;
-                                        border-radius: 5px;
-                                        border: 1px #d3d6d6 solid" filterBy="#{courriers.objetCourrier}">
-                                    <f:facet name="header">Objet</f:facet>
-                                    <h:outputText style="font-size: 13px; alignment: center;" value="#{courriers.objetCourrier}"/>
-                                </p:column>
-                                <p:column
-                                        styleClass="#{courriers.prioriteCourrier eq 'Urgent' ? 'courrierurgent' : null}"
-                                        style="width: 100px; text-align: center"
-                                        filterStyle="background-color: white; width: 100px;
-                                    border-radius: 5px;
-                                    border: 1px #d3d6d6 solid" filterBy="#{courriers.prioriteCourrier}}">
-                                    <f:facet name="header">Priorité</f:facet>
-                                    <h:outputText style="font-size: 13px; alignment: center;" value="#{courriers.prioriteCourrier}"/>
-                                </p:column>
+                                        border: 1px #d3d6d6 solid" filterBy="#{courriers.prioriteCourrier}}">
+                                        <f:facet name="header">Priorité</f:facet>
+                                        <h:outputText style="font-size: 13px; alignment: center;" value="#{courriers.prioriteCourrier}"/>
+                                    </p:column>
 
-                                <p:column style="width:32px">
-                                    <p:commandButton  icon="fa fa-eye"
-                                                      ajax="false"
-                                                      action="#{courriersArchives.voirLesDetailsDuCourrier}"
-                                                      style="background: #496ea1; border: 1px #496ea1 solid"
-                                                      title="Voir plus">
-                                        <f:param name="courrierId" value="#{courriers.idCourrier}" />
-                                        <f:param name="alfrescoId" value="#{courriers.idAlfresco}" />
-                                    </p:commandButton>
-                                </p:column>
-                                <f:facet name="footer">
-                                    Nombre total de courriers :  #{fn:length(courriersArchives.courrier.listeDesCouriersArchives)}
-                                </f:facet>
-                            </p:dataTable>
-                        </h:form>
+                                    <p:column style="width:32px">
+                                        <p:commandButton  icon="fa fa-eye"
+                                                          ajax="false"
+                                                          action="#{courriersArchives.voirLesDetailsDuCourrier}"
+                                                          style="background: #496ea1; border: 1px #496ea1 solid"
+                                                          title="Voir plus">
+                                            <f:param name="courrierId" value="#{courriers.idCourrier}" />
+                                            <f:param name="alfrescoId" value="#{courriers.idAlfresco}" />
+                                        </p:commandButton>
+                                    </p:column>
+                                    <f:facet name="footer">
+                                        Nombre total de courriers :  #{fn:length(courriersArchives.courrier.listeDesCouriersArchives)}
+                                    </f:facet>
+                                </p:dataTable>
+                            </h:form>
+                        </div>
+                        <div class="ui-g-2"/>
                     </div>
 
                     <p:dialog id="dialogueRechercheParDate"

@@ -51,6 +51,7 @@
     border: 1px #dfa574 solid;
     background-color: #f1f1f1;
     width:30%;
+    box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2);
     margin-bottom: 80px;
     margin-left: 40px;
     -webkit-animation-name: slideInModal;

@@ -44,54 +44,56 @@
                         <ui:include src="footer.xhtml" />
                     </ui:insert>
                 </div>
-                <div class="main-overview" style="margin-bottom: 90px; margin-top: 10px; overflow-y: auto">
-                    <div class="col-sm-9 col-sm-offset-3 col-md-9 col-md-offset-2 main">
-                        <ul class="breadcrumb" style="width:100%;">
-                            <li><h:outputLink value="tableaudebord.xhtml" title="Accueil">Accueil</h:outputLink></li>
-                            <li>Mes dossiers</li>
-                        </ul>
-                        <h3 class="page-header"><h:graphicImage value="./resources/images/folders.png" width="30px" height="30px" style="margin-right :10px"/>Mes dossiers</h3>
+                <div style="width:100%; margin-bottom: 90px; margin-top: 10px;overflow-y: auto">
+                    <div class="ui-g" style=" width:100%;">
+                        <div class="ui-g-2"/>
+                        <div  class="ui-g-8">
+                            <ul class="breadcrumb" style="width:100%;">
+                                <li><h:outputLink value="tableaudebord.xhtml" title="Accueil">Accueil</h:outputLink></li>
+                                <li>Mes dossiers</li>
+                            </ul>
+                            <h3 class="page-header"><h:graphicImage value="./resources/images/folders.png" width="30px" height="30px" style="margin-right :10px"/>Mes dossiers</h3>
 
-                        <p:toolbar style="margin-bottom: 15px; margin-top: 15px">
-                            <f:facet name="left">
-                                <p:commandButton  icon="fa fa-plus-circle"
-                                                  type="button" value="créer un dossier"
-                                                  onclick="ouvrirModalBoxCreerDossier()"
-                                                  style="color: white;  padding: 3px 4px; background: #dfa574;border: 1px #dfa574 solid"/>
-                            </f:facet>
-                            <f:facet name="right">
-                                <p:commandButton style="color: white; padding: 2px 3px; background:#286090; border-color:#286090;" value="Actualiser la page"
-                                                 onclick="actualiserLaPageDesCourriers()" type="button" icon="fa fa-refresh"/>
-                            </f:facet>
+                            <p:toolbar style="margin-bottom: 15px; margin-top: 15px;">
+                                <f:facet name="left">
+                                    <p:commandButton  icon="fa fa-plus-circle"
+                                                      type="button" value="créer un dossier"
+                                                      onclick="ouvrirModalBoxCreerDossier()"
+                                                      style="color: white;  padding: 2px 2px; background: #dfa574;border: 1px #dfa574 solid;"/>
+                                </f:facet>
+                                <f:facet name="right">
+                                    <p:commandButton style="color: white; padding: 2px 2px; background:#286090; border-color:#286090;" value="Actualiser la page"
+                                                     onclick="actualiserLaPageDesCourriers()" type="button" icon="fa fa-refresh"/>
+                                </f:facet>
 
-                        </p:toolbar>
+                            </p:toolbar>
 
-                        <h:form enctype="multipart/form-data">
-                            <div>
-                                <p:dataGrid value="#{mesDossiers.dossier.dossierList}"  var="dossier"
-                                            layout="grid"
-                                            paginator="true" paginatorAlwaysVisible="false" paginatorPosition="bottom"
-                                            style="box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2);
-                                            margin-bottom:10px; margin-top: 10px" emptyMessage="Aucun dossier" rows="12" >
+                            <h:form enctype="multipart/form-data">
+                                <div>
+                                    <p:dataGrid value="#{mesDossiers.dossier.dossierList}"  var="dossier"
+                                                layout="grid"
+                                                paginator="true" paginatorAlwaysVisible="false" paginatorPosition="bottom"
+                                                style="box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2);
+                                                margin-bottom:10px; margin-top: 10px" emptyMessage="Aucun dossier" rows="12" >
 
 
-                                    <p:panel header="#{dossier.nomDossier}" style="text-align:center">
-                                        <h:panelGrid columns="1" style="width:100%">
-                                            <h:graphicImage value="./resources/images/folder.png" width="38px" height="38px"/>
+                                        <p:panel header="#{dossier.nomDossier}" style="text-align:center">
+                                            <h:panelGrid columns="1" style="width:100%">
+                                                <h:graphicImage value="./resources/images/folder.png" width="38px" height="38px"/>
 
-                                            <p:commandButton  icon="fa fa-eye" action="#{mesDossiers.voirLesCourriersDuDossier}"
-                                                              style="background: #496ea1;margin-top: 8px; border: 1px #496ea1 solid"
-                                                              title="Détails">
-                                                <f:param name="idDossier" value="#{dossier.idDossier}" />
-                                            </p:commandButton>
-                                        </h:panelGrid>
-                                    </p:panel>
+                                                <p:commandButton  icon="fa fa-eye" action="#{mesDossiers.voirLesCourriersDuDossier}"
+                                                                  style="background: #496ea1;margin-top: 8px; border: 1px #496ea1 solid"
+                                                                  title="Détails">
+                                                    <f:param name="idDossier" value="#{dossier.idDossier}" />
+                                                </p:commandButton>
+                                            </h:panelGrid>
+                                        </p:panel>
 
-                                </p:dataGrid>
+                                    </p:dataGrid>
 
-                            </div>
-                        </h:form>
-
+                                </div>
+                            </h:form>
+                        </div>
                         <div id="modalBoxCreerDossier" class="popupcreerdossier">
                             <h:form id="formdossier" enctype="multipart/form-data">
                                 <div class="popupcreerdossierbody">
@@ -129,7 +131,7 @@
                                 </div>
                             </h:form>
                         </div>
-
+                        <div class="ui-g-2"/>
                     </div>
 
                 </div>
