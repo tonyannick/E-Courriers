@@ -44,9 +44,6 @@
 .fa-file-text{
     color: #0200f1;
 }
-.fa-pencil{
-    color: #ff6f00;
-}
 .fa-share-square{
     color: #0200f1;
 }
@@ -64,7 +61,7 @@
 }
 
 .fa-check-circle{
-    color: #0f9a00;
+    color: #ffffff;
 }
 .fa-share{
     color: #285300;
@@ -120,20 +117,22 @@ input[type=Text]:focus{
 .show {
     display: block;
 }
+
+.terminee {
+    color: black !important;
+    font-weight: bold;
+    font-size: 16px;
+}
 .en-retard {
     color: #ffffff !important;
     font-weight: bold;
-    background-color: #fc003b !important;
+    background-color: #bb002c !important;
+    font-size: 16px;
 }
 .en-traitement {
-    color: #ffffff !important;
+    color: black !important;
     font-weight: bold;
-    background-color: #fe7606 !important;
-}
-.terminee {
-    color: #ffffff !important;
-    font-weight: bold;
-    background-color: #209436 !important;
+    font-size: 16px;
 }
 /* Style the tab */
 .tab {
@@ -462,6 +461,7 @@ input[type=Text]:focus{
     margin-left: 40px;
     right: 15px;
     border: 1px #496ea1 solid;
+    box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2);
     background-color: #f1f1f1;
     z-index: 9;
     overflow: auto; /* Enable scroll if needed */
@@ -569,6 +569,7 @@ input[type=Text]:focus{
     width:25%;
     margin-bottom: 80px;
     margin-left: 40px;
+    box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2);
     -webkit-animation-name: slideInModal;
     -webkit-animation-duration: 0.4s;
     animation-name: slideInModal;

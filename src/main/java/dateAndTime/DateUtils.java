@@ -106,9 +106,6 @@ public class DateUtils {
             mapJoursDeLaSemaine.put( tableauDesJoursDeLaSemaine[i],convertirDateEnString(daysOfWeek[i]));
             semaineEnCours.add(Calendar.DAY_OF_MONTH, 1);
         }
-        /*for (Map.Entry<String,String> entry :  mapJoursDeLaSemaine.entrySet())
-            System.out.println("Key = " + entry.getKey() + ", Value = " + entry.getValue());*/
-
         return mapJoursDeLaSemaine;
     }
 

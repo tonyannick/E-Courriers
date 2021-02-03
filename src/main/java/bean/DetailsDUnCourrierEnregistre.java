@@ -5,6 +5,7 @@ import databaseManager.*;
 import dateAndTime.DateUtils;
 import fileManager.FileManager;
 import fileManager.PropertiesFilesReader;
+import messages.FacesMessages;
 import model.*;
 import org.primefaces.PrimeFaces;
 import org.primefaces.event.FileUploadEvent;
@@ -58,6 +59,8 @@ public class DetailsDUnCourrierEnregistre implements Serializable {
     private boolean droitAjoutDestinataireExterne = false;
     private String dossierCourrierAlfresco;
     private String dossierDiscussionAlfresco;
+    private String nomEtPrenomAjouteurCourrier;
+    private String fonctionAjouteurCourrier;
 
     @PostConstruct
     public void initialisation(){
@@ -368,12 +371,12 @@ public class DetailsDUnCourrierEnregistre implements Serializable {
         HttpSession session = SessionUtils.getSession();
         String idCourrier = (String) session.getAttribute("idCourrier");
         CourriersQueries.recupererLEmetteurDUnCourrierParIdCourrier(idCourrier);
+        CourriersQueries.recupererLeDestinataireDUnCourrierParIdCourrier(idCourrier);
+        CourriersQueries.recupererLesDetailsDUnCourrierEnregistre(idCourrier);
         emetteur.setTypeDEmetteur(CourriersQueries.typeDemetteur);
         emetteur.setMinistere(CourriersQueries.ministereEmetteur);
         emetteur.setDirection(CourriersQueries.directeurEmetteur);
         emetteur.setFonction(CourriersQueries.fonctionEmetteur);
-        CourriersQueries.recupererLeDestinataireDUnCourrierParIdCourrier(idCourrier);
-        CourriersQueries.recupererLesDetailsDUnCourrierEnregistre(idCourrier);
         courrier.setObjetCourrier(CourriersQueries.objetCourrier);
         courrier.setReferenceCourrier(CourriersQueries.referenceCourrier);
         courrier.setPrioriteCourrier(CourriersQueries.prioriteCourrier);
@@ -385,6 +388,10 @@ public class DetailsDUnCourrierEnregistre implements Serializable {
         courrier.setDateDEnregistrement(CourriersQueries.dateDEnregistrement);
         courrier.setDateDeReception(CourriersQueries.dateDeReception);
         courrier.setCommentairesCourrier(CourriersQueries.commentairesCourrier);
+
+        nomEtPrenomAjouteurCourrier = CourriersQueries.nomEtPrenomPersonneAjouteurDuCourrier;
+        fonctionAjouteurCourrier = CourriersQueries.fonctionPersonneAjouteurDuCourrier;
+
         String jour = courrier.getDateDeReception().substring(courrier.getDateDeReception().lastIndexOf("-") +1);
         String mois = courrier.getDateDeReception().substring(courrier.getDateDeReception().indexOf("-")+1,courrier.getDateDeReception().indexOf("-")+3);
         String annee = courrier.getDateDeReception().substring(0,4);
@@ -595,11 +602,10 @@ public class DetailsDUnCourrierEnregistre implements Serializable {
         String idCourrier = (String) session.getAttribute( "idCourrier");
         String ajouterEtapeCourrierSQL;
         if (idAgentAffecteAUneTache == null ){
-            FacesContext.getCurrentInstance().addMessage("messageaffectation", new FacesMessage(FacesMessage.SEVERITY_WARN, "Erreur", "Vous devez selectionner un agent !!"));
+            FacesMessages.warningMessage("messageaffectation","Erreur", "Vous devez selectionner un agent !!");
         }else{
-
             if(etape.getMessage().isEmpty() ){
-                FacesContext.getCurrentInstance().addMessage("messageaffectation", new FacesMessage(FacesMessage.SEVERITY_WARN, "Erreur", "Vous devez ecrire un message !!"));
+                FacesMessages.warningMessage("messageaffectation","Erreur", "Vous devez ecrire un message !!");
             }else{
                 if (dateFinalTemp == null){
                     ajouterEtapeCourrierSQL = "insert into `etape` ( `titre`, `etat`, `message` ) VALUES ('"+ ActionEtape.transmisPourTraitement+"',"+"'"+EtatEtape.enTraitement+"'," +"'"+etape.getMessage().trim().replaceAll("'", " ")+"')";
@@ -617,7 +623,6 @@ public class DetailsDUnCourrierEnregistre implements Serializable {
                 String ajouterCorrespondanceEtapeCourrierSQL = "INSERT INTO `correspondance_etape_courrier` (`id_courrier`,`etat_correspondance`) VALUES" +
                         "('"+ idCourrier +"',"+"'"+EtatCourrier.courrierEnregistre+"')";
 
-
                 Connection connection = DatabaseConnection.getConnexion();
                 Statement statement = null;
                 try {
@@ -631,12 +636,12 @@ public class DetailsDUnCourrierEnregistre implements Serializable {
                     connection.commit();
                     FacesContext context = FacesContext.getCurrentInstance();
                     context.getExternalContext().getFlash().setKeepMessages(true);
-                    FacesContext.getCurrentInstance().addMessage("messageaffectation", new FacesMessage(FacesMessage.SEVERITY_INFO, "Validation", "Transmision effectuée avec succés"));
+                    FacesMessages.infoMessage("messageaffectation","Validation", "Transmision effectuée avec succés");
                     etape.setMessage(null);
                     etape.setDate_fin(null);
                     etape.setActeur(null);
                 } catch (SQLException e) {
-                    FacesContext.getCurrentInstance().addMessage("messageaffectation", new FacesMessage(FacesMessage.SEVERITY_ERROR, "Erreur", "Une erreur avec la base de données s'est produite !!!"));
+                    FacesMessages.errorMessage("messageaffectation","Erreur", "Une erreur avec la base de données s'est produite !!!");
                     e.printStackTrace();
                 }finally {
 
@@ -1542,5 +1547,21 @@ public class DetailsDUnCourrierEnregistre implements Serializable {
 
     public void setDateFinalTemp(Date dateFinalTemp) {
         this.dateFinalTemp = dateFinalTemp;
+    }
+
+    public String getNomEtPrenomAjouteurCourrier() {
+        return nomEtPrenomAjouteurCourrier;
+    }
+
+    public void setNomEtPrenomAjouteurCourrier(String nomEtPrenomAjouteurCourrier) {
+        this.nomEtPrenomAjouteurCourrier = nomEtPrenomAjouteurCourrier;
+    }
+
+    public String getFonctionAjouteurCourrier() {
+        return fonctionAjouteurCourrier;
+    }
+
+    public void setFonctionAjouteurCourrier(String fonctionAjouteurCourrier) {
+        this.fonctionAjouteurCourrier = fonctionAjouteurCourrier;
     }
 }

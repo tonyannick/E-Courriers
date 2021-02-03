@@ -33,7 +33,7 @@
         <h:outputScript name="toast/js/toast.js"/>
         <h:outputStylesheet name="toast/css/toast.css" />
     </h:head>
-    <style>
+    <h:outputStylesheet>
         .courrierurgent{
             background-color: #fca752 !important;
             padding: 5px 50px;
@@ -132,8 +132,28 @@
             font-weight: bold;
             text-align: center;
         }
+        .ui-dialog.ui-widget {
+            background-color: white;
+            color: #ffffff;
+            padding-right: 5px;
+        }
 
-    </style>
+        .ui-dialog .ui-dialog-title {
+            color: white;
+            margin-left: 10px;
+            font-size: 15px  !important;
+        }
+
+        .ui-dialog .ui-dialog-titlebar {
+            background: #4c7ebd !important;
+            width: 100%;
+            position: relative;
+            margin: 2px 2px;
+            padding-right: 10px;
+            padding-top: 10px;
+        }
+    </h:outputStylesheet>
+
     <h:body id="page">
         <div class="container-fluid" >
             <div class="row">
@@ -1043,7 +1063,7 @@
                                       header="Transmettre le courrier à un agent pour son traitement"
                                       widgetVar="dlgTransmettreLeCourrier" width="580"
                                       modal="true" hideEffect="clip"
-                                      showEffect="clip" position="top"  dynamic="true" closable="true">
+                                      showEffect="clip" position="center"  dynamic="true" closable="true">
                                 <h:form  styleClass="formannotationdetail">
                                     <p:messages for="messageaffectation" showDetail="true" closable="true"/>
                                     <h:panelGrid columns="2" styleClass="panelLogin" >

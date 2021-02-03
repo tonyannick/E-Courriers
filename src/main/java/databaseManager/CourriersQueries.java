@@ -42,6 +42,9 @@ public class CourriersQueries {
     public static String emailEmetteurPersonne;
     public static String adresseEmetteurEtablissement;
     public static String nomEtPrenomEmetteurPersonne;
+    public static String fonctionPersonneAjouteurDuCourrier;
+    public static String nomEtPrenomPersonneAjouteurDuCourrier;
+
 
     /***Fonction qui recupere tous les courriers reçus par un utilisateur***/
     public static List<Courrier> recupererTousLesCourriersReçusParUnUtilisateurParSonId(String idUtilisateur) {
@@ -661,7 +664,7 @@ public class CourriersQueries {
 
     /**Fonction qui recuperer les details d'un courrier**/
     public static void recupererLesDetailsDUnCourrierEnregistre(String idCourrier){
-        String requeteDetailCourrierSQL = "select * from `courrier` inner join type_courrier on courrier.fk_type_courrier = type_courrier.id_type_courrier where id_courrier = " + idCourrier + " ;";
+        String requeteDetailCourrierSQL = "select * from `courrier` inner join type_courrier on courrier.fk_type_courrier = type_courrier.id_type_courrier inner join ajouter_courrier on courrier.id_courrier = ajouter_courrier.id_courrier inner join personne on ajouter_courrier.id_personne = personne.id_personne inner join fonction on personne.id_fonction = fonction.id_fonction where courrier.id_courrier  = " + idCourrier + " ;";
         ResultSet resultSet = null;
         Connection connection = DatabaseConnection.getConnexion();
         try {
@@ -678,6 +681,8 @@ public class CourriersQueries {
                 referenceCourrier = resultSet.getString("reference");
                 confidentiel = resultSet.getString("confidentiel");
                 dossierAlfresco = resultSet.getString("dossier_alfresco_emetteur");
+                nomEtPrenomPersonneAjouteurDuCourrier = resultSet.getString("nom")+" "+resultSet.getString("prenom");
+                fonctionPersonneAjouteurDuCourrier = resultSet.getString("titre_fonction");
             }
 
             if(confidentiel != null){

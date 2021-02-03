@@ -24,7 +24,7 @@
         <h:outputScript name="/sweetalert/js/sweetalert.min.js"/>
         <h:outputStylesheet name="/sweetalert/css/sweetalert.css"/>
     </h:head>
-    <style>
+    <h:outputStylesheet>
         .courrierurgent{
             background-color: #fca752 !important;
             padding: 5px 50px;
@@ -63,8 +63,27 @@
             font-weight: bold;
             text-align: center;
         }
+        .ui-dialog.ui-widget {
+            background-color: white;
+            color: #ffffff;
+            padding-right: 5px;
+        }
 
-    </style>
+        .ui-dialog .ui-dialog-title {
+            color: white;
+            margin-left: 10px;
+            font-size: 15px  !important;
+        }
+
+        .ui-dialog .ui-dialog-titlebar {
+            background: #4c7ebd !important;
+            width: 100%;
+            position: relative;
+            margin: 2px 2px;
+            padding-right: 10px;
+            padding-top: 10px;
+        }
+    </h:outputStylesheet>
     <h:body>
         <div class="container-fluid" >
             <div class="row">
