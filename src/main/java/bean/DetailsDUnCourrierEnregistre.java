@@ -384,23 +384,23 @@ public class DetailsDUnCourrierEnregistre implements Serializable {
 
         courrier.setDossierAlfresco(CourriersQueries.dossierAlfresco);
         courrier.setConfidentiel(CourriersQueries.confidentiel);
-        courrier.setHeureDeReception(CourriersQueries.heureDeReception);
+       // courrier.setHeureDeReception(CourriersQueries.heureDeReception);
         courrier.setDateDEnregistrement(CourriersQueries.dateDEnregistrement);
-        courrier.setDateDeReception(CourriersQueries.dateDeReception);
+       // courrier.setDateDeReception(CourriersQueries.dateDeReception);
         courrier.setCommentairesCourrier(CourriersQueries.commentairesCourrier);
 
         nomEtPrenomAjouteurCourrier = CourriersQueries.nomEtPrenomPersonneAjouteurDuCourrier;
         fonctionAjouteurCourrier = CourriersQueries.fonctionPersonneAjouteurDuCourrier;
 
-        String jour = courrier.getDateDeReception().substring(courrier.getDateDeReception().lastIndexOf("-") +1);
+        /*String jour = courrier.getDateDeReception().substring(courrier.getDateDeReception().lastIndexOf("-") +1);
         String mois = courrier.getDateDeReception().substring(courrier.getDateDeReception().indexOf("-")+1,courrier.getDateDeReception().indexOf("-")+3);
-        String annee = courrier.getDateDeReception().substring(0,4);
+        String annee = courrier.getDateDeReception().substring(0,4);*/
 
         String jourEnregistrement = courrier.getDateDEnregistrement().substring(courrier.getDateDEnregistrement().lastIndexOf("-") +1);
         String moisEnregistrement = courrier.getDateDEnregistrement().substring(courrier.getDateDEnregistrement().indexOf("-")+1,courrier.getDateDEnregistrement().indexOf("-")+3);
         String anneeEnregistrement = courrier.getDateDEnregistrement().substring(0,4);
 
-        courrier.setDateDeReception(jour+"-"+mois+"-"+annee);
+        //courrier.setDateDeReception(jour+"-"+mois+"-"+annee);
         courrier.setDateDEnregistrement(jourEnregistrement+"-"+moisEnregistrement+"-"+anneeEnregistrement);
         courrier.setHeureDEnregistrement(CourriersQueries.heureDEnregistrement);
     }
@@ -1395,6 +1395,14 @@ public class DetailsDUnCourrierEnregistre implements Serializable {
         String idDirectionUser = (String) session.getAttribute( "idDirectionUser");
         String updateEtatCourrierSQL = "update `courrier` SET `etat` = 'Courrier envoyé' WHERE id_courrier = '"+idCourrier+"';";
 
+        String mettreAJourDateDEnvoi = "update `envoyer_courrier` SET `date_envoi` = '"+DateUtils.recupererSimpleDateEnCours()+"' where envoyer_courrier.id_courrier = '"+idCourrier+"';";
+        String mettreAJourHeureDEnvoi = "update `envoyer_courrier` SET `heure_envoi` = '"+DateUtils.recupererMiniHeuresEnCours()+"' where envoyer_courrier.id_courrier = '"+idCourrier+"';";
+
+        String mettreAJourDateDeReception = "update `recevoir_courrier` SET `date_reception` = '"+DateUtils.recupererSimpleDateEnCours()+"' where recevoir_courrier.id_courrier = '"+idCourrier+"';";
+        String mettreAJourHeureDeReception = "update `recevoir_courrier` SET `heure_reception` = '"+DateUtils.recupererMiniHeuresEnCours()+"' where recevoir_courrier.id_courrier = '"+idCourrier+"';";
+
+
+
         String ajouterEtapeCourrierSQL = "INSERT INTO `etape` (`titre`, `etat`, `message`) VALUES" +
                 " ('" + EtatCourrier.courrierEnvoye +"',"+"'"+ EtatEtape.termine+"',"+"'"+ ActionEtape.courrierEnvoye+"')";
 
@@ -1424,13 +1432,17 @@ public class DetailsDUnCourrierEnregistre implements Serializable {
             statement.addBatch(ajouterCorrespondanceEtapePersonneSQL);
             statement.addBatch(ajouterEtapeCourrierSQL);
             statement.addBatch(ActivitesQueries.ajouterUneActvitee(TitreActivites.courrierEnvoye, idCourrier ,idUser,idTypeDactivite,idDirectionUser));
+            statement.addBatch(mettreAJourDateDEnvoi);
+            statement.addBatch(mettreAJourHeureDEnvoi);
+            statement.addBatch(mettreAJourDateDeReception);
+            statement.addBatch(mettreAJourHeureDeReception);
             statement.executeBatch();
             connection.commit();
             FacesContext context = FacesContext.getCurrentInstance();
             context.getExternalContext().getFlash().setKeepMessages(true);
             PrimeFaces.current().executeScript("PF('dialogueCourrierBienEnvoye').show()");
         } catch (SQLException e) {
-            PrimeFaces.current().executeScript("swal('Erreur','Une erreur s'est produite', 'error');");
+            FacesMessages.errorMessage("messageEnvoyerCourrier","Ererur","Une erreur s'est produite");
             e.printStackTrace();
         }finally {
 

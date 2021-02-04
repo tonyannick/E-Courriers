@@ -55,7 +55,7 @@ public class CourriersArchives implements Serializable {
         }else{
             courrierTempList.clear();
             for(int a = 0; a < courrier.getListeDesCouriersArchives().size(); a++){
-                if(courrier.getListeDesCouriersArchives().get(a).getDateDeReception().equals(datePourRechercheAvancee)){
+                if(courrier.getListeDesCouriersArchives().get(a).getDateDEnregistrement().equals(datePourRechercheAvancee)){
                     courrierTempList.add(courrier.getListeDesCouriersArchives().get(a));
                     trouve = true;
                 }
@@ -80,7 +80,7 @@ public class CourriersArchives implements Serializable {
             SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy");
             for (int a = 0; a <  courrier.getListeDesCouriersArchives().size(); a++) {
                 try {
-                    Date date = sdf.parse(courrier.getListeDesCouriersArchives().get(a).getDateDeReception());
+                    Date date = sdf.parse(courrier.getListeDesCouriersArchives().get(a).getDateDEnregistrement());
                     if (date.after(DateUtils.premierJourDuMoisAPartirDUneDate) && date.before(DateUtils.dernierJourDuMoisAPartirDUneDate)) {
                         courrierTempList.add(courrier.getListeDesCouriersArchives().get(a));
                         trouve = true;

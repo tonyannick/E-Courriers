@@ -101,8 +101,8 @@
                 </div>
                 <div style="width:100%; margin-bottom: 90px; margin-top: 10px;overflow-y: auto">
                     <div class="ui-g" style=" width:100%;">
-                        <div class="ui-g-1"/>
-                        <div  class="ui-g-10 ui-md-10">
+                        <div class="ui-g-2"/>
+                        <div  class="ui-g-8 ui-md-8">
                             <ul class="breadcrumb" style="width:100%;">
                                 <li><h:outputLink value="tableaudebord.xhtml" title="Accueil">Accueil</h:outputLink></li>
                                 <li><h:outputLink value="courriersenvoyes.xhtml" title="Mes courriers">Courriers envoyés</h:outputLink></li>
@@ -111,23 +111,20 @@
                             <h:form>
                                 <p:toolbar style="margin-bottom: 15px; margin-top: 15px">
                                     <f:facet name="left">
-                                        <p:commandButton type="button" style="background: #8b2421; border-color:#8b2421; color: white; font-weight: bold; padding: 3px 4px"
+                                        <p:commandButton type="button" style="background: #8b2421; border-color:#8b2421; color: white;"
                                                          onclick="PF('dialogueValiderArchiverLeCourrier').show()" iconPos="right"
                                                          value="Archiver" icon="fa fa-trash" />
-                                        <p:commandButton type="button" style="background: #f19121;border-color:#f19121; color: white; margin-left: 10px; font-weight: bold; padding: 3px 4px"
+                                        <p:commandButton type="button" style="background: #f1711a;border-color:#f1711a; color: white; margin-left: 10px;"
                                                          onclick="PF('dialogueValiderCourrierEnFavoris').show()" iconPos="right"
                                                          value="Mettre en favoris" icon="fa fa-star" />
-                                        <p:commandButton type="button" style="background: #dfa574;margin-left: 10px; border-color:#dfa574; color: white; font-weight: bold; padding: 3px 4px"
+                                        <p:commandButton type="button" style="background: #c49166;margin-left: 10px; border-color:#c49166; color: white;"
                                                          onclick="ouvrirModalBoxDossier()" iconPos="right"
                                                          value="Ajouter à un dossier" icon="fa fa-folder-open" />
-
-
                                         <span class="ui-separator">
                                             <span class="fa fa-ellipsis-v" />
                                         </span>
-                                    </f:facet>
-                                    <f:facet name="right">
-                                        <p:commandButton style=" color: white; padding: 2px 3px; background:#286090; border-color:#286090;" value="Actualiser la page"  onclick="rechargerLaPageDetailDUnCourrierEnvoye()" type="button" icon="fa fa-refresh"/>
+                                        <p:commandButton style="color: white; margin-left:10px; background:#286090; border-color:#286090;"
+                                                         onclick="rechargerLaPage()" type="button" icon="fa fa-refresh"/>
                                     </f:facet>
                                 </p:toolbar>
                             </h:form>
@@ -173,14 +170,14 @@
                             <div class="tab">
                                 <button class="tablinks" onclick="openTab(event, 'FichierDuCourrier')" id="defaultOpen">Fichier joint</button>
                                 <button class="tablinks" onclick="openTab(event, 'Annexe')">Annexe(s)</button>
-                                <button class="tablinks" onclick="openTab(event, 'InformationsGenerales')" >Informations générales</button>
+                                <button class="tablinks" onclick="openTab(event, 'InformationsGenerales')" >Informations du courriers</button>
                                 <button class="tablinks" onclick="openTab(event, 'Destinataires')">Destinataires</button>
                                 <button class="tablinks" onclick="openTab(event, 'Historique')">Historiques</button>
                                 <button class="tablinks" onclick="openTab(event, 'Suivi')">Discussions</button>
                             </div>
 
                             <div id="InformationsGenerales" class="tabcontent">
-                                <button class="accordionDetailCourrier"><h:graphicImage value="./resources/images/one.png" style="margin-right:10px; width: 15px; height: 15px;"/>Emetteur du courrier</button>
+                                <button class="accordionDetailCourrier" style="margin-top: 20px"><h:graphicImage value="./resources/images/one.png" style="margin-right:10px; width: 15px; height: 15px;"/>Emetteur du courrier</button>
                                 <div class="panelInfoCourrier" id="agentDuMinistere">
 
                                     <div id="blockTypeEmetteurSimple">
@@ -252,17 +249,6 @@
                                 <button class="accordionDetailCourrier"><h:graphicImage value="./resources/images/two.png" style="margin-right:10px; width: 15px; height: 15px;"/>Eléménts du courrier</button>
                                 <div class="panelInfoCourrier">
 
-                                    <p:panelGrid columns="2" columnClasses="ui-grid-col-2 gridcol2, ui-grid-col-10"  style="border: 1px #888 solid; width: 100%; margin-bottom:15px; margin-top: 15px ">
-                                        <h:outputLabel value="Heure d'enregistrement" style="font-weight: bold; color:black; font-size: 14px"/>
-                                        <h:outputLabel value="#{detailDUnCourrierEnvoye.courrier.heureDEnregistrement}" style="font-size: 14px;"/>
-                                        <h:outputLabel value="Date d'enregistrement" style="font-weight: bold; color:black; font-size: 14px"/>
-                                        <h:outputLabel value="#{detailDUnCourrierEnvoye.courrier.dateDEnregistrement}" style="font-size: 14px;"/>
-                                        <h:outputLabel value="Date de réception " style="font-weight: bold; font-size: 14px; color:black"/>
-                                        <h:outputLabel value="#{detailDUnCourrierEnvoye.courrier.dateDeReception}" style="font-size: 14px"/>
-                                        <h:outputLabel value="Heure de réception  " style="font-weight: bold; font-size: 14px; color:black"/>
-                                        <h:outputLabel value="#{detailDUnCourrierEnvoye.courrier.heureDeReception}" style="font-size: 14px"/>
-                                    </p:panelGrid>
-
                                     <p:panelGrid columns="2" columnClasses="ui-grid-col-2 gridcol2, ui-grid-col-10" style="width: 100%; margin-top: 15px; margin-bottom:15px; border: 1px #888 solid;">
 
                                         <h:outputLabel value="Type de courrier " style="font-weight: bold; color: black; font-size: 14px"/>
@@ -284,6 +270,31 @@
                                         <h:outputLabel value="#{detailDUnCourrierEnvoye.courrier.commentairesCourrier}" style="font-size: 14px" />
                                     </p:panelGrid>
                                 </div>
+
+                                <button class="accordionDetailCourrier"><h:graphicImage value="./resources/images/three.png" style="margin-right:10px; width: 15px; height: 15px;"/>Informations complémentaires</button>
+                                <div class="panelInfoCourrier">
+
+                                    <p:panelGrid columns="2" columnClasses="ui-grid-col-2 gridcol2, ui-grid-col-10"  style="border: 1px #888 solid; width: 100%; margin-bottom:15px; margin-top: 15px ">
+
+                                        <h:outputLabel value="Date d'enregistrement" style="font-weight: bold; color:black; font-size: 14px"/>
+                                        <h:outputLabel value="#{detailDUnCourrierEnvoye.courrier.dateDEnregistrement}" style="font-size: 14px;"/>
+                                        <h:outputLabel value="Heure d'enregistrement" style="font-weight: bold; color:black; font-size: 14px"/>
+                                        <h:outputLabel value="#{detailDUnCourrierEnvoye.courrier.heureDEnregistrement}" style="font-size: 14px;"/>
+                                        <h:outputLabel value="Enregistré par" style="font-weight: bold; color:black; font-size: 14px"/>
+                                        <h:outputLabel value="#{detailDUnCourrierEnvoye.nomEtPrenomAjouteurCourrier}" style="font-size: 14px;"/>
+                                        <h:outputLabel value="Fonction" style="font-weight: bold; color:black; font-size: 14px"/>
+                                        <h:outputLabel value="#{detailDUnCourrierEnvoye.fonctionAjouteurCourrier}" style="font-size: 14px;"/>
+                                    </p:panelGrid>
+
+                                    <p:panelGrid columns="2" columnClasses="ui-grid-col-2 gridcol2, ui-grid-col-10"  style="border: 1px #888 solid; width: 100%; margin-bottom:15px; margin-top: 15px ">
+                                        <h:outputLabel value="Date d'envoi " style="font-weight: bold; font-size: 14px; color:black"/>
+                                        <h:outputLabel value="#{detailDUnCourrierEnvoye.emetteur.dateEnvoi}" style="font-size: 14px"/>
+                                        <h:outputLabel value="Heure d'envoi  " style="font-weight: bold; font-size: 14px; color:black"/>
+                                        <h:outputLabel value="#{detailDUnCourrierEnvoye.emetteur.heureEnvoi}" style="font-size: 14px"/>
+                                    </p:panelGrid>
+
+                                </div>
+
 
                             </div>
 
@@ -679,7 +690,7 @@
                                                     <div id="divbutton">
                                                         <h:panelGrid cellspacing="10" cellpadding="10" columns="3">
                                                             <p:commandLink onclick="ouvrirModalBoxRepondreAUnCourrier()">
-                                                                <h:graphicImage value="./resources/images/annexe.png" width="30px" height="28px"/>
+                                                                <h:graphicImage value="./resources/images/sticky-notes.png" width="20px" height="20px"/>
                                                             </p:commandLink>
                                                             <p:commandButton  style="background-color: #00a867; color: white; margin-left: 15px;"
                                                                               icon="fa fa-mail-forward" iconPos="right"
@@ -820,7 +831,7 @@
                                 </h:form>
                             </div>
                         </div>
-                        <div class="ui-g-1"/>
+                        <div class="ui-g-8"/>
                     </div>
                 </div>
             </div>

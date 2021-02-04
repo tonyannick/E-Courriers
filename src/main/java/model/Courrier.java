@@ -9,10 +9,8 @@ public class Courrier {
     private String idCourrier;
     private String nomCourrier;
     private String cheminCourrierSurPC;
-    private String heureDeReception;
     private String heureDEnregistrement;
     private String genreCourrier;
-    private String dateDeReception;
     private String dateDEnregistrement;
     private String objetCourrier;
     private String referenceCourrier;
@@ -31,9 +29,9 @@ public class Courrier {
     private String idDossier;
     private String direction;
     private String accuseDeReception;
-    private String confirmationDeReception;
     private String transferer;
     private String referenceInterne;
+
     private StreamedContent streamedContentAlfresco;
     private List<String> listeTypeDeCourier;
     private List<Courrier> listeDesCouriersEnregistres;
@@ -108,14 +106,14 @@ public class Courrier {
     }
 
     public Courrier(String referenceCourrier, String prioriteCourrier, String objetCourrier,
-                    String dateDEnregistrement, String idCourrier, String confidentiel,
+                    String dateDEnvoi, String idCourrier, String confidentiel,
                     String extensionCourrier, String idAjouterCourrier,String idAlfresco,
                     String idDossier,String accuseDeReception, String transferer) {
 
         this.referenceCourrier = referenceCourrier;
         this.prioriteCourrier = prioriteCourrier;
         this.objetCourrier = objetCourrier;
-        this.dateDEnregistrement= dateDEnregistrement;
+        this.dateDEnregistrement= dateDEnvoi;
         this.idCourrier = idCourrier;
         this.confidentiel = confidentiel;
         this.extensionCourrier = extensionCourrier;
@@ -154,13 +152,13 @@ public class Courrier {
     }
 
     public Courrier(String referenceCourrier, String prioriteCourrier, String objetCourrier,
-                    String dateReceptionCourrier, String idCourrier, String genreCourrier,
+                    String dateDEnregistrement, String idCourrier, String genreCourrier,
                     String idAlfresco) {
 
         this.referenceCourrier = referenceCourrier;
         this.prioriteCourrier = prioriteCourrier;
         this.objetCourrier = objetCourrier;
-        this.dateDeReception= dateReceptionCourrier;
+        this.dateDEnregistrement= dateDEnregistrement;
         this.idCourrier = idCourrier;
         this.genreCourrier = genreCourrier;
         this.idAlfresco = idAlfresco;
@@ -336,9 +334,6 @@ public class Courrier {
         this.cheminCourrierSurPC = cheminCourrierSurPC;
     }
 
-    public String getHeureDeReception() {
-        return heureDeReception;
-    }
 
     public String getGenreCourrier() {
         return genreCourrier;
@@ -396,18 +391,6 @@ public class Courrier {
         this.genreCourrier = genreCourrier;
     }
 
-    public void setHeureDeReception(String heureDeReception) {
-        this.heureDeReception = heureDeReception;
-    }
-
-    public String getDateDeReception() {
-        return dateDeReception;
-    }
-
-    public void setDateDeReception(String dateDeReception) {
-        this.dateDeReception = dateDeReception;
-    }
-
     public String getDateDEnregistrement() {
         return dateDEnregistrement;
     }
@@ -440,14 +423,6 @@ public class Courrier {
         this.referenceInterne = referenceInterne;
     }
 
-    public String getConfirmationDeReception() {
-        return confirmationDeReception;
-    }
-
-    public void setConfirmationDeReception(String confirmationDeReception) {
-        this.confirmationDeReception = confirmationDeReception;
-    }
-
     public String getDirection() {
         return direction;
     }
@@ -463,4 +438,5 @@ public class Courrier {
     public void setAccuseDeReception(String accuseDeReception) {
         this.accuseDeReception = accuseDeReception;
     }
+
 }

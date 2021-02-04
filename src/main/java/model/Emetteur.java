@@ -23,6 +23,8 @@ public class Emetteur {
     private String prenomParticulier;
     private String telephoneParticulier;
     private String emailParticulier;
+    private String heureEnvoi;
+    private String dateEnvoi;
     private List<Emetteur> listeDetailsDunEmetteur;
 
     public Emetteur() {
@@ -198,5 +200,21 @@ public class Emetteur {
 
     public void setIdEmetteur(String idEmetteur) {
         this.idEmetteur = idEmetteur;
+    }
+
+    public String getHeureEnvoi() {
+        return heureEnvoi;
+    }
+
+    public void setHeureEnvoi(String heureEnvoi) {
+        this.heureEnvoi = heureEnvoi;
+    }
+
+    public String getDateEnvoi() {
+        return dateEnvoi;
+    }
+
+    public void setDateEnvoi(String dateEnvoi) {
+        this.dateEnvoi = dateEnvoi;
     }
 }

@@ -196,12 +196,12 @@ public class RepondreAUneTache implements Serializable {
 
         courrier.setDossierAlfresco(CourriersQueries.dossierAlfresco);
         courrier.setConfidentiel(CourriersQueries.confidentiel);
-        courrier.setHeureDeReception(CourriersQueries.heureDeReception);
+        //courrier.setHeureDeReception(CourriersQueries.heureDeReception);
         courrier.setDateDEnregistrement(CourriersQueries.dateDEnregistrement);
-        courrier.setDateDeReception(CourriersQueries.dateDeReception);
-        String jour = courrier.getDateDeReception().substring(courrier.getDateDeReception().lastIndexOf("-") +1);
+        //courrier.setDateDeReception(CourriersQueries.dateDeReception);
+        /*String jour = courrier.getDateDeReception().substring(courrier.getDateDeReception().lastIndexOf("-") +1);
         String mois = courrier.getDateDeReception().substring(courrier.getDateDeReception().indexOf("-")+1,courrier.getDateDeReception().indexOf("-")+3);
-        String annee = courrier.getDateDeReception().substring(0,4);
+        String annee = courrier.getDateDeReception().substring(0,4);*/
 
         String jourEnregistrement = courrier.getDateDEnregistrement().substring(courrier.getDateDEnregistrement().lastIndexOf("-") +1);
         String moisEnregistrement = courrier.getDateDEnregistrement().substring(courrier.getDateDEnregistrement().indexOf("-")+1,courrier.getDateDEnregistrement().indexOf("-")+3);
@@ -209,7 +209,7 @@ public class RepondreAUneTache implements Serializable {
         courrier.setDateDEnregistrement(jourEnregistrement+"-"+moisEnregistrement+"-"+anneeEnregistrement);
 
 
-        courrier.setDateDeReception(jour+"-"+mois+"-"+annee);
+        //courrier.setDateDeReception(jour+"-"+mois+"-"+annee);
         courrier.setHeureDEnregistrement(CourriersQueries.heureDEnregistrement);
     }
 

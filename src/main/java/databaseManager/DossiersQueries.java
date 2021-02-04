@@ -66,7 +66,7 @@ public class DossiersQueries {
                         resultSet.getString("reference"),
                         resultSet.getString("priorite"),
                         resultSet.getString("objet"),
-                        resultSet.getString("courrier.date_enregistrement"),
+                        resultSet.getString("date_enregistrement"),
                         resultSet.getString("id_courrier"),
                         resultSet.getString("genre"),
                         resultSet.getString("identifiant_alfresco")));
@@ -74,13 +74,13 @@ public class DossiersQueries {
 
             nombreDeCourrierDansUnDossier = mesCourriers.size();
 
-            for (int i = 0; i < mesCourriers.size(); i++){
+           /* for (int i = 0; i < mesCourriers.size(); i++){
 
                 String jour = mesCourriers.get(i).getDateDeReception().substring(mesCourriers.get(i).getDateDeReception().lastIndexOf("-") +1);
                 String mois = mesCourriers.get(i).getDateDeReception().substring(mesCourriers.get(i).getDateDeReception().indexOf("-")+1,mesCourriers.get(i).getDateDeReception().indexOf("-")+3);
                 String annee = mesCourriers.get(i).getDateDeReception().substring(0,4);
                 mesCourriers.get(i).setDateDeReception(jour+"-"+mois+"-"+annee);
-            }
+            }*/
 
         } catch (SQLException e) {
             e.printStackTrace();

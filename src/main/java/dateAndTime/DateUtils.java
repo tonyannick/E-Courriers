@@ -159,6 +159,14 @@ public class DateUtils {
         return myDate;
     }
 
+    public static String recupererMiniHeuresEnCours(){
+        Date date = new Date();
+        String myDate = null;
+        Format formatDate = new SimpleDateFormat("HH:mm:ss");
+        myDate = formatDate.format(date);
+        return myDate;
+    }
+
     public static String convertirHeureDeReceptionAuBonFormat(String heure){
         try {
             heure = heure.replaceAll("\\s","").trim();

@@ -45,7 +45,6 @@ public class NouveauCourrier implements Serializable {
     private final String property = "java.io.tmpdir";
     private final String tempDirectoryPath = System.getProperty(property);
     private boolean isAnnexe = false;
-    private Date dateTemp = null;
     private String isResponsable = "0";
     private String isResponsableDestinataire = "0";
     private boolean thisIsConfidentiel;
@@ -54,6 +53,7 @@ public class NouveauCourrier implements Serializable {
     private List<String> tempListDestinataire = new ArrayList<>();
     private String dossierCourrierAlfresco;
     private String dossierAnnexeAlfresco;
+    private boolean fichierCourrierAjoute = false;
 
 
     @PostConstruct
@@ -179,6 +179,7 @@ public class NouveauCourrier implements Serializable {
             stream.close();
             PrimeFaces.current().executeScript("validerAjouterFichier()");
             FacesMessages.infoMessage("messageFichierCourrier","Info","Le fichier du courrier à bien été ajouté");
+            fichierCourrierAjoute = true;
         } catch (IOException e) {
             PrimeFaces.current().executeScript("swal('Erreur!', 'Une erreur s'est produite lors de l'ajout du fichier', 'error')");
             e.printStackTrace();
@@ -283,9 +284,8 @@ public class NouveauCourrier implements Serializable {
         String updateCourrierAlfrescoSQL = null;
         String ajouterAnnexeAlfrescoSQL = null;
 
-        if(dateTemp!= null && courrier.getHeureDeReception() != null){
+        if(fichierCourrierAjoute){
             genererUniqueIDPourEmetteurEtDestinataire();
-            courrier.setDateDeReception( DateUtils.convertirDateEnString(dateTemp));
             String envoyerCourrierSQL = null;
             String recevoirCourrierSQL = null;
             String ajouterEmetteurSQL=null;
@@ -318,44 +318,44 @@ public class NouveauCourrier implements Serializable {
                 courrier.setNomCourrier("Fichier_Confidentiel");
 
                 if(!emetteur.getTypeDEmetteur().equals("Agent du Ministere")){
-                    insertionCourrierSQL = "insert into `courrier` (`date_reception`, `heure_reception`, `objet`, `reference`, `mots_cles`,  `commentaires`, `priorite`, `confidentiel`, `nom_fichier`, `extension_fichier`, `etat`, `genre`, `fk_type_courrier`)  VALUES" +
-                            " ('" + courrier.getDateDeReception() + "'," + "'" + DateUtils.convertirHeureDeReceptionAuBonFormat(courrier.getHeureDeReception()) + "'," + "'" + courrier.getObjetCourrier().replaceAll("'"," ") + "'," + "'" + courrier.getReferenceCourrier().replace("\\","/").replaceAll("'"," ") + "'," + "'" +courrier.getMotsclesCourrier().replace("\\","/").replaceAll("'"," ") + "'," + "'" +  courrier.getCommentairesCourrier().replace("\\","/").replaceAll("'"," ") + "'," + "'" + courrier.getPrioriteCourrier()+ "'," +  "'" + EtatCourrier.confidentiel+ "'," +
+                    insertionCourrierSQL = "insert into `courrier` (`objet`, `reference`, `mots_cles`,  `commentaires`, `priorite`, `confidentiel`, `nom_fichier`, `extension_fichier`, `etat`, `genre`, `fk_type_courrier`)  VALUES" +
+                            " ('" + courrier.getObjetCourrier().replaceAll("'"," ") + "'," + "'" + courrier.getReferenceCourrier().replace("\\","/").replaceAll("'"," ") + "'," + "'" +courrier.getMotsclesCourrier().replace("\\","/").replaceAll("'"," ") + "'," + "'" +  courrier.getCommentairesCourrier().replace("\\","/").replaceAll("'"," ") + "'," + "'" + courrier.getPrioriteCourrier()+ "'," +  "'" + EtatCourrier.confidentiel+ "'," +
                             "'" + fichierConfidentiel + "'," + "'" + fichierConfidentiel + "'," + "'" +EtatCourrier.courrierEnvoye  + "'," + "'" + courrier.getGenreCourrier()+"',"+"'"+ idTypeDeCourrier +"')";
 
                     ajouterCorrespondanceEtapeCourrierSQL = "insert into `correspondance_etape_courrier` (`id_courrier`,`etat_correspondance`) VALUES" +
-                            "((select id_courrier from `courrier` where date_reception ='"+ courrier.getDateDeReception()+"' and heure_reception ='"+ DateUtils.convertirHeureDeReceptionAuBonFormat(courrier.getHeureDeReception())+"' and objet = '"+courrier.getObjetCourrier().replaceAll("'"," ")+ "' and reference = '"+ courrier.getReferenceCourrier().replace("\\","/").replaceAll("'"," ")+ "' and nom_fichier = '"+ courrier.getNomCourrier().replaceAll("'","_") +"') ,'"+EtatCourrier.courrierRecu+"');";
+                            "((select id_courrier from `courrier` where objet = '"+courrier.getObjetCourrier().replaceAll("'"," ")+ "' and reference = '"+ courrier.getReferenceCourrier().replace("\\","/").replaceAll("'"," ")+ "' and nom_fichier = '"+ courrier.getNomCourrier().replaceAll("'","_") +"') ,'"+EtatCourrier.courrierRecu+"');";
 
                 }else{
-                    insertionCourrierSQL = "insert into `courrier` (`date_reception`, `heure_reception`, `objet`, `reference`, `mots_cles`,  `commentaires`, `priorite`, `confidentiel`, `nom_fichier`, `extension_fichier`, `etat`, `genre`, `fk_type_courrier`)  VALUES" +
-                            " ('" + courrier.getDateDeReception() + "'," + "'" + DateUtils.convertirHeureDeReceptionAuBonFormat(courrier.getHeureDeReception()) + "'," + "'" + courrier.getObjetCourrier().replaceAll("'"," ") + "'," + "'" + courrier.getReferenceCourrier().replace("\\","/").replaceAll("'"," ") + "'," + "'" +courrier.getMotsclesCourrier().replace("\\","/").replaceAll("'"," ") + "'," + "'" +  courrier.getCommentairesCourrier().replace("\\","/").replaceAll("'"," ") + "'," + "'" + courrier.getPrioriteCourrier()+ "'," +  "'" + EtatCourrier.confidentiel+ "'," +
+                    insertionCourrierSQL = "insert into `courrier` (`objet`, `reference`, `mots_cles`,  `commentaires`, `priorite`, `confidentiel`, `nom_fichier`, `extension_fichier`, `etat`, `genre`, `fk_type_courrier`)  VALUES" +
+                            " ('" + courrier.getObjetCourrier().replaceAll("'"," ") + "'," + "'" + courrier.getReferenceCourrier().replace("\\","/").replaceAll("'"," ") + "'," + "'" +courrier.getMotsclesCourrier().replace("\\","/").replaceAll("'"," ") + "'," + "'" +  courrier.getCommentairesCourrier().replace("\\","/").replaceAll("'"," ") + "'," + "'" + courrier.getPrioriteCourrier()+ "'," +  "'" + EtatCourrier.confidentiel+ "'," +
                             "'" + fichierConfidentiel + "'," + "'" + fichierConfidentiel + "'," + "'" +EtatCourrier.courrierEnregistre  + "'," + "'" + courrier.getGenreCourrier()+"',"+"'"+ idTypeDeCourrier +"')";
                     ajouterCorrespondanceEtapeCourrierSQL = "insert into `correspondance_etape_courrier` (`id_courrier`) VALUES" +
-                            "((select id_courrier from `courrier` where date_reception ='"+ courrier.getDateDeReception()+"' and heure_reception ='"+ DateUtils.convertirHeureDeReceptionAuBonFormat(courrier.getHeureDeReception())+"' and objet = '"+courrier.getObjetCourrier().replaceAll("'"," ")+ "' and reference = '"+ courrier.getReferenceCourrier().replace("\\","/").replaceAll("'"," ")+ "' and nom_fichier = '"+ courrier.getNomCourrier().replaceAll("'","_") +"'));";
+                            "((select id_courrier from `courrier` where objet = '"+courrier.getObjetCourrier().replaceAll("'"," ")+ "' and reference = '"+ courrier.getReferenceCourrier().replace("\\","/").replaceAll("'"," ")+ "' and nom_fichier = '"+ courrier.getNomCourrier().replaceAll("'","_") +"'));";
 
                 }
 
             }else if(courrier.getConfidentiel().equalsIgnoreCase("Non")){
 
                 if(!emetteur.getTypeDEmetteur().equals("Agent du Ministere")){
-                    insertionCourrierSQL = "insert into `courrier` (`date_reception`, `heure_reception`, `objet`, `reference`, `mots_cles`,  `commentaires`, `priorite`, `confidentiel`,`nom_fichier`, `extension_fichier`, `etat`, `genre`, `fk_type_courrier`)  VALUES" +
-                            " ('" + courrier.getDateDeReception() + "'," + "'" + DateUtils.convertirHeureDeReceptionAuBonFormat(courrier.getHeureDeReception()) + "'," + "'" + courrier.getObjetCourrier().replaceAll("'"," ") + "'," + "'" + courrier.getReferenceCourrier().replace("\\","/").replaceAll("'"," ") + "'," + "'" +courrier.getMotsclesCourrier().replace("\\","/").replaceAll("'"," ") + "'," + "'" +  courrier.getCommentairesCourrier().replace("\\","/").replaceAll("'"," ") + "'," + "'" + courrier.getPrioriteCourrier()+ "'," +  "'" + EtatCourrier.pasConfidentiel+ "'," +
+                    insertionCourrierSQL = "insert into `courrier` (`objet`, `reference`, `mots_cles`,  `commentaires`, `priorite`, `confidentiel`,`nom_fichier`, `extension_fichier`, `etat`, `genre`, `fk_type_courrier`)  VALUES" +
+                            " ('" + courrier.getObjetCourrier().replaceAll("'"," ") + "'," + "'" + courrier.getReferenceCourrier().replace("\\","/").replaceAll("'"," ") + "'," + "'" +courrier.getMotsclesCourrier().replace("\\","/").replaceAll("'"," ") + "'," + "'" +  courrier.getCommentairesCourrier().replace("\\","/").replaceAll("'"," ") + "'," + "'" + courrier.getPrioriteCourrier()+ "'," +  "'" + EtatCourrier.pasConfidentiel+ "'," +
                             "'"  + courrier.getNomCourrier().replaceAll("'","_") + "'," + "'" + FileManager.recupererExtensionDUnFichierParSonNom(courrier.getNomCourrier()) + "'," + "'" +EtatCourrier.courrierEnvoye + "'," + "'" + courrier.getGenreCourrier()+"',"+"'"+idTypeDeCourrier +"')";
 
                     ajouterCorrespondanceEtapeCourrierSQL = "insert into `correspondance_etape_courrier` (`id_courrier`,`etat_correspondance`) VALUES" +
-                            "((select id_courrier from `courrier` where date_reception ='"+ courrier.getDateDeReception()+"' and heure_reception ='"+ DateUtils.convertirHeureDeReceptionAuBonFormat(courrier.getHeureDeReception())+"' and objet = '"+courrier.getObjetCourrier().replaceAll("'"," ")+ "' and reference = '"+ courrier.getReferenceCourrier().replace("\\","/").replaceAll("'"," ")+ "' and nom_fichier = '"+ courrier.getNomCourrier().replaceAll("'","_") +"') ,'"+EtatCourrier.courrierRecu+"');";
-
+                            "((select id_courrier from `courrier` where objet = '"+courrier.getObjetCourrier().replaceAll("'"," ")+ "' and reference = '"+ courrier.getReferenceCourrier().replace("\\","/").replaceAll("'"," ")+ "' and nom_fichier = '"+ courrier.getNomCourrier().replaceAll("'","_") +"') ,'"+EtatCourrier.courrierRecu+"');";
+                    System.out.println("ajouterCorrespondanceEtapeCourrierSQL = " + ajouterCorrespondanceEtapeCourrierSQL);
                 }else{
-                    insertionCourrierSQL = "insert into `courrier` (`date_reception`, `heure_reception`, `objet`, `reference`, `mots_cles`,  `commentaires`, `priorite`, `confidentiel`,`nom_fichier`, `extension_fichier`, `etat`, `genre`, `fk_type_courrier`)  VALUES" +
-                            " ('" + courrier.getDateDeReception() + "'," + "'" + DateUtils.convertirHeureDeReceptionAuBonFormat(courrier.getHeureDeReception()) + "'," + "'" + courrier.getObjetCourrier().replaceAll("'"," ") + "'," + "'" + courrier.getReferenceCourrier().replace("\\","/").replaceAll("'"," ") + "'," + "'" +courrier.getMotsclesCourrier().replace("\\","/").replaceAll("'"," ") + "'," + "'" +  courrier.getCommentairesCourrier().replace("\\","/").replaceAll("'"," ") + "'," + "'" + courrier.getPrioriteCourrier()+ "'," +  "'" + EtatCourrier.pasConfidentiel+ "'," +
+                    insertionCourrierSQL = "insert into `courrier` (`objet`, `reference`, `mots_cles`,  `commentaires`, `priorite`, `confidentiel`,`nom_fichier`, `extension_fichier`, `etat`, `genre`, `fk_type_courrier`)  VALUES" +
+                            " ('" + courrier.getObjetCourrier().replaceAll("'"," ") + "'," + "'" + courrier.getReferenceCourrier().replace("\\","/").replaceAll("'"," ") + "'," + "'" +courrier.getMotsclesCourrier().replace("\\","/").replaceAll("'"," ") + "'," + "'" +  courrier.getCommentairesCourrier().replace("\\","/").replaceAll("'"," ") + "'," + "'" + courrier.getPrioriteCourrier()+ "'," +  "'" + EtatCourrier.pasConfidentiel+ "'," +
                             "'"  + courrier.getNomCourrier().replaceAll("'","_") + "'," + "'" + FileManager.recupererExtensionDUnFichierParSonNom(courrier.getNomCourrier()) + "'," + "'" +EtatCourrier.courrierEnregistre + "'," + "'" + courrier.getGenreCourrier()+"',"+"'"+idTypeDeCourrier +"')";
 
                     ajouterCorrespondanceEtapeCourrierSQL = "insert into `correspondance_etape_courrier` (`id_courrier`) VALUES" +
-                            "((select id_courrier from `courrier` where date_reception ='"+ courrier.getDateDeReception()+"' and heure_reception ='"+ DateUtils.convertirHeureDeReceptionAuBonFormat(courrier.getHeureDeReception())+"' and objet = '"+courrier.getObjetCourrier().replaceAll("'"," ")+ "' and reference = '"+ courrier.getReferenceCourrier().replace("\\","/").replaceAll("'"," ")+ "' and nom_fichier = '"+ courrier.getNomCourrier().replaceAll("'","_") +"'));";
+                            "((select id_courrier from `courrier` where objet = '"+courrier.getObjetCourrier().replaceAll("'"," ")+ "' and reference = '"+ courrier.getReferenceCourrier().replace("\\","/").replaceAll("'"," ")+ "' and nom_fichier = '"+ courrier.getNomCourrier().replaceAll("'","_") +"'));";
 
                 }
             }
 
-            String ajouterCourrierSQL = "insert into `ajouter_courrier` (`id_personne`,`id_courrier`) VALUES ('" + idUser +"',"+" (select id_courrier from `courrier` where date_reception ='"+ courrier.getDateDeReception()+"' and heure_reception ='"+ DateUtils.convertirHeureDeReceptionAuBonFormat(courrier.getHeureDeReception())+"' and objet = '"+courrier.getObjetCourrier().replaceAll("'"," ")+ "' and reference = '"+ courrier.getReferenceCourrier().replace("\\","/").replaceAll("'"," ")+ "' and nom_fichier = '"+ courrier.getNomCourrier().replaceAll("'","_") +"'))";
+            String ajouterCourrierSQL = "insert into `ajouter_courrier` (`id_personne`,`id_courrier`) VALUES ('" + idUser +"',"+" (select id_courrier from `courrier` where objet = '"+courrier.getObjetCourrier().replaceAll("'"," ")+ "' and reference = '"+ courrier.getReferenceCourrier().replace("\\","/").replaceAll("'"," ")+ "' and nom_fichier = '"+ courrier.getNomCourrier().replaceAll("'","_") +"'))";
 
             String ajouterEtapeCourrierSQL = "insert into `etape` (`titre`, `etat`) VALUES ('" + EtatCourrier.courrierEnregistre +"',"+"'"+ EtatEtape.termine +"')";
 
@@ -378,10 +378,10 @@ public class NouveauCourrier implements Serializable {
                                 " ('" + finalUniqueIDDestinataire+"',"+"'"+idTypeDeDestinataire+"',"+"'"+ idFonctionDestinataire + "',"+"'" +idDirectionDestinataire + "',"+ "'" +idEtablissementDestinataire+ "')";
 
                         envoyerCourrierSQL = "insert into envoyer_courrier (`favoris`,`archive`,`id_courrier`,`id_personne`,`confirmation_reception`) VALUES" +
-                                "('" + EtatCourrier.pasfavoris+"',"+"'"+EtatCourrier.archiveNonActive+"',"+  "(select id_courrier from `courrier` where date_reception ='"+ courrier.getDateDeReception()+"' and heure_reception ='"+ DateUtils.convertirHeureDeReceptionAuBonFormat(courrier.getHeureDeReception())+"' and objet = '"+courrier.getObjetCourrier().replaceAll("'"," ")+ "' and reference = '"+ courrier.getReferenceCourrier().replace("\\","/").replaceAll("'"," ")+ "' and nom_fichier = '"+ courrier.getNomCourrier().replaceAll("'","_") +"'),(select id_personne from `personne` where unique_id = '"+finalUniqueIDEmetteur+"'), '"+EtatCourrier.confirmationDeRecepetionNon+"');";
+                                "('" + EtatCourrier.pasfavoris+"',"+"'"+EtatCourrier.archiveNonActive+"',"+  "(select id_courrier from `courrier` where objet = '"+courrier.getObjetCourrier().replaceAll("'"," ")+ "' and reference = '"+ courrier.getReferenceCourrier().replace("\\","/").replaceAll("'"," ")+ "' and nom_fichier = '"+ courrier.getNomCourrier().replaceAll("'","_") +"'),(select id_personne from `personne` where unique_id = '"+finalUniqueIDEmetteur+"'), '"+EtatCourrier.confirmationDeRecepetionNon+"');";
 
                         recevoirCourrierSQL = "insert into recevoir_courrier (`favoris`,`archive`,`id_courrier`,`id_personne`, `accuse_reception`)  VALUES" +
-                                "('" + EtatCourrier.pasfavoris+"',"+"'"+EtatCourrier.archiveNonActive+"',"+  "(select id_courrier from `courrier` where date_reception ='"+ courrier.getDateDeReception()+"' and heure_reception ='"+ DateUtils.convertirHeureDeReceptionAuBonFormat(courrier.getHeureDeReception())+"' and objet = '"+courrier.getObjetCourrier().replaceAll("'"," ")+ "' and reference = '"+ courrier.getReferenceCourrier().replace("\\","/").replaceAll("'"," ")+ "' and nom_fichier = '"+ courrier.getNomCourrier().replaceAll("'","_") +"'),(select id_personne from `personne` where unique_id = '"+finalUniqueIDDestinataire+"') ,'"+EtatCourrier.accuseDeReceptionNon+"');";
+                                "('" + EtatCourrier.pasfavoris+"',"+"'"+EtatCourrier.archiveNonActive+"',"+  "(select id_courrier from `courrier` where objet = '"+courrier.getObjetCourrier().replaceAll("'"," ")+ "' and reference = '"+ courrier.getReferenceCourrier().replace("\\","/").replaceAll("'"," ")+ "' and nom_fichier = '"+ courrier.getNomCourrier().replaceAll("'","_") +"'),(select id_personne from `personne` where unique_id = '"+finalUniqueIDDestinataire+"') ,'"+EtatCourrier.accuseDeReceptionNon+"');";
 
                     }else if(destinataire.getTypeDestinataire().equals("Agent Autre Ministere")){
 
@@ -396,10 +396,10 @@ public class NouveauCourrier implements Serializable {
                                 " ('" + finalUniqueIDDestinataire+"',"+"'"+idTypeDeDestinataire+"',"+  "(select id_fonction from `fonction` where titre_fonction = '" + destinataire.getFonctionAutreMinistere().replaceAll("'"," ") + "' order by id_fonction desc limit 1)" +"," +"(select id_direction from `direction` where nom_direction = '" + destinataire.getDirectionAutreMinistere().replaceAll("'"," ") + "' order by id_direction desc limit 1)" + ","+ "'" +idEtablissementDestinataireAutreMinistere + "')";
 
                         envoyerCourrierSQL = "insert into envoyer_courrier (`favoris`,`archive`,`id_courrier`,`id_personne`,`confirmation_reception`) VALUES" +
-                                "('" + EtatCourrier.pasfavoris+"',"+"'"+EtatCourrier.archiveNonActive+"',"+  "(select id_courrier from `courrier` where date_reception ='"+ courrier.getDateDeReception()+"' and heure_reception ='"+ DateUtils.convertirHeureDeReceptionAuBonFormat(courrier.getHeureDeReception())+"' and objet = '"+courrier.getObjetCourrier().replaceAll("'"," ")+ "' and reference = '"+ courrier.getReferenceCourrier().replace("\\","/").replaceAll("'"," ")+ "' and nom_fichier = '"+ courrier.getNomCourrier().replaceAll("'","_") +"'),(select id_personne from `personne` where unique_id = '"+finalUniqueIDEmetteur+"'), '"+EtatCourrier.confirmationDeRecepetionNon+"');";
+                                "('" + EtatCourrier.pasfavoris+"',"+"'"+EtatCourrier.archiveNonActive+"',"+  "(select id_courrier from `courrier` where objet = '"+courrier.getObjetCourrier().replaceAll("'"," ")+ "' and reference = '"+ courrier.getReferenceCourrier().replace("\\","/").replaceAll("'"," ")+ "' and nom_fichier = '"+ courrier.getNomCourrier().replaceAll("'","_") +"'),(select id_personne from `personne` where unique_id = '"+finalUniqueIDEmetteur+"'), '"+EtatCourrier.confirmationDeRecepetionNon+"');";
 
                         recevoirCourrierSQL = "insert into recevoir_courrier (`favoris`,`archive`,`id_courrier`,`id_personne`,`accuse_reception`)  VALUES" +
-                                "('" + EtatCourrier.pasfavoris+"',"+"'"+EtatCourrier.archiveNonActive+"',"+  "(select id_courrier from `courrier` where date_reception ='"+ courrier.getDateDeReception()+"' and heure_reception ='"+ DateUtils.convertirHeureDeReceptionAuBonFormat(courrier.getHeureDeReception())+"' and objet = '"+courrier.getObjetCourrier().replaceAll("'"," ")+ "' and reference = '"+ courrier.getReferenceCourrier().replace("\\","/").replaceAll("'"," ")+ "' and nom_fichier = '"+ courrier.getNomCourrier().replaceAll("'","_") +"'),(select id_personne from `personne` where unique_id = '"+finalUniqueIDDestinataire+"') ,'"+EtatCourrier.accuseDeReceptionNon+"');";
+                                "('" + EtatCourrier.pasfavoris+"',"+"'"+EtatCourrier.archiveNonActive+"',"+  "(select id_courrier from `courrier` where objet = '"+courrier.getObjetCourrier().replaceAll("'"," ")+ "' and reference = '"+ courrier.getReferenceCourrier().replace("\\","/").replaceAll("'"," ")+ "' and nom_fichier = '"+ courrier.getNomCourrier().replaceAll("'","_") +"'),(select id_personne from `personne` where unique_id = '"+finalUniqueIDDestinataire+"') ,'"+EtatCourrier.accuseDeReceptionNon+"');";
 
                     }else if(destinataire.getTypeDestinataire().equals("Entreprise") || destinataire.getTypeDestinataire().equals("Association")) {
 
@@ -417,10 +417,10 @@ public class NouveauCourrier implements Serializable {
                                 " ('" + finalUniqueIDDestinataire+"',"+"'"+idTypeDeDestinataire+"',"+  "(select id_fonction from `fonction` where titre_fonction = '" + destinataire.getFonctionEntreprise().replaceAll("'"," ")  + "' order by id_fonction desc limit 1)" +"," +"(select id_direction from `direction` where nom_direction = '" + destinataire.getDirectionEntreprise().replaceAll("'"," ")  + "' order by id_direction desc limit 1)" + ","+ "(select id_etablissement from `etablissement` where nom_etablissement = '" + destinataire.getRaisonSocial().replaceAll("'"," ")  + "' and tel_etablissement  = '"+destinataire.getTelephoneEntreprise() +"' and mail_etablissement = '"+destinataire.getEmailEntreprise()+"'  and adresse_etablissement = '"+destinataire.getAdresseEntreprise().replaceAll("'"," ")  +"' order by id_etablissement desc limit 1)"+ ")";
 
                         envoyerCourrierSQL = "insert into envoyer_courrier (`favoris`,`archive`,`id_courrier`,`id_personne`,`confirmation_reception`) VALUES" +
-                                "('" + EtatCourrier.pasfavoris+"',"+"'"+EtatCourrier.archiveNonActive+"',"+  "(select id_courrier from `courrier` where date_reception ='"+ courrier.getDateDeReception()+"' and heure_reception ='"+ DateUtils.convertirHeureDeReceptionAuBonFormat(courrier.getHeureDeReception())+"' and objet = '"+courrier.getObjetCourrier().replaceAll("'"," ")+ "' and reference = '"+ courrier.getReferenceCourrier().replace("\\","/").replaceAll("'"," ")+ "' and nom_fichier = '"+ courrier.getNomCourrier().replaceAll("'","_") +"'),(select id_personne from `personne` where unique_id = '"+finalUniqueIDEmetteur+"'), '"+EtatCourrier.confirmationDeRecepetionNon+"');";
+                                "('" + EtatCourrier.pasfavoris+"',"+"'"+EtatCourrier.archiveNonActive+"',"+  "(select id_courrier from `courrier` where objet = '"+courrier.getObjetCourrier().replaceAll("'"," ")+ "' and reference = '"+ courrier.getReferenceCourrier().replace("\\","/").replaceAll("'"," ")+ "' and nom_fichier = '"+ courrier.getNomCourrier().replaceAll("'","_") +"'),(select id_personne from `personne` where unique_id = '"+finalUniqueIDEmetteur+"'), '"+EtatCourrier.confirmationDeRecepetionNon+"');";
 
                         recevoirCourrierSQL = "insert into recevoir_courrier (`favoris`,`archive`,`id_courrier`,`id_personne`,`accuse_reception`)  VALUES" +
-                                "('" + EtatCourrier.pasfavoris+"',"+"'"+EtatCourrier.archiveNonActive+"',"+  "(select id_courrier from `courrier` where date_reception ='"+ courrier.getDateDeReception()+"' and heure_reception ='"+ DateUtils.convertirHeureDeReceptionAuBonFormat(courrier.getHeureDeReception())+"' and objet = '"+courrier.getObjetCourrier().replaceAll("'"," ")+ "' and reference = '"+ courrier.getReferenceCourrier().replace("\\","/").replaceAll("'"," ")+ "' and nom_fichier = '"+ courrier.getNomCourrier().replaceAll("'","_") +"'),(select id_personne from `personne` where unique_id = '"+finalUniqueIDDestinataire+"') ,'"+EtatCourrier.accuseDeReceptionNon+"');";
+                                "('" + EtatCourrier.pasfavoris+"',"+"'"+EtatCourrier.archiveNonActive+"',"+  "(select id_courrier from `courrier` where objet = '"+courrier.getObjetCourrier().replaceAll("'"," ")+ "' and reference = '"+ courrier.getReferenceCourrier().replace("\\","/").replaceAll("'"," ")+ "' and nom_fichier = '"+ courrier.getNomCourrier().replaceAll("'","_") +"'),(select id_personne from `personne` where unique_id = '"+finalUniqueIDDestinataire+"') ,'"+EtatCourrier.accuseDeReceptionNon+"');";
 
                     }else if(destinataire.getTypeDestinataire().equals("Particulier")) {
 
@@ -430,15 +430,15 @@ public class NouveauCourrier implements Serializable {
                         ajouterDestinataireSQL = "insert into `personne` (`unique_id`, `nom`, `prenom`, `tel`, `mail`, `fk_type_personne`) VALUES  ('" +finalUniqueIDDestinataire+ "',"+"'"+ destinataire.getNomParticulier().replaceAll("'"," ")  + "'," + "'" + destinataire.getPrenomParticulier().replaceAll("'"," ") + "'," + "'" + destinataire.getTelephoneParticulier() + "'," + "'" + destinataire.getEmailParticulier()+ "'," + "'" +idTypeDeDestinataire+ "')";
 
                         envoyerCourrierSQL = "insert into envoyer_courrier (`favoris`,`archive`,`id_courrier`,`id_personne`,`confirmation_reception`) VALUES" +
-                                "('" + EtatCourrier.pasfavoris+"',"+"'"+EtatCourrier.archiveNonActive+"',"+  "(select id_courrier from `courrier` where date_reception ='"+ courrier.getDateDeReception()+"' and heure_reception ='"+ DateUtils.convertirHeureDeReceptionAuBonFormat(courrier.getHeureDeReception())+"' and objet = '"+courrier.getObjetCourrier().replaceAll("'"," ")+ "' and reference = '"+ courrier.getReferenceCourrier().replace("\\","/").replaceAll("'"," ")+ "' and nom_fichier = '"+ courrier.getNomCourrier().replaceAll("'","_") +"'),(select id_personne from `personne` where unique_id = '"+finalUniqueIDEmetteur+"'), '"+EtatCourrier.confirmationDeRecepetionNon+"');";
+                                "('" + EtatCourrier.pasfavoris+"',"+"'"+EtatCourrier.archiveNonActive+"',"+  "(select id_courrier from `courrier` where objet = '"+courrier.getObjetCourrier().replaceAll("'"," ")+ "' and reference = '"+ courrier.getReferenceCourrier().replace("\\","/").replaceAll("'"," ")+ "' and nom_fichier = '"+ courrier.getNomCourrier().replaceAll("'","_") +"'),(select id_personne from `personne` where unique_id = '"+finalUniqueIDEmetteur+"'), '"+EtatCourrier.confirmationDeRecepetionNon+"');";
 
                         recevoirCourrierSQL = "insert into recevoir_courrier (`favoris`,`archive`,`id_courrier`,`id_personne`,`accuse_reception`)  VALUES" +
-                                "('" + EtatCourrier.pasfavoris+"',"+"'"+EtatCourrier.archiveNonActive+"',"+  "(select id_courrier from `courrier` where date_reception ='"+ courrier.getDateDeReception()+"' and heure_reception ='"+ DateUtils.convertirHeureDeReceptionAuBonFormat(courrier.getHeureDeReception())+"' and objet = '"+courrier.getObjetCourrier().replaceAll("'"," ")+ "' and reference = '"+ courrier.getReferenceCourrier().replace("\\","/").replaceAll("'"," ")+ "' and nom_fichier = '"+ courrier.getNomCourrier().replaceAll("'","_") +"'),(select id_personne from `personne` where unique_id = '"+finalUniqueIDDestinataire+"') ,'"+EtatCourrier.accuseDeReceptionNon+"');";
+                                "('" + EtatCourrier.pasfavoris+"',"+"'"+EtatCourrier.archiveNonActive+"',"+  "(select id_courrier from `courrier` where objet = '"+courrier.getObjetCourrier().replaceAll("'"," ")+ "' and reference = '"+ courrier.getReferenceCourrier().replace("\\","/").replaceAll("'"," ")+ "' and nom_fichier = '"+ courrier.getNomCourrier().replaceAll("'","_") +"'),(select id_personne from `personne` where unique_id = '"+finalUniqueIDDestinataire+"') ,'"+EtatCourrier.accuseDeReceptionNon+"');";
                     }
 
                     if(courrier.getConfidentiel().equalsIgnoreCase("Non")){
                         courrier.setIdAlfresco(ConnexionAlfresco.enregistrerFichierCourrierDansAlfresco(new File(courrier.getCheminCourrierSurPC()),FileManager.determinerTypeDeFichierParSonExtension(FileManager.recupererExtensionDUnFichierParSonNom(courrier.getNomCourrier())),dossierCourrierAlfresco));
-                        updateCourrierAlfrescoSQL = "update `courrier` SET `dossier_alfresco_emetteur` = '"+dossierCourrierAlfresco+"', `identifiant_alfresco` = '"+courrier.getIdAlfresco()+"' WHERE `courrier`.`id_courrier` = (select id_courrier from (select id_courrier from `courrier` where date_reception ='"+ courrier.getDateDeReception()+"' and heure_reception ='"+ DateUtils.convertirHeureDeReceptionAuBonFormat(courrier.getHeureDeReception())+"' and objet = '"+courrier.getObjetCourrier().replaceAll("'"," ")+ "' and reference = '"+ courrier.getReferenceCourrier().replace("\\","/").replaceAll("'"," ")+ "' and nom_fichier = '"+ courrier.getNomCourrier().replaceAll("'","_") +"') as temp)";
+                        updateCourrierAlfrescoSQL = "update `courrier` SET `dossier_alfresco_emetteur` = '"+dossierCourrierAlfresco+"', `identifiant_alfresco` = '"+courrier.getIdAlfresco()+"' WHERE `courrier`.`id_courrier` = (select id_courrier from (select id_courrier from `courrier` where objet = '"+courrier.getObjetCourrier().replaceAll("'"," ")+ "' and reference = '"+ courrier.getReferenceCourrier().replace("\\","/").replaceAll("'"," ")+ "' and nom_fichier = '"+ courrier.getNomCourrier().replaceAll("'","_") +"') as temp)";
                     }
 
                     try {
@@ -475,7 +475,7 @@ public class NouveauCourrier implements Serializable {
                             }
                             for (int a =0; a < listeAnnexe.size(); a++){
                                 ajouterAnnexeAlfrescoSQL = "insert into `annexe` (`titre`, `type_fichier`, `identifiant_alfresco_annexe`, `document_alfresco`, `id_courrier` ) VALUES" +
-                                        " ('" + listeAnnexe.get(a).getNomAnnexe()+"',"+"'" +listeAnnexe.get(a).getTypeDeFichierAnnexe()+"',"+"'"+ listeIdAlfrescoAnnexe.get(a) + "',"+"'" +dossierAnnexeAlfresco + "',"+ "(select id_courrier from `courrier` where date_reception ='"+ courrier.getDateDeReception()+"' and heure_reception ='"+ DateUtils.convertirHeureDeReceptionAuBonFormat(courrier.getHeureDeReception())+"' and objet = '"+courrier.getObjetCourrier().replaceAll("'"," ")+ "' and reference = '"+ courrier.getReferenceCourrier().replace("\\","/").replaceAll("'"," ")+ "' and nom_fichier = '"+ courrier.getNomCourrier().replaceAll("'","_") +"'))";
+                                        " ('" + listeAnnexe.get(a).getNomAnnexe()+"',"+"'" +listeAnnexe.get(a).getTypeDeFichierAnnexe()+"',"+"'"+ listeIdAlfrescoAnnexe.get(a) + "',"+"'" +dossierAnnexeAlfresco + "',"+ "(select id_courrier from `courrier` where objet = '"+courrier.getObjetCourrier().replaceAll("'"," ")+ "' and reference = '"+ courrier.getReferenceCourrier().replace("\\","/").replaceAll("'"," ")+ "' and nom_fichier = '"+ courrier.getNomCourrier().replaceAll("'","_") +"'))";
                                 statement.addBatch( ajouterAnnexeAlfrescoSQL);
                             }
                         }
@@ -504,15 +504,15 @@ public class NouveauCourrier implements Serializable {
                     ajouterDestinataireSQL = "insert into `personne` (`unique_id`, `fk_type_personne`, `id_fonction`, `id_direction` ,`id_etablissement`) VALUES" +
                             " ('" + finalUniqueIDDestinataire+"',"+"'"+idTypeDeDestinataire+"',"+"'"+ idFonctionDestinataire + "',"+"'" +idDirectionDestinataire + "',"+ "'" +idEtablissementDestinataire+ "')";
 
-                    envoyerCourrierSQL = "insert into envoyer_courrier (`favoris`,`archive`,`id_courrier`,`id_personne`,`confirmation_reception`) VALUES ('" + EtatCourrier.pasfavoris+"',"+"'"+EtatCourrier.archiveNonActive+"',"+  "(select id_courrier from `courrier` where date_reception ='"+ courrier.getDateDeReception()+"' and heure_reception ='"+ DateUtils.convertirHeureDeReceptionAuBonFormat(courrier.getHeureDeReception())+"' and objet = '"+courrier.getObjetCourrier().replaceAll("'"," ")+ "' and reference = '"+ courrier.getReferenceCourrier().replace("\\","/").replaceAll("'"," ")+ "' and nom_fichier = '"+ courrier.getNomCourrier().replaceAll("'","_") +"'),(select id_personne from `personne` where unique_id = '"+finalUniqueIDEmetteur+"'), '"+EtatCourrier.confirmationDeRecepetionNon+"');";
+                    envoyerCourrierSQL = "insert into envoyer_courrier (`favoris`,`archive`,`id_courrier`,`id_personne`,`confirmation_reception`) VALUES ('" + EtatCourrier.pasfavoris+"',"+"'"+EtatCourrier.archiveNonActive+"',"+  "(select id_courrier from `courrier` where objet = '"+courrier.getObjetCourrier().replaceAll("'"," ")+ "' and reference = '"+ courrier.getReferenceCourrier().replace("\\","/").replaceAll("'"," ")+ "' and nom_fichier = '"+ courrier.getNomCourrier().replaceAll("'","_") +"'),(select id_personne from `personne` where unique_id = '"+finalUniqueIDEmetteur+"'), '"+EtatCourrier.confirmationDeRecepetionNon+"');";
 
 
-                    recevoirCourrierSQL = "insert into recevoir_courrier (`favoris`,`archive`,`id_courrier`,`id_personne`,`accuse_reception`,`reference_interne`) VALUES  ('" + EtatCourrier.pasfavoris+"',"+"'"+EtatCourrier.archiveNonActive+"',"+  "(select id_courrier from `courrier` where date_reception ='"+ courrier.getDateDeReception()+"' and heure_reception ='"+ DateUtils.convertirHeureDeReceptionAuBonFormat(courrier.getHeureDeReception())+"' and objet = '"+courrier.getObjetCourrier().replaceAll("'"," ")+ "' and reference = '"+ courrier.getReferenceCourrier().replace("\\","/").replaceAll("'"," ")+ "' and nom_fichier = '"+ courrier.getNomCourrier().replaceAll("'","_") +"'),(select id_personne from `personne` where unique_id = '"+finalUniqueIDDestinataire+"') , '"+EtatCourrier.accuseDeReceptionNon+"',"+"'"+courrier.getReferenceCourrier().replace("\\","/").replaceAll("'"," ")+"')";
+                    recevoirCourrierSQL = "insert into recevoir_courrier (`favoris`,`archive`,`id_courrier`,`id_personne`,`accuse_reception`,`reference_interne`) VALUES  ('" + EtatCourrier.pasfavoris+"',"+"'"+EtatCourrier.archiveNonActive+"',"+  "(select id_courrier from `courrier` where objet = '"+courrier.getObjetCourrier().replaceAll("'"," ")+ "' and reference = '"+ courrier.getReferenceCourrier().replace("\\","/").replaceAll("'"," ")+ "' and nom_fichier = '"+ courrier.getNomCourrier().replaceAll("'","_") +"'),(select id_personne from `personne` where unique_id = '"+finalUniqueIDDestinataire+"') , '"+EtatCourrier.accuseDeReceptionNon+"',"+"'"+courrier.getReferenceCourrier().replace("\\","/").replaceAll("'"," ")+"')";
 
 
                     if(courrier.getConfidentiel().equalsIgnoreCase("Non")){
                         courrier.setIdAlfresco(ConnexionAlfresco.enregistrerFichierCourrierDansAlfresco(new File(courrier.getCheminCourrierSurPC()),FileManager.determinerTypeDeFichierParSonExtension(FileManager.recupererExtensionDUnFichierParSonNom(courrier.getNomCourrier())),dossierCourrierAlfresco));
-                        updateCourrierAlfrescoSQL = "update `courrier` SET `dossier_alfresco_emetteur` = '"+dossierCourrierAlfresco+"', `identifiant_alfresco` = '"+courrier.getIdAlfresco()+"' WHERE `courrier`.`id_courrier` = (select id_courrier from (select id_courrier from `courrier` where date_reception ='"+ courrier.getDateDeReception()+"' and heure_reception ='"+ DateUtils.convertirHeureDeReceptionAuBonFormat(courrier.getHeureDeReception())+"' and objet = '"+courrier.getObjetCourrier().replaceAll("'"," ")+ "' and reference = '"+ courrier.getReferenceCourrier().replace("\\","/").replaceAll("'"," ")+ "' and nom_fichier = '"+ courrier.getNomCourrier() +"') as temp)";
+                        updateCourrierAlfrescoSQL = "update `courrier` SET `dossier_alfresco_emetteur` = '"+dossierCourrierAlfresco+"', `identifiant_alfresco` = '"+courrier.getIdAlfresco()+"' WHERE `courrier`.`id_courrier` = (select id_courrier from (select id_courrier from `courrier` where objet = '"+courrier.getObjetCourrier().replaceAll("'"," ")+ "' and reference = '"+ courrier.getReferenceCourrier().replace("\\","/").replaceAll("'"," ")+ "' and nom_fichier = '"+ courrier.getNomCourrier() +"') as temp)";
                     }
 
                     try {
@@ -542,7 +542,7 @@ public class NouveauCourrier implements Serializable {
 
                             for (int a =0; a < listeAnnexe.size(); a++){
                                 ajouterAnnexeAlfrescoSQL = "insert into `annexe` (`titre`, `type_fichier`, `identifiant_alfresco_annexe`, `document_alfresco`, `id_courrier` ) VALUES" +
-                                        " ('" + listeAnnexe.get(a).getNomAnnexe()+"',"+"'" +listeAnnexe.get(a).getTypeDeFichierAnnexe()+"',"+"'"+ listeIdAlfrescoAnnexe.get(a) + "',"+"'" +dossierAnnexeAlfresco + "',"+ "(select id_courrier from `courrier` where date_reception ='"+ courrier.getDateDeReception()+"' and heure_reception ='"+ DateUtils.convertirHeureDeReceptionAuBonFormat(courrier.getHeureDeReception())+"' and objet = '"+courrier.getObjetCourrier().replaceAll("'"," ")+ "' and reference = '"+ courrier.getReferenceCourrier().replace("\\","/").replaceAll("'"," ")+ "' and nom_fichier = '"+ courrier.getNomCourrier().replaceAll("'"," ") +"'))";
+                                        " ('" + listeAnnexe.get(a).getNomAnnexe()+"',"+"'" +listeAnnexe.get(a).getTypeDeFichierAnnexe()+"',"+"'"+ listeIdAlfrescoAnnexe.get(a) + "',"+"'" +dossierAnnexeAlfresco + "',"+ "(select id_courrier from `courrier` where objet = '"+courrier.getObjetCourrier().replaceAll("'"," ")+ "' and reference = '"+ courrier.getReferenceCourrier().replace("\\","/").replaceAll("'"," ")+ "' and nom_fichier = '"+ courrier.getNomCourrier().replaceAll("'"," ") +"'))";
                                 statement.addBatch( ajouterAnnexeAlfrescoSQL);
                             }
                         }
@@ -574,14 +574,14 @@ public class NouveauCourrier implements Serializable {
                     ajouterDestinataireSQL = "insert into `personne` (`unique_id`, `fk_type_personne`, `id_fonction`, `id_direction` ,`id_etablissement`) VALUES" +
                             " ('" + finalUniqueIDDestinataire+"',"+"'"+idTypeDeDestinataire+"',"+"'"+ idFonctionDestinataire + "',"+"'" +idDirectionDestinataire + "',"+ "'" +idEtablissementDestinataire+ "')";
 
-                    envoyerCourrierSQL = "insert into envoyer_courrier (`favoris`,`archive`,`id_courrier`,`id_personne`,`confirmation_reception`) VALUES ('" + EtatCourrier.pasfavoris+"',"+"'"+EtatCourrier.archiveNonActive+"',"+  "(select id_courrier from `courrier` where date_reception ='"+ courrier.getDateDeReception()+"' and heure_reception ='"+ DateUtils.convertirHeureDeReceptionAuBonFormat(courrier.getHeureDeReception())+"' and objet = '"+courrier.getObjetCourrier().replaceAll("'"," ")+ "' and reference = '"+ courrier.getReferenceCourrier().replace("\\","/").replaceAll("'"," ")+ "' and nom_fichier = '"+ courrier.getNomCourrier().replaceAll("'","_") +"'),(select id_personne from `personne` where unique_id = '"+finalUniqueIDEmetteur+"'), '"+EtatCourrier.confirmationDeRecepetionNon+"');";
+                    envoyerCourrierSQL = "insert into envoyer_courrier (`favoris`,`archive`,`id_courrier`,`id_personne`,`confirmation_reception`) VALUES ('" + EtatCourrier.pasfavoris+"',"+"'"+EtatCourrier.archiveNonActive+"',"+  "(select id_courrier from `courrier` where objet = '"+courrier.getObjetCourrier().replaceAll("'"," ")+ "' and reference = '"+ courrier.getReferenceCourrier().replace("\\","/").replaceAll("'"," ")+ "' and nom_fichier = '"+ courrier.getNomCourrier().replaceAll("'","_") +"'),(select id_personne from `personne` where unique_id = '"+finalUniqueIDEmetteur+"'), '"+EtatCourrier.confirmationDeRecepetionNon+"');";
 
-                    recevoirCourrierSQL = "insert into recevoir_courrier (`favoris`,`archive`,`id_courrier`,`id_personne`,`accuse_reception`,`reference_interne`) VALUES  ('" + EtatCourrier.pasfavoris+"',"+"'"+EtatCourrier.archiveNonActive+"',"+  "(select id_courrier from `courrier` where date_reception ='"+ courrier.getDateDeReception()+"' and heure_reception ='"+ DateUtils.convertirHeureDeReceptionAuBonFormat(courrier.getHeureDeReception())+"' and objet = '"+courrier.getObjetCourrier().replaceAll("'"," ")+ "' and reference = '"+ courrier.getReferenceCourrier().replace("\\","/").replaceAll("'"," ")+ "' and nom_fichier = '"+ courrier.getNomCourrier().replaceAll("'"," ") +"'),(select id_personne from `personne` where unique_id = '"+finalUniqueIDDestinataire+"') ,'"+EtatCourrier.accuseDeReceptionNon+"',"+"'"+courrier.getReferenceCourrier().replace("\\","/").replaceAll("'"," ")+"')";
+                    recevoirCourrierSQL = "insert into recevoir_courrier (`favoris`,`archive`,`id_courrier`,`id_personne`,`accuse_reception`,`reference_interne`) VALUES  ('" + EtatCourrier.pasfavoris+"',"+"'"+EtatCourrier.archiveNonActive+"',"+  "(select id_courrier from `courrier` where objet = '"+courrier.getObjetCourrier().replaceAll("'"," ")+ "' and reference = '"+ courrier.getReferenceCourrier().replace("\\","/").replaceAll("'"," ")+ "' and nom_fichier = '"+ courrier.getNomCourrier().replaceAll("'"," ") +"'),(select id_personne from `personne` where unique_id = '"+finalUniqueIDDestinataire+"') ,'"+EtatCourrier.accuseDeReceptionNon+"',"+"'"+courrier.getReferenceCourrier().replace("\\","/").replaceAll("'"," ")+"')";
 
 
                     if(courrier.getConfidentiel().equalsIgnoreCase("Non")){
                         courrier.setIdAlfresco(ConnexionAlfresco.enregistrerFichierCourrierDansAlfresco(new File(courrier.getCheminCourrierSurPC()),FileManager.determinerTypeDeFichierParSonExtension(FileManager.recupererExtensionDUnFichierParSonNom(courrier.getNomCourrier())),dossierCourrierAlfresco));
-                        updateCourrierAlfrescoSQL = "update `courrier` SET `dossier_alfresco_emetteur` = '"+dossierCourrierAlfresco+"', `identifiant_alfresco` = '"+courrier.getIdAlfresco()+"' WHERE `courrier`.`id_courrier` = (select id_courrier from (select id_courrier from `courrier` where date_reception ='"+ courrier.getDateDeReception()+"' and heure_reception ='"+ DateUtils.convertirHeureDeReceptionAuBonFormat(courrier.getHeureDeReception())+"' and objet = '"+courrier.getObjetCourrier().replaceAll("'"," ")+ "' and reference = '"+ courrier.getReferenceCourrier().replace("\\","/").replaceAll("'"," ")+ "' and nom_fichier = '"+ courrier.getNomCourrier().replaceAll("'"," ") +"') as temp)";
+                        updateCourrierAlfrescoSQL = "update `courrier` SET `dossier_alfresco_emetteur` = '"+dossierCourrierAlfresco+"', `identifiant_alfresco` = '"+courrier.getIdAlfresco()+"' WHERE `courrier`.`id_courrier` = (select id_courrier from (select id_courrier from `courrier` where objet = '"+courrier.getObjetCourrier().replaceAll("'"," ")+ "' and reference = '"+ courrier.getReferenceCourrier().replace("\\","/").replaceAll("'"," ")+ "' and nom_fichier = '"+ courrier.getNomCourrier().replaceAll("'"," ") +"') as temp)";
                     }
 
                     try {
@@ -613,7 +613,7 @@ public class NouveauCourrier implements Serializable {
 
                             for (int a =0; a < listeAnnexe.size(); a++){
                                 ajouterAnnexeAlfrescoSQL = "insert into `annexe` (`titre`, `type_fichier`, `identifiant_alfresco_annexe`, `document_alfresco`, `id_courrier` ) VALUES" +
-                                        " ('" + listeAnnexe.get(a).getNomAnnexe()+"',"+"'" +listeAnnexe.get(a).getTypeDeFichierAnnexe()+"',"+"'"+ listeIdAlfrescoAnnexe.get(a) + "',"+"'" +dossierAnnexeAlfresco + "',"+ "(select id_courrier from `courrier` where date_reception ='"+ courrier.getDateDeReception()+"' and heure_reception ='"+ DateUtils.convertirHeureDeReceptionAuBonFormat(courrier.getHeureDeReception())+"' and objet = '"+courrier.getObjetCourrier().replaceAll("'"," ")+ "' and reference = '"+ courrier.getReferenceCourrier().replace("\\","/").replaceAll("'"," ")+ "' and nom_fichier = '"+ courrier.getNomCourrier().replaceAll("'"," ") +"'))";
+                                        " ('" + listeAnnexe.get(a).getNomAnnexe()+"',"+"'" +listeAnnexe.get(a).getTypeDeFichierAnnexe()+"',"+"'"+ listeIdAlfrescoAnnexe.get(a) + "',"+"'" +dossierAnnexeAlfresco + "',"+ "(select id_courrier from `courrier` where objet = '"+courrier.getObjetCourrier().replaceAll("'"," ")+ "' and reference = '"+ courrier.getReferenceCourrier().replace("\\","/").replaceAll("'"," ")+ "' and nom_fichier = '"+ courrier.getNomCourrier().replaceAll("'"," ") +"'))";
                                 statement.addBatch( ajouterAnnexeAlfrescoSQL);
                             }
                         }
@@ -644,14 +644,14 @@ public class NouveauCourrier implements Serializable {
                     ajouterDestinataireSQL = "insert into `personne` (`unique_id`, `fk_type_personne`, `id_fonction`, `id_direction` ,`id_etablissement`) VALUES" +
                             " ('" + finalUniqueIDDestinataire+"',"+"'"+idTypeDeDestinataire+"',"+"'"+ idFonctionDestinataire + "',"+"'" +idDirectionDestinataire + "',"+ "'" +idEtablissementDestinataire+ "')";
 
-                    envoyerCourrierSQL = "insert into envoyer_courrier (`favoris`,`archive`,`id_courrier`,`id_personne`,`confirmation_reception`) VALUES ('" + EtatCourrier.pasfavoris+"',"+"'"+EtatCourrier.archiveNonActive+"',"+  "(select id_courrier from `courrier` where date_reception ='"+ courrier.getDateDeReception()+"' and heure_reception ='"+ DateUtils.convertirHeureDeReceptionAuBonFormat(courrier.getHeureDeReception())+"' and objet = '"+courrier.getObjetCourrier().replaceAll("'"," ")+ "' and reference = '"+ courrier.getReferenceCourrier().replace("\\","/").replaceAll("'"," ")+ "' and nom_fichier = '"+ courrier.getNomCourrier().replaceAll("'","_") +"'),(select id_personne from `personne` where unique_id = '"+finalUniqueIDEmetteur+"'), '"+EtatCourrier.confirmationDeRecepetionNon+"');";
+                    envoyerCourrierSQL = "insert into envoyer_courrier (`favoris`,`archive`,`id_courrier`,`id_personne`,`confirmation_reception`) VALUES ('" + EtatCourrier.pasfavoris+"',"+"'"+EtatCourrier.archiveNonActive+"',"+  "(select id_courrier from `courrier` where objet = '"+courrier.getObjetCourrier().replaceAll("'"," ")+ "' and reference = '"+ courrier.getReferenceCourrier().replace("\\","/").replaceAll("'"," ")+ "' and nom_fichier = '"+ courrier.getNomCourrier().replaceAll("'","_") +"'),(select id_personne from `personne` where unique_id = '"+finalUniqueIDEmetteur+"'), '"+EtatCourrier.confirmationDeRecepetionNon+"');";
 
-                    recevoirCourrierSQL = "insert into recevoir_courrier (`favoris`,`archive`,`id_courrier`,`id_personne`,`accuse_reception`,`reference_interne`) VALUES  ('" + EtatCourrier.pasfavoris+"',"+"'"+EtatCourrier.archiveNonActive+"',"+  "(select id_courrier from `courrier` where date_reception ='"+ courrier.getDateDeReception()+"' and heure_reception ='"+ DateUtils.convertirHeureDeReceptionAuBonFormat(courrier.getHeureDeReception())+"' and objet = '"+courrier.getObjetCourrier().replaceAll("'"," ")+ "' and reference = '"+ courrier.getReferenceCourrier().replace("\\","/").replaceAll("'"," ")+ "' and nom_fichier = '"+ courrier.getNomCourrier().replaceAll("'"," ") +"'),(select id_personne from `personne` where unique_id = '"+finalUniqueIDDestinataire+"') ,'"+EtatCourrier.accuseDeReceptionNon+"',"+"'"+courrier.getReferenceCourrier().replace("\\","/").replaceAll("'"," ")+"')";
+                    recevoirCourrierSQL = "insert into recevoir_courrier (`favoris`,`archive`,`id_courrier`,`id_personne`,`accuse_reception`,`reference_interne`) VALUES  ('" + EtatCourrier.pasfavoris+"',"+"'"+EtatCourrier.archiveNonActive+"',"+  "(select id_courrier from `courrier` where objet = '"+courrier.getObjetCourrier().replaceAll("'"," ")+ "' and reference = '"+ courrier.getReferenceCourrier().replace("\\","/").replaceAll("'"," ")+ "' and nom_fichier = '"+ courrier.getNomCourrier().replaceAll("'"," ") +"'),(select id_personne from `personne` where unique_id = '"+finalUniqueIDDestinataire+"') ,'"+EtatCourrier.accuseDeReceptionNon+"',"+"'"+courrier.getReferenceCourrier().replace("\\","/").replaceAll("'"," ")+"')";
 
 
                     if(courrier.getConfidentiel().equalsIgnoreCase("Non")){
                         courrier.setIdAlfresco(ConnexionAlfresco.enregistrerFichierCourrierDansAlfresco(new File(courrier.getCheminCourrierSurPC()),FileManager.determinerTypeDeFichierParSonExtension(FileManager.recupererExtensionDUnFichierParSonNom(courrier.getNomCourrier())),dossierCourrierAlfresco));
-                        updateCourrierAlfrescoSQL = "update `courrier` SET `dossier_alfresco_emetteur` = '"+dossierCourrierAlfresco+"', `identifiant_alfresco` = '"+courrier.getIdAlfresco()+"' WHERE `courrier`.`id_courrier` = (select id_courrier from (select id_courrier from `courrier` where date_reception ='"+ courrier.getDateDeReception()+"' and heure_reception ='"+ DateUtils.convertirHeureDeReceptionAuBonFormat(courrier.getHeureDeReception())+"' and objet = '"+courrier.getObjetCourrier().replaceAll("'"," ")+ "' and reference = '"+ courrier.getReferenceCourrier().replace("\\","/").replaceAll("'"," ")+ "' and nom_fichier = '"+ courrier.getNomCourrier().replaceAll("'"," ") +"') as temp)";
+                        updateCourrierAlfrescoSQL = "update `courrier` SET `dossier_alfresco_emetteur` = '"+dossierCourrierAlfresco+"', `identifiant_alfresco` = '"+courrier.getIdAlfresco()+"' WHERE `courrier`.`id_courrier` = (select id_courrier from (select id_courrier from `courrier` where objet = '"+courrier.getObjetCourrier().replaceAll("'"," ")+ "' and reference = '"+ courrier.getReferenceCourrier().replace("\\","/").replaceAll("'"," ")+ "' and nom_fichier = '"+ courrier.getNomCourrier().replaceAll("'"," ") +"') as temp)";
 
                     }
 
@@ -684,7 +684,7 @@ public class NouveauCourrier implements Serializable {
 
                             for (int a =0; a < listeAnnexe.size(); a++){
                                 ajouterAnnexeAlfrescoSQL = "insert into `annexe` (`titre`, `type_fichier`, `identifiant_alfresco_annexe`, `document_alfresco`, `id_courrier` ) VALUES" +
-                                        " ('" + listeAnnexe.get(a).getNomAnnexe()+"',"+"'" +listeAnnexe.get(a).getTypeDeFichierAnnexe()+"',"+"'"+ listeIdAlfrescoAnnexe.get(a) + "',"+"'" +dossierAnnexeAlfresco+ "',"+ "(select id_courrier from `courrier` where date_reception ='"+ courrier.getDateDeReception()+"' and heure_reception ='"+ DateUtils.convertirHeureDeReceptionAuBonFormat(courrier.getHeureDeReception())+"' and objet = '"+courrier.getObjetCourrier().replaceAll("'"," ")+ "' and reference = '"+ courrier.getReferenceCourrier().replace("\\","/").replaceAll("'"," ")+ "' and nom_fichier = '"+ courrier.getNomCourrier().replaceAll("'"," ") +"'))";
+                                        " ('" + listeAnnexe.get(a).getNomAnnexe()+"',"+"'" +listeAnnexe.get(a).getTypeDeFichierAnnexe()+"',"+"'"+ listeIdAlfrescoAnnexe.get(a) + "',"+"'" +dossierAnnexeAlfresco+ "',"+ "(select id_courrier from `courrier` where objet = '"+courrier.getObjetCourrier().replaceAll("'"," ")+ "' and reference = '"+ courrier.getReferenceCourrier().replace("\\","/").replaceAll("'"," ")+ "' and nom_fichier = '"+ courrier.getNomCourrier().replaceAll("'"," ") +"'))";
                                 statement.addBatch( ajouterAnnexeAlfrescoSQL);
                             }
                         }
@@ -708,13 +708,13 @@ public class NouveauCourrier implements Serializable {
                     ajouterDestinataireSQL = "insert into `personne` (`unique_id`, `fk_type_personne`, `id_fonction`, `id_direction` ,`id_etablissement`) VALUES" +
                             " ('" + finalUniqueIDDestinataire+"',"+"'"+idTypeDeDestinataire+"',"+"'"+ idFonctionDestinataire + "',"+"'" +idDirectionDestinataire + "',"+ "'" +idEtablissementDestinataire+ "')";
 
-                    envoyerCourrierSQL = "insert into envoyer_courrier (`favoris`,`archive`,`id_courrier`,`id_personne`,`confirmation_reception`) VALUES ('" + EtatCourrier.pasfavoris+"',"+"'"+EtatCourrier.archiveNonActive+"',"+  "(select id_courrier from `courrier` where date_reception ='"+ courrier.getDateDeReception()+"' and heure_reception ='"+ DateUtils.convertirHeureDeReceptionAuBonFormat(courrier.getHeureDeReception())+"' and objet = '"+courrier.getObjetCourrier().replaceAll("'"," ")+ "' and reference = '"+ courrier.getReferenceCourrier().replace("\\","/").replaceAll("'"," ")+ "' and nom_fichier = '"+ courrier.getNomCourrier().replaceAll("'","_") +"'),(select id_personne from `personne` where unique_id = '"+finalUniqueIDEmetteur+"'), '"+EtatCourrier.confirmationDeRecepetionNon+"');";
+                    envoyerCourrierSQL = "insert into envoyer_courrier (`favoris`,`archive`,`id_courrier`,`id_personne`,`confirmation_reception`) VALUES ('" + EtatCourrier.pasfavoris+"',"+"'"+EtatCourrier.archiveNonActive+"',"+  "(select id_courrier from `courrier` where objet = '"+courrier.getObjetCourrier().replaceAll("'"," ")+ "' and reference = '"+ courrier.getReferenceCourrier().replace("\\","/").replaceAll("'"," ")+ "' and nom_fichier = '"+ courrier.getNomCourrier().replaceAll("'","_") +"'),(select id_personne from `personne` where unique_id = '"+finalUniqueIDEmetteur+"'), '"+EtatCourrier.confirmationDeRecepetionNon+"');";
 
-                    recevoirCourrierSQL = "insert into recevoir_courrier (`favoris`,`archive`,`id_courrier`,`id_personne`,`accuse_reception`,`reference_interne`) VALUES  ('" + EtatCourrier.pasfavoris+"',"+"'"+EtatCourrier.archiveNonActive+"',"+  "(select id_courrier from `courrier` where date_reception ='"+ courrier.getDateDeReception()+"' and heure_reception ='"+ DateUtils.convertirHeureDeReceptionAuBonFormat(courrier.getHeureDeReception())+"' and objet = '"+courrier.getObjetCourrier().replaceAll("'"," ")+ "' and reference = '"+ courrier.getReferenceCourrier().replace("\\","/").replaceAll("'"," ")+ "' and nom_fichier = '"+ courrier.getNomCourrier().replaceAll("'"," ") +"'),(select id_personne from `personne` where unique_id = '"+finalUniqueIDDestinataire+"') ,'"+EtatCourrier.accuseDeReceptionNon+"',"+"'"+courrier.getReferenceCourrier().replace("\\","/").replaceAll("'"," ")+"');";
+                    recevoirCourrierSQL = "insert into recevoir_courrier (`favoris`,`archive`,`id_courrier`,`id_personne`,`accuse_reception`,`reference_interne`) VALUES  ('" + EtatCourrier.pasfavoris+"',"+"'"+EtatCourrier.archiveNonActive+"',"+  "(select id_courrier from `courrier` where objet = '"+courrier.getObjetCourrier().replaceAll("'"," ")+ "' and reference = '"+ courrier.getReferenceCourrier().replace("\\","/").replaceAll("'"," ")+ "' and nom_fichier = '"+ courrier.getNomCourrier().replaceAll("'"," ") +"'),(select id_personne from `personne` where unique_id = '"+finalUniqueIDDestinataire+"') ,'"+EtatCourrier.accuseDeReceptionNon+"',"+"'"+courrier.getReferenceCourrier().replace("\\","/").replaceAll("'"," ")+"');";
 
                     if(courrier.getConfidentiel().equalsIgnoreCase("Non")){
                         courrier.setIdAlfresco(ConnexionAlfresco.enregistrerFichierCourrierDansAlfresco(new File(courrier.getCheminCourrierSurPC()),FileManager.determinerTypeDeFichierParSonExtension(FileManager.recupererExtensionDUnFichierParSonNom(courrier.getNomCourrier())),dossierCourrierAlfresco));
-                        updateCourrierAlfrescoSQL = "update `courrier` SET `dossier_alfresco_emetteur` = '"+dossierCourrierAlfresco+"', `identifiant_alfresco` = '"+courrier.getIdAlfresco()+"' WHERE `courrier`.`id_courrier` = (select id_courrier from (select id_courrier from `courrier` where date_reception ='"+ courrier.getDateDeReception()+"' and heure_reception ='"+ DateUtils.convertirHeureDeReceptionAuBonFormat(courrier.getHeureDeReception())+"' and objet = '"+courrier.getObjetCourrier().replaceAll("'"," ")+ "' and reference = '"+ courrier.getReferenceCourrier().replace("\\","/").replaceAll("'"," ")+ "' and nom_fichier = '"+ courrier.getNomCourrier().replaceAll("'"," ") +"') as temp)";
+                        updateCourrierAlfrescoSQL = "update `courrier` SET `dossier_alfresco_emetteur` = '"+dossierCourrierAlfresco+"', `identifiant_alfresco` = '"+courrier.getIdAlfresco()+"' WHERE `courrier`.`id_courrier` = (select id_courrier from (select id_courrier from `courrier` where objet = '"+courrier.getObjetCourrier().replaceAll("'"," ")+ "' and reference = '"+ courrier.getReferenceCourrier().replace("\\","/").replaceAll("'"," ")+ "' and nom_fichier = '"+ courrier.getNomCourrier().replaceAll("'"," ") +"') as temp)";
                     }
 
                     try {
@@ -743,7 +743,7 @@ public class NouveauCourrier implements Serializable {
 
                             for (int a =0; a < listeAnnexe.size(); a++){
                                 ajouterAnnexeAlfrescoSQL = "insert into `annexe` (`titre`, `type_fichier`, `identifiant_alfresco_annexe`, `document_alfresco`, `id_courrier` ) VALUES" +
-                                        " ('" + listeAnnexe.get(a).getNomAnnexe()+"',"+"'" +listeAnnexe.get(a).getTypeDeFichierAnnexe()+"',"+"'"+ listeIdAlfrescoAnnexe.get(a) + "',"+"'" +dossierAnnexeAlfresco + "',"+ "(select id_courrier from `courrier` where date_reception ='"+ courrier.getDateDeReception()+"' and heure_reception ='"+ DateUtils.convertirHeureDeReceptionAuBonFormat(courrier.getHeureDeReception())+"' and objet = '"+courrier.getObjetCourrier().replaceAll("'"," ")+ "' and reference = '"+ courrier.getReferenceCourrier().replace("\\","/").replaceAll("'"," ")+ "' and nom_fichier = '"+ courrier.getNomCourrier().replaceAll("'"," ") +"'))";
+                                        " ('" + listeAnnexe.get(a).getNomAnnexe()+"',"+"'" +listeAnnexe.get(a).getTypeDeFichierAnnexe()+"',"+"'"+ listeIdAlfrescoAnnexe.get(a) + "',"+"'" +dossierAnnexeAlfresco + "',"+ "(select id_courrier from `courrier` where objet = '"+courrier.getObjetCourrier().replaceAll("'"," ")+ "' and reference = '"+ courrier.getReferenceCourrier().replace("\\","/").replaceAll("'"," ")+ "' and nom_fichier = '"+ courrier.getNomCourrier().replaceAll("'"," ") +"'))";
                                 statement.addBatch( ajouterAnnexeAlfrescoSQL);
                             }
                         }
@@ -761,12 +761,12 @@ public class NouveauCourrier implements Serializable {
                     break;
             }
         }else{
-            FacesContext.getCurrentInstance().addMessage("messagesErreur", new FacesMessage(FacesMessage.SEVERITY_ERROR, "Erreur", "Vous devez renseigner la date et l'heure de reception du courrier"));
+            FacesMessages.errorMessage("messagesErreur","Erreur","Vous devez ajouter le fichier du courrier");
         }
     }
 
     private void reinitialiserLeFormulaire(){
-        courrier.setDateDeReception(null);
+
         courrier.setNomCourrier(null);
         courrier.setTypeCourrier(null);
         courrier.setObjetCourrier(null);
@@ -876,14 +876,6 @@ public class NouveauCourrier implements Serializable {
 
     public void setThisIsConfidentiel(boolean thisIsConfidentiel) {
         this.thisIsConfidentiel = thisIsConfidentiel;
-    }
-
-    public Date getDateTemp() {
-        return dateTemp;
-    }
-
-    public void setDateTemp(Date dateTemp) {
-        this.dateTemp = dateTemp;
     }
 
     public User getUser() {

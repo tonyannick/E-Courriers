@@ -31,6 +31,8 @@ public class CourriersQueries {
     public static String referenceInterne;
     public static String heureDeReception;
     public static String heureDEnregistrement;
+    public static String heureDEnvoi;
+    public static String dateDEnvoi;
     public static String typeDemetteur;
     public static String idEmetteur;
     public static String ministereEmetteur;
@@ -114,7 +116,8 @@ public class CourriersQueries {
         String requeteMesCourriersSQL = null;
         HttpSession session = SessionUtils.getSession();
         String idDirection = (String) session.getAttribute("idDirectionUser");
-        requeteMesCourriersSQL = "select * from `envoyer_courrier` inner join `courrier` on envoyer_courrier.id_courrier = courrier.id_courrier left join correspondance_dossier_courrier on correspondance_dossier_courrier.id_courrier = courrier.id_courrier left join dossier on correspondance_dossier_courrier.id_dossier = dossier.id_dossier inner join personne on envoyer_courrier.id_personne = personne.id_personne inner join direction on personne.id_direction = direction.id_direction inner join type_courrier on courrier.fk_type_courrier = type_courrier.id_type_courrier where direction.id_direction = '"+idDirection+"' and courrier.etat = '"+EtatCourrier.courrierEnvoye+"' and envoyer_courrier.favoris = '"+EtatCourrier.pasfavoris+"' and envoyer_courrier.archive =  '"+ EtatCourrier.archiveNonActive +"' order by courrier.id_courrier desc;";
+        requeteMesCourriersSQL = "select * from `envoyer_courrier` inner join `courrier` on envoyer_courrier.id_courrier = courrier.id_courrier left join correspondance_dossier_courrier on correspondance_dossier_courrier.id_courrier = courrier.id_courrier left join dossier on correspondance_dossier_courrier.id_dossier = dossier.id_dossier inner join personne on envoyer_courrier.id_personne = personne.id_personne inner join direction on personne.id_direction = direction.id_direction inner join type_courrier on courrier.fk_type_courrier = type_courrier.id_type_courrier where direction.id_direction = '"+idDirection+"' and courrier.etat = '"+EtatCourrier.courrierEnvoye+"' and envoyer_courrier.favoris = '"+EtatCourrier.pasfavoris+"' and envoyer_courrier.archive =  '"+ EtatCourrier.archiveNonActive +"' order by envoyer_courrier.date_envoi desc;";
+        System.out.println("requeteMesCourriersSQL = " + requeteMesCourriersSQL);
         ResultSet resultSet = null;
         try {
 
@@ -124,7 +127,7 @@ public class CourriersQueries {
                         resultSet.getString("reference"),
                         resultSet.getString("priorite"),
                         resultSet.getString("objet"),
-                        resultSet.getString("courrier.date_enregistrement"),
+                        resultSet.getString("envoyer_courrier.date_envoi"),
                         resultSet.getString("courrier.id_courrier"),
                         resultSet.getString("confidentiel"),
                         resultSet.getString("titre_type_courrier"),
@@ -192,7 +195,7 @@ public class CourriersQueries {
                         resultSet1.getString("reference"),
                         resultSet1.getString("priorite"),
                         resultSet1.getString("objet"),
-                        resultSet1.getString("courrier.date_enregistrement"),
+                        resultSet1.getString("date_enregistrement"),
                         resultSet1.getString("id_courrier"),
                         resultSet1.getString("genre"),
                         resultSet1.getString("identifiant_alfresco")));
@@ -203,14 +206,16 @@ public class CourriersQueries {
                         resultSet2.getString("reference"),
                         resultSet2.getString("priorite"),
                         resultSet2.getString("objet"),
-                        resultSet2.getString("courrier.date_enregistrement"),
+                        resultSet1.getString("date_enregistrement"),
                         resultSet2.getString("id_courrier"),
                         resultSet2.getString("genre"),
                         resultSet2.getString("identifiant_alfresco")));
             }
 
+            finalList = Stream.of(mesCourriersEnvoyes, mesCourriersRecus).flatMap(x -> x.stream()).collect(Collectors.toList());
 
-            if(mesCourriersEnvoyes.size() > 0){
+
+           /* if(mesCourriersEnvoyes.size() > 0){
 
                 for (int i = 0; i < mesCourriersEnvoyes.size(); i++){
                     String jour = mesCourriersEnvoyes.get(i).getDateDeReception().substring(mesCourriersEnvoyes.get(i).getDateDeReception().lastIndexOf("-") +1);
@@ -232,7 +237,7 @@ public class CourriersQueries {
                 }
             }
 
-            finalList = Stream.concat(mesCourriersEnvoyes.stream(), mesCourriersRecus.stream()).collect(Collectors.toList());
+            finalList = Stream.concat(mesCourriersEnvoyes.stream(), mesCourriersRecus.stream()).collect(Collectors.toList());*/
 
         } catch (SQLException e) {
             e.printStackTrace();
@@ -283,7 +288,7 @@ public class CourriersQueries {
                         resultSet1.getString("reference"),
                         resultSet1.getString("priorite"),
                         resultSet1.getString("objet"),
-                        resultSet1.getString("courrier.date_enregistrement"),
+                        resultSet1.getString("date_enregistrement"),
                         resultSet1.getString("id_courrier"),
                         resultSet1.getString("genre"),
                         resultSet1.getString("identifiant_alfresco")));
@@ -294,13 +299,13 @@ public class CourriersQueries {
                         resultSet2.getString("reference"),
                         resultSet2.getString("priorite"),
                         resultSet2.getString("objet"),
-                        resultSet2.getString("courrier.date_enregistrement"),
+                        resultSet1.getString("date_enregistrement"),
                         resultSet2.getString("id_courrier"),
                         resultSet2.getString("genre"),
                         resultSet2.getString("identifiant_alfresco")));
             }
-
-            if(mesCourriersEnvoyes.size() > 0){
+            finalList = Stream.of(mesCourriersEnvoyes, mesCourriersRecus).flatMap(x -> x.stream()).collect(Collectors.toList());
+         /*   if(mesCourriersEnvoyes.size() > 0){
 
                 for (int i = 0; i < mesCourriersEnvoyes.size(); i++){
                     String jour = mesCourriersEnvoyes.get(i).getDateDeReception().substring(mesCourriersEnvoyes.get(i).getDateDeReception().lastIndexOf("-") +1);
@@ -320,9 +325,9 @@ public class CourriersQueries {
                     mesCourriersRecus.get(i).setDateDeReception(jour+"-"+mois+"-"+annee);
                     mesCourriersRecus.get(i).setGenreCourrier("Courrier Reçu");
                 }
-            }
+            }*/
 
-            finalList = Stream.concat(mesCourriersEnvoyes.stream(), mesCourriersRecus.stream()).collect(Collectors.toList());
+            //finalList = Stream.concat(mesCourriersEnvoyes.stream(), mesCourriersRecus.stream()).collect(Collectors.toList());
         } catch (SQLException e) {
             e.printStackTrace();
         }finally {
@@ -447,6 +452,7 @@ public class CourriersQueries {
         list.clear();
         Connection connection = DatabaseConnection.getConnexion();
         String requete = "select titre_type_courrier from type_courrier order by titre_type_courrier ;";
+        System.out.println("requete = " + requete);
         ResultSet resultSet = null;
         try {
             resultSet = connection.createStatement().executeQuery(requete);
@@ -730,6 +736,9 @@ public class CourriersQueries {
                 telEmetteurPersonne = resultSet.getString("tel");
                 emailEmetteurPersonne = resultSet.getString("mail");
                 nomEtPrenomEmetteurPersonne = resultSet.getString("nom") +" "+resultSet.getString("prenom") ;
+
+                heureDEnvoi = resultSet.getString("heure_envoi");
+                dateDEnvoi = resultSet.getString("date_envoi");
 
                 if(telEmetteurEtablissement == null){
                     telEmetteurEtablissement = "";

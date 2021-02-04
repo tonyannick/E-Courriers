@@ -534,7 +534,7 @@
                                 </div>
 
                                 <div id="InformationsGenerales" class="tabcontent">
-                                    <button class="accordionDetailCourrier"><h:graphicImage value="./resources/images/one.png" style="margin-right:10px; width: 15px; height: 15px;"/>Emetteur du courrier</button>
+                                    <button class="accordionDetailCourrier" style="margin-top: 20px"><h:graphicImage value="./resources/images/one.png" style="margin-right:10px; width: 15px; height: 15px;"/>Emetteur du courrier</button>
                                     <div class="panelInfoCourrier">
                                         <p:panelGrid id="titreParticulier" columns="2" columnClasses="ui-grid-col-1 gridcol2, ui-grid-col-8"
                                                      style="width: 100%; margin-top: 15px; margin-bottom:15px; border: 1px #888 solid; background-color: white;">
@@ -1132,7 +1132,7 @@
                                       showEffect="clip"  dynamic="true" closable="true">
 
                                 <h:form  style="width: 100%" styleClass="">
-
+                                    <p:messages  showDetail="true" closable="true" for="messageEnvoyerCourrier"/>
                                     <p:commandButton value="Valider"
                                                      style="margin-top: 14px; margin-right: 10px; float: right"
                                                      icon="fa fa-check-circle" iconPos="right"

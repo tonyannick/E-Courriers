@@ -72,7 +72,7 @@ public class CourriersFavoris implements Serializable {
         }else{
             courrierTempList.clear();
             for(int a = 0; a < courrier.getListeDesCouriersFavoris().size(); a++){
-                if(courrier.getListeDesCouriersFavoris().get(a).getDateDeReception().equals(datePourRechercheAvancee)){
+                if(courrier.getListeDesCouriersFavoris().get(a).getDateDEnregistrement().equals(datePourRechercheAvancee)){
                     courrierTempList.add(courrier.getListeDesCouriersFavoris().get(a));
                     trouve = true;
                 }
@@ -97,7 +97,7 @@ public class CourriersFavoris implements Serializable {
             SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy");
             for (int a = 0; a <  courrier.getListeDesCouriersFavoris().size(); a++) {
                 try {
-                    Date date = sdf.parse(courrier.getListeDesCouriersFavoris().get(a).getDateDeReception());
+                    Date date = sdf.parse(courrier.getListeDesCouriersFavoris().get(a).getDateDEnregistrement());
                     if (date.after(DateUtils.premierJourDuMoisAPartirDUneDate) && date.before(DateUtils.dernierJourDuMoisAPartirDUneDate)) {
                         courrierTempList.add(courrier.getListeDesCouriersFavoris().get(a));
                         trouve = true;

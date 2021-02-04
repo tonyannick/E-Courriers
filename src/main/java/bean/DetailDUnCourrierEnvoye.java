@@ -46,7 +46,8 @@ public class DetailDUnCourrierEnvoye implements Serializable {
     private List<String> listeIdAnnexeAlfresco = new ArrayList<>();
     private String existenceDestinataireDeTransfer = "non";
     private boolean fichierReponseCourrierAjouter = false;
-    private String dossierReponseAlfresco;
+    private String nomEtPrenomAjouteurCourrier;
+    private String fonctionAjouteurCourrier;
 
     @PostConstruct
     public void initialisation(){
@@ -78,6 +79,8 @@ public class DetailDUnCourrierEnvoye implements Serializable {
         emetteur.setMinistere(CourriersQueries.ministereEmetteur);
         emetteur.setDirection(CourriersQueries.directeurEmetteur);
         emetteur.setFonction(CourriersQueries.fonctionEmetteur);
+        emetteur.setHeureEnvoi(CourriersQueries.heureDEnvoi);
+        emetteur.setDateEnvoi(CourriersQueries.dateDEnvoi);
         PrimeFaces.current().executeScript("affichageEnFonctionDuTypeEmetteur()");
 
         courrier.setObjetCourrier(CourriersQueries.objetCourrier);
@@ -87,20 +90,29 @@ public class DetailDUnCourrierEnvoye implements Serializable {
 
         courrier.setDossierAlfresco(CourriersQueries.dossierAlfresco);
         courrier.setConfidentiel(CourriersQueries.confidentiel);
-        courrier.setHeureDeReception(CourriersQueries.heureDeReception);
+        //courrier.setHeureDeReception(CourriersQueries.heureDeReception);
         courrier.setDateDEnregistrement(CourriersQueries.dateDEnregistrement);
-        courrier.setDateDeReception(CourriersQueries.dateDeReception);
+        //courrier.setDateDeReception(CourriersQueries.dateDeReception);
         courrier.setCommentairesCourrier(CourriersQueries.commentairesCourrier);
-        String jour = courrier.getDateDeReception().substring(courrier.getDateDeReception().lastIndexOf("-") +1);
+
+        nomEtPrenomAjouteurCourrier = CourriersQueries.nomEtPrenomPersonneAjouteurDuCourrier;
+        fonctionAjouteurCourrier = CourriersQueries.fonctionPersonneAjouteurDuCourrier;
+
+        /*String jour = courrier.getDateDeReception().substring(courrier.getDateDeReception().lastIndexOf("-") +1);
         String mois = courrier.getDateDeReception().substring(courrier.getDateDeReception().indexOf("-")+1,courrier.getDateDeReception().indexOf("-")+3);
-        String annee = courrier.getDateDeReception().substring(0,4);
+        String annee = courrier.getDateDeReception().substring(0,4);*/
 
         String jourEnregistrement = courrier.getDateDEnregistrement().substring(courrier.getDateDEnregistrement().lastIndexOf("-") +1);
         String moisEnregistrement = courrier.getDateDEnregistrement().substring(courrier.getDateDEnregistrement().indexOf("-")+1,courrier.getDateDEnregistrement().indexOf("-")+3);
         String anneeEnregistrement = courrier.getDateDEnregistrement().substring(0,4);
-        courrier.setDateDEnregistrement(jourEnregistrement+"-"+moisEnregistrement+"-"+anneeEnregistrement);
 
-        courrier.setDateDeReception(jour+"-"+mois+"-"+annee);
+        String jourEnvoi = emetteur.getDateEnvoi().substring(emetteur.getDateEnvoi().lastIndexOf("-") +1);
+        String moisEnvoi = emetteur.getDateEnvoi().substring(emetteur.getDateEnvoi().indexOf("-")+1,emetteur.getDateEnvoi().indexOf("-")+3);
+        String anneeEnvoi = emetteur.getDateEnvoi().substring(0,4);
+        emetteur.setDateEnvoi(jourEnvoi+"-"+moisEnvoi+"-"+anneeEnvoi);
+
+        courrier.setDateDEnregistrement(jourEnregistrement+"-"+moisEnregistrement+"-"+anneeEnregistrement);
+        //courrier.setDateDeReception(jour+"-"+mois+"-"+annee);
         courrier.setHeureDEnregistrement(CourriersQueries.heureDEnregistrement);
     }
 
@@ -650,5 +662,21 @@ public class DetailDUnCourrierEnvoye implements Serializable {
 
     public void setActivites(Activites activites) {
         this.activites = activites;
+    }
+
+    public String getNomEtPrenomAjouteurCourrier() {
+        return nomEtPrenomAjouteurCourrier;
+    }
+
+    public void setNomEtPrenomAjouteurCourrier(String nomEtPrenomAjouteurCourrier) {
+        this.nomEtPrenomAjouteurCourrier = nomEtPrenomAjouteurCourrier;
+    }
+
+    public String getFonctionAjouteurCourrier() {
+        return fonctionAjouteurCourrier;
+    }
+
+    public void setFonctionAjouteurCourrier(String fonctionAjouteurCourrier) {
+        this.fonctionAjouteurCourrier = fonctionAjouteurCourrier;
     }
 }

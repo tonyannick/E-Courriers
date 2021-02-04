@@ -14,9 +14,6 @@
 .fa-check-circle{
     color: #0f9a00;
 }
-.fa-refresh{
-    color: #f19121;
-}
 .panelInfoCourrier {
     padding: 0 18px;
     background-color: white;
@@ -418,4 +415,9 @@ input[type=text]:focus{
 textarea:focus {
     border-color:dodgerBlue;
     box-shadow:0 0 8px 0 dodgerBlue;
+}
+.ui-toolbar.ui-widget-header{
+    background: #c8c8c8;
+    border-color: white;
+    border-width: 1px;
 }
