@@ -66,7 +66,7 @@ public class CourriersQueries {
                         resultSet.getString("reference"),
                         resultSet.getString("priorite"),
                         resultSet.getString("objet"),
-                        resultSet.getString("courrier.date_enregistrement"),
+                        resultSet.getString("recevoir_courrier.date_reception"),
                         resultSet.getString("courrier.id_courrier"),
                         resultSet.getString("confidentiel"),
                         resultSet.getString("titre_type_courrier"),

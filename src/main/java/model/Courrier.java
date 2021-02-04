@@ -65,14 +65,14 @@ public class Courrier {
 
 
     public Courrier(String referenceCourrier, String prioriteCourrier, String objetCourrier,
-                    String dateDEnregistrement, String idCourrier, String confidentiel,
+                    String dateDeReception, String idCourrier, String confidentiel,
                     String extensionCourrier, String idAjouterCourrier,String idAlfresco,
                     String idDossier,String accuseDeReception, String transferer,String motsclesCourrier,String referenceInterne) {
 
         this.referenceCourrier = referenceCourrier;
         this.prioriteCourrier = prioriteCourrier;
         this.objetCourrier = objetCourrier;
-        this.dateDEnregistrement= dateDEnregistrement;
+        this.dateDEnregistrement = dateDeReception;
         this.idCourrier = idCourrier;
         this.confidentiel = confidentiel;
         this.extensionCourrier = extensionCourrier;
