@@ -85,8 +85,8 @@ public class StatistiquesQueries {
         Connection connectionCourrierRecus = DatabaseConnection.getConnexion();
         Connection connectionCourrierEnvoyes = DatabaseConnection.getConnexion();
 
-        String nombreDeCourrierRecusSQL = "select courrier.date_enregistrement from `recevoir_courrier` inner join `courrier` on recevoir_courrier.id_courrier = courrier.id_courrier inner join personne on recevoir_courrier.id_personne = personne.id_personne inner join direction on personne.id_direction = direction.id_direction where direction.nom_direction = '" + nomDirection + "'  and courrier.etat = '" + EtatCourrier.courrierEnvoye + "' group by courrier.id_courrier order by courrier.id_courrier desc";
-        String nombreDeCourrierEnvoyesSQL = "select courrier.date_enregistrement from `envoyer_courrier` inner join `courrier` on envoyer_courrier.id_courrier = courrier.id_courrier inner join personne on  envoyer_courrier.id_personne = personne.id_personne inner join direction on personne.id_direction = direction.id_direction where direction.nom_direction = '" + nomDirection + "'  and courrier.etat = '" + EtatCourrier.courrierEnvoye + "' group by courrier.id_courrier order by courrier.id_courrier desc";
+        String nombreDeCourrierRecusSQL = "select recevoir_courrier.date_reception from `recevoir_courrier` inner join `courrier` on recevoir_courrier.id_courrier = courrier.id_courrier inner join personne on recevoir_courrier.id_personne = personne.id_personne inner join direction on personne.id_direction = direction.id_direction where direction.nom_direction = '" + nomDirection + "'  and courrier.etat = '" + EtatCourrier.courrierEnvoye + "' group by courrier.id_courrier order by courrier.id_courrier desc";
+        String nombreDeCourrierEnvoyesSQL = "select envoyer_courrier.date_envoi from `envoyer_courrier` inner join `courrier` on envoyer_courrier.id_courrier = courrier.id_courrier inner join personne on  envoyer_courrier.id_personne = personne.id_personne inner join direction on personne.id_direction = direction.id_direction where direction.nom_direction = '" + nomDirection + "'  and courrier.etat = '" + EtatCourrier.courrierEnvoye + "' group by courrier.id_courrier order by courrier.id_courrier desc";
         ResultSet resultSetCourriersRecus = null;
         ResultSet resultSetCourriersEnvoyes = null;
 
@@ -95,11 +95,11 @@ public class StatistiquesQueries {
             resultSetCourriersEnvoyes = connectionCourrierEnvoyes.createStatement().executeQuery(nombreDeCourrierEnvoyesSQL);
 
             while (resultSetCourriersRecus.next()) {
-                listeCourriersRecus.add(resultSetCourriersRecus.getString("courrier.date_enregistrement"));
+                listeCourriersRecus.add(resultSetCourriersRecus.getString("recevoir_courrier.date_reception"));
             }
 
             while (resultSetCourriersEnvoyes.next()) {
-                listeCourriersEnvoyes.add(resultSetCourriersEnvoyes.getString("courrier.date_enregistrement"));
+                listeCourriersEnvoyes.add(resultSetCourriersEnvoyes.getString("envoyer_courrier.date_envoi"));
             }
 
             listeCourriersTraites = Stream.concat(listeCourriersRecus.stream(), listeCourriersEnvoyes.stream()).collect(Collectors.toList());
@@ -113,7 +113,7 @@ public class StatistiquesQueries {
                             case "janvier":
                                 nombreDeCourrierTempJanvier++;
                                 break;
-                            case "fevrier":
+                            case "février":
                                 nombreDeCourrierTempFevrier++;
                                 break;
                             case "mars":
@@ -608,7 +608,7 @@ public class StatistiquesQueries {
 
             while (resultSetCourriersRecus.next()) {
                 listeCourriersRecus.add(new Courrier(
-                        resultSetCourriersRecus.getString("date_enregistrement"),
+                        resultSetCourriersRecus.getString("recevoir_courrier.date_reception"),
                         resultSetCourriersRecus.getString("priorite"),
                         resultSetCourriersRecus.getString("confidentiel"),
                         resultSetCourriersRecus.getString("id_courrier"),
@@ -617,7 +617,7 @@ public class StatistiquesQueries {
 
             while (resultSetCourriersEnvoyes.next()) {
                 listeCourriersEnvoyes.add(new Courrier(
-                        resultSetCourriersEnvoyes.getString("date_enregistrement"),
+                        resultSetCourriersEnvoyes.getString("envoyer_courrier.date_envoi"),
                         resultSetCourriersEnvoyes.getString("priorite"),
                         resultSetCourriersEnvoyes.getString("confidentiel"),
                         resultSetCourriersEnvoyes.getString("id_courrier"),
@@ -747,7 +747,7 @@ public class StatistiquesQueries {
 
             while (resultSetCourriersRecus.next()) {
                 listeCourriersRecus.add(new Courrier(
-                        resultSetCourriersRecus.getString("date_enregistrement"),
+                        resultSetCourriersRecus.getString("recevoir_courrier.date_reception"),
                         resultSetCourriersRecus.getString("priorite"),
                         resultSetCourriersRecus.getString("confidentiel"),
                         resultSetCourriersRecus.getString("id_courrier"),
@@ -756,51 +756,50 @@ public class StatistiquesQueries {
 
             while (resultSetCourriersEnvoyes.next()) {
                 listeCourriersEnvoyes.add(new Courrier(
-                        resultSetCourriersEnvoyes.getString("date_enregistrement"),
+                        resultSetCourriersEnvoyes.getString("envoyer_courrier.date_envoi"),
                         resultSetCourriersEnvoyes.getString("priorite"),
                         resultSetCourriersEnvoyes.getString("confidentiel"),
                         resultSetCourriersEnvoyes.getString("id_courrier"),
                         resultSetCourriersEnvoyes.getString("genre")));
             }
 
-
-
             if(listeCourriersRecus.size() > 0){
-
                 for (int i = 0; i < listeCourriersRecus.size(); i++) {
-                    if (listeCourriersRecus.get(i).getDateDEnregistrement().equals(dateDuJour)) {
-                        nombreCourrierRecusDuJour++;
-                        if (listeCourriersRecus.get(i).getPrioriteCourrier().equalsIgnoreCase("Urgent")) {
-                            tempCourrierUrgentRecu++;
-                        }else if(listeCourriersRecus.get(i).getPrioriteCourrier().equalsIgnoreCase("Normal")){
-                            tempCourrierPasUrgentRecu++;
-                        }
-                        if (listeCourriersRecus.get(i).getConfidentiel().equalsIgnoreCase("Oui")) {
-                            tempCourrierConfidentielRecu++;
-                        }else if(listeCourriersRecus.get(i).getConfidentiel().equalsIgnoreCase("Non")){
-                            tempCourrierPasConfidentielRecu++;
+                    if(listeCourriersRecus.get(i).getDateDEnregistrement() != null){
+                        if (listeCourriersRecus.get(i).getDateDEnregistrement().equals(dateDuJour)) {
+                            nombreCourrierRecusDuJour++;
+                            if (listeCourriersRecus.get(i).getPrioriteCourrier().equalsIgnoreCase("Urgent")) {
+                                tempCourrierUrgentRecu++;
+                            }else if(listeCourriersRecus.get(i).getPrioriteCourrier().equalsIgnoreCase("Normal")){
+                                tempCourrierPasUrgentRecu++;
+                            }
+                            if (listeCourriersRecus.get(i).getConfidentiel().equalsIgnoreCase("Oui")) {
+                                tempCourrierConfidentielRecu++;
+                            }else if(listeCourriersRecus.get(i).getConfidentiel().equalsIgnoreCase("Non")){
+                                tempCourrierPasConfidentielRecu++;
+                            }
                         }
                     }
-
                 }
             }
 
             if(listeCourriersEnvoyes.size() > 0) {
                 for (int i = 0; i < listeCourriersEnvoyes.size(); i++) {
-                    if (listeCourriersEnvoyes.get(i).getDateDEnregistrement().equals(dateDuJour)) {
-                        nombreCourrierEnvoyesDuJour++;
-                        if (listeCourriersEnvoyes.get(i).getPrioriteCourrier().equalsIgnoreCase("Normal")) {
-                            tempCourrierPasUrgentEnvoye++;
-                        }else if(listeCourriersEnvoyes.get(i).getPrioriteCourrier().equalsIgnoreCase("Urgent")){
-                            tempCourrierUrgentEnvoye++;
-                        }
-                        if (listeCourriersEnvoyes.get(i).getConfidentiel().equalsIgnoreCase("Oui")) {
-                            tempCourrierConfidentielEnvoye++;
-                        }else if(listeCourriersEnvoyes.get(i).getConfidentiel().equalsIgnoreCase("Non")){
-                            tempCourrierPasConfidentielEnvoye++;
+                    if(listeCourriersEnvoyes.get(i).getDateDEnregistrement() != null){
+                        if (listeCourriersEnvoyes.get(i).getDateDEnregistrement().equals(dateDuJour)) {
+                            nombreCourrierEnvoyesDuJour++;
+                            if (listeCourriersEnvoyes.get(i).getPrioriteCourrier().equalsIgnoreCase("Normal")) {
+                                tempCourrierPasUrgentEnvoye++;
+                            }else if(listeCourriersEnvoyes.get(i).getPrioriteCourrier().equalsIgnoreCase("Urgent")){
+                                tempCourrierUrgentEnvoye++;
+                            }
+                            if (listeCourriersEnvoyes.get(i).getConfidentiel().equalsIgnoreCase("Oui")) {
+                                tempCourrierConfidentielEnvoye++;
+                            }else if(listeCourriersEnvoyes.get(i).getConfidentiel().equalsIgnoreCase("Non")){
+                                tempCourrierPasConfidentielEnvoye++;
+                            }
                         }
                     }
-
                 }
             }
 

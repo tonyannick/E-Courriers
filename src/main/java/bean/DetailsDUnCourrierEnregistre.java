@@ -1397,11 +1397,10 @@ public class DetailsDUnCourrierEnregistre implements Serializable {
 
         String mettreAJourDateDEnvoi = "update `envoyer_courrier` SET `date_envoi` = '"+DateUtils.recupererSimpleDateEnCours()+"' where envoyer_courrier.id_courrier = '"+idCourrier+"';";
         String mettreAJourHeureDEnvoi = "update `envoyer_courrier` SET `heure_envoi` = '"+DateUtils.recupererMiniHeuresEnCours()+"' where envoyer_courrier.id_courrier = '"+idCourrier+"';";
-
+        System.out.println("mettreAJourHeureDEnvoi = " + mettreAJourHeureDEnvoi);
+        System.out.println("mettreAJourDateDEnvoi = " + mettreAJourDateDEnvoi);
         String mettreAJourDateDeReception = "update `recevoir_courrier` SET `date_reception` = '"+DateUtils.recupererSimpleDateEnCours()+"' where recevoir_courrier.id_courrier = '"+idCourrier+"';";
         String mettreAJourHeureDeReception = "update `recevoir_courrier` SET `heure_reception` = '"+DateUtils.recupererMiniHeuresEnCours()+"' where recevoir_courrier.id_courrier = '"+idCourrier+"';";
-
-
 
         String ajouterEtapeCourrierSQL = "INSERT INTO `etape` (`titre`, `etat`, `message`) VALUES" +
                 " ('" + EtatCourrier.courrierEnvoye +"',"+"'"+ EtatEtape.termine+"',"+"'"+ ActionEtape.courrierEnvoye+"')";

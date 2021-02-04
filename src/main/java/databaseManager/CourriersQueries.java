@@ -117,7 +117,6 @@ public class CourriersQueries {
         HttpSession session = SessionUtils.getSession();
         String idDirection = (String) session.getAttribute("idDirectionUser");
         requeteMesCourriersSQL = "select * from `envoyer_courrier` inner join `courrier` on envoyer_courrier.id_courrier = courrier.id_courrier left join correspondance_dossier_courrier on correspondance_dossier_courrier.id_courrier = courrier.id_courrier left join dossier on correspondance_dossier_courrier.id_dossier = dossier.id_dossier inner join personne on envoyer_courrier.id_personne = personne.id_personne inner join direction on personne.id_direction = direction.id_direction inner join type_courrier on courrier.fk_type_courrier = type_courrier.id_type_courrier where direction.id_direction = '"+idDirection+"' and courrier.etat = '"+EtatCourrier.courrierEnvoye+"' and envoyer_courrier.favoris = '"+EtatCourrier.pasfavoris+"' and envoyer_courrier.archive =  '"+ EtatCourrier.archiveNonActive +"' order by envoyer_courrier.date_envoi desc;";
-        System.out.println("requeteMesCourriersSQL = " + requeteMesCourriersSQL);
         ResultSet resultSet = null;
         try {
 
@@ -678,8 +677,6 @@ public class CourriersQueries {
             if (resultSet.next()){
                 dateDEnregistrement = resultSet.getString("date_enregistrement");
                 heureDEnregistrement = resultSet.getString("heure_enregistrement");
-                dateDeReception = resultSet.getString("date_reception");
-                heureDeReception = resultSet.getString("heure_reception");
                 objetCourrier = resultSet.getString("objet");
                 commentairesCourrier = resultSet.getString("commentaires");
                 prioriteCourrier = resultSet.getString("priorite");
