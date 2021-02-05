@@ -85,8 +85,9 @@ public class StatistiquesQueries {
         Connection connectionCourrierRecus = DatabaseConnection.getConnexion();
         Connection connectionCourrierEnvoyes = DatabaseConnection.getConnexion();
 
-        String nombreDeCourrierRecusSQL = "select recevoir_courrier.date_reception from `recevoir_courrier` inner join `courrier` on recevoir_courrier.id_courrier = courrier.id_courrier inner join personne on recevoir_courrier.id_personne = personne.id_personne inner join direction on personne.id_direction = direction.id_direction where direction.nom_direction = '" + nomDirection + "'  and courrier.etat = '" + EtatCourrier.courrierEnvoye + "' group by courrier.id_courrier order by courrier.id_courrier desc";
-        String nombreDeCourrierEnvoyesSQL = "select envoyer_courrier.date_envoi from `envoyer_courrier` inner join `courrier` on envoyer_courrier.id_courrier = courrier.id_courrier inner join personne on  envoyer_courrier.id_personne = personne.id_personne inner join direction on personne.id_direction = direction.id_direction where direction.nom_direction = '" + nomDirection + "'  and courrier.etat = '" + EtatCourrier.courrierEnvoye + "' group by courrier.id_courrier order by courrier.id_courrier desc";
+        String nombreDeCourrierRecusSQL = "select recevoir_courrier.date_reception from `recevoir_courrier` inner join `courrier` on recevoir_courrier.id_courrier = courrier.id_courrier inner join personne on recevoir_courrier.id_personne = personne.id_personne inner join direction on personne.id_direction = direction.id_direction where direction.nom_direction = '" + nomDirection + "'  and courrier.etat = '" + EtatCourrier.courrierEnvoye + "'";
+        String nombreDeCourrierEnvoyesSQL = "select envoyer_courrier.date_envoi from `envoyer_courrier` inner join `courrier` on envoyer_courrier.id_courrier = courrier.id_courrier inner join personne on  envoyer_courrier.id_personne = personne.id_personne inner join direction on personne.id_direction = direction.id_direction where direction.nom_direction = '" + nomDirection + "'  and courrier.etat = '" + EtatCourrier.courrierEnvoye + "'";
+
         ResultSet resultSetCourriersRecus = null;
         ResultSet resultSetCourriersEnvoyes = null;
 
@@ -103,7 +104,8 @@ public class StatistiquesQueries {
             }
 
             listeCourriersTraites = Stream.concat(listeCourriersRecus.stream(), listeCourriersEnvoyes.stream()).collect(Collectors.toList());
-
+           // listeCourriersTraites =  Stream.of(listeCourriersEnvoyes, listeCourriersRecus).flatMap(x -> x.stream()).collect(Collectors.toList());
+            
             String anneeEnCours = DateUtils.recupererLAnneeEnCours();
             listeCourriersTraites.removeIf(e -> !e.contains(anneeEnCours));
             for (int a = 0; a < listeCourriersTraites.size(); a++) {
@@ -115,6 +117,7 @@ public class StatistiquesQueries {
                                 break;
                             case "février":
                                 nombreDeCourrierTempFevrier++;
+                                System.out.println("listeCourriersTraites = " + listeCourriersTraites.get(a));
                                 break;
                             case "mars":
                                 nombreDeCourrierTempMars++;
@@ -157,7 +160,7 @@ public class StatistiquesQueries {
                 }
             }
 
-
+            System.out.println("nombreDeCourrierFevrier = " + nombreDeCourrierFevrier);
             nombreDeCourrierJanvier = nombreDeCourrierTempJanvier;
             nombreDeCourrierFevrier = nombreDeCourrierTempFevrier;
             nombreDeCourrierMars = nombreDeCourrierTempMars;
@@ -195,12 +198,12 @@ public class StatistiquesQueries {
         List<Courrier> finalListeCourriers = new ArrayList<>();
         ResultSet resultSetIdRecus = null;
         Connection connectionCourrierIdRecus =  DatabaseConnection.getConnexion();
-        String requeteIdCourriersRecusSQL = "select courrier.id_courrier,date_enregistrement from `recevoir_courrier` inner join `courrier` on recevoir_courrier.id_courrier = courrier.id_courrier inner join personne on recevoir_courrier.id_personne = personne.id_personne inner join direction on personne.id_direction = direction.id_direction where direction.nom_direction = '"+nomDirection+"' and etat = '"+EtatCourrier.courrierEnvoye+"'";
+        String requeteIdCourriersRecusSQL = "select courrier.id_courrier,recevoir_courrier.date_reception from `recevoir_courrier` inner join `courrier` on recevoir_courrier.id_courrier = courrier.id_courrier inner join personne on recevoir_courrier.id_personne = personne.id_personne inner join direction on personne.id_direction = direction.id_direction where direction.nom_direction = '"+nomDirection+"' and etat = '"+EtatCourrier.courrierEnvoye+"'";
 
         try {
             resultSetIdRecus = connectionCourrierIdRecus.createStatement().executeQuery(requeteIdCourriersRecusSQL);
             while (resultSetIdRecus.next()){
-                listeIdCourriersRecus.add(new Courrier(resultSetIdRecus.getString("date_enregistrement"),resultSetIdRecus.getString("courrier.id_courrier")));
+                listeIdCourriersRecus.add(new Courrier(resultSetIdRecus.getString("recevoir_courrier.date_reception"),resultSetIdRecus.getString("courrier.id_courrier")));
             }
 
             DateUtils.recupererLePremierEtLeDernierJourDuMoisEnCours();
@@ -239,11 +242,12 @@ public class StatistiquesQueries {
         List<Courrier> finalListeCourriers = new ArrayList<>();
         ResultSet resultSetIdEnvoyes = null;
         Connection connectionCourrierIdRecus =  DatabaseConnection.getConnexion();
-        String requeteIdCourriersEnvoyesSQL = "select courrier.id_courrier,date_enregistrement from `envoyer_courrier` inner join `courrier` on envoyer_courrier.id_courrier = courrier.id_courrier inner join personne on envoyer_courrier.id_personne = personne.id_personne inner join direction on personne.id_direction = direction.id_direction where direction.nom_direction = '"+nomDirection+"' and etat = '"+EtatCourrier.courrierEnvoye+"'";
+        String requeteIdCourriersEnvoyesSQL = "select courrier.id_courrier,envoyer_courrier.date_envoi from `envoyer_courrier` inner join `courrier` on envoyer_courrier.id_courrier = courrier.id_courrier inner join personne on envoyer_courrier.id_personne = personne.id_personne inner join direction on personne.id_direction = direction.id_direction where direction.nom_direction = '"+nomDirection+"' and etat = '"+EtatCourrier.courrierEnvoye+"'";
+
         try {
             resultSetIdEnvoyes = connectionCourrierIdRecus.createStatement().executeQuery(requeteIdCourriersEnvoyesSQL);
             while (resultSetIdEnvoyes.next()){
-                listeIdCourriersEnvoyes.add(new Courrier(resultSetIdEnvoyes.getString("date_enregistrement"),resultSetIdEnvoyes.getString("courrier.id_courrier")));
+                listeIdCourriersEnvoyes.add(new Courrier(resultSetIdEnvoyes.getString("envoyer_courrier.date_envoi"),resultSetIdEnvoyes.getString("courrier.id_courrier")));
             }
 
             DateUtils.recupererLePremierEtLeDernierJourDuMoisEnCours();
@@ -363,13 +367,13 @@ public class StatistiquesQueries {
 
             while (resultSetCourriersRecus.next()) {
                 listeCourriersRecus.add(new Courrier(
-                        resultSetCourriersRecus.getString("date_enregistrement"),
+                        resultSetCourriersRecus.getString("recevoir_courrier.date_reception"),
                         resultSetCourriersRecus.getString("titre_type_courrier")));
             }
 
             while (resultSetCourriersEnvoyes.next()) {
                 listeCourriersEnvoyes.add(new Courrier(
-                        resultSetCourriersEnvoyes.getString("date_enregistrement"),
+                        resultSetCourriersEnvoyes.getString("envoyer_courrier.date_envoi"),
                         resultSetCourriersEnvoyes.getString("titre_type_courrier")));
             }
 
@@ -433,7 +437,7 @@ public class StatistiquesQueries {
 
             while (resultSetCourriersRecus.next()) {
                 listeCourriersRecus.add(new Courrier(
-                        resultSetCourriersRecus.getString("date_enregistrement"),
+                        resultSetCourriersRecus.getString("recevoir_courrier.date_reception"),
                         resultSetCourriersRecus.getString("priorite"),
                         resultSetCourriersRecus.getString("confidentiel"),
                         resultSetCourriersRecus.getString("id_courrier"),
@@ -442,7 +446,7 @@ public class StatistiquesQueries {
 
             while (resultSetCourriersEnvoyes.next()) {
                 listeCourriersEnvoyes.add(new Courrier(
-                        resultSetCourriersEnvoyes.getString("date_enregistrement"),
+                        resultSetCourriersEnvoyes.getString("envoyer_courrier.date_envoi"),
                         resultSetCourriersEnvoyes.getString("priorite"),
                         resultSetCourriersEnvoyes.getString("confidentiel"),
                         resultSetCourriersEnvoyes.getString("id_courrier"),
@@ -464,14 +468,11 @@ public class StatistiquesQueries {
             }
 
             for (int a = 0; a < listeCourriersEnvoyes.size(); a++) {
-                System.out.println("listeCourriersEnvoyes = " + listeCourriersEnvoyes.get(a).getDateDEnregistrement());
                 try {
                     Date dateAConsiderer = sdf.parse(listeCourriersEnvoyes.get(a).getDateDEnregistrement());
-                    System.out.println("dateAConsiderer = " + dateAConsiderer);
                     if (dateAConsiderer.after(DateUtils.convertirStringEnDateAuFormatUS(DateUtils.premierJourDeLaSemaineFormatUS)) &&
                             dateAConsiderer.before(DateUtils.convertirStringEnDateAuFormatUS(DateUtils.dernierJourDeLaSemaineFormatUS))) {
                         tempNombreCourrierEnvoyesDeLaSemaine++;
-                        System.out.println("good");
                     }
 
                 } catch (ParseException e) {
@@ -541,20 +542,6 @@ public class StatistiquesQueries {
             nombreCourrierDimancheDeLaSemaine = tempNombreCourrierDimancheDeLaSemaine;
 
 
-          /*  System.out.println("listeDeTousLesCourriersDeLaSemaine = " +nombreCourrierRecusDeLaSemaine );
-            System.out.println("listeDeTousLesCourriersDeLaSemaine = " +nombreCourrierEnvoyesDeLaSemaine );
-            System.out.println("listeDeTousLesCourriersDeLaSemaine = " +nombreCourrierUrgentDeLaSemaine );
-            System.out.println("listeDeTousLesCourriersDeLaSemaine = " +nombreCourrierPasUrgentDeLaSemaine );
-            System.out.println("listeDeTousLesCourriersDeLaSemaine = " +nombreCourrierConfidentielDeLaSemaine );
-            System.out.println("listeDeTousLesCourriersDeLaSemaine = " +nombreCourrierLundiDeLaSemaine );
-            System.out.println("listeDeTousLesCourriersDeLaSemaine = " +nombreCourrierMardiDeLaSemaine );
-            System.out.println("listeDeTousLesCourriersDeLaSemaine = " +nombreCourrierMercrediDeLaSemaine );
-            System.out.println("listeDeTousLesCourriersDeLaSemaine = " +nombreCourrierJeudiDeLaSemaine );
-            System.out.println("listeDeTousLesCourriersDeLaSemaine = " +nombreCourrierVendrediDeLaSemaine );
-            System.out.println("listeDeTousLesCourriersDeLaSemaine = " +nombreCourrierSamediDeLaSemaine );
-            System.out.println("listeDeTousLesCourriersDeLaSemaine = " +nombreCourrierDimancheDeLaSemaine );*/
-
-
         } catch (SQLException e) {
             e.printStackTrace();
         }finally {
@@ -587,7 +574,10 @@ public class StatistiquesQueries {
 
         int tempCourrierEnvoyesDuMois = 0;
         int tempCourrierRecusDuMois =0;
-
+        nombreCourrierConfidentielDuMois = 0;
+        nombreCourrierPasConfidentielDuMois  =0;
+        nombreCourrierUrgentDuMois = 0;
+        nombreCourrierPasUrgentDuMois = 0;
         List<Courrier> listeCourriersRecus = new ArrayList<>();
         List<Courrier> listeCourriersEnvoyes = new ArrayList<>();
 
@@ -652,6 +642,7 @@ public class StatistiquesQueries {
 
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
         DateUtils.recupererLePremierEtLeDernierJourDuMoisEnCours();
+
         if(listeCourriersRecus.size() > 0){
             for (int i = 0; i < listeCourriersRecus.size(); i++) {
                 try {

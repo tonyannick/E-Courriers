@@ -6,6 +6,29 @@
       xmlns:p="http://primefaces.org/ui"
       xmlns:f="http://xmlns.jcp.org/jsf/core">
 <f:view>
+    <h:outputStylesheet>
+        .ui-dialog.ui-widget {
+            background-color: white;
+            color: #ffffff;
+            padding-right: 5px;
+        }
+
+        .ui-dialog .ui-dialog-title {
+            color: white;
+            margin-left: 10px;
+            font-size: 15px  !important;
+            font-weight: normal;
+        }
+
+        .ui-dialog .ui-dialog-titlebar {
+            background: #4c7ebd !important;
+            width: 100%;
+            position: relative;
+            margin: 2px 2px;
+            padding-right: 10px;
+            padding-top: 10px;
+        }
+    </h:outputStylesheet>
     <h:body>
         <ui:composition>
             <h:outputStylesheet name="css/header.css" />

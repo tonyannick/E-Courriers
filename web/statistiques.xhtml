@@ -10,6 +10,7 @@
         <f:viewAction action="#{statistiques.recupererStatistiquesDuJour}" onPostBack="true"/>
         <f:viewAction action="#{statistiques.recupererStatistiquesDeLaSemaine}" onPostBack="true"/>
         <f:viewAction action="#{statistiques.recupererStatistiquesDuMoisEnCours}" onPostBack="true"/>
+        <f:viewAction action="#{statistiques.recupererStatistiqueDeLAnneeEnCours}" onPostBack="true"/>
     </f:metadata>
     <h:head>
         <title>Statistiques</title>
@@ -23,12 +24,32 @@
         <h:outputStylesheet name="chartjs/css/Chart.css" />
         <h:outputStylesheet name="chartjs/css/Chart.min.css" />
     </h:head>
-    <style>
+    <h:outputStylesheet>
+        .ui-tabs.ui-widget .ui-tabs-nav {
+            background-color: #2b669a;
+            margin: 0;
+            font-weight: bold;
+        }
+        .ui-tabs .ui-tabs-nav li {
+            color: black;
+        }
+        .ui-tabs .ui-tabs-nav>li.ui-state-default{
+            background:#f6f7f9;
+        }
+        .ui-tabs .ui-tabs-nav>li.ui-state-default.ui-state-hover{
+            background:floralwhite;
+            font-weight: bold;
+        }
+        .ui-tabs .ui-tabs-nav>li.ui-state-default.ui-state-active{
+            font-weight:bold;
+            color:#555;
+            background:floralwhite;
+        }
         .center {
             margin: 0 auto;
             width: 80%;
         }
-    </style>
+    </h:outputStylesheet>
     <h:body>
         <div class="container-fluid" style="margin-bottom: 50px">
             <div class="row">
@@ -210,7 +231,7 @@
 
                                             </div>
                                         </p:tab>
-                                        <p:tab title="Statistiques de cette année">
+                                        <p:tab title="Statistiques de l'année en cours">
                                             <div class="lignechart" style="margin-top: 20px; margin-left: -20px">
                                                 <div class="chartboxfullpage" style="background-color: floralwhite;margin-left: 10px;box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2);border-radius: 20px">
                                                     <p:barChart model="#{statistiques.barModelNombreDeCourrierParMoisPourLAnnee}" style="width: 90%; height: 250px;"/>

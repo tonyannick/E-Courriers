@@ -48,4 +48,8 @@
     <orderEntry type="library" name="mysql-connector-java-5.1.21" level="project" />
     <orderEntry type="library" name="primefaces-8.0" level="project" />
   </component>
+  <component name="sonarModuleSettings">
+    <option name="localAnalysisScripName" value="&lt;PROJECT&gt;" />
+    <option name="serverName" value="&lt;PROJECT&gt;" />
+  </component>
 </module>

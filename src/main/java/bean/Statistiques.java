@@ -93,8 +93,7 @@ public class Statistiques implements Serializable {
         String idDirection = session.getAttribute("idDirectionUser").toString();
         StatistiquesQueries.calculerLeNombreDeCourrierRecusParDirectionLeMoisCourant(nomDirection);
         StatistiquesQueries.calculerLeNombreDeCourrierEnvoyesParDirectionLeMoisCourant(nomDirection);
-        StatistiquesQueries.recupererLeNombreDeCourrierTraitesParMoisPourLAnneeEnCours(nomDirection);
-        StatistiquesQueries.calculerLesStatistiquesDuMoisEnCoursPourUneDirection(nomDirection);
+        StatistiquesQueries.calculerLesStatistiquesDuMoisEnCoursPourUneDirection(idDirection);
         StatistiquesQueries.calculerLesStatistiquesDesCourriersTraitesParTypesDeCourrierDuMoisEnCours(idDirection);
         creerGraphiqueCourriersParPrioriteDuMois();
         creerGraphiqueCourriersEntrantEtSortantDuMois();
@@ -107,6 +106,12 @@ public class Statistiques implements Serializable {
         statistiques.setNombreDeCourrierEnvoyesDuMois(String.valueOf(StatistiquesQueries.nombreCourrierEnvoyesDuMois));
         statistiques.setNombreDeCourrierRecusDuMois(String.valueOf(StatistiquesQueries.nombreCourrierRecusDuMois));
         totalCourrierTraitesParMois = String.valueOf(Integer.parseInt(statistiques.getNombreDeCourrierRecusDuMois()) + Integer.parseInt(statistiques.getNombreDeCourrierEnvoyesDuMois()));
+    }
+
+    public void recupererStatistiqueDeLAnneeEnCours(){
+        HttpSession session = SessionUtils.getSession();
+        String nomDirection = session.getAttribute("directionUser").toString();
+        StatistiquesQueries.recupererLeNombreDeCourrierTraitesParMoisPourLAnneeEnCours(nomDirection);
     }
 
     private void creerGraphiqueCourriersTraitesParJour(){
@@ -426,7 +431,7 @@ public class Statistiques implements Serializable {
 
         List<String> labels = new ArrayList<>();
         remplirListeLabelsGraphique("Janvier",labels);
-        remplirListeLabelsGraphique("Fevrier",labels);
+        remplirListeLabelsGraphique("Février",labels);
         remplirListeLabelsGraphique("Mars",labels);
         remplirListeLabelsGraphique("Avril",labels);
         remplirListeLabelsGraphique("Mai",labels);
