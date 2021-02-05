@@ -117,7 +117,6 @@ public class StatistiquesQueries {
                                 break;
                             case "février":
                                 nombreDeCourrierTempFevrier++;
-                                System.out.println("listeCourriersTraites = " + listeCourriersTraites.get(a));
                                 break;
                             case "mars":
                                 nombreDeCourrierTempMars++;

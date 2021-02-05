@@ -74,6 +74,7 @@
         .ui-dialog .ui-dialog-title {
             color: white;
             margin-left: 10px;
+            font-weight: normal;
             font-size: 15px  !important;
         }
 
@@ -114,7 +115,7 @@
                                         <p:commandButton type="button" style="background: #8b2421; border-color:#8b2421; color: white;"
                                                          onclick="PF('dialogueValiderArchiverLeCourrier').show()" iconPos="right"
                                                          value="Archiver" icon="fa fa-trash" />
-                                        <p:commandButton type="button" style="background: #f1711a;border-color:#f1711a; color: white; margin-left: 10px;"
+                                        <p:commandButton type="button" style="background: #f19121;border-color:#f19121; color: white; margin-left: 10px;"
                                                          onclick="PF('dialogueValiderCourrierEnFavoris').show()" iconPos="right"
                                                          value="Mettre en favoris" icon="fa fa-star" />
                                         <p:commandButton type="button" style="background: #c49166;margin-left: 10px; border-color:#c49166; color: white;"
@@ -252,22 +253,22 @@
                                     <p:panelGrid columns="2" columnClasses="ui-grid-col-2 gridcol2, ui-grid-col-10" style="width: 100%; margin-top: 15px; margin-bottom:15px; border: 1px #888 solid;">
 
                                         <h:outputLabel value="Type de courrier " style="font-weight: bold; color: black; font-size: 14px"/>
-                                        <h:outputLabel value="#{detailDUnCourrierEnvoye.courrier.typeCourrier}" style="font-size: 14px;"/>
+                                        <h:outputLabel value="#{detailDUnCourrierEnvoye.courrier.typeCourrier}" style="font-weight: normal;font-size: 14px;"/>
 
                                         <h:outputLabel value="Référence  " style="font-weight: bold; font-size: 14px;color: black"/>
-                                        <h:outputLabel value="#{detailDUnCourrierEnvoye.courrier.referenceCourrier}" style="font-size: 14px"/>
+                                        <h:outputLabel value="#{detailDUnCourrierEnvoye.courrier.referenceCourrier}" style="font-weight: normal;font-size: 14px"/>
 
                                         <h:outputLabel value="Objet  " style="font-weight: bold; font-size: 14px; color: black"/>
-                                        <h:outputLabel value="#{detailDUnCourrierEnvoye.courrier.objetCourrier}" style="font-size: 14px"/>
+                                        <h:outputLabel value="#{detailDUnCourrierEnvoye.courrier.objetCourrier}" style="font-weight: normal;font-size: 14px"/>
 
                                         <h:outputLabel value="Priorité  " style="font-weight: bold; font-size: 14px; color: black" />
-                                        <h:outputLabel value="#{detailDUnCourrierEnvoye.courrier.prioriteCourrier}" style="font-size: 14px"/>
+                                        <h:outputLabel value="#{detailDUnCourrierEnvoye.courrier.prioriteCourrier}" style="font-weight: normal;font-size: 14px"/>
 
                                         <h:outputLabel value="Confidentiel  " style="font-weight: bold; font-size: 14px; color: black"/>
-                                        <h:outputLabel value="#{detailDUnCourrierEnvoye.courrier.confidentiel}" style="font-size: 14px"/>
+                                        <h:outputLabel value="#{detailDUnCourrierEnvoye.courrier.confidentiel}" style="font-weight: normal;font-size: 14px"/>
 
                                         <h:outputLabel value="Comentaires " style="font-weight: bold; font-size: 14px; color: black"/>
-                                        <h:outputLabel value="#{detailDUnCourrierEnvoye.courrier.commentairesCourrier}" style="font-size: 14px" />
+                                        <h:outputLabel value="#{detailDUnCourrierEnvoye.courrier.commentairesCourrier}" style="font-weight: normal;font-size: 14px" />
                                     </p:panelGrid>
                                 </div>
 
@@ -277,20 +278,20 @@
                                     <p:panelGrid columns="2" columnClasses="ui-grid-col-2 gridcol2, ui-grid-col-10"  style="border: 1px #888 solid; width: 100%; margin-bottom:15px; margin-top: 15px ">
 
                                         <h:outputLabel value="Date d'enregistrement" style="font-weight: bold; color:black; font-size: 14px"/>
-                                        <h:outputLabel value="#{detailDUnCourrierEnvoye.courrier.dateDEnregistrement}" style="font-size: 14px;"/>
+                                        <h:outputLabel value="#{detailDUnCourrierEnvoye.courrier.dateDEnregistrement}" style="font-weight: normal;font-size: 14px;"/>
                                         <h:outputLabel value="Heure d'enregistrement" style="font-weight: bold; color:black; font-size: 14px"/>
-                                        <h:outputLabel value="#{detailDUnCourrierEnvoye.courrier.heureDEnregistrement}" style="font-size: 14px;"/>
+                                        <h:outputLabel value="#{detailDUnCourrierEnvoye.courrier.heureDEnregistrement}" style="font-weight: normal;font-size: 14px;"/>
                                         <h:outputLabel value="Enregistré par" style="font-weight: bold; color:black; font-size: 14px"/>
-                                        <h:outputLabel value="#{detailDUnCourrierEnvoye.nomEtPrenomAjouteurCourrier}" style="font-size: 14px;"/>
+                                        <h:outputLabel value="#{detailDUnCourrierEnvoye.nomEtPrenomAjouteurCourrier}" style="font-weight: normal;font-size: 14px;"/>
                                         <h:outputLabel value="Fonction" style="font-weight: bold; color:black; font-size: 14px"/>
-                                        <h:outputLabel value="#{detailDUnCourrierEnvoye.fonctionAjouteurCourrier}" style="font-size: 14px;"/>
+                                        <h:outputLabel value="#{detailDUnCourrierEnvoye.fonctionAjouteurCourrier}" style="font-weight: normal;font-size: 14px;"/>
                                     </p:panelGrid>
 
                                     <p:panelGrid columns="2" columnClasses="ui-grid-col-2 gridcol2, ui-grid-col-10"  style="border: 1px #888 solid; width: 100%; margin-bottom:15px; margin-top: 15px ">
                                         <h:outputLabel value="Date d'envoi " style="font-weight: bold; font-size: 14px; color:black"/>
-                                        <h:outputLabel value="#{detailDUnCourrierEnvoye.emetteur.dateEnvoi}" style="font-size: 14px"/>
+                                        <h:outputLabel value="#{detailDUnCourrierEnvoye.emetteur.dateEnvoi}" style="font-weight: normal;font-size: 14px"/>
                                         <h:outputLabel value="Heure d'envoi  " style="font-weight: bold; font-size: 14px; color:black"/>
-                                        <h:outputLabel value="#{detailDUnCourrierEnvoye.emetteur.heureEnvoi}" style="font-size: 14px"/>
+                                        <h:outputLabel value="#{detailDUnCourrierEnvoye.emetteur.heureEnvoi}" style="font-weight: normal;font-size: 14px"/>
                                     </p:panelGrid>
 
                                 </div>

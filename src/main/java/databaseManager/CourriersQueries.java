@@ -205,7 +205,7 @@ public class CourriersQueries {
                         resultSet2.getString("reference"),
                         resultSet2.getString("priorite"),
                         resultSet2.getString("objet"),
-                        resultSet1.getString("date_enregistrement"),
+                        resultSet2.getString("date_enregistrement"),
                         resultSet2.getString("id_courrier"),
                         resultSet2.getString("genre"),
                         resultSet2.getString("identifiant_alfresco")));
@@ -778,10 +778,8 @@ public class CourriersQueries {
         try {
             resultSet = connection.createStatement().executeQuery(requeteDetailCourrierSQL);
             if (resultSet.next()){
-                dateDEnregistrement = resultSet.getString("courrier.date_enregistrement");
-                heureDEnregistrement = resultSet.getString("courrier.heure_enregistrement");
-                dateDeReception = resultSet.getString("courrier.date_reception");
-                heureDeReception = resultSet.getString("courrier.heure_reception");
+                dateDeReception = resultSet.getString("recevoir_courrier.date_reception");
+                heureDeReception = resultSet.getString("recevoir_courrier.heure_reception");
                 objetCourrier = resultSet.getString("objet");
                 commentairesCourrier = resultSet.getString("commentaires");
                 prioriteCourrier = resultSet.getString("priorite");

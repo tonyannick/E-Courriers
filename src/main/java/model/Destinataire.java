@@ -28,6 +28,8 @@ public class Destinataire {
     private String emailParticulier;
     private String nombreDeDestinataire;
     private String accuseDeReception;
+    private String dateDeReception;
+    private String heureDeReception;
     private String etatCourrierTransferer;
     private List<Destinataire> listeDestinataire;
     private List<Destinataire> listeDestinataireParTransfer;
@@ -277,5 +279,21 @@ public class Destinataire {
 
     public void setIdTypeDestinataire(String idTypeDestinataire) {
         this.idTypeDestinataire = idTypeDestinataire;
+    }
+
+    public String getDateDeReception() {
+        return dateDeReception;
+    }
+
+    public void setDateDeReception(String dateDeReception) {
+        this.dateDeReception = dateDeReception;
+    }
+
+    public String getHeureDeReception() {
+        return heureDeReception;
+    }
+
+    public void setHeureDeReception(String heureDeReception) {
+        this.heureDeReception = heureDeReception;
     }
 }

@@ -239,22 +239,16 @@ public class DetailDUnCourrierRecu implements Serializable {
         courrier.setCommentairesCourrier(CourriersQueries.commentairesCourrier);
         courrier.setDossierAlfresco(CourriersQueries.dossierAlfresco);
         courrier.setConfidentiel(CourriersQueries.confidentiel);
-        //courrier.setHeureDeReception(CourriersQueries.heureDeReception);
-        courrier.setDateDEnregistrement(CourriersQueries.dateDEnregistrement);
-        //courrier.setDateDeReception(CourriersQueries.dateDeReception);
+        destinataire.setHeureDeReception(CourriersQueries.heureDeReception);
+        destinataire.setDateDeReception(CourriersQueries.dateDeReception);
         courrier.setReferenceInterne(CourriersQueries.referenceInterne);
 
         PrimeFaces.current().executeScript("affichageMessageDivReferenceInterne()");
 
-       /* String jour = courrier.getDateDeReception().substring(courrier.getDateDeReception().lastIndexOf("-") +1);
-        String mois = courrier.getDateDeReception().substring(courrier.getDateDeReception().indexOf("-")+1,courrier.getDateDeReception().indexOf("-")+3);
-        String annee = courrier.getDateDeReception().substring(0,4);
-        courrier.setDateDeReception(jour+"-"+mois+"-"+annee);*/
-
-        String jourEnregistrement = courrier.getDateDEnregistrement().substring(courrier.getDateDEnregistrement().lastIndexOf("-") +1);
-        String moisEnregistrement = courrier.getDateDEnregistrement().substring(courrier.getDateDEnregistrement().indexOf("-")+1,courrier.getDateDEnregistrement().indexOf("-")+3);
-        String anneeEnregistrement = courrier.getDateDEnregistrement().substring(0,4);
-        courrier.setDateDEnregistrement(jourEnregistrement+"-"+moisEnregistrement+"-"+anneeEnregistrement);
+        String jour = destinataire.getDateDeReception().substring(destinataire.getDateDeReception().lastIndexOf("-") +1);
+        String mois = destinataire.getDateDeReception().substring(destinataire.getDateDeReception().indexOf("-")+1,destinataire.getDateDeReception().indexOf("-")+3);
+        String annee = destinataire.getDateDeReception().substring(0,4);
+        destinataire.setDateDeReception(jour+"-"+mois+"-"+annee);
 
         courrier.setHeureDEnregistrement(CourriersQueries.heureDEnregistrement);
     }

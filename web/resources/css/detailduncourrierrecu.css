@@ -17,9 +17,6 @@
 .fa-pencil{
  color: #002a72;
 }
-.fa-refresh{
-    color: #f19121;
-}
 .fa-folder-open{
     color:white;
 }
@@ -730,4 +727,9 @@ textarea:focus {
     padding: 10px 6px;
     overflow-x: auto;
     overflow-y: auto;
+}
+.ui-toolbar.ui-widget-header{
+    background: #c8c8c8;
+    border-color: white;
+    border-width: 1px;
 }
