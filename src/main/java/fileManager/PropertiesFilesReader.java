@@ -1,6 +1,7 @@
 package fileManager;
 
 import java.io.*;
+import java.nio.charset.Charset;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Properties;
@@ -16,6 +17,7 @@ public class PropertiesFilesReader {
     public static String alfresscoDownloadFileUrl;
     public static String reponseCourrierDossier;
     public static String dossierPhotos;
+    public static String copyright;
     public static String alfresscoDeletedFileUrl;
     public static Map<String,String> mapDossiersDirectionDansAlfresco = new HashMap<>();
 
@@ -79,6 +81,17 @@ public class PropertiesFilesReader {
         reponseCourrierDossier = properties.getProperty("reponses_courriers");
         dossierPhotos = properties.getProperty("photos");
 
+    }
+
+    public static void lireLeFichierDuCopyright(String nomFichier){
+        Properties properties = new Properties();
+        InputStream inputStream = PropertiesFilesReader.class.getClassLoader().getResourceAsStream(nomFichier);
+        try {
+            properties.load(new InputStreamReader(inputStream, Charset.forName(System.getProperty("file.encoding"))));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        copyright = properties.getProperty("copyright");
     }
 
     public static void ajoutDesProprietesDesDossiersDUneDirection(String nomFichier,String nomDirection){

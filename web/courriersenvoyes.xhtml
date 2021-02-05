@@ -17,7 +17,7 @@
         <h:outputStylesheet name="bootstrap/css/bootstrap.css" />
         <h:outputStylesheet name="css/courriersenvoyes.css" />
     </h:head>
-    <style>
+    <h:outputStylesheet>
         .courrierurgent{
             background-color: #fca752 !important;
             color: #fefefe;
@@ -55,7 +55,28 @@
         .ui-selectonemenu.ui-state-hover, .ui-selectonemenu.ui-state-focus {
             background-color: transparent;
         }
-    </style>
+        .ui-dialog.ui-widget {
+            background-color: white;
+            color: #ffffff;
+            padding-right: 5px;
+        }
+
+        .ui-dialog .ui-dialog-title {
+            color: white;
+            margin-left: 10px;
+            font-size: 15px  !important;
+            font-weight: normal;
+        }
+
+        .ui-dialog .ui-dialog-titlebar {
+            background: #4c7ebd !important;
+            width: 100%;
+            position: relative;
+            margin: 2px 2px;
+            padding-right: 10px;
+            padding-top: 10px;
+        }
+    </h:outputStylesheet>
     <h:body>
         <div class="container-fluid" >
             <div class="row">

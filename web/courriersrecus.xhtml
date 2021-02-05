@@ -23,7 +23,7 @@
         <h:outputStylesheet name="/wickedpicker/css/wickedpicker.css"/>
         <h:outputScript name="wickedpicker/js/wickedpicker.js"/>
     </h:head>
-    <style>
+    <h:outputStylesheet>
         .courrierurgent{
             background-color: #fca752 !important;
             color: #fefefe;
@@ -54,7 +54,39 @@
             border-bottom-left-radius: 20px;
             border-bottom-right-radius: 20px;
         }
-    </style>
+        .ui-dialog.ui-widget {
+            background-color: white;
+            color: #ffffff;
+            padding-right: 5px;
+        }
+
+        .ui-dialog .ui-dialog-title {
+            color: white;
+            margin-left: 10px;
+            font-size: 15px  !important;
+            font-weight: normal;
+        }
+
+        .ui-dialog .ui-dialog-titlebar {
+            background: #4c7ebd !important;
+            width: 100%;
+            position: relative;
+            margin: 2px 2px;
+            padding-right: 10px;
+            padding-top: 10px;
+        }
+
+        .ui-selectonemenu .ui-selectonemenu-trigger{
+            width: 40px !important;
+            padding-top: 0.2em;
+            background-color:#0062cc;
+            color: white;
+        }
+
+        .ui-selectonemenu.ui-state-hover, .ui-selectonemenu.ui-state-focus {
+            background-color: transparent;
+        }
+    </h:outputStylesheet>
     <h:body id="page">
         <div class="container-fluid" >
             <div class="row">
