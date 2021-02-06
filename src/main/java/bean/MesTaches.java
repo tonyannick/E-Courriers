@@ -2,8 +2,11 @@ package bean;
 
 import databaseManager.DataBaseQueries;
 import databaseManager.DatabaseConnection;
+import messages.FacesMessages;
 import model.Etape;
+import model.User;
 import org.primefaces.PrimeFaces;
+import org.primefaces.event.SelectEvent;
 import sessionManager.SessionUtils;
 import variables.TypeDePersonne;
 
@@ -17,6 +20,9 @@ import java.io.Serializable;
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 import java.util.Map;
 
 @SessionScoped
@@ -30,6 +36,10 @@ public class MesTaches implements Serializable {
     private String titreDeLaPage;
     private boolean isResponsable = false;
     private String phrase;
+    private String idAgentAffecteAUneTache = null;
+    private List<String> mesAgentsListe = new ArrayList<>();
+    private List<User> userList = new ArrayList<>();
+    private List<Etape> mesTachesSauvegardeListe = new ArrayList<>();
 
     @PostConstruct
     public void initialisation(){
@@ -47,8 +57,70 @@ public class MesTaches implements Serializable {
             titreDeLaPage = "Liste de mes taches";
             etape.setListeDeMesTaches(DataBaseQueries.recupererToutesLesTachesDUnAgent(idUser));
         }
+        mesTachesSauvegardeListe.clear();
+        mesTachesSauvegardeListe.addAll(etape.getListeDeMesTaches());
     }
 
+    public List<String> recupererLesAgentsDUneDirectionALaSaisie(String query) {
+        userList.clear();
+        mesAgentsListe.clear();
+        HttpSession session = SessionUtils.getSession();
+        String direction = (String) session.getAttribute("directionUser");
+
+        String idTypeDePersonne = DataBaseQueries.recupererIdTypeDePersonneParTitre(TypeDePersonne.agentDuMinistere);
+        String requeteAgentSQL = "select * from `personne` inner join `direction` on personne.id_direction = direction.id_direction inner join profil on personne.id_profil = profil.id_profil inner join fonction on personne.id_fonction = fonction.id_fonction where nom_direction = '"+direction+"' and fk_type_personne = '"+idTypeDePersonne+"';";
+        Connection connection = DatabaseConnection.getConnexion();
+        ResultSet resultSet = null;
+        try {
+            resultSet = connection.createStatement().executeQuery(requeteAgentSQL);
+            while ( resultSet.next()) {
+                userList.add(new User(
+                        resultSet.getString("id_personne"),
+                        resultSet.getString("nom") + " "+resultSet.getString("prenom"),
+                        resultSet.getString("titre_fonction")));
+            }
+
+            for (int i = 0; i <  userList.size(); i++){
+                mesAgentsListe.add(  userList.get(i).getUserName()+" ("+ userList.get(i).getUserFonction()+")");
+            }
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }finally {
+            if ( resultSet != null) {
+                try {
+                    resultSet.close();
+                } catch (SQLException e) { /* ignored */}
+            }
+            if (connection != null) {
+                try {
+                    connection.close();
+                } catch (SQLException e) { /* ignored */}
+            }
+        }
+
+        return  mesAgentsListe;
+    }
+
+    public void recupererIdDeLAgentChoisi(SelectEvent event) {
+        for(int i = 0; i < userList.size(); i++){
+            if (userList.get(i).getUserName().contains(event.getObject().toString().substring(0,event.getObject().toString().indexOf("(") - 1))){
+                idAgentAffecteAUneTache = userList.get(i).getUserId();
+            }
+        }
+    }
+
+    public void faireUneRechercheAvanceeParAgent(){
+        if(idAgentAffecteAUneTache != null){
+            etape.getListeDeMesTaches().clear();
+            etape.setListeDeMesTaches( DataBaseQueries.recupererToutesLesTachesDUnAgent(idAgentAffecteAUneTache));
+            etape.setActeur(null);
+            gestionDeLAffichageDesBoutonsDeRecherche();
+        }else{
+            FacesMessages.errorMessage("messagesRechercheAgent","Erreur","Une erreur s'est produite");
+        }
+
+    }
 
     public String voirUneTache(){
         Map<String,String> params = FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap();
@@ -59,6 +131,16 @@ public class MesTaches implements Serializable {
         return DataBaseQueries.repondreAUneTache(String.valueOf(etapeId));
     }
 
+    private void gestionDeLAffichageDesBoutonsDeRecherche(){
+        PrimeFaces.current().executeScript("PF('dialogueRechercheParAgent').hide()");
+        PrimeFaces.current().executeScript("afficherBoutonAnnulerRecherche()");
+    }
+
+    public void annulerUneRechercheAvancee(){
+        etape.getListeDeMesTaches().clear();
+        etape.setListeDeMesTaches(mesTachesSauvegardeListe);
+        PrimeFaces.current().executeScript("afficherBoutonFaireUneRecherche()");
+    }
 
     public void recupererLeCreateurDUneTache(){
         Map<String,String> params = FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap();

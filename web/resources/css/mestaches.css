@@ -34,6 +34,11 @@
     background-color: gray;
     color: gray;
 }
-.popupoverinfodestinataire{
-
+.panelLogin{
+    border-style: hidden !important;
+    cursor: hand;
+    padding: 10px;
+}
+.panelLogin td {
+    border-style: hidden !important;
 }

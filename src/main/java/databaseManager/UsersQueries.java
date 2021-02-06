@@ -161,6 +161,7 @@ public class UsersQueries {
         return  agentDirectionList;
     }
 
+
     /***Fonction qui recupere les infos d'un utilisateur***/
     public static void recupererInfosUsersParSonId(String idPersonne){
         Connection connection =  DatabaseConnection.getConnexion();

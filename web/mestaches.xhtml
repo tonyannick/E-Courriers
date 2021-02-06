@@ -33,6 +33,7 @@
             color: white;
             margin-left: 10px;
             font-size: 15px  !important;
+            font-weight: normal;
         }
 
         .ui-dialog .ui-dialog-titlebar {
@@ -74,9 +75,8 @@
                                         <f:facet name="left">
                                             <div id="divBoutonFaireUnRecherche" style="float: left;">
                                                 <p:menuButton value="Recherche avancée" iconPos="right" icon="fa fa-search">
-                                                    <p:menuitem value="Recherche par date" onclick="PF('dialogueRechercherCourrierParDate').show()"  />
-                                                    <p:menuitem value="Recherche par mois" onclick="PF('dialogueRechercherCourrierParMois').show()"/>
-                                                    <p:menuitem value="Recherche par agent" onclick="PF('dialogueRechercherCourrierParTypeDeCourrier').show()"/>
+                                                    <p:menuitem value="Recherche par agent" onclick="PF('dialogueRechercheParAgent').show()"  />
+                                                    <p:menuitem value="Recherche par etat" />
                                                 </p:menuButton>
                                             </div>
 
@@ -84,7 +84,7 @@
                                                 <p:commandButton style="background: #6872b4;margin-left: 10px;
                                                          border-color:#6872b4; color: white; font-weight: bold;"
                                                                  iconPos="right"
-                                                                 actionListener="#{courriersRecus.annulerUneRechercheAvancee}"
+                                                                 actionListener="#{mesTaches.annulerUneRechercheAvancee}"
                                                                  update="form:tableMesTaches"
                                                                  value="Annuler la recherche" icon="fa fa-times" />
                                             </div>
@@ -159,18 +159,55 @@
                                         </h:panelGrid>
 
                                     </p:dialog>
+
                                 </h:form>
-
-
                             </div>
 
-
-
+                        <p:dialog id="dialogueRechercheAgent"
+                                  resizable="false"
+                                  header="Recherche par agent"
+                                  widgetVar="dialogueRechercheParAgent" width="auto"
+                                  modal="true" hideEffect="clip"
+                                  showEffect="clip"  dynamic="true" closable="true">
+                            <h:form>
+                                <p:messages  showDetail="true" closable="true" for="messagesRechercheAgent"/>
+                                <p:panelGrid columns="2" width="100%"  styleClass="panelLogin">
+                                    <h4 style="font-weight:bold ; font-size: 13px; margin-top: 10px">Nom de l'Agent : * </h4>
+                                    <p:autoComplete
+                                            cache="true"
+                                            style="width: 100%;margin-top: 5px; font-size: 13px"
+                                            forceSelection="true"
+                                            completeMethod="#{mesTaches.recupererLesAgentsDUneDirectionALaSaisie}"
+                                            value="#{mesTaches.etape.acteur}">
+                                        <p:ajax event="itemSelect" listener="#{mesTaches.recupererIdDeLAgentChoisi}"/>
+                                    </p:autoComplete>
+                                </p:panelGrid>
+                                <p:commandButton value="valider"
+                                                 style="margin-top: 18px; margin-right: 22px; float: right"
+                                                 update="@form form:tableMesTaches"
+                                                 actionListener="#{mesTaches.faireUneRechercheAvanceeParAgent}"/>
+                            </h:form>
+                        </p:dialog>
                     </div>
                 </div>
             </div>
         </div>
         <script>
+            var divBoutonAnnulerRecherche = document.getElementById('divBoutonAnnulerRecherche');
+            var divBoutonFaireUnRecherche = document.getElementById('divBoutonFaireUnRecherche');
+
+            function afficherBoutonAnnulerRecherche(){
+                divBoutonAnnulerRecherche.style.display = 'block';
+                divBoutonFaireUnRecherche.style.display = 'none';
+            }
+            function afficherBoutonFaireUneRecherche(){
+                divBoutonAnnulerRecherche.style.display = 'none';
+                divBoutonFaireUnRecherche.style.display = 'block';
+            }
+            /***Rechargement simple de la page ***/
+            function rechargerLaPage(){
+                window.location.reload();
+            }
 
         </script>
 
