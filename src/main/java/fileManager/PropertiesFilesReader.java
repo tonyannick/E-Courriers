@@ -79,7 +79,7 @@ public class PropertiesFilesReader {
         Properties properties = new Properties();
         InputStream inputStream = PropertiesFilesReader.class.getClassLoader().getResourceAsStream(nomFichier);
         try {
-            properties.load(new InputStreamReader(inputStream, Charset.forName(System.getProperty("file.encoding"))));
+            properties.load(new InputStreamReader(inputStream, Charset.forName("UTF-8")));
         } catch (IOException e) {
             e.printStackTrace();
         }

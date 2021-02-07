@@ -17,8 +17,6 @@ import javax.faces.context.FacesContext;
 import javax.inject.Named;
 import javax.servlet.http.HttpSession;
 import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Map;
 
 @Named
@@ -125,6 +123,27 @@ public class TableauDeBord implements Serializable {
 
         }
     }
+
+    public String naviguerVersTableauDeBord(){
+        return "tableaudebord?faces-redirect=true";
+    }
+
+    public String naviguerVersActivites(){
+        return "activites?faces-redirect=true";
+    }
+
+    public String naviguerVersMesTaches(){
+        return "mestaches?faces-redirect=true";
+    }
+
+    public String naviguerVersMesDossiers(){
+        return "mesdossiers?faces-redirect=true";
+    }
+
+    public String naviguerVersStatistiques(){
+        return "statistiques?faces-redirect=true";
+    }
+
 
     /**Acceder aux parametre**/
     public String accederAuxParametreDeLapplication() {

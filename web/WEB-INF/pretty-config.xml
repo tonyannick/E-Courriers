@@ -1,0 +1,61 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<pretty-config xmlns="http://ocpsoft.org/schema/rewrite-config-prettyfaces"
+               xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+               xsi:schemaLocation="http://ocpsoft.org/schema/rewrite-config-prettyfaces
+               http://ocpsoft.org/xml/ns/prettyfaces/rewrite-config-prettyfaces.xsd">
+
+    <url-mapping id="login">
+        <pattern value="/login"/>
+        <view-id value="/faces/login.xhtml"/>
+    </url-mapping>
+    <url-mapping id="tableaudebord">
+        <pattern value="/tableaudebord"/>
+        <view-id value="/faces/tableaudebord.xhtml"/>
+    </url-mapping>
+    <url-mapping id="mestaches">
+        <pattern value="/mestaches"/>
+        <view-id value="/faces/mestaches.xhtml"/>
+    </url-mapping>
+    <url-mapping id="activites">
+        <pattern value="/activites"/>
+        <view-id value="/faces/activites.xhtml"/>
+    </url-mapping>
+    <url-mapping id="mesdossiers">
+        <pattern value="/mesdossiers"/>
+        <view-id value="/faces/mesdossiers.xhtml"/>
+    </url-mapping>
+    <url-mapping id="parametres">
+        <pattern value="/parametres"/>
+        <view-id value="/faces/parametres.xhtml"/>
+    </url-mapping>
+    <url-mapping id="nouveaucourrier">
+        <pattern value="/nouveaucourrier"/>
+        <view-id value="/faces/nouveaucourrier.xhtml"/>
+    </url-mapping>
+    <url-mapping id="favoris">
+        <pattern value="/favoris"/>
+        <view-id value="/faces/courriersfavoris.xhtml"/>
+    </url-mapping>
+    <url-mapping id="courriersenvoyes">
+        <pattern value="/courriersenvoyes"/>
+        <view-id value="/faces/courriersenvoyes.xhtml"/>
+    </url-mapping>
+    <url-mapping id="courriersrecus">
+        <pattern value="/courriersrecus"/>
+        <view-id value="/faces/courriersrecus.xhtml"/>
+    </url-mapping>
+    <url-mapping id="archives">
+        <pattern value="/archives"/>
+        <view-id value="/faces/courriersarchives.xhtml"/>
+    </url-mapping>
+    <url-mapping id="statistisques">
+        <pattern value="/statistisques"/>
+        <view-id value="/faces/statistiques.xhtml"/>
+    </url-mapping>
+    <url-mapping id="mescourriers">
+        <pattern value="/mescourriers"/>
+        <view-id value="/faces/mescourriers.xhtml"/>
+    </url-mapping>
+
+
+</pretty-config>

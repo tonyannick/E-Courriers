@@ -47,6 +47,8 @@
     <orderEntry type="library" name="javax.transaction" level="project" />
     <orderEntry type="library" name="mysql-connector-java-5.1.21" level="project" />
     <orderEntry type="library" name="primefaces-8.0" level="project" />
+    <orderEntry type="library" name="rewrite-servlet-3.4.4.Final" level="project" />
+    <orderEntry type="library" name="rewrite-config-prettyfaces-3.4.4.Final" level="project" />
   </component>
   <component name="sonarModuleSettings">
     <option name="localAnalysisScripName" value="&lt;PROJECT&gt;" />

@@ -78,15 +78,15 @@
                         <div class="fixed-header">
                             <div id="navigationHeader" class="ui-g-12 container-header">
                                 <nav class="navheader">
-                                    <h:outputLink value="statistiques.xhtml">
+                                    <p:commandLink  action="#{tableauDeBord.naviguerVersStatistiques}">
                                         <h:graphicImage  width="16px" height="16px" value="./resources/images/rising.png" style="margin-right: 5px; margin-top: -4px "/>
                                         <span style="font-size: 16px">Statistiques</span>
-                                    </h:outputLink>
+                                    </p:commandLink>
 
-                                    <h:outputLink value="mesdossiers.xhtml">
+                                    <p:commandLink  action="#{tableauDeBord.naviguerVersMesDossiers}">
                                         <h:graphicImage  width="16px" height="16px" value="./resources/images/folders.png" style="margin-right: 5px; margin-top: -4px "/>
                                         <span style="font-size: 16px">Mes dossiers</span>
-                                    </h:outputLink>
+                                    </p:commandLink>
 
                                     <p:commandLink action="#{tableauDeBord.naviguerVersUneListeDesCourriers}">
                                         <f:param name="url" value="courriersarchives.xhtml" />

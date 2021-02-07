@@ -54,6 +54,25 @@
         <param-value>true</param-value>
     </context-param>
 
+    <!-- configuration prettyfaces-->
+    <context-param>
+        <param-name>javax.faces.CONFIG_FILES</param-name>
+        <param-value>/WEB-INF/pretty-config.xml</param-value>
+    </context-param>
+
+    <filter>
+        <filter-name>Pretty Filter</filter-name>
+        <filter-class>org.ocpsoft.rewrite.servlet.RewriteFilter</filter-class>
+    </filter>
+
+    <filter-mapping>
+        <filter-name>Pretty Filter</filter-name>
+        <url-pattern>/*</url-pattern>
+        <dispatcher>FORWARD</dispatcher>
+        <dispatcher>REQUEST</dispatcher>
+        <dispatcher>ERROR</dispatcher>
+    </filter-mapping>
+
 
     <!-- Gestion des Pages d'erreurs -->
     <error-page>
