@@ -52,18 +52,20 @@
                                 <li><h:outputLink value="tableaudebord.xhtml" title="Accueil">Accueil</h:outputLink></li>
                                 <li>Mes dossiers</li>
                             </ul>
-                            <h3 class="page-header"><h:graphicImage value="./resources/images/folders.png" width="30px" height="30px" style="margin-right :10px"/>Mes dossiers</h3>
+                            <h3 class="page-header"><h:graphicImage value="./resources/images/folders.png" width="30px" height="30px" style="margin-right :10px"/>#{mesDossiers.titreDeLaPage}</h3>
 
                             <p:toolbar style="margin-bottom: 15px; margin-top: 15px;">
                                 <f:facet name="left">
                                     <p:commandButton  icon="fa fa-plus-circle"
                                                       type="button" value="créer un dossier"
                                                       onclick="ouvrirModalBoxCreerDossier()"
-                                                      style="color: white;  padding: 2px 2px; background: #dfa574;border: 1px #dfa574 solid;"/>
-                                </f:facet>
-                                <f:facet name="right">
-                                    <p:commandButton style="color: white; padding: 2px 2px; background:#286090; border-color:#286090;" value="Actualiser la page"
+                                                      style="color: white; background:#c49166;border: 1px#c49166 solid;"/>
+                                    <span class="ui-separator">
+                                        <span class="fa fa-ellipsis-v" />
+                                    </span>
+                                    <p:commandButton style="color: white; margin-left:10px; background:#286090; border-color:#286090;"
                                                      onclick="actualiserLaPageDesCourriers()" type="button" icon="fa fa-refresh"/>
+
                                 </f:facet>
 
                             </p:toolbar>

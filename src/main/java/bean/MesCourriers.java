@@ -2,6 +2,7 @@ package bean;
 
 import databaseManager.CourriersQueries;
 import dateAndTime.DateUtils;
+import fileManager.PropertiesFilesReader;
 import model.Courrier;
 import org.primefaces.PrimeFaces;
 import sessionManager.SessionUtils;
@@ -29,11 +30,12 @@ public class MesCourriers implements Serializable {
     private Integer firstAncienCourrier = 0;
     private Integer rowsPerPageAncienCourrier = 5;
     private List<Courrier> mesCourriersDuJour = new ArrayList<>();
+    private String titreDeLaPage;
 
     @PostConstruct
     public void initialisation(){
         courrier = new Courrier();
-       //recupererLalisteDesCourriersEnregistres();
+        titreDeLaPage = PropertiesFilesReader.mapTitreDesPages.get("mesCourriersEnregistres");
     }
 
     public void recupererLalisteDesCourriersEnregistres(){
@@ -130,5 +132,13 @@ public class MesCourriers implements Serializable {
 
     public void setRowsPerPageAncienCourrier(Integer rowsPerPageAncienCourrier) {
         this.rowsPerPageAncienCourrier = rowsPerPageAncienCourrier;
+    }
+
+    public String getTitreDeLaPage() {
+        return titreDeLaPage;
+    }
+
+    public void setTitreDeLaPage(String titreDeLaPage) {
+        this.titreDeLaPage = titreDeLaPage;
     }
 }

@@ -2,6 +2,7 @@ package bean;
 
 import databaseManager.CourriersQueries;
 import dateAndTime.DateUtils;
+import fileManager.PropertiesFilesReader;
 import model.Courrier;
 import org.primefaces.PrimeFaces;
 import sessionManager.SessionUtils;
@@ -32,10 +33,12 @@ public class CourriersFavoris implements Serializable {
     private List<Courrier> courrierTempList = new ArrayList<>();
     private List<Courrier> courrierSauvegardeList = new ArrayList<>();
     private boolean isMoisSelectionne = false;
+    private String titreDeLaPage;
 
     @PostConstruct
     public void initialisation(){
         courrier = new Courrier();
+        titreDeLaPage = PropertiesFilesReader.mapTitreDesPages.get("favoris");
     }
 
     public void recupererLalisteDesCourriersEnFavoris(){
@@ -177,4 +180,11 @@ public class CourriersFavoris implements Serializable {
         this.moisPourRechercheAvancee = moisPourRechercheAvancee;
     }
 
+    public String getTitreDeLaPage() {
+        return titreDeLaPage;
+    }
+
+    public void setTitreDeLaPage(String titreDeLaPage) {
+        this.titreDeLaPage = titreDeLaPage;
+    }
 }

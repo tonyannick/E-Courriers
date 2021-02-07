@@ -2,6 +2,7 @@ package bean;
 
 import databaseManager.DataBaseQueries;
 import databaseManager.DatabaseConnection;
+import fileManager.PropertiesFilesReader;
 import messages.FacesMessages;
 import model.Etape;
 import model.User;
@@ -51,10 +52,10 @@ public class MesTaches implements Serializable {
         String idUser = (String) session.getAttribute( "idUser");
         isResponsable = (Boolean) session.getAttribute("isResponsable");
         if(isResponsable){
-            titreDeLaPage = "Liste des taches que vous avez crées";
+            titreDeLaPage = PropertiesFilesReader.mapTitreDesPages.get("tachesQueVousAvezCrees");
             etape.setListeDeMesTaches(DataBaseQueries.recupererLesTachesCreesParUnUser(idUser));
         }else{
-            titreDeLaPage = "Liste de mes taches";
+            titreDeLaPage = PropertiesFilesReader.mapTitreDesPages.get("mesTaches");;
             etape.setListeDeMesTaches(DataBaseQueries.recupererToutesLesTachesDUnAgent(idUser));
         }
         mesTachesSauvegardeListe.clear();

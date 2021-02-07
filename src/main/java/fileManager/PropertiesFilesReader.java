@@ -20,54 +20,27 @@ public class PropertiesFilesReader {
     public static String copyright;
     public static String alfresscoDeletedFileUrl;
     public static Map<String,String> mapDossiersDirectionDansAlfresco = new HashMap<>();
+    public static Map<String,String> mapTitreDesPages = new HashMap<>();
 
     public static String lireLeFichierDuMotSecret(String nomFichier){
-        Properties properties = new Properties();
-        InputStream inputStream = PropertiesFilesReader.class.getClassLoader().getResourceAsStream(nomFichier);
-        try {
-            properties.load(inputStream);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        return properties.getProperty("cle_cryptage_motdepasse");
+        return chargerUnFichierDeProprietes(nomFichier).getProperty("cle_cryptage_motdepasse");
     }
 
     public static void LireLeFichierDeConnexionAlaBaseDeDonnees(String nomFichier){
-        Properties properties = new Properties();
-        InputStream inputStream = PropertiesFilesReader.class.getClassLoader().getResourceAsStream(nomFichier);
-        try {
-            properties.load(inputStream);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        identifiantUser = properties.getProperty("username");
-        motDePasseUser = properties.getProperty("password");
-        nomBaseDeDonnees = properties.getProperty("databaseName");
-        urlBaseDeDonnees = properties.getProperty("urlDatabase");
+        identifiantUser = chargerUnFichierDeProprietes(nomFichier).getProperty("username");
+        motDePasseUser = chargerUnFichierDeProprietes(nomFichier).getProperty("password");
+        nomBaseDeDonnees = chargerUnFichierDeProprietes(nomFichier).getProperty("databaseName");
+        urlBaseDeDonnees = chargerUnFichierDeProprietes(nomFichier).getProperty("urlDatabase");
     }
 
     public static void lireLeFichierDeProprietesDAlfresco(String nomFichier){
-        Properties properties = new Properties();
-        InputStream inputStream = PropertiesFilesReader.class.getClassLoader().getResourceAsStream(nomFichier);
-        try {
-            properties.load(inputStream);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        alfrescoTicketUrl = properties.getProperty("alfrescoticketurl");
-        alfrescoUploadFileUrl = properties.getProperty("alfrescoUploadFileUrl");
-        alfresscoDownloadFileUrl = properties.getProperty("alfresscoDownloadFileUrl");
+        alfrescoTicketUrl = chargerUnFichierDeProprietes(nomFichier).getProperty("alfrescoticketurl");
+        alfrescoUploadFileUrl = chargerUnFichierDeProprietes(nomFichier).getProperty("alfrescoUploadFileUrl");
+        alfresscoDownloadFileUrl = chargerUnFichierDeProprietes(nomFichier).getProperty("alfresscoDownloadFileUrl");
     }
 
     public static void trouverLesDossiersDeLaDirectionDansAlfresco(String nomFichier,String nomDirectionUser){
         nomDirectionUser = nomDirectionUser.toLowerCase();
-        Properties properties = new Properties();
-        InputStream inputStream = PropertiesFilesReader.class.getClassLoader().getResourceAsStream(nomFichier);
-        try {
-            properties.load(inputStream);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
         if(nomDirectionUser.equalsIgnoreCase("sécrétariat générale adjoint")){
             nomDirectionUser = "sga";
         }
@@ -75,15 +48,34 @@ public class PropertiesFilesReader {
             nomDirectionUser = "sg";
         }
         mapDossiersDirectionDansAlfresco.clear();
-        mapDossiersDirectionDansAlfresco.put("courrier_"+nomDirectionUser,properties.getProperty("courrier_"+nomDirectionUser));
-        mapDossiersDirectionDansAlfresco.put("annexe_"+nomDirectionUser,properties.getProperty("annexe_"+nomDirectionUser));
-        mapDossiersDirectionDansAlfresco.put("discussion_"+nomDirectionUser,properties.getProperty("discussion_"+nomDirectionUser));
-        reponseCourrierDossier = properties.getProperty("reponses_courriers");
-        dossierPhotos = properties.getProperty("photos");
+        mapDossiersDirectionDansAlfresco.put("courrier_"+nomDirectionUser,chargerUnFichierDeProprietes(nomFichier).getProperty("courrier_"+nomDirectionUser));
+        mapDossiersDirectionDansAlfresco.put("annexe_"+nomDirectionUser,chargerUnFichierDeProprietes(nomFichier).getProperty("annexe_"+nomDirectionUser));
+        mapDossiersDirectionDansAlfresco.put("discussion_"+nomDirectionUser,chargerUnFichierDeProprietes(nomFichier).getProperty("discussion_"+nomDirectionUser));
+        reponseCourrierDossier = chargerUnFichierDeProprietes(nomFichier).getProperty("reponses_courriers");
+        dossierPhotos = chargerUnFichierDeProprietes(nomFichier).getProperty("photos");
 
     }
 
     public static void lireLeFichierDuCopyright(String nomFichier){
+        copyright = chargerUnFichierDeProprietes(nomFichier).getProperty("copyright");
+    }
+
+    public static void lireLeFichierDesTitresDesPages(String nomFichier){
+        mapTitreDesPages.put("mesTaches",chargerUnFichierDeProprietes(nomFichier).getProperty("mesTaches"));
+        mapTitreDesPages.put("tachesQueVousAvezCrees",chargerUnFichierDeProprietes(nomFichier).getProperty("tachesQueVousAvezCrees"));
+        mapTitreDesPages.put("mesCourriersEnregistres",chargerUnFichierDeProprietes(nomFichier).getProperty("mesCourriersEnregistres"));
+        mapTitreDesPages.put("tableauDeBord",chargerUnFichierDeProprietes(nomFichier).getProperty("tableauDeBord"));
+        mapTitreDesPages.put("activites",chargerUnFichierDeProprietes(nomFichier).getProperty("activites"));
+        mapTitreDesPages.put("formulairenouveaucourrier",chargerUnFichierDeProprietes(nomFichier).getProperty("formulairenouveaucourrier"));
+        mapTitreDesPages.put("statistiques",chargerUnFichierDeProprietes(nomFichier).getProperty("statistiques"));
+        mapTitreDesPages.put("courriersEnvoyes",chargerUnFichierDeProprietes(nomFichier).getProperty("courriersEnvoyes"));
+        mapTitreDesPages.put("courriersRecus",chargerUnFichierDeProprietes(nomFichier).getProperty("courriersRecus"));
+        mapTitreDesPages.put("favoris",chargerUnFichierDeProprietes(nomFichier).getProperty("favoris"));
+        mapTitreDesPages.put("archives",chargerUnFichierDeProprietes(nomFichier).getProperty("archives"));
+        mapTitreDesPages.put("mesDossiers",chargerUnFichierDeProprietes(nomFichier).getProperty("mesDossiers"));
+    }
+
+    private static Properties chargerUnFichierDeProprietes(String nomFichier){
         Properties properties = new Properties();
         InputStream inputStream = PropertiesFilesReader.class.getClassLoader().getResourceAsStream(nomFichier);
         try {
@@ -91,7 +83,8 @@ public class PropertiesFilesReader {
         } catch (IOException e) {
             e.printStackTrace();
         }
-        copyright = properties.getProperty("copyright");
+
+        return properties;
     }
 
     public static void ajoutDesProprietesDesDossiersDUneDirection(String nomFichier,String nomDirection){

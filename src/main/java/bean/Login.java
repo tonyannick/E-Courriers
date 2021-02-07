@@ -2,6 +2,7 @@ package bean;
 
 import cookieManager.CookiesUtils;
 import databaseManager.UsersQueries;
+import fileManager.PropertiesFilesReader;
 import messages.FacesMessages;
 import model.User;
 import org.primefaces.PrimeFaces;
@@ -93,7 +94,7 @@ public class Login implements Serializable {
                 UsersQueries.recupererInfosDeSession();
                 session.setAttribute("isResponsable", UsersQueries.isResponsable);
                 session.setAttribute("isSecretaire", UsersQueries.isSecretaire);
-
+                chargerLesTitresDesPages();
                 return "tableaudebord?faces-redirect=true";
             }else{
                 FacesContext context = FacesContext.getCurrentInstance();
@@ -107,6 +108,10 @@ public class Login implements Serializable {
             FacesMessages.errorMessage("messagesLogin","Erreur!!!","Le texte du captcha n'est pas correct");
             return "login?faces-redirect=true";
         }
+    }
+
+    private void chargerLesTitresDesPages(){
+        PropertiesFilesReader.lireLeFichierDesTitresDesPages("titresDesPages.properties");
     }
 
     private boolean verifierCaptcha(){

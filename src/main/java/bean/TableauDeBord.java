@@ -3,6 +3,7 @@ package bean;
 import alfresco.ConnexionAlfresco;
 import databaseManager.DataBaseQueries;
 import databaseManager.StatistiquesQueries;
+import fileManager.PropertiesFilesReader;
 import model.Discussion;
 import model.Etape;
 import model.Statistiques;
@@ -32,6 +33,7 @@ public class TableauDeBord implements Serializable {
     private boolean isResponsable = false;
     private int courrierConfidentiel;
     private int courrierPasConfidentiel;
+    private String titreDeLaPage;
 
 
     @PostConstruct
@@ -42,6 +44,7 @@ public class TableauDeBord implements Serializable {
         etape = new Etape();
         recupererInfosDeSessionUser();
         checkIfAlfrescoIsOnline();
+        titreDeLaPage = PropertiesFilesReader.mapTitreDesPages.get("tableauDeBord");
     }
 
     /***Recuperer les infos de session du user connecté***/
@@ -261,5 +264,12 @@ public class TableauDeBord implements Serializable {
         this.courrierPasConfidentiel = courrierPasConfidentiel;
     }
 
+    public String getTitreDeLaPage() {
+        return titreDeLaPage;
+    }
+
+    public void setTitreDeLaPage(String titreDeLaPage) {
+        this.titreDeLaPage = titreDeLaPage;
+    }
 }
 

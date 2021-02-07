@@ -5,6 +5,7 @@ import databaseManager.DataBaseQueries;
 import databaseManager.DatabaseConnection;
 import databaseManager.DirectionQueries;
 import dateAndTime.DateUtils;
+import fileManager.PropertiesFilesReader;
 import model.Courrier;
 import org.primefaces.PrimeFaces;
 import sessionManager.SessionUtils;
@@ -43,11 +44,12 @@ public class CourriersRecus implements Serializable {
     private boolean isMoisSelectionne = false;
     private List<Courrier> courrierTempList = new ArrayList<>();
     private List<Courrier> courrierSauvegardeList = new ArrayList<>();
-
+    private String titreDeLaPage;
 
     @PostConstruct
     public void initialisation(){
         courrier = new Courrier();
+        titreDeLaPage = PropertiesFilesReader.mapTitreDesPages.get("courriersRecus");
     }
 
     public void recupererLalisteDesCourriersRecus(){
@@ -404,5 +406,13 @@ public class CourriersRecus implements Serializable {
 
     public void setReferenceInternePourRechercheAvancee(String referenceInternePourRechercheAvancee) {
         this.referenceInternePourRechercheAvancee = referenceInternePourRechercheAvancee;
+    }
+
+    public String getTitreDeLaPage() {
+        return titreDeLaPage;
+    }
+
+    public void setTitreDeLaPage(String titreDeLaPage) {
+        this.titreDeLaPage = titreDeLaPage;
     }
 }

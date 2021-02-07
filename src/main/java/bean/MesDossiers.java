@@ -1,6 +1,7 @@
 package bean;
 
 import databaseManager.DossiersQueries;
+import fileManager.PropertiesFilesReader;
 import model.Dossier;
 import sessionManager.SessionUtils;
 
@@ -19,10 +20,12 @@ public class MesDossiers implements Serializable {
 
     private static final long serialVersionUID = 5160498496961132417L;
     private Dossier dossier;
+    private String titreDeLaPage;
 
     @PostConstruct
     public void initialisation(){
         dossier = new Dossier();
+        titreDeLaPage = PropertiesFilesReader.mapTitreDesPages.get("mesDossiers");
     }
 
     public void recupererLesDossiers(){
@@ -76,5 +79,13 @@ public class MesDossiers implements Serializable {
 
     public void setDossier(Dossier dossier) {
         this.dossier = dossier;
+    }
+
+    public String getTitreDeLaPage() {
+        return titreDeLaPage;
+    }
+
+    public void setTitreDeLaPage(String titreDeLaPage) {
+        this.titreDeLaPage = titreDeLaPage;
     }
 }

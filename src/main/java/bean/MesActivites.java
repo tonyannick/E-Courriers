@@ -2,6 +2,7 @@ package bean;
 
 import databaseManager.ActivitesQueries;
 import dateAndTime.DateUtils;
+import fileManager.PropertiesFilesReader;
 import model.Activites;
 import org.primefaces.PrimeFaces;
 import sessionManager.SessionUtils;
@@ -28,10 +29,12 @@ public class MesActivites implements Serializable {
     private Integer firstRow = 0;
     private Integer rowsPerPage = 10;
     private List<Activites> activitesDuJour = new ArrayList<>();
+    private String titreDeLaPage;
 
     @PostConstruct
     public void initialisation(){
         activites = new Activites();
+        titreDeLaPage = PropertiesFilesReader.mapTitreDesPages.get("activites");
     }
 
     public void recupererLaListeDesActivites(){
@@ -45,7 +48,6 @@ public class MesActivites implements Serializable {
         String dateDuJour = DateUtils.recupererSimpleDateEnCoursAuFormatFrancais();
         activitesDuJour.clear();
         for(int a = 0; a < activites.getActivitesList().size(); a++){
-            System.out.println("activites = " + activites.getActivitesList().get(a).getDateActivites());
             if ( activites.getActivitesList().get(a).getDateActivites().equals(dateDuJour)) {
                 activitesDuJour.add(activites.getActivitesList().get(a));
             }
@@ -121,5 +123,13 @@ public class MesActivites implements Serializable {
 
     public void setRowsPerPage(Integer rowsPerPage) {
         this.rowsPerPage = rowsPerPage;
+    }
+
+    public String getTitreDeLaPage() {
+        return titreDeLaPage;
+    }
+
+    public void setTitreDeLaPage(String titreDeLaPage) {
+        this.titreDeLaPage = titreDeLaPage;
     }
 }

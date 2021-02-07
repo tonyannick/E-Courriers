@@ -54,6 +54,7 @@ public class NouveauCourrier implements Serializable {
     private String dossierCourrierAlfresco;
     private String dossierAnnexeAlfresco;
     private boolean fichierCourrierAjoute = false;
+    private String titreDeLaPage;
 
 
     @PostConstruct
@@ -91,7 +92,7 @@ public class NouveauCourrier implements Serializable {
 
         direction.getListeDirectionDestinataire().removeIf(e -> e.equals(user.getUserDirection()));
         tempListDestinataire.removeIf(e -> e.equals(user.getUserDirection()));
-
+        titreDeLaPage = PropertiesFilesReader.mapTitreDesPages.get("formulairenouveaucourrier");
         PropertiesFilesReader.trouverLesDossiersDeLaDirectionDansAlfresco("dossiersAlfrescoMinistere.properties",user.getUserDirection());
         dossierCourrierAlfresco = user.getUserDirection().toLowerCase()+"/"+PropertiesFilesReader.mapDossiersDirectionDansAlfresco.get("courrier_"+user.getUserDirection().toLowerCase());
         dossierAnnexeAlfresco = user.getUserDirection().toLowerCase()+"/"+PropertiesFilesReader.mapDossiersDirectionDansAlfresco.get("annexe_"+user.getUserDirection().toLowerCase());
@@ -892,5 +893,13 @@ public class NouveauCourrier implements Serializable {
 
     public void setIsResponsable(String isResponsable) {
         this.isResponsable = isResponsable;
+    }
+
+    public String getTitreDeLaPage() {
+        return titreDeLaPage;
+    }
+
+    public void setTitreDeLaPage(String titreDeLaPage) {
+        this.titreDeLaPage = titreDeLaPage;
     }
 }

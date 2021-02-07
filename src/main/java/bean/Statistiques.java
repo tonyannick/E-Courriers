@@ -3,6 +3,7 @@ package bean;
 import databaseManager.DataBaseQueries;
 import databaseManager.StatistiquesQueries;
 import dateAndTime.DateUtils;
+import fileManager.PropertiesFilesReader;
 import functions.ColorsRandomGenerator;
 import functions.GraphicsManager;
 import org.primefaces.model.charts.ChartData;
@@ -47,11 +48,14 @@ public class Statistiques implements Serializable {
     private String totalCourrierTraitesParJour;
     private String totalCourrierTraitesParSemaine;
     private String totalCourrierTraitesParMois;
+    private String titreDeLaPage;
+
 
     @PostConstruct
     public void initialisation(){
         statistiques = new model.Statistiques();
         hbarModel = new HorizontalBarChartModel();
+        titreDeLaPage = PropertiesFilesReader.mapTitreDesPages.get("statistiques");
     }
 
     public void recupererStatistiquesDuJour(){
@@ -612,5 +616,13 @@ public class Statistiques implements Serializable {
 
     public void setBarModelNombreDeCourrierParMoisPourLAnnee(BarChartModel barModelNombreDeCourrierParMoisPourLAnnee) {
         this.barModelNombreDeCourrierParMoisPourLAnnee = barModelNombreDeCourrierParMoisPourLAnnee;
+    }
+
+    public String getTitreDeLaPage() {
+        return titreDeLaPage;
+    }
+
+    public void setTitreDeLaPage(String titreDeLaPage) {
+        this.titreDeLaPage = titreDeLaPage;
     }
 }

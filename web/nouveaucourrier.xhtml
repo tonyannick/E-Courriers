@@ -70,7 +70,7 @@
                             <li>Nouveau courrier</li>
                         </ul>
 
-                        <h3 class="page-header"><h:graphicImage value="./resources/images/nouveaucourriertitre.png" style="margin-right :10px"/>Formulaire d'enregistrement d'un nouveau courrier</h3>
+                        <h3 class="page-header"><h:graphicImage value="./resources/images/nouveaucourriertitre.png" style="margin-right :10px"/>#{nouveauCourrier.titreDeLaPage}</h3>
                         <p class="infoerreuralfresco" id="messageerreur" style="display: none;">Impossible d'enregistrer un courrier, le serveur de fichier Alfresco est indisponible</p>
                         <h:form  class="login-form-1" id="courrierForm" cellspacing="30" cellpadding="30" enctype="multipart/form-data" onkeypress="if (event.keyCode == 13) { return false; }">
                             <h:inputText value="#{nouveauCourrier.user.userFonction}" id="userFonction" style="display: none;"/>
