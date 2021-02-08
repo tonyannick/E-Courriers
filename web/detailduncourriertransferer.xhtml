@@ -6,6 +6,7 @@
       xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
       xmlns:fn="http://xmlns.jcp.org/jsp/jstl/functions"
       xmlns:pt="http://xmlns.jcp.org/jsf/passthrough"
+      xmlns:pretty="http://ocpsoft.com/prettyfaces"
       xmlns:f="http://xmlns.jcp.org/jsf/core">
 <f:view transient="true">
     <f:metadata>
@@ -29,6 +30,7 @@
         <h:outputStylesheet name="css/detailduncourrierrecu.css" />
         <h:outputStylesheet name="css/accordiondetail.css" />
         <h:outputScript name="/sweetalert/js/sweetalert.min.js"/>
+        <h:outputStylesheet name="css/custombreadcrumb.css"/>
         <h:outputStylesheet name="/sweetalert/css/sweetalert.css"/>
         <h:outputScript name="toast/js/toast.js"/>
         <h:outputStylesheet name="toast/css/toast.css" />
@@ -176,6 +178,18 @@
                                 <li><h:outputLink value="courriersrecus.xhtml" title="Mes courriers">Courriers reçus</h:outputLink></li>
                                 <li>Details d'un courrier reçus</li>
                             </ul>
+
+                            <div class="custombreadcrumb flat">
+                                <pretty:link mappingId="tableaudebord">
+                                    Accueil
+                                </pretty:link>
+                                <pretty:link mappingId="courriersrecus">
+                                    Courriers reçus
+                                </pretty:link>
+                                <a class="active">
+                                    Details d'un courrier reçus
+                                </a>
+                            </div>
                             <h:form>
                                 <p:toolbar style="margin-bottom: 15px; margin-top: 15px">
                                     <f:facet name="left">

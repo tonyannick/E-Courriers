@@ -5,6 +5,7 @@
       xmlns:p="http://primefaces.org/ui"
       xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
       xmlns:fn="http://xmlns.jcp.org/jsp/jstl/functions"
+      xmlns:pretty="http://ocpsoft.com/prettyfaces"
       xmlns:f="http://xmlns.jcp.org/jsf/core">
 
 <f:view transient="true">
@@ -19,6 +20,7 @@
         <h:outputStylesheet name="css/mescourriers.css" />
         <h:outputScript name="/sweetalert/js/sweetalert.min.js"/>
         <h:outputStylesheet name="/sweetalert/css/sweetalert.css"/>
+        <h:outputStylesheet name="css/custombreadcrumb.css"/>
     </h:head>
     <style>
         .courrierconfidentiel{
@@ -63,10 +65,15 @@
                  </div>
                 <div class="main-overview" style="margin-bottom: 90px; margin-top: 10px">
                     <div class="col-sm-9 col-sm-offset-3 col-md-8 col-md-offset-2 main">
-                        <ul class="breadcrumb">
-                            <li><h:outputLink value="tableaudebord.xhtml" title="Accueil">Accueil</h:outputLink></li>
-                            <li>Mes Courriers enregistrés</li>
-                        </ul>
+
+                        <div class="custombreadcrumb flat">
+                            <pretty:link mappingId="tableaudebord">
+                                Accueil
+                            </pretty:link>
+                            <a class="active">
+                                Mes Courriers enregistrés
+                            </a>
+                        </div>
 
                         <h3 class="page-header"><h:graphicImage value="./resources/images/officematerial.png" style="margin-right :10px"/>Mes courriers enregistrés</h3>
 

@@ -6,6 +6,7 @@
       xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
       xmlns:pt="http://xmlns.jcp.org/jsf/passthrough"
       xmlns:fn="http://xmlns.jcp.org/jsp/jstl/functions"
+      xmlns:pretty="http://ocpsoft.com/prettyfaces"
       xmlns:f="http://xmlns.jcp.org/jsf/core">
 <f:view transient="true">
     <f:metadata>
@@ -22,6 +23,7 @@
         <h:outputStylesheet name="/wickedpicker/css/wickedpicker.min.css"/>
         <h:outputStylesheet name="/wickedpicker/css/wickedpicker.css"/>
         <h:outputScript name="wickedpicker/js/wickedpicker.js"/>
+        <h:outputStylesheet name="css/custombreadcrumb.css"/>
     </h:head>
     <h:outputStylesheet>
         .courrierurgent{
@@ -104,19 +106,23 @@
                     <div class="ui-g" style=" width:100%;">
                         <div class="ui-g-2"/>
                         <div  class="ui-g-8">
-                            <ul class="breadcrumb" style="width:100%;">
-                                <li><h:outputLink value="tableaudebord.xhtml" title="Accueil">Accueil</h:outputLink></li>
-                                <li>Courriers reçus</li>
-                            </ul>
+
+                            <div class="custombreadcrumb flat">
+                                <pretty:link mappingId="tableaudebord">
+                                    Accueil
+                                </pretty:link>
+                                <a class="active">
+                                    Courriers reçus
+                                </a>
+                            </div>
                             <h3 class="page-header"><h:graphicImage value="./resources/images/courrierrecu.png" style="margin-right :10px"/>#{courriersRecus.titreDeLaPage}</h3>
 
                             <h:form  id="form">
-
                                 <p:toolbar style="margin-bottom: 15px; margin-top: 15px;">
                                     <f:facet name="left">
                                         <div id="divBoutonFaireUnRecherche" style="float: left;">
                                             <p:menuButton value="Recherche avancée" iconPos="right" icon="fa fa-search">
-                                                <p:menuitem value="Recherche par date" onclick="PF('dialogueRechercherCourrierParDate').show()"  />
+                                                <p:menuitem value="Recherche par date" onclick="PF('dialogueRechercherCourrierParDate').show()"/>
                                                 <p:menuitem value="Recherche par mois" onclick="PF('dialogueRechercherCourrierParMois').show()"/>
                                                 <p:menuitem value="Recherche par type de courrier" onclick="PF('dialogueRechercherCourrierParTypeDeCourrier').show()"/>
                                                 <p:menuitem value="Recherche par direction"  onclick="PF('dialogueRechercherCourrierParDirection').show()"/>

@@ -57,7 +57,14 @@ public class PropertiesFilesReader {
     }
 
     public static void lireLeFichierDuCopyright(String nomFichier){
-        copyright = chargerUnFichierDeProprietes(nomFichier).getProperty("copyright");
+        Properties properties = new Properties();
+        InputStream inputStream = PropertiesFilesReader.class.getClassLoader().getResourceAsStream(nomFichier);
+        try {
+            properties.load(new InputStreamReader(inputStream, Charset.forName(System.getProperty("file.encoding"))));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        copyright = properties.getProperty("copyright");
     }
 
     public static void lireLeFichierDesTitresDesPages(String nomFichier){

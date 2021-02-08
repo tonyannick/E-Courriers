@@ -298,35 +298,21 @@ public class CourriersQueries {
                         resultSet2.getString("reference"),
                         resultSet2.getString("priorite"),
                         resultSet2.getString("objet"),
-                        resultSet1.getString("date_enregistrement"),
+                        resultSet2.getString("date_enregistrement"),
                         resultSet2.getString("id_courrier"),
                         resultSet2.getString("genre"),
                         resultSet2.getString("identifiant_alfresco")));
             }
             finalList = Stream.of(mesCourriersEnvoyes, mesCourriersRecus).flatMap(x -> x.stream()).collect(Collectors.toList());
-         /*   if(mesCourriersEnvoyes.size() > 0){
-
-                for (int i = 0; i < mesCourriersEnvoyes.size(); i++){
-                    String jour = mesCourriersEnvoyes.get(i).getDateDeReception().substring(mesCourriersEnvoyes.get(i).getDateDeReception().lastIndexOf("-") +1);
-                    String mois = mesCourriersEnvoyes.get(i).getDateDeReception().substring(mesCourriersEnvoyes.get(i).getDateDeReception().indexOf("-")+1,mesCourriersEnvoyes.get(i).getDateDeReception().indexOf("-")+3);
-                    String annee = mesCourriersEnvoyes.get(i).getDateDeReception().substring(0,4);
-                    mesCourriersEnvoyes.get(i).setDateDeReception(jour+"-"+mois+"-"+annee);
+            if(mesCourriersEnvoyes.size() > 0){
+                for (int i = 0; i < finalList.size(); i++){
+                    String jour = finalList.get(i).getDateDEnregistrement().substring(finalList.get(i).getDateDEnregistrement().lastIndexOf("-") +1);
+                    String mois = finalList.get(i).getDateDEnregistrement().substring(finalList.get(i).getDateDEnregistrement().indexOf("-")+1,finalList.get(i).getDateDEnregistrement().indexOf("-")+3);
+                    String annee = finalList.get(i).getDateDEnregistrement().substring(0,4);
+                    finalList.get(i).setDateDEnregistrement(jour+"-"+mois+"-"+annee);
                 }
-
             }
 
-            if(mesCourriersRecus.size() > 0){
-
-                for (int i = 0; i < mesCourriersRecus.size(); i++){
-                    String jour = mesCourriersRecus.get(i).getDateDeReception().substring(mesCourriersRecus.get(i).getDateDeReception().lastIndexOf("-") +1);
-                    String mois = mesCourriersRecus.get(i).getDateDeReception().substring(mesCourriersRecus.get(i).getDateDeReception().indexOf("-")+1,mesCourriersRecus.get(i).getDateDeReception().indexOf("-")+3);
-                    String annee = mesCourriersRecus.get(i).getDateDeReception().substring(0,4);
-                    mesCourriersRecus.get(i).setDateDeReception(jour+"-"+mois+"-"+annee);
-                    mesCourriersRecus.get(i).setGenreCourrier("Courrier Reçu");
-                }
-            }*/
-
-            //finalList = Stream.concat(mesCourriersEnvoyes.stream(), mesCourriersRecus.stream()).collect(Collectors.toList());
         } catch (SQLException e) {
             e.printStackTrace();
         }finally {

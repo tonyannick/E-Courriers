@@ -1,0 +1,9 @@
+<component name="libraryTable">
+  <library name="rewrite-config-prettyfaces-3.4.4.Final">
+    <CLASSES>
+      <root url="jar://$PROJECT_DIR$/lib/rewrite-config-prettyfaces-3.4.4.Final.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES />
+  </library>
+</component>

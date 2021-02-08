@@ -6,6 +6,7 @@
       xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
       xmlns:fn="http://xmlns.jcp.org/jsp/jstl/functions"
       xmlns:pt="http://xmlns.jcp.org/jsf/passthrough"
+      xmlns:pretty="http://ocpsoft.com/prettyfaces"
       xmlns:f="http://xmlns.jcp.org/jsf/core">
 <f:view transient="true">
     <f:metadata>
@@ -21,6 +22,7 @@
         <h:outputStylesheet name="/sweetalert/css/sweetalert.css"/>
         <h:outputScript name="toast/js/toast.js"/>
         <h:outputStylesheet name="toast/css/toast.css" />
+        <h:outputStylesheet name="css/custombreadcrumb.css"/>
     </h:head>
     <h:outputStylesheet>
         .ui-dialog.ui-widget {
@@ -60,10 +62,15 @@
                 </div>
                 <div class="main-overview" style="margin-bottom: 90px; margin-top: 10px">
                     <div class="col-sm-9 col-sm-offset-3 col-md-8 col-md-offset-2 main">
-                        <ul class="breadcrumb">
-                            <li><h:outputLink value="tableaudebord.xhtml" title="Accueil">Accueil</h:outputLink></li>
-                            <li>Mes taches</li>
-                        </ul>
+
+                        <div class="custombreadcrumb flat">
+                            <pretty:link mappingId="tableaudebord">
+                                Accueil
+                            </pretty:link>
+                            <a class="active">
+                                Mes taches
+                            </a>
+                        </div>
 
                         <h3 class="page-header"><h:graphicImage value="./resources/images/worker.png" style="margin-right :10px"/>#{mesTaches.titreDeLaPage}</h3>
 

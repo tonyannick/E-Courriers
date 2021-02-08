@@ -4,6 +4,7 @@
       xmlns:h="http://xmlns.jcp.org/jsf/html"
       xmlns:p="http://primefaces.org/ui"
       xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:pretty="http://ocpsoft.com/prettyfaces"
       xmlns:f="http://xmlns.jcp.org/jsf/core">
 <f:view>
     <f:metadata>
@@ -17,12 +18,14 @@
         <meta http-equiv="Content-Type" content="text/html;charset=UTF8" />
         <h:outputStylesheet name="css/tableaudebord.css" />
         <h:outputStylesheet name="css/statistiques.css" />
+        <h:outputStylesheet name="css/custombreadcrumb.css"/>
         <h:outputScript name="bootstrap/js/bootstrap.js" />
         <h:outputStylesheet name="bootstrap/css/bootstrap.css" />
         <h:outputScript name="chartjs/js/Chart.js"/>
         <h:outputScript name="chartjs/js/Chart.min.js"/>
         <h:outputStylesheet name="chartjs/css/Chart.css" />
         <h:outputStylesheet name="chartjs/css/Chart.min.css" />
+        <script src="http://thecodeplayer.com/uploads/js/prefixfree-1.0.7.js"  type="text/javascript"></script>
     </h:head>
     <h:outputStylesheet>
         .ui-tabs.ui-widget .ui-tabs-nav {
@@ -68,10 +71,13 @@
                     <div style=" width:100%;">
                         <div class="ui-g-1"/>
                         <div  class="ui-g-10">
-                            <ul class="breadcrumb">
-                                <li><h:outputLink value="tableaudebord.xhtml" title="Accueil">Accueil</h:outputLink></li>
-                                <li>Statistiques</li>
-                            </ul>
+
+                            <div class="custombreadcrumb flat">
+                                <pretty:link mappingId="tableaudebord">
+                                    Accueil
+                                </pretty:link>
+                                <a class="active"> Statistiques</a>
+                            </div>
 
                             <h1 class="page-header">
                                 <h:graphicImage value="./resources/images/graph.png" style="margin-right :10px"/>#{statistiques.titreDeLaPage}

@@ -4,6 +4,7 @@
       xmlns:h="http://xmlns.jcp.org/jsf/html"
       xmlns:p="http://primefaces.org/ui"
       xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:pretty="http://ocpsoft.com/prettyfaces"
       xmlns:f="http://xmlns.jcp.org/jsf/core">
 <f:view transient="true">
     <f:metadata>
@@ -23,6 +24,7 @@
         <h:outputStylesheet name="css/detailduncourrierfavorisouarchiver.css" />
         <h:outputScript name="/sweetalert/js/sweetalert.min.js"/>
         <h:outputStylesheet name="/sweetalert/css/sweetalert.css"/>
+        <h:outputStylesheet name="css/custombreadcrumb.css"/>
     </h:head>
     <h:outputStylesheet>
         .courrierurgent{
@@ -101,13 +103,21 @@
                     <div class="ui-g" style=" width:100%;">
                         <div class="ui-g-1"/>
                         <div  class="ui-g-10 ui-md-10">
-                            <ul class="breadcrumb" style="width:100%;">
-                                <li><h:outputLink value="tableaudebord.xhtml" title="Accueil">Accueil</h:outputLink></li>
-                                <li><h:outputLink value="#{detailDUnCourrierFavorisOuArchiver.urlDeRetour}" title="Mes courriers">Courriers #{detailDUnCourrierFavorisOuArchiver.favorisOuArchive}</h:outputLink></li>
-                                <li>Details d'un courrier</li>
-                            </ul>
+
+                            <div class="custombreadcrumb flat">
+                                <pretty:link mappingId="tableaudebord">
+                                    Accueil
+                                </pretty:link>
+                                <pretty:link mappingId="archives">
+                                    archives
+                                </pretty:link>
+                                <a class="active">
+                                    Details d'un courrier
+                                </a>
+                            </div>
+
                             <h:form>
-                                <p:toolbar style="margin-bottom: 15px; margin-top: 15px">
+                                <p:toolbar style="margin-bottom: 15px;">
                                     <f:facet name="left">
                                         <div id="boutonDossier" style="float: left">
                                         <p:commandButton type="button" style="background: #dfa574;margin-left: 10px; border-color:#dfa574; color: white; font-weight: bold; padding: 3px 4px"

@@ -5,6 +5,7 @@
       xmlns:p="http://primefaces.org/ui"
       xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
       xmlns:pt="http://xmlns.jcp.org/jsf/passthrough"
+      xmlns:pretty="http://ocpsoft.com/prettyfaces"
       xmlns:f="http://xmlns.jcp.org/jsf/core">
 <f:view transient="true">
     <f:metadata>
@@ -17,6 +18,7 @@
        <h:outputScript name="bootstrap/js/bootstrap.js" />
        <h:outputStylesheet name="bootstrap/css/bootstrap.css" />
        <h:outputStylesheet name="css/nouveaucourrier.css" />
+       <h:outputStylesheet name="css/custombreadcrumb.css"/>
        <h:outputScript name="/sweetalert/js/sweetalert.min.js"/>
        <h:outputStylesheet name="/sweetalert/css/sweetalert.css"/>
        <h:outputStylesheet name="/wickedpicker/css/wickedpicker.min.css"/>
@@ -65,10 +67,16 @@
                 </div>
                 <div class="main-overview" style="margin-bottom: 90px; margin-top: 10px">
                     <div class="col-sm-9 col-sm-offset-3 col-md-8 col-md-offset-2 main">
-                        <ul class="breadcrumb">
-                            <li><h:outputLink value="tableaudebord.xhtml" title="Accueil">Accueil</h:outputLink></li>
-                            <li>Nouveau courrier</li>
-                        </ul>
+
+                        <div class="custombreadcrumb flat">
+                            <pretty:link mappingId="tableaudebord">
+                                Accueil
+                            </pretty:link>
+                            <a class="active">
+                                Nouveau courrier
+                            </a>
+                        </div>
+
 
                         <h3 class="page-header"><h:graphicImage value="./resources/images/nouveaucourriertitre.png" style="margin-right :10px"/>#{nouveauCourrier.titreDeLaPage}</h3>
                         <p class="infoerreuralfresco" id="messageerreur" style="display: none;">Impossible d'enregistrer un courrier, le serveur de fichier Alfresco est indisponible</p>

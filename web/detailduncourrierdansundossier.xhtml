@@ -82,6 +82,7 @@
             color: white;
             margin-left: 10px;
             font-size: 15px  !important;
+            font-weight: normal;
         }
 
         .ui-dialog .ui-dialog-titlebar {
@@ -108,8 +109,8 @@
                 </div>
                 <div style="width:100%; margin-bottom: 90px; margin-top: 10px;overflow-y: auto">
                     <div class="ui-g" style=" width:100%;">
-                        <div class="ui-g-1"/>
-                        <div  class="ui-g-10 ui-md-10">
+                        <div class="ui-g-2"/>
+                        <div  class="ui-g-8 ui-md-8">
                             <ul class="breadcrumb" style="width:100%;">
                                 <li><h:outputLink value="tableaudebord.xhtml" title="Accueil">Accueil</h:outputLink></li>
                                 <li><h:outputLink value="mesdossiers.xhtml" title="Mess dossiers">Mes dossiers</h:outputLink></li>
@@ -120,10 +121,9 @@
                             <p:toolbar style="margin-bottom: 15px; margin-top: 15px">
                                 <f:facet name="left">
                                     <p:commandButton type="button"
-                                                     style="background: #8b2421; border-color: #8b2421;
-                                                            color: white; font-weight: bold; padding: 3px 4px"
-                                                            onclick="PF('dialogueConfirmationSuppression').show()" iconPos="right"
-                                                            value="retirer le courrier du dossier" icon="fa fa-window-close" />
+                                                     style="background: #8b2421; border-color: #8b2421;color: white;"
+                                                     onclick="PF('dialogueConfirmationSuppression').show()" iconPos="right"
+                                                     value="Retirer le courrier du dossier" icon="fa fa-minus-circle" />
                                 </f:facet>
 
                             </p:toolbar>
@@ -209,39 +209,41 @@
                                 <button class="accordionDetailCourrier"><h:graphicImage value="./resources/images/two.png" style="margin-right:10px; width: 15px; height: 15px;"/>Eléménts du courrier</button>
                                 <div class="panelInfoCourrier">
 
-                                    <p:panelGrid columns="2" columnClasses="ui-grid-col-2 gridcol2, ui-grid-col-10"  style="border: 1px #888 solid; width: 100%; margin-bottom:15px; margin-top: 15px ">
-                                        <h:outputLabel value="Heure d'enregistrement" style="font-weight: bold; color:black; font-size: 14px"/>
-                                        <h:outputLabel value="#{detailDUnCourrierDansUnDossier.courrier.heureDEnregistrement}" style="font-size: 12px;"/>
-                                        <h:outputLabel value="Date d'enregistrement" style="font-weight: bold; color:black; font-size: 14px"/>
-                                        <h:outputLabel value="#{detailDUnCourrierDansUnDossier.courrier.dateDEnregistrement}" style="font-size: 14px" />
-                                        <h:outputLabel value="Date de réception " style="font-weight: bold; font-size: 14px; color:black"/>
-                                        <h:outputLabel value="#{detailDUnCourrierDansUnDossier.courrier.dateDeReception}" style="font-size: 12px"/>
-                                        <h:outputLabel value="Heure de réception  " style="font-weight: bold; font-size: 14px; color:black"/>
-                                        <h:outputLabel value="#{detailDUnCourrierDansUnDossier.courrier.heureDeReception}" style="font-size: 12px"/>
-                                    </p:panelGrid>
-
                                     <p:panelGrid columns="2" columnClasses="ui-grid-col-2 gridcol2, ui-grid-col-10" style="width: 100%; margin-top: 15px; margin-bottom:15px; border: 1px #888 solid;">
 
                                         <h:outputLabel value="Type de courrier " style="font-weight: bold; color: black; font-size: 14px"/>
-                                        <h:outputLabel value="#{detailDUnCourrierDansUnDossier.courrier.typeCourrier}" style="font-size: 14px;"/>
+                                        <h:outputLabel value="#{detailDUnCourrierDansUnDossier.courrier.typeCourrier}" style="font-weight: normal;font-size: 14px;"/>
 
                                         <h:outputLabel value="Référence  " style="font-weight: bold; font-size: 14px;color: black"/>
-                                        <h:outputLabel value="#{detailDUnCourrierDansUnDossier.courrier.referenceCourrier}" style="font-size: 14px"/>
+                                        <h:outputLabel value="#{detailDUnCourrierDansUnDossier.courrier.referenceCourrier}" style="font-weight: normal;font-size: 14px"/>
 
                                         <h:outputLabel value="Objet  " style="font-weight: bold; font-size: 14px; color: black"/>
-                                        <h:outputLabel value="#{detailDUnCourrierDansUnDossier.courrier.objetCourrier}" style="font-size: 14px"/>
+                                        <h:outputLabel value="#{detailDUnCourrierDansUnDossier.courrier.objetCourrier}" style="font-weight: normal;font-size: 14px"/>
 
                                         <h:outputLabel value="Priorité  " style="font-weight: bold; font-size: 14px; color: black" />
-                                        <h:outputLabel value="#{detailDUnCourrierDansUnDossier.courrier.prioriteCourrier}" style="font-size: 14px"/>
+                                        <h:outputLabel value="#{detailDUnCourrierDansUnDossier.courrier.prioriteCourrier}" style="font-weight: normal;font-size: 14px"/>
 
                                         <h:outputLabel value="Confidentiel  " style="font-weight: bold; font-size: 14px; color: black"/>
-                                        <h:outputLabel value="#{detailDUnCourrierDansUnDossier.courrier.confidentiel}" style="font-size: 14px"/>
+                                        <h:outputLabel value="#{detailDUnCourrierDansUnDossier.courrier.confidentiel}" style="font-weight: normal;font-size: 14px"/>
 
                                         <h:outputLabel value="Comentaires " style="font-weight: bold; font-size: 14px; color: black"/>
-                                        <h:outputLabel value="#{detailDUnCourrierDansUnDossier.courrier.commentairesCourrier}" style="font-size: 14px" />
+                                        <h:outputLabel value="#{detailDUnCourrierDansUnDossier.courrier.commentairesCourrier}" style="font-weight: normal;font-size: 14px" />
                                     </p:panelGrid>
 
+                                </div>
 
+                                <button class="accordionDetailCourrier"><h:graphicImage value="./resources/images/three.png" style="margin-right:10px; width: 15px; height: 15px;"/>Informations complémentaires</button>
+                                <div class="panelInfoCourrier">
+                                    <p:panelGrid columns="2" columnClasses="ui-grid-col-2 gridcol2, ui-grid-col-10"  style="border: 1px #888 solid; width: 100%; margin-bottom:15px; margin-top: 15px ">
+                                        <h:outputLabel value="Heure d'enregistrement" style="font-weight: bold; color:black; font-size: 14px"/>
+                                        <h:outputLabel value="#{detailDUnCourrierDansUnDossier.courrier.heureDEnregistrement}" style="font-weight: normal;font-size: 14px;"/>
+                                        <h:outputLabel value="Date d'enregistrement" style="font-weight: bold; color:black; font-size: 14px"/>
+                                        <h:outputLabel value="#{detailDUnCourrierDansUnDossier.courrier.dateDEnregistrement}" style="font-weight: normal;font-size:14px" />
+                                        <h:outputLabel value="Enregistré par" style="font-weight: bold; color:black; font-size: 14px"/>
+                                        <h:outputLabel value="#{detailDUnCourrierEnvoye.nomEtPrenomAjouteurCourrier}" style="font-weight: normal;font-size: 14px;"/>
+                                        <h:outputLabel value="Fonction" style="font-weight: bold; color:black; font-size: 14px"/>
+                                        <h:outputLabel value="#{detailDUnCourrierEnvoye.fonctionAjouteurCourrier}" style="font-weight: normal;font-size: 14px;"/>
+                                    </p:panelGrid>
                                 </div>
 
                             </div>
@@ -437,8 +439,8 @@
                                 <h:form>
                                     <p:messages for="messages" showDetail="true" closable="true"/>
                                     <p:commandButton value="Retirer"
-                                                     style="margin-top: 14px; margin-right: 10px"
-                                                     icon="fa fa-check-circle"
+                                                     style="margin-top: 14px;float: right"
+                                                     icon="fa fa-check-circle" iconPos="right"
                                                      update="@form"
                                                      actionListener="#{detailDUnCourrierDansUnDossier.retirerUnCourrierDUnDossier}"/>
                                 </h:form>
@@ -456,14 +458,14 @@
 
                                     <p:separator/>
                                     <p:commandButton value="Ok"
-                                                     style="background: #8b2421; border: 1px #8b2421 solid; color: white"
-                                                     icon="fa fa-window-close"
+                                                     style="background: #008b4a; border: 1px #008b4a solid; color: white"
+                                                     icon="fa fa-check-circle-o" iconPos="right"
                                                      ajax="false"
                                                      action="#{detailDUnCourrierDansUnDossier.retourALaListeDesCourriersDuDossiers}"/>
                                 </h:form>
                             </p:dialog>
                         </div>
-                        <div class="ui-g-1"/>
+                        <div class="ui-g-2"/>
                     </div>
                 </div>
             </div>

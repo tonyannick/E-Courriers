@@ -5,6 +5,7 @@
       xmlns:p="http://primefaces.org/ui"
       xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
       xmlns:fn="http://xmlns.jcp.org/jsp/jstl/functions"
+      xmlns:pretty="http://ocpsoft.com/prettyfaces"
       xmlns:pt="http://xmlns.jcp.org/jsf/passthrough"
       xmlns:f="http://xmlns.jcp.org/jsf/core">
 <f:view transient="true">
@@ -32,6 +33,7 @@
         <h:outputStylesheet name="/sweetalert/css/sweetalert.css"/>
         <h:outputScript name="toast/js/toast.js"/>
         <h:outputStylesheet name="toast/css/toast.css" />
+        <h:outputStylesheet name="css/custombreadcrumb.css"/>
     </h:head>
     <h:outputStylesheet>
         .courrierurgent{
@@ -172,13 +174,20 @@
                     <div class="ui-g" style=" width:100%;">
                         <div class="ui-g-2"/>
                         <div  class="ui-g-8 ui-md-8">
-                            <ul class="breadcrumb" style="width:100%">
-                                <li><h:outputLink value="tableaudebord.xhtml" title="Accueil">Accueil</h:outputLink></li>
-                                <li><h:outputLink value="courriersrecus.xhtml" title="Mes courriers">Courriers reçus</h:outputLink></li>
-                                <li>Details d'un courrier reçus</li>
-                            </ul>
+
+                            <div class="custombreadcrumb flat">
+                                <pretty:link mappingId="tableaudebord">
+                                    Accueil
+                                </pretty:link>
+                                <pretty:link mappingId="courriersrecus">
+                                    Courriers reçus
+                                </pretty:link>
+                                <a class="active">
+                                    Details d'un courrier reçus
+                                </a>
+                            </div>
                             <h:form>
-                                <p:toolbar style="margin-bottom: 15px; margin-top: 15px">
+                                <p:toolbar style="margin-bottom: 15px;">
                                     <f:facet name="left">
                                         <p:commandButton type="button" style="background: #8b2421; border-color:#8b2421; color: white;"
                                                          onclick="PF('dialogueValiderArchiverLeCourrier').show()" iconPos="right"

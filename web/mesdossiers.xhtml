@@ -5,6 +5,7 @@
       xmlns:p="http://primefaces.org/ui"
       xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
       xmlns:fn="http://xmlns.jcp.org/jsp/jstl/functions"
+      xmlns:pretty="http://ocpsoft.com/prettyfaces"
       xmlns:f="http://xmlns.jcp.org/jsf/core">
 <f:view transient="true">
     <f:metadata>
@@ -17,6 +18,7 @@
         <h:outputScript name="bootstrap/js/bootstrap.js" />
         <h:outputStylesheet name="bootstrap/css/bootstrap.css" />
         <h:outputStylesheet name="css/mesdossiers.css" />
+        <h:outputStylesheet name="css/custombreadcrumb.css"/>
     </h:head>
     <style>
         .courrierurgent{
@@ -47,11 +49,16 @@
                 <div style="width:100%; margin-bottom: 90px; margin-top: 10px;overflow-y: auto">
                     <div class="ui-g" style=" width:100%;">
                         <div class="ui-g-2"/>
-                        <div  class="ui-g-8">
-                            <ul class="breadcrumb" style="width:100%;">
-                                <li><h:outputLink value="tableaudebord.xhtml" title="Accueil">Accueil</h:outputLink></li>
-                                <li>Mes dossiers</li>
-                            </ul>
+                        <div  class="ui-g-8" style=" border-radius: 20px">
+
+                            <div class="custombreadcrumb flat">
+                                <pretty:link mappingId="tableaudebord">
+                                    Accueil
+                                </pretty:link>
+                                <a class="active">  Mes dossiers</a>
+                            </div>
+
+
                             <h3 class="page-header"><h:graphicImage value="./resources/images/folders.png" width="30px" height="30px" style="margin-right :10px"/>#{mesDossiers.titreDeLaPage}</h3>
 
                             <p:toolbar style="margin-bottom: 15px; margin-top: 15px;">
@@ -59,7 +66,7 @@
                                     <p:commandButton  icon="fa fa-plus-circle"
                                                       type="button" value="créer un dossier"
                                                       onclick="ouvrirModalBoxCreerDossier()"
-                                                      style="color: white; background:#c49166;border: 1px#c49166 solid;"/>
+                                                      style="color: white; background:#c49166;border: 1px #c49166 solid;"/>
                                     <span class="ui-separator">
                                         <span class="fa fa-ellipsis-v" />
                                     </span>

@@ -56,6 +56,14 @@
         <pattern value="/mescourriers"/>
         <view-id value="/faces/mescourriers.xhtml"/>
     </url-mapping>
+    <url-mapping id="detailsduncourrierdansundossier">
+        <pattern value="/detailduncourrier"/>
+        <view-id value="/faces/detailduncourrierdansundossier.xhtml"/>
+    </url-mapping>
+    <url-mapping id="detaildundossier">
+        <pattern value="/detaildundossier"/>
+        <view-id value="/faces/detaildundossier.xhtml"/>
+    </url-mapping>
 
 
 </pretty-config>

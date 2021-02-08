@@ -18,7 +18,7 @@
         <h:outputStylesheet name="bootstrap/css/bootstrap.css" />
         <h:outputStylesheet name="css/detaildundossier.css" />
     </h:head>
-    <style>
+    <h:outputStylesheet>
         .courrierurgent{
             background-color: #fca752 !important;
             color: #fefefe;
@@ -35,7 +35,28 @@
             border-bottom-left-radius: 20px;
             border-bottom-right-radius: 20px;
         }
-    </style>
+        .ui-dialog.ui-widget {
+            background-color: white;
+            color: #ffffff;
+            padding-right: 5px;
+        }
+
+        .ui-dialog .ui-dialog-title {
+            color: white;
+            margin-left: 10px;
+            font-weight: normal;
+            font-size: 15px  !important;
+        }
+
+        .ui-dialog .ui-dialog-titlebar {
+            background: #4c7ebd !important;
+            width: 100%;
+            position: relative;
+            margin: 2px 2px;
+            padding-right: 10px;
+            padding-top: 10px;
+        }
+    </h:outputStylesheet>
     <h:body>
         <div class="container-fluid" >
             <div class="row">
@@ -65,20 +86,22 @@
                             <p:toolbar style="margin-bottom: 15px; margin-top: 15px;">
                                 <f:facet name="left">
                                     <p:commandButton type="button"
-                                                     style="background: #8b2421; border-color: #8b2421;
-                                                     color: white; font-weight: bold; padding: 2px 2px"
+                                                     style="background: #8b2421; border-color: #8b2421;color: white;"
                                                      onclick="PF('dialogueConfirmationSuppression').show()" iconPos="right"
-                                                     value="Supprimer le dossier" icon="fa fa-close" />
+                                                     value="Supprimer le dossier" icon="fa fa-minus-circle" />
                                     <p:commandButton type="button"
                                                      style="background: #1c4b74; border-color: #1c4b74;
-                                                     color: white; font-weight: bold; margin-left: 8px;  padding: 2px 2px"
+                                                     color: white; margin-left: 8px;"
                                                      onclick="PF('dialogueRenommerDossier').show()" iconPos="right"
                                                      value="Renommer le dossier" icon="fa fa-pencil" />
+
+                                    <span class="ui-separator">
+                                        <span class="fa fa-ellipsis-v" />
+                                    </span>
+                                    <p:commandButton style="color: white; margin-left:10px; background:#286090; border-color:#286090;"
+                                                     onclick="actualiserLaPageDesCourriers()" type="button" icon="fa fa-refresh"/>
                                 </f:facet>
-                                <f:facet name="right">
-                                    <p:commandButton style=" color: white; padding: 2px 2px; background:#286090; border-color:#286090;margin-right: 20px;"
-                                                     value="Atualiser la page"  onclick="actualiserLaPageDesCourriers()" type="button" icon="fa fa-refresh"/>
-                                </f:facet>
+
 
                             </p:toolbar>
 
@@ -109,12 +132,12 @@
                                         <h:outputText value="#{index + 1}" />
                                     </p:column>
                                     <p:column style="width: 140px; text-align: center"
-                                              filterStyle="background-color: white; width: 100px;
+                                              filterStyle="background-color: white; width: 150px;
                                               border-radius: 5px;
                                               border: 1px #d3d6d6 solid"
-                                              filterBy="#{courriers.dateDeReception}">
+                                              filterBy="#{courriers.dateDEnregistrement}">
                                         <f:facet name="header" >Date d'enregistrement</f:facet>
-                                        <h:outputText style="font-size: 13px; alignment: center; " value="#{courriers.dateDeReception}"/>
+                                        <h:outputText style="font-size: 13px; alignment: center; " value="#{courriers.dateDEnregistrement}"/>
                                     </p:column>
                                     <p:column style="text-align: center"
                                               filterStyle="background-color: white;  width: 200px;
@@ -125,7 +148,7 @@
                                         <h:outputText style="font-size: 13px; alignment: center;" value="#{courriers.referenceCourrier}"/>
                                     </p:column>
                                     <p:column style="text-align: center"
-                                              filterStyle="background-color: white; width: 100px;
+                                              filterStyle="background-color: white; width: 150px;
                                               border-radius: 5px;
                                               border: 1px #d3d6d6 solid"
                                               filterBy="#{courriers.objetCourrier}">
@@ -136,8 +159,9 @@
                                             styleClass="#{courriers.prioriteCourrier eq 'Urgent' ? 'courrierurgent' : null}"
                                             style="width: 100px; text-align: center"
                                             filterStyle="background-color: white; width: 100px;
-                                        border-radius: 5px;
-                                        border-color: #f9fffd" filterBy="#{courriers.prioriteCourrier}}">
+                                            border-radius: 5px;
+                                            border: 1px #d3d6d6 solid"
+                                            filterBy="#{courriers.prioriteCourrier}}">
                                         <f:facet name="header">Priorité</f:facet>
                                         <h:outputText style="font-size: 13px; alignment: center;" value="#{courriers.prioriteCourrier}"/>
                                     </p:column>
