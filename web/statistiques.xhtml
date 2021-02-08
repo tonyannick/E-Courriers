@@ -9,9 +9,7 @@
 <f:view>
     <f:metadata>
         <f:viewAction action="#{statistiques.recupererStatistiquesDuJour}" onPostBack="true"/>
-        <f:viewAction action="#{statistiques.recupererStatistiquesDeLaSemaine}" onPostBack="true"/>
-        <f:viewAction action="#{statistiques.recupererStatistiquesDuMoisEnCours}" onPostBack="true"/>
-        <f:viewAction action="#{statistiques.recupererStatistiqueDeLAnneeEnCours}" onPostBack="true"/>
+        <f:viewAction action="#{statistiques.recupererStatistiquesDeLAnneeEnCours}" onPostBack="true"/>
     </f:metadata>
     <h:head>
         <title>Statistiques</title>
@@ -83,13 +81,13 @@
                                 <h:graphicImage value="./resources/images/graph.png" style="margin-right :10px"/>#{statistiques.titreDeLaPage}
                             </h1>
                             <div class="colonnecontent">
-                                    <p:tabView>
-                                        <p:tab title="Statistiques du jour">
+                                    <p:tabView dynamic="true" cache="true" effect="fade">
+                                        <p:ajax event="tabChange" listener="#{statistiques.clickSurUnTabView}"/>
+                                        <p:tab title="Statistiques du jour" >
                                             <p:panel style="background-color: floralwhite; border-bottom-left-radius: 20px; border-bottom-right-radius: 20px"
-                                                     toggleable="true" header="Chiffres du jour">
+                                                      header="Chiffres du jour">
 
                                                 <h:panelGrid columns="3" styleClass="panelLogin" cellspacing="30" cellpadding="30" >
-
                                                     <h:graphicImage value="./resources/images/square.png" style="margin-right:5px; width: 10px; height: 5px"/>
                                                     <h4 style="margin-left:10px; font-weight:bold; color: #0D47A1; font-size: 15px">Total courriers traités </h4>
                                                     <h:outputText style="font-weight:bold; margin-left:10px; color: #0D47A1"
@@ -133,7 +131,7 @@
                                         </p:tab>
                                         <p:tab title="Statistiques de la semaine en cours">
                                             <p:panel style="background-color: floralwhite; border-bottom-left-radius: 20px; border-bottom-right-radius: 20px"
-                                                     toggleable="true" header="Chiffres du : #{statistiques.statistiques.debutDeSemaine}
+                                                      header="Chiffres du : #{statistiques.statistiques.debutDeSemaine}
                                                                 au #{statistiques.statistiques.finDeSemaine}">
                                                 <h:panelGrid columns="3" styleClass="panelLogin" cellspacing="30" cellpadding="30">
 
@@ -182,7 +180,7 @@
                                         <p:tab title="Statistiques du mois en cours">
 
                                             <p:panel style="background-color: floralwhite; border-bottom-left-radius: 20px; border-bottom-right-radius: 20px"
-                                                     toggleable="true" header="Chiffres du mois en cours">
+                                                      header="Chiffres du mois en cours">
                                                 <h:panelGrid columns="3" styleClass="panelLogin" cellspacing="30" cellpadding="30">
 
                                                     <h:graphicImage value="./resources/images/square.png" style="margin-right:5px; width: 10px; height: 5px"/>

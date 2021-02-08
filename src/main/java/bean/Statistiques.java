@@ -6,6 +6,7 @@ import dateAndTime.DateUtils;
 import fileManager.PropertiesFilesReader;
 import functions.ColorsRandomGenerator;
 import functions.GraphicsManager;
+import org.primefaces.event.TabChangeEvent;
 import org.primefaces.model.charts.ChartData;
 
 import org.primefaces.model.charts.bar.BarChartDataSet;
@@ -56,6 +57,24 @@ public class Statistiques implements Serializable {
         statistiques = new model.Statistiques();
         hbarModel = new HorizontalBarChartModel();
         titreDeLaPage = PropertiesFilesReader.mapTitreDesPages.get("statistiques");
+    }
+
+    public void clickSurUnTabView(TabChangeEvent tabChangeEvent){
+        String titreTabView = tabChangeEvent.getTab().getTitle();
+        switch (titreTabView){
+            case "Statistiques de la semaine en cours":
+                recupererStatistiquesDeLaSemaine();
+                break;
+            case "Statistiques du mois en cours":
+                recupererStatistiquesDuMoisEnCours();
+                break;
+            case "Statistiques de l'année en cours":
+                recupererStatistiquesDeLAnneeEnCours();
+                break;
+            case "Statistiques du jour":
+                recupererStatistiquesDuJour();
+                break;
+        }
     }
 
     public void recupererStatistiquesDuJour(){
@@ -112,7 +131,7 @@ public class Statistiques implements Serializable {
         totalCourrierTraitesParMois = String.valueOf(Integer.parseInt(statistiques.getNombreDeCourrierRecusDuMois()) + Integer.parseInt(statistiques.getNombreDeCourrierEnvoyesDuMois()));
     }
 
-    public void recupererStatistiqueDeLAnneeEnCours(){
+    public void recupererStatistiquesDeLAnneeEnCours(){
         HttpSession session = SessionUtils.getSession();
         String nomDirection = session.getAttribute("directionUser").toString();
         StatistiquesQueries.recupererLeNombreDeCourrierTraitesParMoisPourLAnneeEnCours(nomDirection);
