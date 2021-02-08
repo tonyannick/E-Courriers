@@ -131,7 +131,6 @@
 
                                     </f:facet>
                                     <f:facet name="right">
-
                                         <p:menuButton value="Actions sur le courrier" icon="fa fa-wrench" iconPos="right">
                                             <p:menuitem value="Ajouter une annotation" actionListener="#{detailsDUnCourrierEnregistre.ouvrirDialogueAjouterUneAnnotation}">Ajouter une annotation</p:menuitem>
                                             <p:menuitem value="Transmettre à un agent" actionListener="#{detailsDUnCourrierEnregistre.ouvrirDialogueTransmettreAUnAgent}">Transmettre à un agent</p:menuitem>
@@ -567,7 +566,6 @@
 
                                     <button class="accordionDetailCourrier"><h:graphicImage value="./resources/images/two.png" style="margin-right:10px; width: 15px; height: 15px;"/>Eléménts du courrier</button>
                                     <div class="panelInfoCourrier">
-
                                         <p:panelGrid columns="3" columnClasses="ui-grid-col-1 gridcol2, ui-grid-col-8,ui-grid-col-1" style="width: 100%; margin-top: 15px; margin-bottom:15px; border: 1px #888 solid;">
 
                                             <h:outputLabel value="Type de courrier" style="font-weight: bold; color:black; font-size: 14px"/>
@@ -641,9 +639,9 @@
                                             <h:outputLabel value="#{detailsDUnCourrierEnregistre.nomEtPrenomAjouteurCourrier}" style="font-size: 14px;"/>
                                             <h:outputLabel value="Fonction " style="font-weight: bold; color:black; font-size: 14px"/>
                                             <h:outputLabel value="#{detailsDUnCourrierEnregistre.fonctionAjouteurCourrier}" style="font-size: 14px;"/>
-                                            <h:outputLabel value="Date " style="font-weight: bold; color:black; font-size: 14px"/>
+                                            <h:outputLabel value="Date d'enregistrement" style="font-weight: bold; color:black; font-size: 14px"/>
                                             <h:outputLabel value="#{detailsDUnCourrierEnregistre.courrier.dateDEnregistrement}" style="font-size: 14px;"/>
-                                            <h:outputLabel value="Heure " style="font-weight: bold; color:black; font-size: 14px"/>
+                                            <h:outputLabel value="Heure d'enregistrement" style="font-weight: bold; color:black; font-size: 14px"/>
                                             <h:outputLabel value="#{detailsDUnCourrierEnregistre.courrier.heureDEnregistrement}" style="font-size: 14px;"/>
                                         </p:panelGrid>
 

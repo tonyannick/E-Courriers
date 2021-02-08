@@ -197,7 +197,7 @@
                             </h:form>
                             <div class="tab">
                                 <button class="tablinks" onclick="openTab(event, 'FichierDuCourrier')" id="defaultOpen">Fichier courrier</button>
-                                <button class="tablinks" onclick="openTab(event, 'Annexe')">Annexe(s) du courrier</button>
+                                <button class="tablinks" onclick="openTab(event, 'Annexe')">Annexe(s)</button>
                                 <button class="tablinks" onclick="openTab(event, 'InformationsGenerales')" >Informations générales</button>
                                 <button class="tablinks" onclick="openTab(event, 'Destinataires')">Destinataires</button>
                                 <button class="tablinks" onclick="openTab(event, 'Annotations')">Annotations</button>
@@ -317,14 +317,13 @@
                                 </div>
                                 <button class="accordionDetailCourrier"><h:graphicImage value="./resources/images/three.png" style="margin-right:10px; width: 15px; height: 15px;"/>Informations complémentaires</button>
                                 <div class="panelInfoCourrier">
-                                    <p:panelGrid columns="2" columnClasses="ui-grid-col-1 gridcol2, ui-grid-col-8"  style="border:none; width: 100%; margin-bottom:15px; margin-top: 15px " styleClass="panelLogin">
+                                    <p:panelGrid columns="2" columnClasses="ui-grid-col-1 gridcol2, ui-grid-col-8"  style="border:none; width: 100%; margin-bottom:15px; margin-top: 15px" >
                                         <h:outputLabel value="Date d'enregistrement" style="font-weight: bold; color:black; font-size: 14px"/>
                                         <h:outputLabel value="#{repondreAUnCourrierRecu.courrier.dateDEnregistrement}" style="font-weight:normal;font-size: 14px;"/>
                                         <h:outputLabel value="Heure d'enregistrement" style="font-weight: bold; color:black; font-size: 14px"/>
                                         <h:outputLabel value="#{repondreAUnCourrierRecu.courrier.heureDEnregistrement}" style="font-weight:normal;font-size: 14px;"/>
                                     </p:panelGrid>
                                 </div>
-
                             </div>
 
                             <div id="Destinataires" class="tabcontent">

@@ -65,11 +65,11 @@
         <view-id value="/faces/detaildundossier.xhtml"/>
     </url-mapping>
     <url-mapping id="tachesuruncourrierrecu">
-        <pattern value="/tache"/>
+        <pattern value="/tachecourrierrecu"/>
         <view-id value="/faces/repondreauncourrierrecus.xhtml"/>
     </url-mapping>
     <url-mapping id="tachesuruncourrierenregistre">
-        <pattern value="/tache"/>
+        <pattern value="/tachecourrierenregistre"/>
         <view-id value="/faces/repondreaunetache.xhtml"/>
     </url-mapping>
 

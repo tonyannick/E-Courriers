@@ -2,12 +2,13 @@
 .custombreadcrumb {
     /*centering*/
     display: inline-block;
-    box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2);
+    box-shadow: 0 2px 4px 0 rgba(0,0,0,0.2);
     overflow: hidden;
     border-radius: 5px;
     /*Lets add the numbers for each link using CSS counters. flag is the name of the counter. to be defined using counter-reset in the parent element of the links*/
     counter-reset: flag;
     margin-bottom: 20px;
+    margin-top: 15px;
 }
 
 .custombreadcrumb a {
