@@ -384,9 +384,7 @@ public class DetailsDUnCourrierEnregistre implements Serializable {
 
         courrier.setDossierAlfresco(CourriersQueries.dossierAlfresco);
         courrier.setConfidentiel(CourriersQueries.confidentiel);
-       // courrier.setHeureDeReception(CourriersQueries.heureDeReception);
         courrier.setDateDEnregistrement(CourriersQueries.dateDEnregistrement);
-       // courrier.setDateDeReception(CourriersQueries.dateDeReception);
         courrier.setCommentairesCourrier(CourriersQueries.commentairesCourrier);
 
         nomEtPrenomAjouteurCourrier = CourriersQueries.nomEtPrenomPersonneAjouteurDuCourrier;

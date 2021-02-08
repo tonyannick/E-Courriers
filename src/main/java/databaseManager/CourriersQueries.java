@@ -764,8 +764,8 @@ public class CourriersQueries {
         try {
             resultSet = connection.createStatement().executeQuery(requeteDetailCourrierSQL);
             if (resultSet.next()){
-                dateDeReception = resultSet.getString("recevoir_courrier.date_reception");
-                heureDeReception = resultSet.getString("recevoir_courrier.heure_reception");
+                dateDEnregistrement= resultSet.getString("recevoir_courrier.date_reception");
+                heureDEnregistrement= resultSet.getString("recevoir_courrier.heure_reception");
                 objetCourrier = resultSet.getString("objet");
                 commentairesCourrier = resultSet.getString("commentaires");
                 prioriteCourrier = resultSet.getString("priorite");

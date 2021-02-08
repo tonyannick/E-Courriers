@@ -64,6 +64,13 @@
         <pattern value="/detaildundossier"/>
         <view-id value="/faces/detaildundossier.xhtml"/>
     </url-mapping>
-
+    <url-mapping id="tachesuruncourrierrecu">
+        <pattern value="/tache"/>
+        <view-id value="/faces/repondreauncourrierrecus.xhtml"/>
+    </url-mapping>
+    <url-mapping id="tachesuruncourrierenregistre">
+        <pattern value="/tache"/>
+        <view-id value="/faces/repondreaunetache.xhtml"/>
+    </url-mapping>
 
 </pretty-config>

@@ -68,6 +68,8 @@ public class RepondreAUnCourrierRecu implements Serializable {
     private String messageAccuseDeReception;
     private boolean isResponsable = false;
     private String dossierDiscussionAlfresco;
+    private String nomEtPrenomAjouteurCourrier;
+    private String fonctionAjouteurCourrier;
 
     @PostConstruct
     public void initialisation(){
@@ -222,21 +224,13 @@ public class RepondreAUnCourrierRecu implements Serializable {
 
         courrier.setDossierAlfresco(CourriersQueries.dossierAlfresco);
         courrier.setConfidentiel(CourriersQueries.confidentiel);
-        //courrier.setHeureDeReception(CourriersQueries.heureDeReception);
         courrier.setDateDEnregistrement(CourriersQueries.dateDEnregistrement);
-        //courrier.setDateDeReception(CourriersQueries.dateDeReception);
         courrier.setReferenceInterne(CourriersQueries.referenceInterne);
-
-        /*String jour = courrier.getDateDeReception().substring(courrier.getDateDeReception().lastIndexOf("-") +1);
-        String mois = courrier.getDateDeReception().substring(courrier.getDateDeReception().indexOf("-")+1,courrier.getDateDeReception().indexOf("-")+3);
-        String annee = courrier.getDateDeReception().substring(0,4);
-        courrier.setDateDeReception(jour+"-"+mois+"-"+annee);*/
 
         String jourEnregistrement = courrier.getDateDEnregistrement().substring(courrier.getDateDEnregistrement().lastIndexOf("-") +1);
         String moisEnregistrement = courrier.getDateDEnregistrement().substring(courrier.getDateDEnregistrement().indexOf("-")+1,courrier.getDateDEnregistrement().indexOf("-")+3);
         String anneeEnregistrement = courrier.getDateDEnregistrement().substring(0,4);
         courrier.setDateDEnregistrement(jourEnregistrement+"-"+moisEnregistrement+"-"+anneeEnregistrement);
-
         courrier.setHeureDEnregistrement(CourriersQueries.heureDEnregistrement);
     }
 
@@ -828,5 +822,19 @@ public class RepondreAUnCourrierRecu implements Serializable {
         this.nomActeurDuTransfer = nomActeurDuTransfer;
     }
 
+    public String getNomEtPrenomAjouteurCourrier() {
+        return nomEtPrenomAjouteurCourrier;
+    }
 
+    public void setNomEtPrenomAjouteurCourrier(String nomEtPrenomAjouteurCourrier) {
+        this.nomEtPrenomAjouteurCourrier = nomEtPrenomAjouteurCourrier;
+    }
+
+    public String getFonctionAjouteurCourrier() {
+        return fonctionAjouteurCourrier;
+    }
+
+    public void setFonctionAjouteurCourrier(String fonctionAjouteurCourrier) {
+        this.fonctionAjouteurCourrier = fonctionAjouteurCourrier;
+    }
 }
