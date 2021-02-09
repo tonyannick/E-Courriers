@@ -6,6 +6,7 @@ import dateAndTime.DateUtils;
 import fileManager.PropertiesFilesReader;
 import functions.ColorsRandomGenerator;
 import functions.GraphicsManager;
+import org.primefaces.PrimeFaces;
 import org.primefaces.event.TabChangeEvent;
 import org.primefaces.model.charts.ChartData;
 
@@ -50,7 +51,6 @@ public class Statistiques implements Serializable {
     private String totalCourrierTraitesParSemaine;
     private String totalCourrierTraitesParMois;
     private String titreDeLaPage;
-
 
     @PostConstruct
     public void initialisation(){
@@ -108,6 +108,7 @@ public class Statistiques implements Serializable {
         creerGraphiqueCourriersParJourDeLaSemaine();
         creerGraphiqueCourriersParPrioriteParSemaine();
         creerGraphiqueCourriersEntrantEtSortantParSemaine();
+        PrimeFaces.current().executeScript("PF('divstatistiquesloadingsemaine').close()");
     }
 
     public void recupererStatistiquesDuMoisEnCours(){
@@ -123,18 +124,20 @@ public class Statistiques implements Serializable {
         creerGraphiqueNombreDeCourriersParTypeLeMoisEnCours();
         creerGraphiqueNombreDeCourriersRecusParDirectionLeMoisEnCours();
         creerGraphiqueNombreDeCourriersEnvoyesParDirectionLeMoisEnCours();
-        creerGraphiqueNombreDeCourriersParMoisPourLAnneeEnCours();
         statistiques.setNombreDeCourrierConfidentielDuMois(String.valueOf(StatistiquesQueries.nombreCourrierConfidentielDuMois));
         statistiques.setNombreDeCourrierUrgentDuMois(String.valueOf(StatistiquesQueries.nombreCourrierUrgentDuMois));
         statistiques.setNombreDeCourrierEnvoyesDuMois(String.valueOf(StatistiquesQueries.nombreCourrierEnvoyesDuMois));
         statistiques.setNombreDeCourrierRecusDuMois(String.valueOf(StatistiquesQueries.nombreCourrierRecusDuMois));
         totalCourrierTraitesParMois = String.valueOf(Integer.parseInt(statistiques.getNombreDeCourrierRecusDuMois()) + Integer.parseInt(statistiques.getNombreDeCourrierEnvoyesDuMois()));
+        PrimeFaces.current().executeScript("PF('divstatistiquesloadingmois').close()");
     }
 
     public void recupererStatistiquesDeLAnneeEnCours(){
         HttpSession session = SessionUtils.getSession();
         String nomDirection = session.getAttribute("directionUser").toString();
         StatistiquesQueries.recupererLeNombreDeCourrierTraitesParMoisPourLAnneeEnCours(nomDirection);
+        creerGraphiqueNombreDeCourriersParMoisPourLAnneeEnCours();
+        PrimeFaces.current().executeScript("PF('divstatistiquesloadingannee').close()");
     }
 
     private void creerGraphiqueCourriersTraitesParJour(){
