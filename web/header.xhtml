@@ -4,6 +4,7 @@
       xmlns:h="http://xmlns.jcp.org/jsf/html"
       xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
       xmlns:p="http://primefaces.org/ui"
+      xmlns:pretty="http://ocpsoft.com/prettyfaces"
       xmlns:f="http://xmlns.jcp.org/jsf/core">
 <f:view>
     <h:outputStylesheet>
@@ -40,11 +41,21 @@
                         <h:outputLabel href="#" style="margin-left: 8px; padding-right: 25px; color : dodgerblue; font-size:18px; border-right: 3px solid #2b669a; color: black; font-weight: bold"> E-Courrier</h:outputLabel>
                            <h:outputLabel style="color: black; font-weight: bold; font-size: 13px; margin-left: 25px">#{headerBean.user.userName}</h:outputLabel>
                            <div class="header-right">
-                               <p:commandLink action="#{tableauDeBord.naviguerVersTableauDeBord}" title="Accueil" styleClass="active">Accueil </p:commandLink>
-                               <p:commandLink styleClass="mescourriers" action="#{tableauDeBord.voirLesCourriersEnregistres}">Courriers enregistrés</p:commandLink>
-                               <p:commandLink styleClass="mestaches" action="#{tableauDeBord.naviguerVersMesTaches}">Mes Taches </p:commandLink>
-                               <p:commandLink styleClass="activites" action="#{tableauDeBord.naviguerVersActivites}">Activités </p:commandLink>
-                               <p:commandLink styleClass="parametre" action="#{tableauDeBord.accederAuxParametreDeLapplication}">Paramètres</p:commandLink>
+                               <pretty:link mappingId="tableaudebord" title="Accueil" styleClass="active">
+                                   Accueil
+                               </pretty:link>
+                               <pretty:link mappingId="mescourriers" styleClass="mescourriers">
+                                   Courriers enregistrés
+                               </pretty:link>
+                               <pretty:link mappingId="mestaches" styleClass="mestaches">
+                                   Mes Taches
+                               </pretty:link>
+                               <pretty:link mappingId="activites" styleClass="activites">
+                                   Activités
+                               </pretty:link>
+                               <pretty:link mappingId="parametres" styleClass="parametre">
+                                   Paramètres
+                               </pretty:link>
                                <p:commandLink styleClass="quitter" action="#{tableauDeBord.deconnexion}" ajax="false" title="Déconnexion" value="Quitter">
                                    <p:confirm message="Voulez-vous vraiment vous deconnecter?" header="Deconnexion" icon="fa fa-exclamation-triangle" />
                                </p:commandLink>

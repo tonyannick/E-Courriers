@@ -8,7 +8,7 @@ import javax.servlet.http.HttpSession;
 import java.io.IOException;
 
 
-@WebFilter(filterName = "AuthFilter", urlPatterns = { "*.xhtml" })
+@WebFilter(filterName = "AuthFilter", urlPatterns = { "*.xhtml" }, dispatcherTypes = {DispatcherType.REQUEST, DispatcherType.FORWARD})
 public class webfilter implements Filter {
     @Override
     public void init(FilterConfig filterConfig) throws ServletException {

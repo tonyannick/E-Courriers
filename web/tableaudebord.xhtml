@@ -4,6 +4,7 @@
       xmlns:h="http://xmlns.jcp.org/jsf/html"
       xmlns:p="http://primefaces.org/ui"
       xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:pretty="http://ocpsoft.com/prettyfaces"
       xmlns:f="http://xmlns.jcp.org/jsf/core">
 <f:view transient="true">
     <f:metadata>
@@ -78,44 +79,41 @@
                         <div class="fixed-header">
                             <div id="navigationHeader" class="ui-g-12 container-header">
                                 <nav class="navheader">
-                                    <p:commandLink  action="#{tableauDeBord.naviguerVersStatistiques}">
+
+                                    <pretty:link mappingId="statistisques">
                                         <h:graphicImage  width="16px" height="16px" value="./resources/images/rising.png" style="margin-right: 5px; margin-top: -4px "/>
                                         <span style="font-size: 16px">Statistiques</span>
-                                    </p:commandLink>
+                                    </pretty:link>
 
-                                    <p:commandLink  action="#{tableauDeBord.naviguerVersMesDossiers}">
+                                    <pretty:link mappingId="mesdossiers">
                                         <h:graphicImage  width="16px" height="16px" value="./resources/images/folders.png" style="margin-right: 5px; margin-top: -4px "/>
                                         <span style="font-size: 16px">Mes dossiers</span>
-                                    </p:commandLink>
+                                    </pretty:link>
 
-                                    <p:commandLink action="#{tableauDeBord.naviguerVersUneListeDesCourriers}">
-                                        <f:param name="url" value="courriersarchives.xhtml" />
+                                    <pretty:link mappingId="archives">
                                         <h:graphicImage  width="16px" height="16px" value="./resources/images/archive.png" style="margin-right: 5px; margin-top: -4px "/>
                                         <span style="font-size: 16px">Archives</span>
-                                    </p:commandLink>
+                                    </pretty:link>
 
-                                    <p:commandLink action="#{tableauDeBord.naviguerVersUneListeDesCourriers}">
-                                        <f:param name="url" value="courriersrecus.xhtml" />
+                                    <pretty:link mappingId="courriersrecus">
                                         <h:graphicImage  width="16px" height="16px" value="./resources/images/courrierrecu.png" style="margin-right: 5px; margin-top: -4px "/>
-                                        <span style="font-size: 16px"> Courriers reçus</span>
-                                    </p:commandLink>
+                                        <span style="font-size: 16px">Courriers reçus</span>
+                                    </pretty:link>
 
-                                    <p:commandLink action="#{tableauDeBord.naviguerVersUneListeDesCourriers}">
-                                        <f:param name="url" value="courriersenvoyes.xhtml" />
-                                        <h:graphicImage  width="16px" height="16px" value="./resources/images/courrierenvoye.png" style="margin-right: 5px; margin-top: -4px "/>
+                                    <pretty:link mappingId="courriersenvoyes">
+                                        <h:graphicImage  width="16px" height="16px" value="./resources/images/courriersenvoye.png" style="margin-right: 5px; margin-top: -4px "/>
                                         <span style="font-size: 16px">Courriers envoyés</span>
-                                    </p:commandLink>
+                                    </pretty:link>
 
-                                    <p:commandLink action="#{tableauDeBord.naviguerVersUneListeDesCourriers}">
-                                        <f:param name="url" value="courriersfavoris.xhtml" />
-                                        <h:graphicImage  width="16px" height="16px" value="./resources/images/star.png" style="margin-right: 5px; margin-top: -4px"/>
+                                    <pretty:link mappingId="favoris">
+                                        <h:graphicImage  width="16px" height="16px" value="./resources/images/courriersfavoris.png" style="margin-right: 5px; margin-top: -4px "/>
                                         <span style="font-size: 16px">Favoris</span>
-                                    </p:commandLink>
+                                    </pretty:link>
 
-                                    <p:commandLink action="#{tableauDeBord.afficherPagePourAjouterUnNouveauCourrier}">
-                                        <h:graphicImage  width="16px" height="16px" value="./resources/images/nouveaucourrier.png" style="margin-right: 5px; margin-top: -4px"/>
-                                        <span style="font-size: 16px">Nouveau courrier</span>
-                                    </p:commandLink>
+                                    <pretty:link mappingId="nouveaucourrier">
+                                        <h:graphicImage  width="16px" height="16px" value="./resources/images/nouveaucourrier.png" style="margin-right: 5px; margin-top: -4px "/>
+                                        <span style="font-size: 16px">nouveaucourrier</span>
+                                    </pretty:link>
 
                                 </nav>
                             </div>
