@@ -9,7 +9,7 @@ import java.io.IOException;
 
 
 @WebFilter(filterName = "AuthFilter", urlPatterns = { "*.xhtml" }, dispatcherTypes = {DispatcherType.REQUEST, DispatcherType.FORWARD})
-public class webfilter implements Filter {
+public class Webfilter implements Filter {
     @Override
     public void init(FilterConfig filterConfig) throws ServletException {
 
@@ -34,6 +34,6 @@ public class webfilter implements Filter {
                 || reqURI.contains("javax.faces.resource"))
             filterChain.doFilter(request, response);
         else
-            resp.sendRedirect(reqt.getContextPath() + "/faces/login.xhtml");
+            resp.sendRedirect(reqt.getContextPath() + "/login");
     }
 }

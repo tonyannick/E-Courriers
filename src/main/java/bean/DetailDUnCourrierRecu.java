@@ -231,17 +231,17 @@ public class DetailDUnCourrierRecu implements Serializable {
         PrimeFaces.current().executeScript("affichageEnFonctionDuTypeEmetteur()");
         PrimeFaces.current().executeScript("affichageDivAccuseDeReception()");
 
-        courrier.setObjetCourrier(CourriersQueries.objetCourrier);
-        courrier.setReferenceCourrier(CourriersQueries.referenceCourrier);
-        courrier.setPrioriteCourrier(CourriersQueries.prioriteCourrier);
-        courrier.setTypeCourrier(CourriersQueries.typeCourrier);
-        courrier.setAccuseDeReception(CourriersQueries.accuseDeReception);
-        courrier.setCommentairesCourrier(CourriersQueries.commentairesCourrier);
-        courrier.setDossierAlfresco(CourriersQueries.dossierAlfresco);
-        courrier.setConfidentiel(CourriersQueries.confidentiel);
-        destinataire.setHeureDeReception(CourriersQueries.heureDeReception);
-        destinataire.setDateDeReception(CourriersQueries.dateDeReception);
-        courrier.setReferenceInterne(CourriersQueries.referenceInterne);
+        courrier.setObjetCourrier(CourriersQueries.mapDetailsCourrierRecu.get("objet"));
+        courrier.setReferenceCourrier(CourriersQueries.mapDetailsCourrierRecu.get("reference"));
+        courrier.setPrioriteCourrier(CourriersQueries.mapDetailsCourrierRecu.get("priorite"));
+        courrier.setTypeCourrier(CourriersQueries.mapDetailsCourrierRecu.get("type_courrier"));
+        courrier.setAccuseDeReception(CourriersQueries.mapDetailsCourrierRecu.get("accuse_reception"));
+        courrier.setCommentairesCourrier(CourriersQueries.mapDetailsCourrierRecu.get("commentaires"));
+        courrier.setDossierAlfresco(CourriersQueries.mapDetailsCourrierRecu.get("dossier_alfresco_emetteur"));
+        courrier.setConfidentiel(CourriersQueries.mapDetailsCourrierRecu.get("confidentiel"));
+        destinataire.setHeureDeReception(CourriersQueries.mapDetailsCourrierRecu.get("heure_de_reception"));
+        destinataire.setDateDeReception(CourriersQueries.mapDetailsCourrierRecu.get("date_de_reception"));
+        courrier.setReferenceInterne(CourriersQueries.mapDetailsCourrierRecu.get("reference_interne"));
 
         PrimeFaces.current().executeScript("affichageMessageDivReferenceInterne()");
 

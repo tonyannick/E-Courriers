@@ -124,27 +124,6 @@ public class TableauDeBord implements Serializable {
         }
     }
 
-    public String naviguerVersTableauDeBord(){
-        return "tableaudebord?faces-redirect=true";
-    }
-
-    public String naviguerVersActivites(){
-        return "activites?faces-redirect=true";
-    }
-
-    public String naviguerVersMesTaches(){
-        return "mestaches?faces-redirect=true";
-    }
-
-    public String naviguerVersMesDossiers(){
-        return "mesdossiers?faces-redirect=true";
-    }
-
-    public String naviguerVersStatistiques(){
-        return "statistiques?faces-redirect=true";
-    }
-
-
     /**Acceder aux parametre**/
     public String accederAuxParametreDeLapplication() {
         HttpSession httpSession = SessionUtils.getSession();

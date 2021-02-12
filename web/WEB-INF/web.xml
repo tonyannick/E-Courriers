@@ -20,7 +20,7 @@
     </context-param>
 
     <session-config>
-        <session-timeout>2</session-timeout>
+        <session-timeout>20</session-timeout>
     </session-config>
 
     <!-- Pour appliquer le theme primefaces  -->

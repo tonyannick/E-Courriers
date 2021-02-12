@@ -11,7 +11,9 @@ import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -46,7 +48,8 @@ public class CourriersQueries {
     public static String nomEtPrenomEmetteurPersonne;
     public static String fonctionPersonneAjouteurDuCourrier;
     public static String nomEtPrenomPersonneAjouteurDuCourrier;
-
+    public static Map<String, String> mapDetailsCourrierRecu = new HashMap<>();
+    public static Map<String, String> mapDetailsCourrierEnregistre = new HashMap<>();
 
     /***Fonction qui recupere tous les courriers reçus par un utilisateur***/
     public static List<Courrier> recupererTousLesCourriersReçusParUnUtilisateurParSonId(String idUtilisateur) {
@@ -657,29 +660,28 @@ public class CourriersQueries {
     public static void recupererLesDetailsDUnCourrierEnregistre(String idCourrier){
         String requeteDetailCourrierSQL = "select * from `courrier` inner join type_courrier on courrier.fk_type_courrier = type_courrier.id_type_courrier inner join ajouter_courrier on courrier.id_courrier = ajouter_courrier.id_courrier inner join personne on ajouter_courrier.id_personne = personne.id_personne inner join fonction on personne.id_fonction = fonction.id_fonction where courrier.id_courrier  = " + idCourrier + " ;";
         ResultSet resultSet = null;
+        mapDetailsCourrierEnregistre.clear();
+        String nom;
+        String prenom;
         Connection connection = DatabaseConnection.getConnexion();
         try {
             resultSet = connection.createStatement().executeQuery(requeteDetailCourrierSQL);
             if (resultSet.next()){
-                dateDEnregistrement = resultSet.getString("date_enregistrement");
-                heureDEnregistrement = resultSet.getString("heure_enregistrement");
-                objetCourrier = resultSet.getString("objet");
-                commentairesCourrier = resultSet.getString("commentaires");
-                prioriteCourrier = resultSet.getString("priorite");
-                typeCourrier = resultSet.getString("titre_type_courrier");
-                referenceCourrier = resultSet.getString("reference");
-                confidentiel = resultSet.getString("confidentiel");
-                dossierAlfresco = resultSet.getString("dossier_alfresco_emetteur");
-                nomEtPrenomPersonneAjouteurDuCourrier = resultSet.getString("nom")+" "+resultSet.getString("prenom");
-                fonctionPersonneAjouteurDuCourrier = resultSet.getString("titre_fonction");
-            }
 
-            if(confidentiel != null){
-                if(confidentiel.equals("0")){
-                    confidentiel = "non";
-                }else if(confidentiel.equals("1")){
-                    confidentiel = "oui";
-                }
+                mapDetailsCourrierEnregistre.put("date_enregistrement",resultSet.getString("date_enregistrement"));
+                mapDetailsCourrierEnregistre.put("heure_enregistrement",resultSet.getString("heure_enregistrement"));
+                mapDetailsCourrierEnregistre.put("objet",resultSet.getString("objet"));
+                mapDetailsCourrierEnregistre.put("commentaires",resultSet.getString("commentaires"));
+                mapDetailsCourrierEnregistre.put("priorite",resultSet.getString("priorite"));
+                mapDetailsCourrierEnregistre.put("type_courrier",resultSet.getString("titre_type_courrier"));
+                mapDetailsCourrierEnregistre.put("reference",resultSet.getString("reference"));
+                mapDetailsCourrierEnregistre.put("confidentiel",resultSet.getString("confidentiel"));
+                mapDetailsCourrierEnregistre.put("dossier_alfresco_emetteur",resultSet.getString("dossier_alfresco_emetteur"));
+                mapDetailsCourrierEnregistre.put("fonctionPersonneAjouteurDuCourrier",resultSet.getString("titre_fonction"));
+                nom =  resultSet.getString("nom");
+                prenom = resultSet.getString("prenom");
+                mapDetailsCourrierEnregistre.put("nomEtPrenomPersonneAjouteurDuCourrier",nom+" "+prenom);
+
             }
 
         } catch (SQLException e) {
@@ -758,38 +760,32 @@ public class CourriersQueries {
     /**Fonction qui recuperer les details d'un courrier reçu par un user**/
     public static void recupererLesDetailsDUnCourrierRecu(String idCourrier,String idDirection){
         String requeteDetailCourrierSQL = "select * from `courrier` inner join type_courrier on courrier.fk_type_courrier = type_courrier.id_type_courrier inner join recevoir_courrier on courrier.id_courrier = recevoir_courrier.id_courrier inner join personne on personne.id_personne =  recevoir_courrier.id_personne where courrier.id_courrier = '" + idCourrier + "' and personne.id_direction = '"+idDirection+"' ;";
-
+        String referenceInterne = null;
         ResultSet resultSet = null;
+        mapDetailsCourrierRecu.clear();
         Connection connection = DatabaseConnection.getConnexion();
         try {
             resultSet = connection.createStatement().executeQuery(requeteDetailCourrierSQL);
             if (resultSet.next()){
-                dateDEnregistrement= resultSet.getString("recevoir_courrier.date_reception");
-                heureDEnregistrement= resultSet.getString("recevoir_courrier.heure_reception");
-                objetCourrier = resultSet.getString("objet");
-                commentairesCourrier = resultSet.getString("commentaires");
-                prioriteCourrier = resultSet.getString("priorite");
-                typeCourrier = resultSet.getString("titre_type_courrier");
-                referenceCourrier = resultSet.getString("reference");
-                confidentiel = resultSet.getString("confidentiel");
-                dossierAlfresco = resultSet.getString("dossier_alfresco_emetteur");
-                accuseDeReception = resultSet.getString("accuse_reception");
-                referenceInterne = resultSet.getString("reference_interne");
-            }
 
-            if(confidentiel != null){
-                if(confidentiel.equals("0")){
-                    confidentiel = "non";
-                }else if(confidentiel.equals("1")){
-                    confidentiel = "oui";
+                if(resultSet.getString("reference_interne") == null){
+                    referenceInterne = "non";
+                }else{
+                    referenceInterne = resultSet.getString("reference_interne");
                 }
+
+                mapDetailsCourrierRecu.put("date_de_reception",resultSet.getString("recevoir_courrier.date_reception"));
+                mapDetailsCourrierRecu.put("heure_de_reception",resultSet.getString("recevoir_courrier.heure_reception"));
+                mapDetailsCourrierRecu.put("objet",resultSet.getString("objet"));
+                mapDetailsCourrierRecu.put("commentaires",resultSet.getString("commentaires"));
+                mapDetailsCourrierRecu.put("priorite",resultSet.getString("priorite"));
+                mapDetailsCourrierRecu.put("type_courrier",resultSet.getString("titre_type_courrier"));
+                mapDetailsCourrierRecu.put("reference",resultSet.getString("reference"));
+                mapDetailsCourrierRecu.put("confidentiel",resultSet.getString("confidentiel"));
+                mapDetailsCourrierRecu.put("dossier_alfresco_emetteur",resultSet.getString("dossier_alfresco_emetteur"));
+                mapDetailsCourrierRecu.put("accuse_reception",resultSet.getString("accuse_reception"));
+                mapDetailsCourrierRecu.put("reference_interne",referenceInterne);
             }
-
-
-            if(referenceInterne == null){
-                referenceInterne = "non";
-            }
-
 
         } catch (SQLException e) {
             e.printStackTrace();

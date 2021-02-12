@@ -38,7 +38,8 @@ public class DetailDUnCourrierDansUnDossier implements Serializable {
     private Annotation annotation;
     private Etape etape;
     private List<String> listeIdAnnexeAlfresco = new ArrayList<>();
-
+    private String nomEtPrenomAjouteurCourrier;
+    private String fonctionAjouteurCourrier;
 
     @PostConstruct
     public void initialisation(){
@@ -77,27 +78,26 @@ public class DetailDUnCourrierDansUnDossier implements Serializable {
 
         PrimeFaces.current().executeScript("affichageEnFonctionDuTypeEmetteur()");
 
-        courrier.setObjetCourrier(CourriersQueries.objetCourrier);
-        courrier.setReferenceCourrier(CourriersQueries.referenceCourrier);
-        courrier.setPrioriteCourrier(CourriersQueries.prioriteCourrier);
-        courrier.setTypeCourrier(CourriersQueries.typeCourrier);
+        courrier.setObjetCourrier(CourriersQueries.mapDetailsCourrierEnregistre.get("objet"));
+        courrier.setReferenceCourrier(CourriersQueries.mapDetailsCourrierEnregistre.get("reference"));
+        courrier.setPrioriteCourrier(CourriersQueries.mapDetailsCourrierEnregistre.get("priorite"));
+        courrier.setTypeCourrier(CourriersQueries.mapDetailsCourrierEnregistre.get("type_courrier"));
+        courrier.setCommentairesCourrier(CourriersQueries.mapDetailsCourrierEnregistre.get("commentaires"));
+        courrier.setDossierAlfresco(CourriersQueries.mapDetailsCourrierEnregistre.get("dossier_alfresco_emetteur"));
+        courrier.setConfidentiel(CourriersQueries.mapDetailsCourrierEnregistre.get("confidentiel"));
+        courrier.setReferenceInterne(CourriersQueries.mapDetailsCourrierEnregistre.get("reference_interne"));
+        courrier.setDateDEnregistrement(CourriersQueries.mapDetailsCourrierEnregistre.get("date_enregistrement"));
+        courrier.setHeureDEnregistrement(CourriersQueries.mapDetailsCourrierEnregistre.get("heure_enregistrement"));
 
-        courrier.setDossierAlfresco(CourriersQueries.dossierAlfresco);
-        courrier.setConfidentiel(CourriersQueries.confidentiel);
-        //courrier.setHeureDeReception(CourriersQueries.heureDeReception);
-        courrier.setDateDEnregistrement(CourriersQueries.dateDEnregistrement);
-       /* courrier.setDateDeReception(CourriersQueries.dateDeReception);
-        String jour = courrier.getDateDeReception().substring(courrier.getDateDeReception().lastIndexOf("-") +1);
-        String mois = courrier.getDateDeReception().substring(courrier.getDateDeReception().indexOf("-")+1,courrier.getDateDeReception().indexOf("-")+3);
-        String annee = courrier.getDateDeReception().substring(0,4);
-        courrier.setDateDeReception(jour+"-"+mois+"-"+annee);*/
+        nomEtPrenomAjouteurCourrier = CourriersQueries.mapDetailsCourrierEnregistre.get("nomEtPrenomPersonneAjouteurDuCourrier");
+        fonctionAjouteurCourrier = CourriersQueries.mapDetailsCourrierEnregistre.get("fonctionPersonneAjouteurDuCourrier");
+
 
         String jourEnregistrement = courrier.getDateDEnregistrement().substring(courrier.getDateDEnregistrement().lastIndexOf("-") +1);
         String moisEnregistrement = courrier.getDateDEnregistrement().substring(courrier.getDateDEnregistrement().indexOf("-")+1,courrier.getDateDEnregistrement().indexOf("-")+3);
         String anneeEnregistrement = courrier.getDateDEnregistrement().substring(0,4);
         courrier.setDateDEnregistrement(jourEnregistrement+"-"+moisEnregistrement+"-"+anneeEnregistrement);
 
-        courrier.setHeureDEnregistrement(CourriersQueries.heureDEnregistrement);
 
     }
 
@@ -378,4 +378,19 @@ public class DetailDUnCourrierDansUnDossier implements Serializable {
         this.dossier = dossier;
     }
 
+    public String getNomEtPrenomAjouteurCourrier() {
+        return nomEtPrenomAjouteurCourrier;
+    }
+
+    public void setNomEtPrenomAjouteurCourrier(String nomEtPrenomAjouteurCourrier) {
+        this.nomEtPrenomAjouteurCourrier = nomEtPrenomAjouteurCourrier;
+    }
+
+    public String getFonctionAjouteurCourrier() {
+        return fonctionAjouteurCourrier;
+    }
+
+    public void setFonctionAjouteurCourrier(String fonctionAjouteurCourrier) {
+        this.fonctionAjouteurCourrier = fonctionAjouteurCourrier;
+    }
 }

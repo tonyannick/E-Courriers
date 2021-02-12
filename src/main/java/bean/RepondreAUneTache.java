@@ -191,26 +191,26 @@ public class RepondreAUneTache implements Serializable {
         emetteur.setFonction(CourriersQueries.fonctionEmetteur);
         CourriersQueries.recupererLeDestinataireDUnCourrierParIdCourrier(idCourrier);
         CourriersQueries.recupererLesDetailsDUnCourrierEnregistre(idCourrier);
-        courrier.setObjetCourrier(CourriersQueries.objetCourrier);
-        courrier.setReferenceCourrier(CourriersQueries.referenceCourrier);
-        courrier.setPrioriteCourrier(CourriersQueries.prioriteCourrier);
-        courrier.setTypeCourrier(CourriersQueries.typeCourrier);
 
-        courrier.setDossierAlfresco(CourriersQueries.dossierAlfresco);
-        courrier.setConfidentiel(CourriersQueries.confidentiel);
-        courrier.setDateDEnregistrement(CourriersQueries.dateDEnregistrement);
+        courrier.setObjetCourrier(CourriersQueries.mapDetailsCourrierEnregistre.get("objet"));
+        courrier.setReferenceCourrier(CourriersQueries.mapDetailsCourrierEnregistre.get("reference"));
+        courrier.setPrioriteCourrier(CourriersQueries.mapDetailsCourrierEnregistre.get("priorite"));
+        courrier.setTypeCourrier(CourriersQueries.mapDetailsCourrierEnregistre.get("type_courrier"));
+        courrier.setAccuseDeReception(CourriersQueries.mapDetailsCourrierEnregistre.get("accuse_reception"));
+        courrier.setCommentairesCourrier(CourriersQueries.mapDetailsCourrierEnregistre.get("commentaires"));
+        courrier.setDossierAlfresco(CourriersQueries.mapDetailsCourrierEnregistre.get("dossier_alfresco_emetteur"));
+        courrier.setConfidentiel(CourriersQueries.mapDetailsCourrierEnregistre.get("confidentiel"));
+        courrier.setDateDEnregistrement(CourriersQueries.mapDetailsCourrierEnregistre.get("date_enregistrement"));
+        courrier.setHeureDEnregistrement(CourriersQueries.mapDetailsCourrierEnregistre.get("heure_enregistrement"));
+        nomEtPrenomAjouteurCourrier = CourriersQueries.mapDetailsCourrierEnregistre.get("nomEtPrenomPersonneAjouteurDuCourrier");
+        fonctionAjouteurCourrier = CourriersQueries.mapDetailsCourrierEnregistre.get("fonctionPersonneAjouteurDuCourrier");
 
-        nomEtPrenomAjouteurCourrier = CourriersQueries.nomEtPrenomPersonneAjouteurDuCourrier;
-        fonctionAjouteurCourrier = CourriersQueries.fonctionPersonneAjouteurDuCourrier;
 
         String jourEnregistrement = courrier.getDateDEnregistrement().substring(courrier.getDateDEnregistrement().lastIndexOf("-") +1);
         String moisEnregistrement = courrier.getDateDEnregistrement().substring(courrier.getDateDEnregistrement().indexOf("-")+1,courrier.getDateDEnregistrement().indexOf("-")+3);
         String anneeEnregistrement = courrier.getDateDEnregistrement().substring(0,4);
         courrier.setDateDEnregistrement(jourEnregistrement+"-"+moisEnregistrement+"-"+anneeEnregistrement);
-        nomEtPrenomAjouteurCourrier = CourriersQueries.nomEtPrenomPersonneAjouteurDuCourrier;
-        fonctionAjouteurCourrier = CourriersQueries.fonctionPersonneAjouteurDuCourrier;
 
-        courrier.setHeureDEnregistrement(CourriersQueries.heureDEnregistrement);
     }
 
     public void recupererHistoriqueDuCourrier(){

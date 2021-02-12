@@ -88,28 +88,21 @@ public class DetailDUnCourrierFavorisOuArchiver implements Serializable {
 
         PrimeFaces.current().executeScript("affichageEnFonctionDuTypeEmetteur()");
 
-        courrier.setObjetCourrier(CourriersQueries.objetCourrier);
-        courrier.setReferenceCourrier(CourriersQueries.referenceCourrier);
-        courrier.setPrioriteCourrier(CourriersQueries.prioriteCourrier);
-        courrier.setTypeCourrier(CourriersQueries.typeCourrier);
-
-        courrier.setDossierAlfresco(CourriersQueries.dossierAlfresco);
-        courrier.setConfidentiel(CourriersQueries.confidentiel);
-       // courrier.setHeureDeReception(CourriersQueries.heureDeReception);
-        courrier.setDateDEnregistrement(CourriersQueries.dateDEnregistrement);
-        //courrier.setDateDeReception(CourriersQueries.dateDeReception);
-        courrier.setCommentairesCourrier(CourriersQueries.commentairesCourrier);
-       /* String jour = courrier.getDateDeReception().substring(courrier.getDateDeReception().lastIndexOf("-") +1);
-        String mois = courrier.getDateDeReception().substring(courrier.getDateDeReception().indexOf("-")+1,courrier.getDateDeReception().indexOf("-")+3);
-        String annee = courrier.getDateDeReception().substring(0,4);*/
+        courrier.setObjetCourrier(CourriersQueries.mapDetailsCourrierEnregistre.get("objet"));
+        courrier.setReferenceCourrier(CourriersQueries.mapDetailsCourrierEnregistre.get("reference"));
+        courrier.setPrioriteCourrier(CourriersQueries.mapDetailsCourrierEnregistre.get("priorite"));
+        courrier.setTypeCourrier(CourriersQueries.mapDetailsCourrierEnregistre.get("type_courrier"));
+        courrier.setAccuseDeReception(CourriersQueries.mapDetailsCourrierEnregistre.get("accuse_reception"));
+        courrier.setCommentairesCourrier(CourriersQueries.mapDetailsCourrierEnregistre.get("commentaires"));
+        courrier.setDossierAlfresco(CourriersQueries.mapDetailsCourrierEnregistre.get("dossier_alfresco_emetteur"));
+        courrier.setConfidentiel(CourriersQueries.mapDetailsCourrierEnregistre.get("confidentiel"));
+        courrier.setDateDEnregistrement(CourriersQueries.mapDetailsCourrierEnregistre.get("date_enregistrement"));
+        courrier.setHeureDEnregistrement(CourriersQueries.mapDetailsCourrierEnregistre.get("heure_enregistrement"));
 
         String jourEnregistrement = courrier.getDateDEnregistrement().substring(courrier.getDateDEnregistrement().lastIndexOf("-") +1);
         String moisEnregistrement = courrier.getDateDEnregistrement().substring(courrier.getDateDEnregistrement().indexOf("-")+1,courrier.getDateDEnregistrement().indexOf("-")+3);
         String anneeEnregistrement = courrier.getDateDEnregistrement().substring(0,4);
         courrier.setDateDEnregistrement(jourEnregistrement+"-"+moisEnregistrement+"-"+anneeEnregistrement);
-
-       // courrier.setDateDeReception(jour+"-"+mois+"-"+annee);
-        courrier.setHeureDEnregistrement(CourriersQueries.heureDEnregistrement);
 
         if(favorisOuArchive.equals("favoris")){
             urlDeRetour = "courriersfavoris.xhtml";
