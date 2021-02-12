@@ -20,36 +20,9 @@ import java.util.stream.Stream;
 public class CourriersQueries {
 
     public static int nombreDeDestinataireDuCourrier= 0;
-    public static String dateDeReception;
-    public static String dateDEnregistrement;
-    public static String objetCourrier;
-    public static String referenceCourrier;
-    public static String commentairesCourrier;
-    public static String typeCourrier;
-    public static String prioriteCourrier;
-    public static String confidentiel;
-    public static String dossierAlfresco;
-    public static String accuseDeReception;
-    public static String referenceInterne;
-    public static String heureDeReception;
-    public static String heureDEnregistrement;
-    public static String heureDEnvoi;
-    public static String dateDEnvoi;
-    public static String typeDemetteur;
-    public static String idEmetteur;
-    public static String ministereEmetteur;
-    public static String directeurEmetteur;
-    public static String fonctionEmetteur;
-    public static String telEmetteurEtablissement;
-    public static String telEmetteurPersonne;
-    public static String emailEmetteurEtablissement;
-    public static String emailEmetteurPersonne;
-    public static String adresseEmetteurEtablissement;
-    public static String nomEtPrenomEmetteurPersonne;
-    public static String fonctionPersonneAjouteurDuCourrier;
-    public static String nomEtPrenomPersonneAjouteurDuCourrier;
     public static Map<String, String> mapDetailsCourrierRecu = new HashMap<>();
     public static Map<String, String> mapDetailsCourrierEnregistre = new HashMap<>();
+    public static Map<String, String> mapDetailsEmetteurDUnCourrier = new HashMap<>();
 
     /***Fonction qui recupere tous les courriers reçus par un utilisateur***/
     public static List<Courrier> recupererTousLesCourriersReçusParUnUtilisateurParSonId(String idUtilisateur) {
@@ -704,26 +677,20 @@ public class CourriersQueries {
     public static void recupererLEmetteurDUnCourrierParIdCourrier(String idCourrier){
         String requeteDetailEmetteurCourrierSQL = "select * from `envoyer_courrier` inner join `personne` on envoyer_courrier.id_personne = personne.id_personne left join fonction on fonction.id_fonction = personne.id_fonction left join direction on personne.id_direction = direction.id_direction inner join type_de_personne on personne.fk_type_personne = type_de_personne.id_type_de_personne left join etablissement on personne.id_etablissement = etablissement.id_etablissement where envoyer_courrier.id_courrier = " + idCourrier + ";";
         ResultSet resultSet = null;
+        String nom;
+        String prenom;
+
+        mapDetailsEmetteurDUnCourrier.clear();
         Connection connection = DatabaseConnection.getConnexion();
         try {
             resultSet = connection.createStatement().executeQuery(requeteDetailEmetteurCourrierSQL);
             if (resultSet.next()){
-                typeDemetteur = resultSet.getString("titre_type_de_personne");
-                directeurEmetteur = resultSet.getString("nom_direction");
-                fonctionEmetteur = resultSet.getString("titre_fonction");
-                ministereEmetteur = resultSet.getString("nom_etablissement");
 
-                telEmetteurEtablissement = resultSet.getString("tel_etablissement");
-                emailEmetteurEtablissement = resultSet.getString("mail_etablissement");
-                adresseEmetteurEtablissement = resultSet.getString("adresse_etablissement");
-
-                idEmetteur = resultSet.getString("envoyer_courrier.id_personne");
-                telEmetteurPersonne = resultSet.getString("tel");
-                emailEmetteurPersonne = resultSet.getString("mail");
-                nomEtPrenomEmetteurPersonne = resultSet.getString("nom") +" "+resultSet.getString("prenom") ;
-
-                heureDEnvoi = resultSet.getString("heure_envoi");
-                dateDEnvoi = resultSet.getString("date_envoi");
+                String telEmetteurEtablissement = resultSet.getString("tel_etablissement");
+                String telEmetteurPersonne = resultSet.getString("tel");
+                String adresseEmetteurEtablissement = resultSet.getString("adresse_etablissement");
+                String emailEmetteurEtablissement = resultSet.getString("mail_etablissement");
+                String emailEmetteurPersonne = resultSet.getString("mail");
 
                 if(telEmetteurEtablissement == null){
                     telEmetteurEtablissement = "";
@@ -740,6 +707,24 @@ public class CourriersQueries {
                 if(emailEmetteurPersonne == null){
                     emailEmetteurPersonne = "";
                 }
+
+                mapDetailsEmetteurDUnCourrier.put("type_personne",resultSet.getString("titre_type_de_personne"));
+                mapDetailsEmetteurDUnCourrier.put("nom_direction",resultSet.getString("nom_direction"));
+                mapDetailsEmetteurDUnCourrier.put("titre_fonction",resultSet.getString("titre_fonction"));
+                mapDetailsEmetteurDUnCourrier.put("nom_etablissement",resultSet.getString("nom_etablissement"));
+
+                mapDetailsEmetteurDUnCourrier.put("tel_etablissement",telEmetteurEtablissement);
+                mapDetailsEmetteurDUnCourrier.put("mail_etablissement",emailEmetteurEtablissement);
+                mapDetailsEmetteurDUnCourrier.put("adresse_etablissement",adresseEmetteurEtablissement);
+
+                mapDetailsEmetteurDUnCourrier.put("envoyer_courrier.id_personne",resultSet.getString("envoyer_courrier.id_personne"));
+                mapDetailsEmetteurDUnCourrier.put("tel",telEmetteurPersonne);
+                mapDetailsEmetteurDUnCourrier.put("mail",emailEmetteurPersonne);
+                nom = resultSet.getString("nom");
+                prenom = resultSet.getString("prenom");
+                mapDetailsEmetteurDUnCourrier.put("nomEtPrenomEmetteurDuCourrier",nom+" "+prenom);
+                mapDetailsEmetteurDUnCourrier.put("heure_envoi",resultSet.getString("heure_envoi"));
+                mapDetailsEmetteurDUnCourrier.put("date_envoi",resultSet.getString("date_envoi"));
             }
         } catch (SQLException e) {
             e.printStackTrace();

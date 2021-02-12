@@ -207,26 +207,25 @@ public class DetailDUnCourrierRecu implements Serializable {
         CourriersQueries.recupererLeDestinataireDUnCourrierParIdCourrier(idCourrier);
         CourriersQueries.recupererLesDetailsDUnCourrierRecu(idCourrier,idDirection);
 
-        emetteur.setTypeDEmetteur(CourriersQueries.typeDemetteur);
+        emetteur.setTypeDEmetteur(CourriersQueries.mapDetailsEmetteurDUnCourrier.get("type_personne"));
+        emetteur.setMinistere(CourriersQueries.mapDetailsEmetteurDUnCourrier.get("nom_etablissement"));
+        emetteur.setDirection(CourriersQueries.mapDetailsEmetteurDUnCourrier.get("nom_direction"));
+        emetteur.setFonction(CourriersQueries.mapDetailsEmetteurDUnCourrier.get("titre_fonction"));
 
-        emetteur.setMinistere(CourriersQueries.ministereEmetteur);
-        emetteur.setDirection(CourriersQueries.directeurEmetteur);
-        emetteur.setFonction(CourriersQueries.fonctionEmetteur);
+        emetteur.setMinistereAutreMinistere(CourriersQueries.mapDetailsEmetteurDUnCourrier.get("nom_etablissement"));
+        emetteur.setDirectionAutreMinistere(CourriersQueries.mapDetailsEmetteurDUnCourrier.get("nom_direction"));
+        emetteur.setFonctionAutreMinistere(CourriersQueries.mapDetailsEmetteurDUnCourrier.get("titre_fonction"));
 
-        emetteur.setMinistereAutreMinistere(CourriersQueries.ministereEmetteur);
-        emetteur.setDirectionAutreMinistere(CourriersQueries.directeurEmetteur);
-        emetteur.setFonctionAutreMinistere(CourriersQueries.fonctionEmetteur);
+        emetteur.setRaisonSocial(CourriersQueries.mapDetailsEmetteurDUnCourrier.get("nom_etablissement"));
+        emetteur.setDirectionEntreprise(CourriersQueries.mapDetailsEmetteurDUnCourrier.get("nom_direction"));
+        emetteur.setFonctionEntreprise(CourriersQueries.mapDetailsEmetteurDUnCourrier.get("titre_fonction"));
+        emetteur.setTelephoneEntreprise(CourriersQueries.mapDetailsEmetteurDUnCourrier.get("tel_etablissement"));
+        emetteur.setEmailEntreprise(CourriersQueries.mapDetailsEmetteurDUnCourrier.get("mail_etablissement"));
+        emetteur.setAdresseEntreprise(CourriersQueries.mapDetailsEmetteurDUnCourrier.get("adresse_etablissement"));
 
-        emetteur.setRaisonSocial(CourriersQueries.ministereEmetteur);
-        emetteur.setDirectionEntreprise(CourriersQueries.directeurEmetteur);
-        emetteur.setFonctionEntreprise(CourriersQueries.fonctionEmetteur);
-        emetteur.setTelephoneEntreprise(CourriersQueries.telEmetteurEtablissement);
-        emetteur.setEmailEntreprise(CourriersQueries.emailEmetteurEtablissement);
-        emetteur.setAdresseEntreprise(CourriersQueries.adresseEmetteurEtablissement);
-
-        emetteur.setNomParticulier(CourriersQueries.nomEtPrenomEmetteurPersonne);
-        emetteur.setTelephoneParticulier(CourriersQueries.telEmetteurPersonne);
-        emetteur.setEmailParticulier(CourriersQueries.emailEmetteurPersonne);
+        emetteur.setNomParticulier(CourriersQueries.mapDetailsEmetteurDUnCourrier.get("nomEtPrenomEmetteurDuCourrier"));
+        emetteur.setTelephoneParticulier(CourriersQueries.mapDetailsEmetteurDUnCourrier.get("tel"));
+        emetteur.setEmailParticulier(CourriersQueries.mapDetailsEmetteurDUnCourrier.get("email"));
 
         PrimeFaces.current().executeScript("affichageEnFonctionDuTypeEmetteur()");
         PrimeFaces.current().executeScript("affichageDivAccuseDeReception()");
@@ -239,6 +238,7 @@ public class DetailDUnCourrierRecu implements Serializable {
         courrier.setCommentairesCourrier(CourriersQueries.mapDetailsCourrierRecu.get("commentaires"));
         courrier.setDossierAlfresco(CourriersQueries.mapDetailsCourrierRecu.get("dossier_alfresco_emetteur"));
         courrier.setConfidentiel(CourriersQueries.mapDetailsCourrierRecu.get("confidentiel"));
+
         destinataire.setHeureDeReception(CourriersQueries.mapDetailsCourrierRecu.get("heure_de_reception"));
         destinataire.setDateDeReception(CourriersQueries.mapDetailsCourrierRecu.get("date_de_reception"));
         courrier.setReferenceInterne(CourriersQueries.mapDetailsCourrierRecu.get("reference_interne"));
@@ -249,8 +249,6 @@ public class DetailDUnCourrierRecu implements Serializable {
         String mois = destinataire.getDateDeReception().substring(destinataire.getDateDeReception().indexOf("-")+1,destinataire.getDateDeReception().indexOf("-")+3);
         String annee = destinataire.getDateDeReception().substring(0,4);
         destinataire.setDateDeReception(jour+"-"+mois+"-"+annee);
-
-        courrier.setHeureDEnregistrement(CourriersQueries.heureDEnregistrement);
     }
 
     public void fermerDialogueAccuseDeReception(){

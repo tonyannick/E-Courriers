@@ -4,6 +4,7 @@
       xmlns:h="http://xmlns.jcp.org/jsf/html"
       xmlns:p="http://primefaces.org/ui"
       xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:pretty="http://ocpsoft.com/prettyfaces"
       xmlns:fn="http://xmlns.jcp.org/jsp/jstl/functions"
       xmlns:f="http://xmlns.jcp.org/jsf/core">
 <f:view transient="true">
@@ -16,6 +17,7 @@
         <meta http-equiv="Content-Type" content="text/html;charset=UTF8" />
         <h:outputScript name="bootstrap/js/bootstrap.js" />
         <h:outputStylesheet name="bootstrap/css/bootstrap.css" />
+        <h:outputStylesheet name="css/custombreadcrumb.css"/>
         <h:outputStylesheet name="css/detaildundossier.css" />
     </h:head>
     <h:outputStylesheet>
@@ -74,11 +76,19 @@
                     <div class="ui-g" style=" width:100%;">
                         <div class="ui-g-2"/>
                         <div  class="ui-g-8">
-                            <ul class="breadcrumb" style="width:100%;">
-                                <li><h:outputLink value="tableaudebord.xhtml" title="Accueil">Accueil</h:outputLink></li>
-                                <li><h:outputLink value="mesdossiers.xhtml" title="Accueil">Mes dossiers</h:outputLink></li>
-                                <li>Contenu d'un dossier</li>
-                            </ul>
+
+                            <div class="custombreadcrumb flat">
+                                <pretty:link mappingId="tableaudebord">
+                                    Accueil
+                                </pretty:link>
+                                <pretty:link mappingId="mesdossiers">
+                                    Mes dossiers
+                                </pretty:link>
+                                <a class="active">
+                                    Contenu d'un dossier
+                                </a>
+                            </div>
+
                             <h3 class="page-header"><h:graphicImage value="./resources/images/folder.png" style="margin-right :10px"/>
                                 <h:outputText id="nomDuDossier" style="font-size: 18px; alignment: center;" value="Nom du dossier : #{detailDUnDossier.nomDossierEnCours}"/>
                             </h3>
@@ -101,7 +111,6 @@
                                     <p:commandButton style="color: white; margin-left:10px; background:#286090; border-color:#286090;"
                                                      onclick="actualiserLaPageDesCourriers()" type="button" icon="fa fa-refresh"/>
                                 </f:facet>
-
 
                             </p:toolbar>
 

@@ -185,10 +185,11 @@ public class RepondreAUneTache implements Serializable {
         HttpSession session = SessionUtils.getSession();
         String idCourrier = (String) session.getAttribute("idCourrier");
         CourriersQueries.recupererLEmetteurDUnCourrierParIdCourrier(idCourrier);
-        emetteur.setTypeDEmetteur(CourriersQueries.typeDemetteur);
-        emetteur.setMinistere(CourriersQueries.ministereEmetteur);
-        emetteur.setDirection(CourriersQueries.directeurEmetteur);
-        emetteur.setFonction(CourriersQueries.fonctionEmetteur);
+
+        emetteur.setTypeDEmetteur(CourriersQueries.mapDetailsEmetteurDUnCourrier.get("type_personne"));
+        emetteur.setMinistere(CourriersQueries.mapDetailsEmetteurDUnCourrier.get("nom_etablissement"));
+        emetteur.setDirection(CourriersQueries.mapDetailsEmetteurDUnCourrier.get("nom_direction"));
+        emetteur.setFonction(CourriersQueries.mapDetailsEmetteurDUnCourrier.get("titre_fonction"));
         CourriersQueries.recupererLeDestinataireDUnCourrierParIdCourrier(idCourrier);
         CourriersQueries.recupererLesDetailsDUnCourrierEnregistre(idCourrier);
 

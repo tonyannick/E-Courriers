@@ -108,8 +108,8 @@
                                 <pretty:link mappingId="tableaudebord">
                                     Accueil
                                 </pretty:link>
-                                <pretty:link mappingId="archives">
-                                    archives
+                                <pretty:link mappingId="#{detailDUnCourrierFavorisOuArchiver.indicateurFavorisOuArchive}">
+                                    #{detailDUnCourrierFavorisOuArchiver.indicateurFavorisOuArchive}
                                 </pretty:link>
                                 <a class="active">
                                     Details d'un courrier
@@ -120,25 +120,26 @@
                                 <p:toolbar style="margin-bottom: 15px;">
                                     <f:facet name="left">
                                         <div id="boutonDossier" style="float: left">
-                                        <p:commandButton type="button" style="background: #dfa574;margin-left: 10px; border-color:#dfa574; color: white; font-weight: bold; padding: 3px 4px"
+                                        <p:commandButton type="button" style="background:#c49166;margin-left: 10px; border-color:#c49166; color: white;"
                                                          onclick="ouvrirModalBoxDossier()" iconPos="right"
                                                          value="Ajouter à un dossier" icon="fa fa-folder-open" />
                                         </div>
                                         <div id="boutonRestaurer" style="float: left">
-                                            <p:commandButton type="button" style="background: #4ab40c;margin-left: 10px; border-color:#4ab40c; color: white; font-weight: bold; padding: 3px 4px"
+                                            <p:commandButton type="button" style="background: #4ab40c;margin-left: 10px; border-color:#4ab40c; color: white;"
                                                              onclick="PF('dialogueRestaurerCourriers').show()" iconPos="right"
                                                              value="Restaurer" icon="fa fa-circle-o-notch" />
                                         </div>
                                         <div id="boutonRetirer" style="float: left">
                                             <p:commandButton type="button"
-                                                             style="background: #6a000c;margin-left: 10px; border-color:#6a000c; color: white; font-weight: bold; padding: 3px 4px"
+                                                             style="background: #6a000c;margin-left: 10px; border-color:#6a000c; color: white;"
                                                              onclick="PF('dialogueRetirerEnFavoris').show()" iconPos="right"
-                                                             value="Retirer de mes favoris" icon="fa fa-times" />
+                                                             value="Retirer de mes favoris" icon="fa fa-minus-circle" />
                                         </div>
-
-                                    </f:facet>
-                                    <f:facet name="right">
-                                        <p:commandButton style=" color: white; padding: 2px 3px; background:#286090; border-color:#286090;" value="Actualiser la page"  onclick="rechargerLaPageDetailDUnCourrierEnvoye()" type="button" icon="fa fa-refresh"/>
+                                        <span class="ui-separator">
+                                            <span class="fa fa-ellipsis-v" />
+                                        </span>
+                                        <p:commandButton style=" color: white; margin-left:10px; background:#286090; border-color:#286090;"
+                                                         onclick="rechargerLaPageDetailDUnCourrierRecu()" type="button" icon="fa fa-refresh"/>
                                     </f:facet>
                                 </p:toolbar>
                             </h:form>

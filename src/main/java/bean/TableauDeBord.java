@@ -195,7 +195,6 @@ public class TableauDeBord implements Serializable {
         statistiques.setNombreDeCourrierUrgentDuJour(String.valueOf( StatistiquesQueries.nombreCourrierUrgentDuJour));
         statistiques.setNombreDeCourrierConfidentielDuJour(String.valueOf( StatistiquesQueries.nombreCourrierConfidentielDuJour));
 
-
         statistiques.setNombreDeCourrierEnvoyesDuMois(String.valueOf(StatistiquesQueries.nombreCourrierEnvoyesDuMois));
         statistiques.setNombreDeCourrierRecusDuMois(String.valueOf(StatistiquesQueries.nombreCourrierRecusDuMois));
         statistiques.setNombreDeCourrierUrgentDuMois(String.valueOf(StatistiquesQueries.nombreCourrierUrgentDuMois));
@@ -210,9 +209,7 @@ public class TableauDeBord implements Serializable {
         }else{
             etape.setListeDeMesTachesEnTraitement(DataBaseQueries.recupererLesCinqDernieresTachesEnTraitementDUnAgent(idUser));
         }
-
     }
-
 
     public Etape getEtape() {
         return etape;

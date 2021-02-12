@@ -71,10 +71,10 @@ public class DetailDUnCourrierDansUnDossier implements Serializable {
         CourriersQueries.recupererLeDestinataireDUnCourrierParIdCourrier(idCourrier);
         CourriersQueries.recupererLesDetailsDUnCourrierEnregistre(idCourrier);
 
-        emetteur.setTypeDEmetteur(CourriersQueries.typeDemetteur);
-        emetteur.setMinistere(CourriersQueries.ministereEmetteur);
-        emetteur.setDirection(CourriersQueries.directeurEmetteur);
-        emetteur.setFonction(CourriersQueries.fonctionEmetteur);
+        emetteur.setTypeDEmetteur(CourriersQueries.mapDetailsEmetteurDUnCourrier.get("type_personne"));
+        emetteur.setMinistere(CourriersQueries.mapDetailsEmetteurDUnCourrier.get("nom_etablissement"));
+        emetteur.setDirection(CourriersQueries.mapDetailsEmetteurDUnCourrier.get("nom_direction"));
+        emetteur.setFonction(CourriersQueries.mapDetailsEmetteurDUnCourrier.get("titre_fonction"));
 
         PrimeFaces.current().executeScript("affichageEnFonctionDuTypeEmetteur()");
 
@@ -91,7 +91,6 @@ public class DetailDUnCourrierDansUnDossier implements Serializable {
 
         nomEtPrenomAjouteurCourrier = CourriersQueries.mapDetailsCourrierEnregistre.get("nomEtPrenomPersonneAjouteurDuCourrier");
         fonctionAjouteurCourrier = CourriersQueries.mapDetailsCourrierEnregistre.get("fonctionPersonneAjouteurDuCourrier");
-
 
         String jourEnregistrement = courrier.getDateDEnregistrement().substring(courrier.getDateDEnregistrement().lastIndexOf("-") +1);
         String moisEnregistrement = courrier.getDateDEnregistrement().substring(courrier.getDateDEnregistrement().indexOf("-")+1,courrier.getDateDEnregistrement().indexOf("-")+3);

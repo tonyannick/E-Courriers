@@ -72,5 +72,23 @@
         <pattern value="/tachecourrierenregistre"/>
         <view-id value="/faces/repondreaunetache.xhtml"/>
     </url-mapping>
+    <url-mapping id="detaildundossier">
+        <pattern value="/detaildundossier"/>
+        <view-id value="/faces/detaildundossier.xhtml"/>
+    </url-mapping>
+    <url-mapping id="erreur">
+        <pattern value="/erreur"/>
+        <view-id value="/faces/erreur.xhtml"/>
+    </url-mapping>
+    <url-mapping id="archivedetails">
+        <pattern value="/details"/>
+        <view-id value="/faces/detailduncourrierfavorisouarchiver.xhtml"/>
+    </url-mapping>
+    <url-mapping id="favorisdetails">
+        <pattern value="/details"/>
+        <view-id value="/faces/detailduncourrierfavorisouarchiver.xhtml"/>
+    </url-mapping>
+
+
 
 </pretty-config>

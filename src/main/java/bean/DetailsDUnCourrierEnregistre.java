@@ -373,10 +373,11 @@ public class DetailsDUnCourrierEnregistre implements Serializable {
         CourriersQueries.recupererLEmetteurDUnCourrierParIdCourrier(idCourrier);
         CourriersQueries.recupererLeDestinataireDUnCourrierParIdCourrier(idCourrier);
         CourriersQueries.recupererLesDetailsDUnCourrierEnregistre(idCourrier);
-        emetteur.setTypeDEmetteur(CourriersQueries.typeDemetteur);
-        emetteur.setMinistere(CourriersQueries.ministereEmetteur);
-        emetteur.setDirection(CourriersQueries.directeurEmetteur);
-        emetteur.setFonction(CourriersQueries.fonctionEmetteur);
+
+        emetteur.setTypeDEmetteur(CourriersQueries.mapDetailsEmetteurDUnCourrier.get("type_personne"));
+        emetteur.setMinistere(CourriersQueries.mapDetailsEmetteurDUnCourrier.get("nom_etablissement"));
+        emetteur.setDirection(CourriersQueries.mapDetailsEmetteurDUnCourrier.get("nom_direction"));
+        emetteur.setFonction(CourriersQueries.mapDetailsEmetteurDUnCourrier.get("titre_fonction"));
 
         courrier.setObjetCourrier(CourriersQueries.mapDetailsCourrierEnregistre.get("objet"));
         courrier.setReferenceCourrier(CourriersQueries.mapDetailsCourrierEnregistre.get("reference"));

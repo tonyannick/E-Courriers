@@ -75,12 +75,13 @@ public class DetailDUnCourrierEnvoye implements Serializable {
         CourriersQueries.recupererLeDestinataireDUnCourrierParIdCourrier(idCourrier);
         CourriersQueries.recupererLesDetailsDUnCourrierEnregistre(idCourrier);
 
-        emetteur.setTypeDEmetteur(CourriersQueries.typeDemetteur);
-        emetteur.setMinistere(CourriersQueries.ministereEmetteur);
-        emetteur.setDirection(CourriersQueries.directeurEmetteur);
-        emetteur.setFonction(CourriersQueries.fonctionEmetteur);
-        emetteur.setHeureEnvoi(CourriersQueries.heureDEnvoi);
-        emetteur.setDateEnvoi(CourriersQueries.dateDEnvoi);
+        emetteur.setTypeDEmetteur(CourriersQueries.mapDetailsEmetteurDUnCourrier.get("type_personne"));
+        emetteur.setMinistere(CourriersQueries.mapDetailsEmetteurDUnCourrier.get("nom_etablissement"));
+        emetteur.setDirection(CourriersQueries.mapDetailsEmetteurDUnCourrier.get("nom_direction"));
+        emetteur.setFonction(CourriersQueries.mapDetailsEmetteurDUnCourrier.get("titre_fonction"));
+        emetteur.setHeureEnvoi(CourriersQueries.mapDetailsEmetteurDUnCourrier.get("heure_envoi"));
+        emetteur.setDateEnvoi(CourriersQueries.mapDetailsEmetteurDUnCourrier.get("date_envoi"));
+
         PrimeFaces.current().executeScript("affichageEnFonctionDuTypeEmetteur()");
 
         courrier.setObjetCourrier(CourriersQueries.mapDetailsCourrierEnregistre.get("objet"));

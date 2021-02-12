@@ -43,6 +43,7 @@ public class DetailDUnCourrierFavorisOuArchiver implements Serializable {
     private List<String> listeIdAnnexeAlfresco = new ArrayList<>();
     private String favorisOuArchive = null;
     private String urlDeRetour = null;
+    private String indicateurFavorisOuArchive;
 
     @PostConstruct
     public void initialisation(){
@@ -69,22 +70,25 @@ public class DetailDUnCourrierFavorisOuArchiver implements Serializable {
         CourriersQueries.recupererLeDestinataireDUnCourrierParIdCourrier(idCourrier);
         CourriersQueries.recupererLesDetailsDUnCourrierEnregistre(idCourrier);
 
-        emetteur.setTypeDEmetteur(CourriersQueries.typeDemetteur);
-        emetteur.setMinistere(CourriersQueries.ministereEmetteur);
-        emetteur.setDirection(CourriersQueries.directeurEmetteur);
-        emetteur.setFonction(CourriersQueries.fonctionEmetteur);
+        emetteur.setTypeDEmetteur(CourriersQueries.mapDetailsEmetteurDUnCourrier.get("type_personne"));
+        emetteur.setMinistere(CourriersQueries.mapDetailsEmetteurDUnCourrier.get("nom_etablissement"));
+        emetteur.setDirection(CourriersQueries.mapDetailsEmetteurDUnCourrier.get("nom_direction"));
+        emetteur.setFonction(CourriersQueries.mapDetailsEmetteurDUnCourrier.get("titre_fonction"));
 
-        emetteur.setRaisonSocial(CourriersQueries.ministereEmetteur);
-        emetteur.setDirectionEntreprise(CourriersQueries.directeurEmetteur);
-        emetteur.setFonctionEntreprise(CourriersQueries.fonctionEmetteur);
-        emetteur.setTelephoneEntreprise(CourriersQueries.telEmetteurEtablissement);
-        emetteur.setEmailEntreprise(CourriersQueries.emailEmetteurEtablissement);
-        emetteur.setAdresseEntreprise(CourriersQueries.adresseEmetteurEtablissement);
+        emetteur.setMinistereAutreMinistere(CourriersQueries.mapDetailsEmetteurDUnCourrier.get("nom_etablissement"));
+        emetteur.setDirectionAutreMinistere(CourriersQueries.mapDetailsEmetteurDUnCourrier.get("nom_direction"));
+        emetteur.setFonctionAutreMinistere(CourriersQueries.mapDetailsEmetteurDUnCourrier.get("titre_fonction"));
 
-        emetteur.setNomParticulier(CourriersQueries.nomEtPrenomEmetteurPersonne);
-        emetteur.setTelephoneParticulier(CourriersQueries.telEmetteurPersonne);
-        emetteur.setEmailParticulier(CourriersQueries.emailEmetteurPersonne);
-        emetteur.setIdEmetteur(CourriersQueries.idEmetteur);
+        emetteur.setRaisonSocial(CourriersQueries.mapDetailsEmetteurDUnCourrier.get("nom_etablissement"));
+        emetteur.setDirectionEntreprise(CourriersQueries.mapDetailsEmetteurDUnCourrier.get("nom_direction"));
+        emetteur.setFonctionEntreprise(CourriersQueries.mapDetailsEmetteurDUnCourrier.get("titre_fonction"));
+        emetteur.setTelephoneEntreprise(CourriersQueries.mapDetailsEmetteurDUnCourrier.get("tel_etablissement"));
+        emetteur.setEmailEntreprise(CourriersQueries.mapDetailsEmetteurDUnCourrier.get("mail_etablissement"));
+        emetteur.setAdresseEntreprise(CourriersQueries.mapDetailsEmetteurDUnCourrier.get("adresse_etablissement"));
+
+        emetteur.setNomParticulier(CourriersQueries.mapDetailsEmetteurDUnCourrier.get("nomEtPrenomEmetteurDuCourrier"));
+        emetteur.setTelephoneParticulier(CourriersQueries.mapDetailsEmetteurDUnCourrier.get("tel"));
+        emetteur.setEmailParticulier(CourriersQueries.mapDetailsEmetteurDUnCourrier.get("email"));
 
         PrimeFaces.current().executeScript("affichageEnFonctionDuTypeEmetteur()");
 
@@ -103,10 +107,12 @@ public class DetailDUnCourrierFavorisOuArchiver implements Serializable {
         String moisEnregistrement = courrier.getDateDEnregistrement().substring(courrier.getDateDEnregistrement().indexOf("-")+1,courrier.getDateDEnregistrement().indexOf("-")+3);
         String anneeEnregistrement = courrier.getDateDEnregistrement().substring(0,4);
         courrier.setDateDEnregistrement(jourEnregistrement+"-"+moisEnregistrement+"-"+anneeEnregistrement);
-
+        System.out.println("favorisOuArchive = " + favorisOuArchive);
         if(favorisOuArchive.equals("favoris")){
+            indicateurFavorisOuArchive = "favoris";
             urlDeRetour = "courriersfavoris.xhtml";
         }else{
+            indicateurFavorisOuArchive = "archives";
             urlDeRetour = "courriersarchives.xhtml";
         }
 
@@ -570,5 +576,13 @@ public class DetailDUnCourrierFavorisOuArchiver implements Serializable {
 
     public void setUrlDeRetour(String urlDeRetour) {
         this.urlDeRetour = urlDeRetour;
+    }
+
+    public String getIndicateurFavorisOuArchive() {
+        return indicateurFavorisOuArchive;
+    }
+
+    public void setIndicateurFavorisOuArchive(String indicateurFavorisOuArchive) {
+        this.indicateurFavorisOuArchive = indicateurFavorisOuArchive;
     }
 }

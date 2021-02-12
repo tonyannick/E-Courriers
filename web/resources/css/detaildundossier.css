@@ -42,3 +42,8 @@ input[type=text]:focus{
     margin-bottom: 15px;
     padding: 12px 12px;
 }
+.ui-toolbar.ui-widget-header{
+    background: #c8c8c8;
+    border-color: white;
+    border-width: 1px;
+}

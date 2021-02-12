@@ -317,11 +317,16 @@
                                 </div>
                                 <button class="accordionDetailCourrier"><h:graphicImage value="./resources/images/three.png" style="margin-right:10px; width: 15px; height: 15px;"/>Informations complémentaires</button>
                                 <div class="panelInfoCourrier">
-                                    <p:panelGrid columns="2" columnClasses="ui-grid-col-1 gridcol2, ui-grid-col-8"  style="border:none; width: 100%; margin-bottom:15px; margin-top: 15px" >
-                                        <h:outputLabel value="Date d'enregistrement" style="font-weight: bold; color:black; font-size: 14px"/>
-                                        <h:outputLabel value="#{repondreAUnCourrierRecu.courrier.dateDEnregistrement}" style="font-weight:normal;font-size: 14px;"/>
-                                        <h:outputLabel value="Heure d'enregistrement" style="font-weight: bold; color:black; font-size: 14px"/>
-                                        <h:outputLabel value="#{repondreAUnCourrierRecu.courrier.heureDEnregistrement}" style="font-weight:normal;font-size: 14px;"/>
+
+                                    <p:panelGrid columns="2" columnClasses="ui-grid-col-2 gridcol2, ui-grid-col-10"  style="border: 1px #888 solid; width: 100%; margin-bottom:15px; margin-top: 15px ">
+                                        <h:outputLabel value="Date de réception " style="font-weight: bold; font-size: 14px; color:black"/>
+                                        <h:outputLabel value="#{repondreAUnCourrierRecu.destinataire.dateDeReception}" style="font-weight: normal;font-size: 14px"/>
+                                        <h:outputLabel value="Heure de réception  " style="font-weight: bold; font-size: 14px; color:black"/>
+                                        <h:outputLabel value="#{repondreAUnCourrierRecu.destinataire.heureDeReception}" style="font-weight: normal;font-size: 14px"/>
+                                        <h:outputLabel value="Accusé de réception" style="font-weight: bold; color:black; font-size: 14px"/>
+                                        <h:outputLabel value="#{repondreAUnCourrierRecu.courrier.accuseDeReception}"
+                                                       styleClass="#{(repondreAUnCourrierRecu.courrier.accuseDeReception eq 'oui') ? 'receptionok' : (detailDUnCourrierRecu.courrier.accuseDeReception eq 'non') ? 'receptionpasok' : null}"
+                                                       style="font-size: 14px;"/>
                                     </p:panelGrid>
                                 </div>
                             </div>
