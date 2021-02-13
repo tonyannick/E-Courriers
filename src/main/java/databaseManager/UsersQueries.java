@@ -14,7 +14,9 @@ import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class UsersQueries {
 
@@ -36,7 +38,10 @@ public class UsersQueries {
     public static String typeDeUser;
     public static String photoUser;
     public static boolean isResponsable = false;
+    public static boolean responsableDirection = false;
     public static boolean isSecretaire = false;
+    public static Map<String, String> mapDetailsUser = new HashMap<>();
+    public static List<String> listeDesPermissionsDUnUser = new ArrayList<>();
 
     /***Fonction de verification de connexion d'un utilisateur***/
     public static boolean verifierUserLogin(String login, String motDePasse){
@@ -47,7 +52,6 @@ public class UsersQueries {
         ResultSet resultSet = null;
         boolean connected = false;
         String requeteLoginSQL = "select * from `personne` inner join direction on personne.id_direction = direction.id_direction inner join `fonction` on personne.id_fonction = fonction.id_fonction inner join profil on personne.id_profil = profil.id_profil where pseudo = '"+login+"' and mot_de_passe = '"+motDePasse+"';";
-
         try {
             resultSet = connection.createStatement().executeQuery(requeteLoginSQL);
             if(resultSet.next()){
@@ -58,6 +62,11 @@ public class UsersQueries {
                 fonctionUser = resultSet.getString("titre_fonction");
                 profilUser = resultSet.getString("titre_profil");
                 idDirectionUser = resultSet.getString("id_direction");
+                if(resultSet.getString("responsable_direction").equalsIgnoreCase("0")){
+                    responsableDirection = false;
+                }else{
+                  responsableDirection = true;
+                }
                 connected = true;
             }else{
                 connected = false;
@@ -79,6 +88,7 @@ public class UsersQueries {
 
         return connected;
     }
+
 
     /***Fonction qui recupere les infos d'un utilisateur***/
     public static List<User> recupererLaListeDesUsers(){
@@ -252,6 +262,34 @@ public class UsersQueries {
                 break;
             default:
                 isResponsable = false;
+        }
+    }
+
+    /**Fonction qui récupère les droits d'un utilisateur par son id**/
+    public static void recupererLesDroitsDUnUtilisateurParSonId(String idPersonne){
+        listeDesPermissionsDUnUser.clear();
+        Connection connection =  DatabaseConnection.getConnexion();
+        String requeteSQL = "SELECT titre_permissions FROM `personne` inner join profil on profil.id_profil = personne.id_profil inner join correspondance_profil_permissions on correspondance_profil_permissions.id_profil = profil.id_profil inner join permissions on permissions.id_permissions = correspondance_profil_permissions.id_permissions WHERE personne.id_personne= '"+idPersonne+"';";
+        ResultSet resultSet = null;
+        try {
+            resultSet = connection.createStatement().executeQuery(requeteSQL);
+            while(resultSet.next()){
+                listeDesPermissionsDUnUser.add(resultSet.getString("titre_permissions"));
+            }
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }finally {
+            if ( resultSet != null) {
+                try {
+                    resultSet.close();
+                } catch (SQLException e) { /* ignored */}
+            }
+            if ( connection != null) {
+                try {
+                    connection.close();
+                } catch (SQLException e) { /* ignored */}
+            }
         }
     }
 
