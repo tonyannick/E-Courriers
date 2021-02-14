@@ -82,6 +82,10 @@ public class PropertiesFilesReader {
         mapTitreDesPages.put("mesDossiers",chargerUnFichierDeProprietes(nomFichier).getProperty("mesDossiers"));
     }
 
+    public static void lireFichierDesPermissions(String nomFichier){
+
+    }
+
     private static Properties chargerUnFichierDeProprietes(String nomFichier){
         Properties properties = new Properties();
         InputStream inputStream = PropertiesFilesReader.class.getClassLoader().getResourceAsStream(nomFichier);

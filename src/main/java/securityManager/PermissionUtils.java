@@ -1,10 +1,10 @@
 package securityManager;
 
-import java.util.ArrayList;
+import java.util.List;
 
 public class PermissionUtils {
 
-    public static boolean verifierPermission(String permission, ArrayList<String> listeDesPermissions){
+    public static boolean verifierPermission(String permission, List<String> listeDesPermissions){
         boolean find = false;
         if(listeDesPermissions.contains(permission)){
             find = true;

@@ -548,17 +548,17 @@
                                         <p:panelGrid id="titreParticulier" columns="2" columnClasses="ui-grid-col-1 gridcol2, ui-grid-col-8"
                                                      style="width: 100%; margin-top: 15px; margin-bottom:15px; border: 1px #888 solid; background-color: white;">
                                             <h:outputLabel value="Emetteur " style="font-weight: bold;font-size: 14px; color:black" />
-                                            <h:outputLabel value="#{detailsDUnCourrierEnregistre.emetteur.typeDEmetteur}" style="font-size: 14px"/>
+                                            <h:outputLabel value="#{detailsDUnCourrierEnregistre.emetteur.typeDEmetteur}" style="font-size: 14px;font-weight: normal"/>
                                             <h:outputLabel value="Ministère " style="font-weight: bold;font-size: 14px; color: black;" />
-                                            <h:outputLabel value="#{detailsDUnCourrierEnregistre.emetteur.ministere}" style="font-size: 14px"/>
+                                            <h:outputLabel value="#{detailsDUnCourrierEnregistre.emetteur.ministere}" style="font-size: 14px;font-weight: normal"/>
                                         </p:panelGrid>
 
                                         <p:panelGrid columns="2" columnClasses="ui-grid-col-1 gridcol2, ui-grid-col-8"
                                                      style="width: 100%; border: 1px #888 solid; background-color: white; margin-bottom: 16px">
                                             <h:outputLabel value="Direction " style="font-weight: bold;font-size: 14px; color: black;"/>
-                                            <h:outputLabel value="#{detailsDUnCourrierEnregistre.emetteur.direction}" style="font-size: 14px" />
+                                            <h:outputLabel value="#{detailsDUnCourrierEnregistre.emetteur.direction}" style="font-size: 14px;font-weight: normal" />
                                             <h:outputLabel value="Fonction  " style="font-weight: bold;font-size: 14px; color: black;"/>
-                                            <h:outputLabel value="#{detailsDUnCourrierEnregistre.emetteur.fonction}" style="font-size: 14px" />
+                                            <h:outputLabel value="#{detailsDUnCourrierEnregistre.emetteur.fonction}" style="font-size: 14px;font-weight: normal" />
 
                                         </p:panelGrid>
 
@@ -569,7 +569,7 @@
                                         <p:panelGrid columns="3" columnClasses="ui-grid-col-1 gridcol2, ui-grid-col-8,ui-grid-col-1" style="width: 100%; margin-top: 15px; margin-bottom:15px; border: 1px #888 solid;">
 
                                             <h:outputLabel value="Type de courrier" style="font-weight: bold; color:black; font-size: 14px"/>
-                                            <h:outputLabel value="#{detailsDUnCourrierEnregistre.courrier.typeCourrier}" style="font-size: 14px;"/>
+                                            <h:outputLabel value="#{detailsDUnCourrierEnregistre.courrier.typeCourrier}" style="font-size: 14px;font-weight: normal"/>
                                             <p:commandButton value="Modifier"
                                                              actionListener="#{detailsDUnCourrierEnregistre.recupererElementAModifier}"
                                                              onclick="PF('dialogueTypeCourrier').show();"
@@ -579,7 +579,7 @@
                                             </p:commandButton>
 
                                             <h:outputLabel value="Référence" style="font-weight: bold; font-size: 14px;color:black"/>
-                                            <h:outputLabel value="#{detailsDUnCourrierEnregistre.courrier.referenceCourrier}" style="font-size: 14px"/>
+                                            <h:outputLabel value="#{detailsDUnCourrierEnregistre.courrier.referenceCourrier}" style="font-size: 14px;font-weight: normal"/>
                                             <p:commandButton value="Modifier"
                                                              actionListener="#{detailsDUnCourrierEnregistre.recupererElementAModifier}"
                                                              onclick="PF('dialogueObjetReferenceCommenairesCourrier').show();"
@@ -589,7 +589,7 @@
                                             </p:commandButton>
 
                                             <h:outputLabel value="Objet" style="font-weight: bold; font-size: 14px; color:black"/>
-                                            <h:outputLabel value="#{detailsDUnCourrierEnregistre.courrier.objetCourrier}" style="font-size: 14px"/>
+                                            <h:outputLabel value="#{detailsDUnCourrierEnregistre.courrier.objetCourrier}" style="font-size: 14px;font-weight: normal"/>
                                             <p:commandButton value="Modifier"
                                                              actionListener="#{detailsDUnCourrierEnregistre.recupererElementAModifier}"
                                                              onclick="PF('dialogueObjetReferenceCommenairesCourrier').show();"
@@ -599,7 +599,7 @@
                                             </p:commandButton>
 
                                             <h:outputLabel value="Priorité" style="font-weight: bold; font-size: 14px; color:black" />
-                                            <h:outputLabel value="#{detailsDUnCourrierEnregistre.courrier.prioriteCourrier}" style="font-size: 14px"/>
+                                            <h:outputLabel value="#{detailsDUnCourrierEnregistre.courrier.prioriteCourrier}" style="font-size: 14px;font-weight: normal"/>
                                             <p:commandButton value="Modifier"
                                                              actionListener="#{detailsDUnCourrierEnregistre.recupererElementAModifier}"
                                                              onclick="PF('dialoguePrioriteCourrier').show();"
@@ -609,7 +609,7 @@
                                             </p:commandButton>
 
                                             <h:outputLabel value="Confidentiel" style="font-weight: bold; font-size: 14px; color:black"/>
-                                            <h:outputLabel value="#{detailsDUnCourrierEnregistre.courrier.confidentiel}" style="font-size: 14px"/>
+                                            <h:outputLabel value="#{detailsDUnCourrierEnregistre.courrier.confidentiel}" style="font-size: 14px;font-weight: normal"/>
                                             <p:commandButton value="Modifier"
                                                              actionListener="#{detailsDUnCourrierEnregistre.recupererElementAModifier}"
                                                              onclick="PF('dialogueConfidentielCourrier').show();"
@@ -619,7 +619,7 @@
                                             </p:commandButton>
 
                                             <h:outputLabel value="Comentaires " style="font-weight: bold; font-size: 13px; color:black"/>
-                                            <h:outputLabel value="#{detailsDUnCourrierEnregistre.courrier.commentairesCourrier}" style="font-size: 14px" />
+                                            <h:outputLabel value="#{detailsDUnCourrierEnregistre.courrier.commentairesCourrier}" style="font-size: 14px;font-weight: normal" />
                                             <p:commandButton value="Modifier"
                                                              actionListener="#{detailsDUnCourrierEnregistre.recupererElementAModifier}"
                                                              onclick="PF('dialogueObjetReferenceCommenairesCourrier').show();"
@@ -636,13 +636,13 @@
 
                                         <p:panelGrid columns="2" columnClasses="ui-grid-col-1 gridcol2, ui-grid-col-8"  style="border:none; width: 100%; margin-bottom:15px; margin-top: 15px " styleClass="panelLogin">
                                             <h:outputLabel value="Ajouté par " style="font-weight: bold; color:black; font-size: 13px"/>
-                                            <h:outputLabel value="#{detailsDUnCourrierEnregistre.nomEtPrenomAjouteurCourrier}" style="font-size: 14px;"/>
+                                            <h:outputLabel value="#{detailsDUnCourrierEnregistre.nomEtPrenomAjouteurCourrier}" style="font-size: 14px;font-weight: normal"/>
                                             <h:outputLabel value="Fonction " style="font-weight: bold; color:black; font-size: 14px"/>
-                                            <h:outputLabel value="#{detailsDUnCourrierEnregistre.fonctionAjouteurCourrier}" style="font-size: 14px;"/>
+                                            <h:outputLabel value="#{detailsDUnCourrierEnregistre.fonctionAjouteurCourrier}" style="font-size: 14px;font-weight: normal"/>
                                             <h:outputLabel value="Date d'enregistrement" style="font-weight: bold; color:black; font-size: 14px"/>
-                                            <h:outputLabel value="#{detailsDUnCourrierEnregistre.courrier.dateDEnregistrement}" style="font-size: 14px;"/>
+                                            <h:outputLabel value="#{detailsDUnCourrierEnregistre.courrier.dateDEnregistrement}" style="font-size: 14px;font-weight: normal"/>
                                             <h:outputLabel value="Heure d'enregistrement" style="font-weight: bold; color:black; font-size: 14px"/>
-                                            <h:outputLabel value="#{detailsDUnCourrierEnregistre.courrier.heureDEnregistrement}" style="font-size: 14px;"/>
+                                            <h:outputLabel value="#{detailsDUnCourrierEnregistre.courrier.heureDEnregistrement}" style="font-size: 14px;font-weight: normal"/>
                                         </p:panelGrid>
 
                                     </div>

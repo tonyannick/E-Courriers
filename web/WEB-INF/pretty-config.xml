@@ -76,10 +76,6 @@
         <pattern value="/detaildundossier"/>
         <view-id value="/faces/detaildundossier.xhtml"/>
     </url-mapping>
-    <url-mapping id="erreur">
-        <pattern value="/erreur"/>
-        <view-id value="/faces/erreur.xhtml"/>
-    </url-mapping>
     <url-mapping id="archivedetails">
         <pattern value="/details"/>
         <view-id value="/faces/detailduncourrierfavorisouarchiver.xhtml"/>
@@ -92,11 +88,13 @@
         <pattern value="/taches"/>
         <view-id value="/faces/tableaudebordagent.xhtml"/>
     </url-mapping>
-
     <url-mapping id="parametresagents">
-        <pattern value="/parametres"/>
+        <pattern value="/mesparametres"/>
         <view-id value="/faces/parametresagent.xhtml"/>
     </url-mapping>
-
+    <url-mapping id="parametresagents">
+        <pattern value="/mesparametres"/>
+        <view-id value="/faces/parametresagent.xhtml"/>
+    </url-mapping>
 
 </pretty-config>

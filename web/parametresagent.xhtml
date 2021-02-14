@@ -71,7 +71,7 @@
             <div class="row">
                 <div id="header">
                     <ui:insert name="header" >
-                        <ui:include src="header.xhtml" />
+                        <ui:include src="headeragent.xhtml" />
                     </ui:insert>
                 </div>
                 <div id="footer">
@@ -201,7 +201,7 @@
                                             </div>
                                         </div>
                                         <input type="radio" name="tabs" id="tabtwo"/>
-                                        <label for="tabtwo">Liste des Utilisateurs</label>
+                                        <label for="tabtwo">Informations générales</label>
                                         <div class="tab">
                                             <div id="divPasDAccesListeDesUsers" style="display: block">
                                                 <p class="titresection">
@@ -361,134 +361,6 @@
                                             </div>
 
                                         </div>
-                                        <input type="radio" name="tabs" id="tabthree"/>
-                                        <label for="tabthree">Parametres du Ministère</label>
-                                        <div class="tab">
-                                            <div id="pageDesNonAdministrateurs" style="display: block">
-                                                <p class="titresection">
-                                                    <h:graphicImage value="./resources/images/fichierconfidentiel.png" style="margin-left:10px"/>
-                                                    <h:outputText value="Votre profil ne vous permets pas d'acceder à ce contenu" style="font-size: 18px; font-weight: bold"/>
-                                                </p>
-                                            </div>
-
-                                            <div class="row" id="divPageParametresGeneraux" style="display: none">
-                                                <div class="col-md-6">
-                                                    <p:panel header="Information du Ministère" toggleable="true">
-                                                        <h:panelGrid columns="3" columnClasses="ui-grid-col-3, ui-grid-col-8,ui-grid-col-1" styleClass="panelLogin" cellspacing="30" cellpadding="30">
-                                                            <h4 style="margin-left:10px; font-weight:bold; font-size: 16px" >Nom du Ministère</h4>
-                                                            <h:outputText style="margin-left:10px"
-                                                                          value="#{parametres.etablissement.titreEtablissement}"/>
-                                                            <p:commandLink actionListener="#{parametres.recupererElementAModifierAuClick}">
-                                                                <h:graphicImage value="./resources/images/pencil.png" styleClass="imageDestinataire" style=" color:black; width: 13px; height: 13px;"/>
-                                                                <f:param name = "valeurMinistereAModifier" value= "nom"/>
-                                                            </p:commandLink>
-
-                                                            <h4 style="margin-left:10px; font-weight:bold; font-size: 16px">Email </h4>
-                                                            <h:outputText  size="55" style="margin-left:10px"
-                                                                           value="#{parametres.etablissement.mailEtablissement}"/>
-                                                            <p:commandLink actionListener="#{parametres.recupererElementAModifierAuClick}">
-                                                                <h:graphicImage value="./resources/images/pencil.png"
-                                                                                style=" color:black; width: 13px; height: 13px;"/>
-                                                                <f:param name = "valeurMinistereAModifier" value= "email"/>
-                                                            </p:commandLink>
-
-                                                            <h4 style="margin-left:10px; font-weight:bold; font-size: 16px">Téléphone </h4>
-                                                            <h:outputText style="margin-left:10px"
-                                                                          value="#{parametres.etablissement.telEtablissement}"/>
-                                                            <p:commandLink actionListener="#{parametres.recupererElementAModifierAuClick}">
-                                                                <h:graphicImage value="./resources/images/pencil.png"
-                                                                                style=" color:black; width: 13px; height: 13px;"/>
-                                                                <f:param name = "valeurMinistereAModifier" value= "tel"/>
-                                                            </p:commandLink>
-
-                                                            <h4 style="margin-left:10px; font-weight:bold; font-size: 16px">Adresse </h4>
-                                                            <h:outputText style="margin-left:10px"
-                                                                          value="#{parametres.etablissement.adresseEtablissement}"/>
-                                                            <p:commandLink actionListener="#{parametres.recupererElementAModifierAuClick}">
-                                                                <h:graphicImage value="./resources/images/pencil.png"
-                                                                                style=" color:black; width: 13px; height: 13px;"/>
-                                                                <f:param name = "valeurMinistereAModifier" value= "adresse"/>
-                                                            </p:commandLink>
-                                                        </h:panelGrid>
-                                                    </p:panel>
-                                                    <p:panel header="Liste des entités du Ministère" toggleable="true" collapsed="true"
-                                                             style=" margin-top: 35px; height: auto;  overflow: auto;" >
-
-                                                        <h:form>
-                                                            <p:commandButton value="Ajouter" iconPos="right" icon="fa fa-plus-square"
-                                                                             type="button" onclick="PF('dialogueAjouterUneEntiteAuMinistere').show()"
-                                                                             style="display: inline-block; margin-top: 10px"/>
-                                                            <p:separator style="margin-bottom: 10px; "/>
-                                                        </h:form>
-
-                                                        <h:form id="formListeEntitesDuMinistere">
-                                                            <p:dataList type="unordered"
-                                                                    styleClass="noBorders"
-                                                                    value="#{parametres.direction.listeObjetsDirection}"   var="direction"
-                                                                    rows="8" paginator="true" paginatorAlwaysVisible="false" paginatorPosition="bottom">
-
-                                                                <div class="ui-g">
-                                                                    <div class="ui-g-9">
-                                                                        <i class="fa fa-certificate" aria-hidden="true" style="font-size: 8px; margin-right: 8px"/>
-                                                                        <h:outputText  value="#{direction.titreDirection}"/>
-                                                                    </div>
-
-                                                                </div>
-                                                            </p:dataList>
-                                                        </h:form>
-
-                                                    </p:panel>
-                                                </div>
-                                                <div class="col-md-6">
-                                                    <p:panel header="Liste des Ministères enregistrés" toggleable="true" collapsed="true"
-                                                             style=" height: auto; overflow: auto" >
-                                                        <h:form>
-                                                            <p:dataList type="unordered"
-                                                                        styleClass="noBorders"
-
-                                                                        value="#{parametres.etablissement.listeDesEtablissements}"  var="etablissement"
-                                                                        rows="8" paginator="true" paginatorAlwaysVisible="false" paginatorPosition="bottom">
-
-                                                                <div class="ui-g">
-                                                                    <div class="ui-g-10">
-                                                                        <i class="fa fa-window-minimize" aria-hidden="true" style="font-size: 8px; margin-right: 8px"/>
-                                                                        <h:outputText  style="margin-left:10px" value="#{etablissement.abreviationEtablissement}"/>
-                                                                    </div>
-                                                                    <div class="ui-g-2">
-                                                                        <p:commandButton icon="fa fa-search" style="background-color: #2b669a; border-color: #2b669a"
-                                                                                         update="@form"
-                                                                                         actionListener="#{parametres.afficherDetailsDUnMinistereParSonId}"
-                                                                                         oncomplete="PF('dialogueDetailsMinistere').show()">
-                                                                            <f:param value="#{etablissement.idetablissement}" name="idEtablissement"/>
-                                                                        </p:commandButton>
-                                                                        <p:commandButton icon="fa fa-pencil" style="background-color: #eea236; border-color: #eea236; margin-left: 10px"
-                                                                                     type="button" onclick="PF('dialogueAjouterUneEntiteAuMinistere').show()"/>
-                                                                    </div>
-                                                                </div>
-                                                                <p:dialog resizable="false"
-                                                                          header="Détails d'un ministère" position="center,left"
-                                                                          widgetVar="dialogueDetailsMinistere" width="auto"
-                                                                          modal="true" hideEffect="clip"
-                                                                          showEffect="clip"  dynamic="true">
-
-                                                                    <h:panelGrid columns="2" styleClass="panelLogin" cellspacing="30" cellpadding="30">
-                                                                        <h4 style="margin-left:10px; margin-bottom: 5px; font-weight:bold; font-size: 14px" >Nom complet </h4>
-                                                                        <h:outputText style="margin-left:30px; margin-bottom: 5px" value="#{parametres.nomMinistereTemp}"/>
-                                                                        <h4 style="margin-left:10px; font-weight:bold; font-size: 14px">Abréviation </h4>
-                                                                        <h:outputText style="margin-left:30px" value="#{parametres.abreviationTemp}"/>
-                                                                    </h:panelGrid>
-
-                                                                    <p:separator/>
-                                                                </p:dialog>
-                                                            </p:dataList>
-                                                        </h:form>
-                                                    </p:panel>
-                                                </div>
-                                            </div>
-                                        </div>
-
-                                        <input type="radio" name="tabs" id="tabfour"/>
-                                        <label for="tabfour">Parametres du Courrier</label>
 
                                         <div class="tab">
                                             <div id="pageDesNonAdministrateursCourrier" style="display: block">

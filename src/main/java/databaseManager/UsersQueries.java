@@ -30,7 +30,6 @@ public class UsersQueries {
     public static String pseudUser;
     public static String nomUser;
     public static String prenomUser;
-    public static String nomCompletUser;
     public static String directionUser;
     public static String idDirectionUser;
     public static String fonctionUser;
@@ -51,21 +50,33 @@ public class UsersQueries {
         Connection connection =  DatabaseConnection.getConnexion();
         ResultSet resultSet = null;
         boolean connected = false;
+        mapDetailsUser.clear();
+        String nom;
+        String prenom;
         String requeteLoginSQL = "select * from `personne` inner join direction on personne.id_direction = direction.id_direction inner join `fonction` on personne.id_fonction = fonction.id_fonction inner join profil on personne.id_profil = profil.id_profil where pseudo = '"+login+"' and mot_de_passe = '"+motDePasse+"';";
         try {
             resultSet = connection.createStatement().executeQuery(requeteLoginSQL);
             if(resultSet.next()){
-                idPersonne = resultSet.getString("id_personne");
-                idEtablissement = resultSet.getString("id_etablissement");
-                nomCompletUser = resultSet.getString("nom") +" "+resultSet.getString("prenom") ;
-                directionUser = resultSet.getString("nom_direction");
+                mapDetailsUser.put("id_personne",resultSet.getString("id_personne"));
+                mapDetailsUser.put("nom_direction",resultSet.getString("nom_direction"));
+                mapDetailsUser.put("titre_fonction",resultSet.getString("titre_fonction"));
+                mapDetailsUser.put("titre_profil",resultSet.getString("titre_profil"));
+                mapDetailsUser.put("id_direction",resultSet.getString("id_direction"));
+                mapDetailsUser.put("id_etablissement",resultSet.getString("id_etablissement"));
+                nom = resultSet.getString("nom");
+                nom = resultSet.getString("nom");
+                prenom = resultSet.getString("prenom");
+                mapDetailsUser.put("nom_complet",nom+ " "+prenom);
+                //nomCompletUser = resultSet.getString("nom") +" "+resultSet.getString("prenom") ;
+               /* directionUser = resultSet.getString("nom_direction");
                 fonctionUser = resultSet.getString("titre_fonction");
                 profilUser = resultSet.getString("titre_profil");
-                idDirectionUser = resultSet.getString("id_direction");
+                idDirectionUser = resultSet.getString("id_direction");*/
+
                 if(resultSet.getString("responsable_direction").equalsIgnoreCase("0")){
                     responsableDirection = false;
                 }else{
-                  responsableDirection = true;
+                    responsableDirection = true;
                 }
                 connected = true;
             }else{
@@ -88,7 +99,6 @@ public class UsersQueries {
 
         return connected;
     }
-
 
     /***Fonction qui recupere les infos d'un utilisateur***/
     public static List<User> recupererLaListeDesUsers(){
@@ -212,39 +222,48 @@ public class UsersQueries {
     }
 
     /****Recuperer les infos de session***/
-    public static void recupererInfosDeSession(){
+    public static void recupererInfosFonctionDuUser(){
         HttpSession session = SessionUtils.getSession();
         String fonction = (String) session.getAttribute("fonctionUser");
         switch (fonction) {
             case FonctionsUtilisateurs.agent :
                 isResponsable = false;
+                isSecretaire = false;
                 break;
             case FonctionsUtilisateurs.chargeDEtudes :
                 isResponsable = false;
+                isSecretaire = false;
                 break;
             case FonctionsUtilisateurs.chefDeService :
                 isResponsable = false;
                 break;
             case FonctionsUtilisateurs.conseiller :
                 isResponsable = false;
+                isSecretaire = false;
                 break;
             case FonctionsUtilisateurs.directeur :
                 isResponsable = true;
+                isSecretaire = false;
                 break;
             case FonctionsUtilisateurs.directeurCabinet :
                 isResponsable = true;
+                isSecretaire = false;
                 break;
             case FonctionsUtilisateurs.directeurGeneral :
                 isResponsable = true;
+                isSecretaire = false;
                 break;
             case FonctionsUtilisateurs.directeurGeneralAdjoint :
                 isResponsable = true;
+                isSecretaire = false;
                 break;
             case FonctionsUtilisateurs.ministreDelegue :
                 isResponsable = true;
+                isSecretaire = false;
                 break;
             case FonctionsUtilisateurs.ministre :
                 isResponsable = true;
+                isSecretaire = false;
                 break;
             case FonctionsUtilisateurs.secretaire :
                 isResponsable = false;
@@ -256,12 +275,15 @@ public class UsersQueries {
                 break;
             case FonctionsUtilisateurs.secretaireGeneral :
                 isResponsable = true;
+                isSecretaire = false;
                 break;
             case FonctionsUtilisateurs.secretaireGeneralAdjoint :
                 isResponsable = true;
+                isSecretaire = false;
                 break;
             default:
                 isResponsable = false;
+                isSecretaire = false;
         }
     }
 

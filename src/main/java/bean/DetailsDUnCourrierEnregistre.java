@@ -11,6 +11,7 @@ import org.primefaces.PrimeFaces;
 import org.primefaces.event.FileUploadEvent;
 import org.primefaces.event.SelectEvent;
 import org.primefaces.event.ToggleEvent;
+import securityManager.PermissionUtils;
 import sessionManager.SessionUtils;
 import model.Annotation;
 import variables.*;
@@ -1226,56 +1227,57 @@ public class DetailsDUnCourrierEnregistre implements Serializable {
     }
 
     public void supprimerUnDestinataire(){
-        HttpSession session = SessionUtils.getSession();
-        String idUser = (String) session.getAttribute( "idUser");
-        String idCourrier = (String) session.getAttribute( "idCourrier");
 
-        if(  destinataire.getNombreDeDestinataire().equals("1")){
-            PrimeFaces.current().executeScript("swal('Oups', 'Impossible de supprimer cet unique destinataire', 'warning');");
-        }else{
+        if(PermissionUtils.verifierPermission("Modifier un courrier",UsersQueries.listeDesPermissionsDUnUser)){
+            HttpSession session = SessionUtils.getSession();
+            String idUser = (String) session.getAttribute( "idUser");
+            String idCourrier = (String) session.getAttribute( "idCourrier");
+            if( destinataire.getNombreDeDestinataire().equals("1")){
+                PrimeFaces.current().executeScript("swal('Oups', 'Impossible de supprimer cet unique destinataire', 'warning');");
+            }else{
+                String supprimerDestinataireSQL = "delete from `recevoir_courrier` where id_recevoir_courrier = '"+idRecevoirCourrier+"';";
+                String ajouterEtapeCourrierSQL = "INSERT INTO `etape` (`titre`, `etat`, `message`) VALUES ('" + EtatCourrier.suppressionCourrier +"',"+"'"+ EtatEtape.termine+"',"+"'"+ ActionEtape.suppressionDestinataire+"')";
+                String ajouterCorrespondanceEtapeCourrierSQL = "INSERT INTO `correspondance_etape_courrier` (`id_courrier`,`etat_correspondance`) VALUES" +
+                        "('"+  idCourrier+"',"+"'"+EtatCourrier.courrierEnregistre+"')";
+                String ajouterCorrespondanceEtapePersonneSQL = "INSERT INTO `correspondance_personne_etape` (`id_personne`) VALUES" +
+                        " ('" + idUser +"')";
+                Connection connection = DatabaseConnection.getConnexion();
+                Statement statement = null;
+                try {
+                    connection.setAutoCommit(false);
+                    statement = connection.createStatement();
+                    statement.addBatch(supprimerDestinataireSQL);
+                    statement.addBatch(ajouterCorrespondanceEtapeCourrierSQL);
+                    statement.addBatch(ajouterCorrespondanceEtapePersonneSQL);
+                    statement.addBatch(ajouterEtapeCourrierSQL);
+                    statement.executeBatch();
+                    connection.commit();
+                    FacesContext context = FacesContext.getCurrentInstance();
+                    context.getExternalContext().getFlash().setKeepMessages(true);
+                    PrimeFaces.current().executeScript("swal('Validation','Destinataire bien retiré du courrier', 'success');");
+                } catch (SQLException e) {
+                    PrimeFaces.current().executeScript("swal('Validation','Une erreur s'est produite', 'error');");
+                    e.printStackTrace();
 
-            String supprimerDestinataireSQL = "delete from `recevoir_courrier` where id_recevoir_courrier = '"+idRecevoirCourrier+"';";
-
-            String ajouterEtapeCourrierSQL = "INSERT INTO `etape` (`titre`, `etat`, `message`) VALUES ('" + EtatCourrier.suppressionCourrier +"',"+"'"+ EtatEtape.termine+"',"+"'"+ ActionEtape.suppressionDestinataire+"')";
-
-            String ajouterCorrespondanceEtapeCourrierSQL = "INSERT INTO `correspondance_etape_courrier` (`id_courrier`,`etat_correspondance`) VALUES" +
-                    "('"+  idCourrier+"',"+"'"+EtatCourrier.courrierEnregistre+"')";
-
-            String ajouterCorrespondanceEtapePersonneSQL = "INSERT INTO `correspondance_personne_etape` (`id_personne`) VALUES" +
-                    " ('" + idUser +"')";
-
-            Connection connection = DatabaseConnection.getConnexion();
-            Statement statement = null;
-
-            try {
-                connection.setAutoCommit(false);
-                statement = connection.createStatement();
-                statement.addBatch(supprimerDestinataireSQL);
-                statement.addBatch(ajouterCorrespondanceEtapeCourrierSQL);
-                statement.addBatch(ajouterCorrespondanceEtapePersonneSQL);
-                statement.addBatch(ajouterEtapeCourrierSQL);
-                statement.executeBatch();
-                connection.commit();
-                FacesContext context = FacesContext.getCurrentInstance();
-                context.getExternalContext().getFlash().setKeepMessages(true);
-                PrimeFaces.current().executeScript("swal('Validation','Destinataire bien retiré du courrier', 'success');");
-            } catch (SQLException e) {
-                PrimeFaces.current().executeScript("swal('Validation','Une erreur s'est produite', 'error');");
-                e.printStackTrace();
-
-            }finally {
-                if ( statement != null) {
-                    try {
-                        statement.close();
-                    } catch (SQLException e) { /* ignored */}
-                }
-                if ( connection != null) {
-                    try {
-                        connection.close();
-                    } catch (SQLException e) { /* ignored */}
+                }finally {
+                    if ( statement != null) {
+                        try {
+                            statement.close();
+                        } catch (SQLException e) { /* ignored */}
+                    }
+                    if ( connection != null) {
+                        try {
+                            connection.close();
+                        } catch (SQLException e) { /* ignored */}
+                    }
                 }
             }
+        }else{
+            PrimeFaces.current().executeScript("swal('Oups','Votre profil ne vous permets pas de réaliser cette action', 'warning');");
+
         }
+
+
     }
 
     public void recupererListeDirection(){
@@ -1345,113 +1347,112 @@ public class DetailsDUnCourrierEnregistre implements Serializable {
 
     public void remplacerLeFichierDuCourrier(){
 
-        HttpSession session = SessionUtils.getSession();
-        String idCourrier = (String) session.getAttribute("idCourrier");
-        String idUser = (String) session.getAttribute( "idUser");
-        String ajouterEtapeCourrierSQL = "INSERT INTO `etape` (`titre`, `etat`, `message`) VALUES ('" + EtatCourrier.miseAJour +"',"+"'"+ EtatEtape.termine+"',"+"'"+ ActionEtape.changementDuFichier+"')";
-
-        String ajouterCorrespondanceEtapeCourrierSQL = "INSERT INTO `correspondance_etape_courrier` (`id_courrier`,`etat_correspondance`) VALUES" +
-                "('"+  idCourrier+"',"+"'"+EtatCourrier.courrierEnregistre+"')";
-
-        String ajouterCorrespondanceEtapePersonneSQL = "INSERT INTO `correspondance_personne_etape` (`id_personne`) VALUES" +
-                " ('" + idUser +"')";
-
-        courrier.setIdAlfresco(ConnexionAlfresco.enregistrerFichierCourrierDansAlfresco(new File(courrier.getCheminCourrierSurPC()),FileManager.determinerTypeDeFichierParSonExtension(FileManager.recupererExtensionDUnFichierParSonNom(courrier.getNomCourrier())),courrier.getDossierAlfresco()));
-
-        String updateIdAlfrescoDuCourrierSQL = "update `courrier` set `identifiant_alfresco` = '"+courrier.getIdAlfresco()+"' where id_courrier  = '"+idCourrier+"';";
-
-        String updateNomFichierDuCourrierSQL = "update `courrier` set `nom_fichier` = '"+courrier.getNomCourrier().replaceAll("'","_")+"' where id_courrier  = '"+idCourrier+"';";
-
-        Connection connection = DatabaseConnection.getConnexion();
-        Statement statement = null;
-
-        try {
-            connection.setAutoCommit(false);
-            statement = connection.createStatement();
-            statement.addBatch(updateIdAlfrescoDuCourrierSQL);
-            statement.addBatch(updateNomFichierDuCourrierSQL);
-            statement.addBatch(ajouterCorrespondanceEtapeCourrierSQL);
-            statement.addBatch(ajouterCorrespondanceEtapePersonneSQL);
-            statement.addBatch(ajouterEtapeCourrierSQL);
-            statement.executeBatch();
-            connection.commit();
-            session.setAttribute("idAlfresco", courrier.getIdAlfresco());
-            PrimeFaces.current().executeScript("swal('Validation','Le fichier du courrier à été remplacé', 'success');");
-        } catch (SQLException e) {
-            PrimeFaces.current().executeScript("retirerLoading()");
-            PrimeFaces.current().executeScript("swal('Erreur','Une erreur s'est produite', 'error');");
-            e.printStackTrace();
+        if(PermissionUtils.verifierPermission("Modifier un courrier",UsersQueries.listeDesPermissionsDUnUser)){
+            HttpSession session = SessionUtils.getSession();
+            String idCourrier = (String) session.getAttribute("idCourrier");
+            String idUser = (String) session.getAttribute( "idUser");
+            String ajouterEtapeCourrierSQL = "INSERT INTO `etape` (`titre`, `etat`, `message`) VALUES ('" + EtatCourrier.miseAJour +"',"+"'"+ EtatEtape.termine+"',"+"'"+ ActionEtape.changementDuFichier+"')";
+            String ajouterCorrespondanceEtapeCourrierSQL = "INSERT INTO `correspondance_etape_courrier` (`id_courrier`,`etat_correspondance`) VALUES" +
+                    "('"+  idCourrier+"',"+"'"+EtatCourrier.courrierEnregistre+"')";
+            String ajouterCorrespondanceEtapePersonneSQL = "INSERT INTO `correspondance_personne_etape` (`id_personne`) VALUES" +
+                    " ('" + idUser +"')";
+            courrier.setIdAlfresco(ConnexionAlfresco.enregistrerFichierCourrierDansAlfresco(new File(courrier.getCheminCourrierSurPC()),FileManager.determinerTypeDeFichierParSonExtension(FileManager.recupererExtensionDUnFichierParSonNom(courrier.getNomCourrier())),courrier.getDossierAlfresco()));
+            String updateIdAlfrescoDuCourrierSQL = "update `courrier` set `identifiant_alfresco` = '"+courrier.getIdAlfresco()+"' where id_courrier  = '"+idCourrier+"';";
+            String updateNomFichierDuCourrierSQL = "update `courrier` set `nom_fichier` = '"+courrier.getNomCourrier().replaceAll("'","_")+"' where id_courrier  = '"+idCourrier+"';";
+            Connection connection = DatabaseConnection.getConnexion();
+            Statement statement = null;
+            try {
+                connection.setAutoCommit(false);
+                statement = connection.createStatement();
+                statement.addBatch(updateIdAlfrescoDuCourrierSQL);
+                statement.addBatch(updateNomFichierDuCourrierSQL);
+                statement.addBatch(ajouterCorrespondanceEtapeCourrierSQL);
+                statement.addBatch(ajouterCorrespondanceEtapePersonneSQL);
+                statement.addBatch(ajouterEtapeCourrierSQL);
+                statement.executeBatch();
+                connection.commit();
+                session.setAttribute("idAlfresco", courrier.getIdAlfresco());
+                PrimeFaces.current().executeScript("swal('Validation','Le fichier du courrier à été remplacé', 'success');");
+            } catch (SQLException e) {
+                PrimeFaces.current().executeScript("retirerLoading()");
+                PrimeFaces.current().executeScript("swal('Erreur','Une erreur s'est produite', 'error');");
+                e.printStackTrace();
+            }
+        }else{
+            PrimeFaces.current().executeScript("swal('Oups','Votre profil ne vous permets pas de réaliser cette action', 'warning');");
         }
-
     }
 
     public void envoyerCourrier(){
-        HttpSession session = SessionUtils.getSession();
-        String idCourrier = (String) session.getAttribute("idCourrier");
-        String idUser = (String) session.getAttribute( "idUser");
-        String idDirectionUser = (String) session.getAttribute( "idDirectionUser");
-        String updateEtatCourrierSQL = "update `courrier` SET `etat` = 'Courrier envoyé' WHERE id_courrier = '"+idCourrier+"';";
 
-        String mettreAJourDateDEnvoi = "update `envoyer_courrier` SET `date_envoi` = '"+DateUtils.recupererSimpleDateEnCours()+"' where envoyer_courrier.id_courrier = '"+idCourrier+"';";
-        String mettreAJourHeureDEnvoi = "update `envoyer_courrier` SET `heure_envoi` = '"+DateUtils.recupererMiniHeuresEnCours()+"' where envoyer_courrier.id_courrier = '"+idCourrier+"';";
-        System.out.println("mettreAJourHeureDEnvoi = " + mettreAJourHeureDEnvoi);
-        System.out.println("mettreAJourDateDEnvoi = " + mettreAJourDateDEnvoi);
-        String mettreAJourDateDeReception = "update `recevoir_courrier` SET `date_reception` = '"+DateUtils.recupererSimpleDateEnCours()+"' where recevoir_courrier.id_courrier = '"+idCourrier+"';";
-        String mettreAJourHeureDeReception = "update `recevoir_courrier` SET `heure_reception` = '"+DateUtils.recupererMiniHeuresEnCours()+"' where recevoir_courrier.id_courrier = '"+idCourrier+"';";
+        if(PermissionUtils.verifierPermission("Enregistrer un courrier",UsersQueries.listeDesPermissionsDUnUser)){
+            HttpSession session = SessionUtils.getSession();
+            String idCourrier = (String) session.getAttribute("idCourrier");
+            String idUser = (String) session.getAttribute( "idUser");
+            String idDirectionUser = (String) session.getAttribute( "idDirectionUser");
+            String updateEtatCourrierSQL = "update `courrier` SET `etat` = 'Courrier envoyé' WHERE id_courrier = '"+idCourrier+"';";
 
-        String ajouterEtapeCourrierSQL = "INSERT INTO `etape` (`titre`, `etat`, `message`) VALUES" +
-                " ('" + EtatCourrier.courrierEnvoye +"',"+"'"+ EtatEtape.termine+"',"+"'"+ ActionEtape.courrierEnvoye+"')";
+            String mettreAJourDateDEnvoi = "update `envoyer_courrier` SET `date_envoi` = '"+DateUtils.recupererSimpleDateEnCours()+"' where envoyer_courrier.id_courrier = '"+idCourrier+"';";
+            String mettreAJourHeureDEnvoi = "update `envoyer_courrier` SET `heure_envoi` = '"+DateUtils.recupererMiniHeuresEnCours()+"' where envoyer_courrier.id_courrier = '"+idCourrier+"';";
 
-        String ajouterCorrespondanceEtapeCourrierSQL = "INSERT INTO `correspondance_etape_courrier` (`id_courrier`,`etat_correspondance`) VALUES" +
-                "('"+ idCourrier +"',"+"'"+EtatCourrier.courrierEnvoye+"')";
+            String mettreAJourDateDeReception = "update `recevoir_courrier` SET `date_reception` = '"+DateUtils.recupererSimpleDateEnCours()+"' where recevoir_courrier.id_courrier = '"+idCourrier+"';";
+            String mettreAJourHeureDeReception = "update `recevoir_courrier` SET `heure_reception` = '"+DateUtils.recupererMiniHeuresEnCours()+"' where recevoir_courrier.id_courrier = '"+idCourrier+"';";
 
-        String ajouterCorrespondanceEtapePersonneSQL = "INSERT INTO `correspondance_personne_etape` (`id_personne`) VALUES" +
-                " ('" + idUser +"')";
+            String ajouterEtapeCourrierSQL = "INSERT INTO `etape` (`titre`, `etat`, `message`) VALUES" +
+                    " ('" + EtatCourrier.courrierEnvoye +"',"+"'"+ EtatEtape.termine+"',"+"'"+ ActionEtape.courrierEnvoye+"')";
 
-        String cloreDiscussionSQL = null;
-        String cloreEtatEtapeSQL = null;
+            String ajouterCorrespondanceEtapeCourrierSQL = "INSERT INTO `correspondance_etape_courrier` (`id_courrier`,`etat_correspondance`) VALUES" +
+                    "('"+ idCourrier +"',"+"'"+EtatCourrier.courrierEnvoye+"')";
 
-        Connection connection = DatabaseConnection.getConnexion();
-        Statement statement = null;
-        try {
-            connection.setAutoCommit(false);
-            statement = connection.createStatement();
-            String idTypeDactivite = ActivitesQueries.recupererIdTypeDActivitesParSonTitre(TypeDActivites.courrierEnvoye);
-            for(int a = 0; a < etape.getListeDesActionsSurLeCourrier().size(); a++){
-                cloreDiscussionSQL = "update `discussion_etape` set `etat_discussion` = '"+EtatEtape.Fermer+"' where id_etape = '"+etape.getListeDesActionsSurLeCourrier().get(a).getId()+"'";
-                cloreEtatEtapeSQL = "update `etape` set `etat` = '"+EtatEtape.termine+"' where id_etape = '"+etape.getListeDesActionsSurLeCourrier().get(a).getId()+"'";
-                statement.addBatch(cloreDiscussionSQL);
-                statement.addBatch(cloreEtatEtapeSQL);
+            String ajouterCorrespondanceEtapePersonneSQL = "INSERT INTO `correspondance_personne_etape` (`id_personne`) VALUES" +
+                    " ('" + idUser +"')";
+
+            String cloreDiscussionSQL = null;
+            String cloreEtatEtapeSQL = null;
+
+            Connection connection = DatabaseConnection.getConnexion();
+            Statement statement = null;
+            try {
+                connection.setAutoCommit(false);
+                statement = connection.createStatement();
+                String idTypeDactivite = ActivitesQueries.recupererIdTypeDActivitesParSonTitre(TypeDActivites.courrierEnvoye);
+                for(int a = 0; a < etape.getListeDesActionsSurLeCourrier().size(); a++){
+                    cloreDiscussionSQL = "update `discussion_etape` set `etat_discussion` = '"+EtatEtape.Fermer+"' where id_etape = '"+etape.getListeDesActionsSurLeCourrier().get(a).getId()+"'";
+                    cloreEtatEtapeSQL = "update `etape` set `etat` = '"+EtatEtape.termine+"' where id_etape = '"+etape.getListeDesActionsSurLeCourrier().get(a).getId()+"'";
+                    statement.addBatch(cloreDiscussionSQL);
+                    statement.addBatch(cloreEtatEtapeSQL);
+                }
+                statement.addBatch(updateEtatCourrierSQL);
+                statement.addBatch(ajouterCorrespondanceEtapeCourrierSQL);
+                statement.addBatch(ajouterCorrespondanceEtapePersonneSQL);
+                statement.addBatch(ajouterEtapeCourrierSQL);
+                statement.addBatch(ActivitesQueries.ajouterUneActvitee(TitreActivites.courrierEnvoye, idCourrier ,idUser,idTypeDactivite,idDirectionUser));
+                statement.addBatch(mettreAJourDateDEnvoi);
+                statement.addBatch(mettreAJourHeureDEnvoi);
+                statement.addBatch(mettreAJourDateDeReception);
+                statement.addBatch(mettreAJourHeureDeReception);
+                statement.executeBatch();
+                connection.commit();
+                FacesContext context = FacesContext.getCurrentInstance();
+                context.getExternalContext().getFlash().setKeepMessages(true);
+                PrimeFaces.current().executeScript("PF('dialogueCourrierBienEnvoye').show()");
+            } catch (SQLException e) {
+                FacesMessages.errorMessage("messageEnvoyerCourrier","Ererur","Une erreur s'est produite");
+                e.printStackTrace();
+            }finally {
+                if ( statement != null) {
+                    try {
+                        statement.close();
+                    } catch (SQLException e) { /* ignored */}
+                }
+                if ( connection != null) {
+                    try {
+                        connection.close();
+                    } catch (SQLException e) { /* ignored */}
+                }
             }
-            statement.addBatch(updateEtatCourrierSQL);
-            statement.addBatch(ajouterCorrespondanceEtapeCourrierSQL);
-            statement.addBatch(ajouterCorrespondanceEtapePersonneSQL);
-            statement.addBatch(ajouterEtapeCourrierSQL);
-            statement.addBatch(ActivitesQueries.ajouterUneActvitee(TitreActivites.courrierEnvoye, idCourrier ,idUser,idTypeDactivite,idDirectionUser));
-            statement.addBatch(mettreAJourDateDEnvoi);
-            statement.addBatch(mettreAJourHeureDEnvoi);
-            statement.addBatch(mettreAJourDateDeReception);
-            statement.addBatch(mettreAJourHeureDeReception);
-            statement.executeBatch();
-            connection.commit();
-            FacesContext context = FacesContext.getCurrentInstance();
-            context.getExternalContext().getFlash().setKeepMessages(true);
-            PrimeFaces.current().executeScript("PF('dialogueCourrierBienEnvoye').show()");
-        } catch (SQLException e) {
-            FacesMessages.errorMessage("messageEnvoyerCourrier","Ererur","Une erreur s'est produite");
-            e.printStackTrace();
-        }finally {
-
-            if ( statement != null) {
-                try {
-                    statement.close();
-                } catch (SQLException e) { /* ignored */}
-            }
-            if ( connection != null) {
-                try {
-                    connection.close();
-                } catch (SQLException e) { /* ignored */}
-            }
+        }else{
+            PrimeFaces.current().executeScript("swal('Oups','Votre profil ne vous permets pas de réaliser cette action', 'warning');");
         }
     }
 

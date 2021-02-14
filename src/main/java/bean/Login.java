@@ -32,7 +32,6 @@ public class Login implements Serializable {
 
     private static final long serialVersionUID = -486667257950195964L;
     private User user;
-    private String userSessionUniqueId;
     private StreamedContent imageCaptcha;
     private String valeurCaptcha;
     private String captcha;
@@ -75,28 +74,25 @@ public class Login implements Serializable {
 
         if(verifierCaptcha()){
             if(UsersQueries.verifierUserLogin(user.getUserlogin(),user.getUserPassword())){
-                userSessionUniqueId = UUID.randomUUID().toString();
                 HttpSession session = SessionUtils.getSession();
-                session.setAttribute("uniqueUserID",userSessionUniqueId);
-                session.setAttribute("userName", UsersQueries.nomCompletUser);
-                session.setAttribute("idUser",UsersQueries.idPersonne);
-                session.setAttribute("id_etablissement",UsersQueries.idEtablissement);
-                session.setAttribute("directionUser", UsersQueries.directionUser);
-                session.setAttribute("fonctionUser", UsersQueries.fonctionUser);
-                session.setAttribute("profilUser", UsersQueries.profilUser);
-                session.setAttribute("premiereConnexion", "oui");
-                session.setAttribute("idDirectionUser", UsersQueries.idDirectionUser);
+                session.setAttribute("userName", UsersQueries.mapDetailsUser.get("nom_complet"));
+                session.setAttribute("idUser",UsersQueries.mapDetailsUser.get("id_personne"));
+                session.setAttribute("id_etablissement",UsersQueries.mapDetailsUser.get("id_etablissement"));
+                session.setAttribute("directionUser", UsersQueries.mapDetailsUser.get("nom_direction"));
+                session.setAttribute("fonctionUser", UsersQueries.mapDetailsUser.get("titre_fonction"));
+                session.setAttribute("profilUser", UsersQueries.mapDetailsUser.get("titre_profil"));
+                session.setAttribute("idDirectionUser",UsersQueries.mapDetailsUser.get("id_direction"));
                 if(user.isSeSouvenir()) {
                     CookiesUtils.creerUnCookie("cookieIdentifiant",user.getUserlogin());
                     CookiesUtils.creerUnCookie("cookieMotDePasse",user.getUserPassword());
                     CookiesUtils.creerUnCookie("seSouvenirDeMoi","oui");
                 }
-                UsersQueries.recupererInfosDeSession();
+                UsersQueries.recupererInfosFonctionDuUser();
                 session.setAttribute("isResponsable", UsersQueries.isResponsable);
                 session.setAttribute("isSecretaire", UsersQueries.isSecretaire);
                 chargerLesTitresDesPages();
                 UsersQueries.recupererLesDroitsDUnUtilisateurParSonId(UsersQueries.idPersonne);
-                if(UsersQueries.responsableDirection){
+                if(UsersQueries.isResponsable || UsersQueries.isSecretaire){
                     return "tableaudebord?faces-redirect=true";
                 }else{
                     return "tableaudebordagent?faces-redirect=true";
