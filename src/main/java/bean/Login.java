@@ -91,7 +91,7 @@ public class Login implements Serializable {
                 session.setAttribute("isResponsable", UsersQueries.isResponsable);
                 session.setAttribute("isSecretaire", UsersQueries.isSecretaire);
                 chargerLesTitresDesPages();
-                UsersQueries.recupererLesDroitsDUnUtilisateurParSonId(UsersQueries.idPersonne);
+               // UsersQueries.recupererLesDroitsDUnUtilisateurParSonId(UsersQueries.idPersonne);
                 if(UsersQueries.isResponsable || UsersQueries.isSecretaire){
                     return "tableaudebord?faces-redirect=true";
                 }else{

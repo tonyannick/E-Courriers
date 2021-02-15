@@ -64,20 +64,13 @@ public class UsersQueries {
                 mapDetailsUser.put("id_direction",resultSet.getString("id_direction"));
                 mapDetailsUser.put("id_etablissement",resultSet.getString("id_etablissement"));
                 nom = resultSet.getString("nom");
-                nom = resultSet.getString("nom");
                 prenom = resultSet.getString("prenom");
                 mapDetailsUser.put("nom_complet",nom+ " "+prenom);
-                //nomCompletUser = resultSet.getString("nom") +" "+resultSet.getString("prenom") ;
-               /* directionUser = resultSet.getString("nom_direction");
-                fonctionUser = resultSet.getString("titre_fonction");
-                profilUser = resultSet.getString("titre_profil");
-                idDirectionUser = resultSet.getString("id_direction");*/
-
-                if(resultSet.getString("responsable_direction").equalsIgnoreCase("0")){
+               /* if(resultSet.getString("responsable_courrier").equalsIgnoreCase("0")){
                     responsableDirection = false;
                 }else{
                     responsableDirection = true;
-                }
+                }*/
                 connected = true;
             }else{
                 connected = false;

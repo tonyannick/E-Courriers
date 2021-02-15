@@ -65,6 +65,11 @@
         float: none;
     }
 }
+.accueil {
+    font-weight: bold;
+    background-color: dodgerblue;
+    color: white;
+}
 .mescourriers{
     background: #cdb38a;
     font-weight:bold;

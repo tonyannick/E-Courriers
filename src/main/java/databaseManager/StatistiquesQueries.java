@@ -455,12 +455,17 @@ public class StatistiquesQueries {
             DateUtils.recupererLePremierEtLeDernierJourDelaSemaine();
             SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
             for (int a = 0; a < listeCourriersRecus.size(); a++) {
+
                 try {
                     Date dateAConsiderer = sdf.parse(listeCourriersRecus.get(a).getDateDEnregistrement());
-                    if (dateAConsiderer.after(DateUtils.convertirStringEnDateAuFormatUS(DateUtils.premierJourDeLaSemaineFormatUS)) &&
-                            dateAConsiderer.before(DateUtils.convertirStringEnDateAuFormatUS(DateUtils.dernierJourDeLaSemaineFormatUS))) {
+                    if (dateAConsiderer.compareTo(DateUtils.convertirStringEnDateAuFormatUS(DateUtils.premierJourDeLaSemaineFormatUS)) == 0){
+
                         tempNombreCourrierRecusDeLaSemaine++;
                     }
+                    /*if (dateAConsiderer.after(DateUtils.convertirStringEnDateAuFormatUS(DateUtils.premierJourDeLaSemaineFormatUS)) &&
+                            dateAConsiderer.before(DateUtils.convertirStringEnDateAuFormatUS(DateUtils.dernierJourDeLaSemaineFormatUS))) {
+                        tempNombreCourrierRecusDeLaSemaine++;
+                    }*/
                 } catch (ParseException e) {
                     e.printStackTrace();
                 }
@@ -469,10 +474,14 @@ public class StatistiquesQueries {
             for (int a = 0; a < listeCourriersEnvoyes.size(); a++) {
                 try {
                     Date dateAConsiderer = sdf.parse(listeCourriersEnvoyes.get(a).getDateDEnregistrement());
-                    if (dateAConsiderer.after(DateUtils.convertirStringEnDateAuFormatUS(DateUtils.premierJourDeLaSemaineFormatUS)) &&
-                            dateAConsiderer.before(DateUtils.convertirStringEnDateAuFormatUS(DateUtils.dernierJourDeLaSemaineFormatUS))) {
+                    if (dateAConsiderer.compareTo(DateUtils.convertirStringEnDateAuFormatUS(DateUtils.premierJourDeLaSemaineFormatUS)) == 0){
+
                         tempNombreCourrierEnvoyesDeLaSemaine++;
                     }
+                   /* if (dateAConsiderer.after(DateUtils.convertirStringEnDateAuFormatUS(DateUtils.premierJourDeLaSemaineFormatUS)) &&
+                            dateAConsiderer.before(DateUtils.convertirStringEnDateAuFormatUS(DateUtils.dernierJourDeLaSemaineFormatUS))) {
+                        tempNombreCourrierEnvoyesDeLaSemaine++;
+                    }*/
 
                 } catch (ParseException e) {
                     e.printStackTrace();
@@ -484,8 +493,46 @@ public class StatistiquesQueries {
             for (int a = 0; a < listeDeTousLesCourriersDeLaSemaine.size(); a++) {
                 try {
                     Date dateAConsiderer = sdf.parse(listeDeTousLesCourriersDeLaSemaine.get(a).getDateDEnregistrement());
-                    if (dateAConsiderer.after(DateUtils.convertirStringEnDateAuFormatUS(DateUtils.premierJourDeLaSemaineFormatUS)) &&
+                   /* if (dateAConsiderer.after(DateUtils.convertirStringEnDateAuFormatUS(DateUtils.premierJourDeLaSemaineFormatUS)) &&
                             dateAConsiderer.before(DateUtils.convertirStringEnDateAuFormatUS(DateUtils.dernierJourDeLaSemaineFormatUS))) {
+                        if(listeDeTousLesCourriersDeLaSemaine.get(a).getPrioriteCourrier().equals("Urgent")){
+                            tempNombreCourrierUrgentDeLaSemaine++;
+                        }else if(listeDeTousLesCourriersDeLaSemaine.get(a).getPrioriteCourrier().equals("Normal")){
+                            tempNombreCourrierPasUrgentDeLaSemaine++;
+                        }
+                        if(listeDeTousLesCourriersDeLaSemaine.get(a).getConfidentiel().equals("Oui")){
+                            tempNombreCourrierConfidentielDeLaSemaine++;
+                        }
+
+                        for (Map.Entry<String,String> entry :  DateUtils.recupererTousLesJoursDeLaSemaineEnCours().entrySet()){
+                            if(listeDeTousLesCourriersDeLaSemaine.get(a).getDateDEnregistrement().equalsIgnoreCase(entry.getValue())){
+                                if(entry.getKey().equals("Lundi")){
+                                    tempNombreCourrierLundiDeLaSemaine++;
+                                }
+                                if(entry.getKey().equals("Mardi")){
+                                    tempNombreCourrierMardiDeLaSemaine++;
+                                }
+                                if(entry.getKey().equals("Mercredi")){
+                                    tempNombreCourrierMercrediDeLaSemaine++;
+                                }
+                                if(entry.getKey().equals("Jeudi")){
+                                    tempNombreCourrierJeudiDeLaSemaine++;
+                                }
+                                if(entry.getKey().equals("Vendredi")){
+                                    tempNombreCourrierVendrediDeLaSemaine++;
+                                }
+                                if(entry.getKey().equals("Samedi")){
+                                    tempNombreCourrierSamediDeLaSemaine++;
+                                }
+                                if(entry.getKey().equals("Dimanche")){
+                                    tempNombreCourrierDimancheDeLaSemaine++;
+                                }
+                            }
+                        }
+
+                    }*/
+
+                    if (dateAConsiderer.compareTo(DateUtils.convertirStringEnDateAuFormatUS(DateUtils.premierJourDeLaSemaineFormatUS)) == 0) {
                         if(listeDeTousLesCourriersDeLaSemaine.get(a).getPrioriteCourrier().equals("Urgent")){
                             tempNombreCourrierUrgentDeLaSemaine++;
                         }else if(listeDeTousLesCourriersDeLaSemaine.get(a).getPrioriteCourrier().equals("Normal")){
@@ -527,6 +574,7 @@ public class StatistiquesQueries {
                 }
             }
 
+            System.out.println("tempNombreCourrierLundiDeLaSemaine = " + tempNombreCourrierLundiDeLaSemaine);
             nombreCourrierRecusDeLaSemaine = tempNombreCourrierRecusDeLaSemaine;
             nombreCourrierEnvoyesDeLaSemaine =  tempNombreCourrierEnvoyesDeLaSemaine;
             nombreCourrierUrgentDeLaSemaine = tempNombreCourrierUrgentDeLaSemaine;

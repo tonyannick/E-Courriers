@@ -1303,7 +1303,7 @@ public class DetailsDUnCourrierEnregistre implements Serializable {
             stream.write(bytes);
             stream.flush();
             stream.close();
-            FacesContext.getCurrentInstance().addMessage("messageinfo", new FacesMessage(FacesMessage.SEVERITY_INFO, "Info", "Fichier bien ajouté !!"));
+            FacesMessages.infoMessage("messageinfo","Info", "Fichier bien ajouté !!");
         } catch (IOException e) {
             FacesContext.getCurrentInstance().addMessage("messageinfo", new FacesMessage(FacesMessage.SEVERITY_INFO, "Erreur", "Une erreur s'est produite lors de l'ajout du fichier !!"));
             e.printStackTrace();
@@ -1347,7 +1347,7 @@ public class DetailsDUnCourrierEnregistre implements Serializable {
 
     public void remplacerLeFichierDuCourrier(){
 
-        if(PermissionUtils.verifierPermission("Modifier un courrier",UsersQueries.listeDesPermissionsDUnUser)){
+       // if(PermissionUtils.verifierPermission("Modifier un courrier",UsersQueries.listeDesPermissionsDUnUser)){
             HttpSession session = SessionUtils.getSession();
             String idCourrier = (String) session.getAttribute("idCourrier");
             String idUser = (String) session.getAttribute( "idUser");
@@ -1378,14 +1378,14 @@ public class DetailsDUnCourrierEnregistre implements Serializable {
                 PrimeFaces.current().executeScript("swal('Erreur','Une erreur s'est produite', 'error');");
                 e.printStackTrace();
             }
-        }else{
+       /* }else{
             PrimeFaces.current().executeScript("swal('Oups','Votre profil ne vous permets pas de réaliser cette action', 'warning');");
-        }
+        }*/
     }
 
     public void envoyerCourrier(){
 
-        if(PermissionUtils.verifierPermission("Enregistrer un courrier",UsersQueries.listeDesPermissionsDUnUser)){
+        //if(PermissionUtils.verifierPermission("Enregistrer un courrier",UsersQueries.listeDesPermissionsDUnUser)){
             HttpSession session = SessionUtils.getSession();
             String idCourrier = (String) session.getAttribute("idCourrier");
             String idUser = (String) session.getAttribute( "idUser");
@@ -1451,9 +1451,9 @@ public class DetailsDUnCourrierEnregistre implements Serializable {
                     } catch (SQLException e) { /* ignored */}
                 }
             }
-        }else{
+        /*}else{
             PrimeFaces.current().executeScript("swal('Oups','Votre profil ne vous permets pas de réaliser cette action', 'warning');");
-        }
+        }*/
     }
 
     public String retourALaListeDesCourriersEnregistres(){

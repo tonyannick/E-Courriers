@@ -41,19 +41,19 @@
                         <h:outputLabel href="#" style="margin-left: 8px; padding-right: 25px; color : dodgerblue; font-size:18px; border-right: 3px solid #2b669a; color: black; font-weight: bold"> E-Courrier</h:outputLabel>
                            <h:outputLabel style="color: black; font-weight: bold; font-size: 13px; margin-left: 25px">#{headerBean.user.userName}</h:outputLabel>
                            <div class="header-right">
-                               <pretty:link mappingId="tableaudebord" title="Accueil" styleClass="active">
+                               <pretty:link mappingId="tableaudebord" title="Accueil" styleClass="accueil">
                                    Accueil
                                </pretty:link>
-                               <pretty:link mappingId="mescourriers" styleClass="mescourriers">
+                               <pretty:link mappingId="mescourriers" styleClass="mestaches">
                                    Courriers enregistrés
                                </pretty:link>
-                               <pretty:link mappingId="mestaches" styleClass="mestaches">
+                               <pretty:link mappingId="mestaches" styleClass="quitter">
                                    Mes Taches
                                </pretty:link>
-                               <pretty:link mappingId="activites" styleClass="activites">
+                               <pretty:link mappingId="activites" styleClass="accueil">
                                    Activités
                                </pretty:link>
-                               <pretty:link mappingId="parametres" styleClass="parametre">
+                               <pretty:link mappingId="parametres" styleClass="mestaches">
                                    Paramètres
                                </pretty:link>
                                <p:commandLink styleClass="quitter" action="#{tableauDeBord.deconnexion}" ajax="false" title="Déconnexion" value="Quitter">

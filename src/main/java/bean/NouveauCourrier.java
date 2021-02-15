@@ -168,11 +168,13 @@ public class NouveauCourrier implements Serializable {
     }
 
     public void ajoutDuFichierDuCourrier(FileUploadEvent fileUploadEvent){
+        System.out.println("dedede");
         byte[] bytes = null;
         courrier.setNomCourrier(DateUtils.recupererSimpleHeuresEnCours()+"_"+fileUploadEvent.getFile().getFileName());
         bytes = fileUploadEvent.getFile().getContent();
         BufferedOutputStream stream = null;
         courrier.setCheminCourrierSurPC(tempDirectoryPath+"courrier_"+courrier.getNomCourrier());
+        System.out.println("courrier = " + courrier.getCheminCourrierSurPC());
         try {
             stream = new BufferedOutputStream(new FileOutputStream(new File(courrier.getCheminCourrierSurPC())));
             stream.write(bytes);
@@ -231,8 +233,10 @@ public class NouveauCourrier implements Serializable {
     public void voirSiLeCourrierEstConfidentiel(){
         if(courrier.getConfidentiel().equalsIgnoreCase("Oui")){
             FacesMessages.infoMessage("messageconfidentiel","Info","Le courrier à été marqué comme confidentiel");
+            fichierCourrierAjoute = true;
         }else if(courrier.getConfidentiel().equalsIgnoreCase("Non")){
             FacesMessages.infoMessage("messageconfidentiel","Info","Le courrier à été marqué comme non confidentiel");
+            fichierCourrierAjoute = false;
         }
     }
 
