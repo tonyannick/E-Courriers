@@ -676,18 +676,15 @@ public class DataBaseQueries {
                 String annee = listeActionsCourrier.get(i).getDate_debut().substring(0,4);
                 listeActionsCourrier.get(i).setDate_debut(jour+"-"+mois+"-"+annee);
 
-                if (listeActionsCourrier.get(i).getDate_fin() == null){
-                    listeActionsCourrier.get(i).setDate_fin("Aucun");
-                }else{
+                if (listeActionsCourrier.get(i).getDate_fin() != null){
+
                     String jourFin = listeActionsCourrier.get(i).getDate_fin().substring(listeActionsCourrier.get(i).getDate_fin().lastIndexOf("-") +1);
                     String moisFin = listeActionsCourrier.get(i).getDate_fin().substring(listeActionsCourrier.get(i).getDate_fin().indexOf("-")+1,listeActionsCourrier.get(i).getDate_fin().indexOf("-")+3);
                     String anneeFin = listeActionsCourrier.get(i).getDate_fin().substring(0,4);
                     listeActionsCourrier.get(i).setDate_fin(jourFin+"-"+moisFin+"-"+anneeFin);
                 }
 
-
             }
-
 
         } catch (SQLException e) {
             e.printStackTrace();

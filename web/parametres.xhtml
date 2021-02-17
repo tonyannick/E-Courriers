@@ -935,7 +935,9 @@
             function rechargerLaPage(){
                 window.location.reload();
             }
-
+            window.oncontextmenu = function () {
+                return false;
+            }
         </script>
         <h:outputScript name="/js/parametres.js"/>
     </h:body>

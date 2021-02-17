@@ -2,6 +2,8 @@ package bean;
 
 import databaseManager.DatabaseConnection;
 import databaseManager.DossiersQueries;
+import fileManager.PropertiesFilesReader;
+import messages.FacesMessages;
 import model.Courrier;
 import model.Dossier;
 import org.primefaces.PrimeFaces;
@@ -31,11 +33,14 @@ public class DetailDUnDossier implements Serializable {
     private int nombreDeCourriers = 0;
     private Integer first = 0;
     private Integer rowsPerPage = 15;
+    private String messageSuppressionDossier;
 
     @PostConstruct
     public void initialisation(){
         courrier = new Courrier();
         dossier = new Dossier();
+        PropertiesFilesReader.lireLeFichierDesMessages("messageApplication.properties","indicationSuppressionDossier");
+        messageSuppressionDossier = PropertiesFilesReader.mapMessageApplication.get("indicationSuppressionDossier");
     }
 
     public void recupererLesDossiers(){
@@ -78,12 +83,12 @@ public class DetailDUnDossier implements Serializable {
     }
 
     public void supprimerUnDossier(){
+
         HttpSession session = SessionUtils.getSession();
         String idDossier = (String) session.getAttribute("idDossier");
         Connection connection = DatabaseConnection.getConnexion();
         String supprimerDossierSQL = "DELETE FROM `dossier` WHERE `dossier`.`id_dossier` = '"+idDossier+"' ; ";
         String supprimerTousLesCourriersDansUnDossier = null;
-
         Statement statement = null;
         try {
             connection.setAutoCommit(false);
@@ -100,7 +105,7 @@ public class DetailDUnDossier implements Serializable {
             PrimeFaces.current().executeScript("PF('dialogueConfirmationSuppression').hide()");
             PrimeFaces.current().executeScript("PF('dialogueRetourAuxDossiers').show()");
         } catch (SQLException e) {
-            FacesContext.getCurrentInstance().addMessage("messagesupprimerdossier", new FacesMessage(FacesMessage.SEVERITY_ERROR, "Erreur", "Une erreur s'est produite!!!"));
+            FacesMessages.errorMessage("messagesupprimerdossier","Erreur", "Une erreur s'est produite!!!");
             e.printStackTrace();
         }finally {
             if ( statement != null) {
@@ -172,5 +177,13 @@ public class DetailDUnDossier implements Serializable {
 
     public void setRowsPerPage(Integer rowsPerPage) {
         this.rowsPerPage = rowsPerPage;
+    }
+
+    public String getMessageSuppressionDossier() {
+        return messageSuppressionDossier;
+    }
+
+    public void setMessageSuppressionDossier(String messageSuppressionDossier) {
+        this.messageSuppressionDossier = messageSuppressionDossier;
     }
 }

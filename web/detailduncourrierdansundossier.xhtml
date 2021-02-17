@@ -588,7 +588,9 @@
                     type: 'danger'
                 })
             }
-
+            window.oncontextmenu = function () {
+                return false;
+            }
         </script>
     </h:body>
     <h:outputScript name="/js/detailduncourrierenvoye.js"/>

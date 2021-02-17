@@ -146,7 +146,7 @@
                                               border: 1px #d3d6d6 solid"
                                               filterBy="#{courriers.dateDEnregistrement}">
                                         <f:facet name="header" >Date d'enregistrement</f:facet>
-                                        <h:outputText style="font-size: 13px; alignment: center; " value="#{courriers.dateDEnregistrement}"/>
+                                        <h:outputText style="font-size: 14px; alignment: center; " value="#{courriers.dateDEnregistrement}"/>
                                     </p:column>
                                     <p:column style="text-align: center"
                                               filterStyle="background-color: white;  width: 200px;
@@ -154,7 +154,7 @@
                                               border: 1px #d3d6d6 solid"
                                               filterBy="#{courriers.referenceCourrier}">
                                         <f:facet name="header">Référence</f:facet>
-                                        <h:outputText style="font-size: 13px; alignment: center;" value="#{courriers.referenceCourrier}"/>
+                                        <h:outputText style="font-size: 14px; alignment: center;" value="#{courriers.referenceCourrier}"/>
                                     </p:column>
                                     <p:column style="text-align: center"
                                               filterStyle="background-color: white; width: 150px;
@@ -162,7 +162,7 @@
                                               border: 1px #d3d6d6 solid"
                                               filterBy="#{courriers.objetCourrier}">
                                         <f:facet name="header">Objet</f:facet>
-                                        <h:outputText style="font-size: 13px; alignment: center;" value="#{courriers.objetCourrier}"/>
+                                        <h:outputText style="font-size: 14px; alignment: center;" value="#{courriers.objetCourrier}"/>
                                     </p:column>
                                     <p:column
                                             styleClass="#{courriers.prioriteCourrier eq 'Urgent' ? 'courrierurgent' : null}"
@@ -172,7 +172,7 @@
                                             border: 1px #d3d6d6 solid"
                                             filterBy="#{courriers.prioriteCourrier}}">
                                         <f:facet name="header">Priorité</f:facet>
-                                        <h:outputText style="font-size: 13px; alignment: center;" value="#{courriers.prioriteCourrier}"/>
+                                        <h:outputText style="font-size: 14px; alignment: center;" value="#{courriers.prioriteCourrier}"/>
                                     </p:column>
 
                                     <p:column style="width:32px">
@@ -180,7 +180,7 @@
                                                 icon="fa fa-eye"
                                                 ajax="false"
                                                 action="#{detailDUnDossier.voirLesDetailsDuCourrier}"
-                                                style="background: #496ea1; border: 1px #496ea1 solid"
+                                                style="background: #2192DB; border: 1px #2192DB solid"
                                                 title="Voir plus">
                                             <f:param name="alfrescoId" value="#{courriers.idAlfresco}" />
                                             <f:param name="courrierId" value="#{courriers.idCourrier}" />
@@ -229,7 +229,7 @@
 
                         <div class="infosuppressiondossier" id="info">
                             <p style="font-size: 15px">
-                                <strong>Note : En supprimant le dossier, vous ne supprimé pas les courriers qui resteront disponibles à leur emplacement d'origine !</strong>
+                                <strong>#{detailDUnDossier.messageSuppressionDossier}</strong>
                             </p>
                         </div>
                         <p:separator/>
@@ -266,5 +266,10 @@
         </div>
         <h:outputScript name="js/mesdossiers.js" />
     </h:body>
+    <script>
+        window.oncontextmenu = function () {
+            return false;
+        }
+    </script>
 </f:view>
 </html>

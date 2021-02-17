@@ -21,6 +21,7 @@ public class PropertiesFilesReader {
     public static String alfresscoDeletedFileUrl;
     public static Map<String,String> mapDossiersDirectionDansAlfresco = new HashMap<>();
     public static Map<String,String> mapTitreDesPages = new HashMap<>();
+    public static Map<String,String> mapMessageApplication = new HashMap<>();
 
     public static String lireLeFichierDuMotSecret(String nomFichier){
         return chargerUnFichierDeProprietes(nomFichier).getProperty("cle_cryptage_motdepasse");
@@ -80,6 +81,10 @@ public class PropertiesFilesReader {
         mapTitreDesPages.put("favoris",chargerUnFichierDeProprietes(nomFichier).getProperty("favoris"));
         mapTitreDesPages.put("archives",chargerUnFichierDeProprietes(nomFichier).getProperty("archives"));
         mapTitreDesPages.put("mesDossiers",chargerUnFichierDeProprietes(nomFichier).getProperty("mesDossiers"));
+    }
+
+    public static void lireLeFichierDesMessages(String nomFichier,String parametre){
+        mapMessageApplication.put(parametre,chargerUnFichierDeProprietes(nomFichier).getProperty("indicationSuppressionDossier"));
     }
 
     public static void lireFichierDesPermissions(String nomFichier){

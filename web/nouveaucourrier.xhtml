@@ -558,6 +558,10 @@
                     window.location.reload();
                 }, 100);
             }
+
+            window.oncontextmenu = function () {
+                return false;
+            }
         </script>
 
        <h:outputScript name="js/nouveaucourrier.js"/>

@@ -27,16 +27,16 @@
     </h:head>
     <h:outputStylesheet>
         .courrierurgent{
-            background-color: #fca752 !important;
+            background-color: #fc7626 !important;
             color: #fefefe;
             font-size: 16px;
             font-weight: bold;
             text-align: center;
         }
         .receptionok{
-            background-color: #209436 !important;
-            color: #fefefe;
-            font-size: 16px;
+            background-color: white !important;
+            color: black;
+            font-size: 14px;
             font-weight: bold;
             text-align: center;
         }
@@ -175,7 +175,7 @@
                                             border: 1px #d3d6d6 solid"
                                               filterBy="#{courriers.dateDEnregistrement}">
                                         <f:facet name="header" >Date de reception</f:facet>
-                                        <h:outputText style="font-size: 13px; alignment: center; " value="#{courriers.dateDEnregistrement}"/>
+                                        <h:outputText style="font-size: 14px; alignment: center; " value="#{courriers.dateDEnregistrement}"/>
                                     </p:column>
                                     <p:column style="text-align: center"
                                             filterStyle="background-color: white;  width: 200px;
@@ -183,7 +183,7 @@
                                             border: 1px #d3d6d6 solid"
                                               filterBy="#{courriers.referenceCourrier}">
                                         <f:facet name="header">Référence</f:facet>
-                                        <h:outputText style="font-size: 13px; alignment: center;" value="#{courriers.referenceCourrier}"/>
+                                        <h:outputText style="font-size: 14px; alignment: center;" value="#{courriers.referenceCourrier}"/>
                                     </p:column>
                                     <p:column style="text-align: center"
                                             filterStyle="background-color: white; width: 150px;
@@ -191,7 +191,7 @@
                                             border: 1px #d3d6d6 solid"
                                               filterBy="#{courriers.objetCourrier}">
                                         <f:facet name="header">Objet</f:facet>
-                                        <h:outputText style="font-size: 13px; alignment: center;" value="#{courriers.objetCourrier}"/>
+                                        <h:outputText style="font-size: 14px; alignment: center;" value="#{courriers.objetCourrier}"/>
                                     </p:column>
                                     <p:column
                                             styleClass="#{courriers.prioriteCourrier eq 'Urgent' ? 'courrierurgent' : null}"
@@ -200,23 +200,22 @@
                                             border-radius: 5px;
                                             border: 1px #d3d6d6 solid" filterBy="#{courriers.prioriteCourrier}}">
                                         <f:facet name="header">Priorité</f:facet>
-                                        <h:outputText style="font-size: 13px; alignment: center;" value="#{courriers.prioriteCourrier}"/>
+                                        <h:outputText style="font-size: 14px; alignment: center;" value="#{courriers.prioriteCourrier}"/>
                                     </p:column>
                                     <p:column
-                                            styleClass="#{(courriers.accuseDeReception eq 'oui') ? 'receptionok' : (courriers.accuseDeReception eq 'non') ? 'receptionpasok' : null}"
-                                            style="width: 100px; text-align: center"
+                                            style="width: 100px; text-align: center;"
                                             filterStyle="background-color: white; width: 130px;
                                             border-radius: 5px;
                                             border: 1px #d3d6d6 solid" filterBy="#{courriers.accuseDeReception}}">
                                         <f:facet name="header">Accusé de reception</f:facet>
-                                        <h:outputText style="font-size: 13px; alignment: center;" value="#{courriers.accuseDeReception}"/>
+                                        <h:outputText style="font-size: 14px; alignment: center; text-transform: uppercase" value="#{courriers.accuseDeReception}"/>
                                     </p:column>
 
                                     <p:column style="width:32px">
                                         <p:commandButton  icon="fa fa-eye"
                                                           ajax="false"
                                                           action="#{courriersRecus.voirLesDetailsDuCourrier}"
-                                                          style="background: #496ea1; border: 1px #496ea1 solid"
+                                                          style="background: #2192DB; border: 1px #2192DB solid"
                                                           title="Voir plus">
                                             <f:setPropertyActionListener value="#{courriers}" target="#{courriersRecus.courrier}"/>
 
@@ -403,7 +402,9 @@
             function rechargerLaPage(){
                 window.location.reload();
             }
-
+            window.oncontextmenu = function () {
+                return false;
+            }
         </script>
         <h:outputScript name="js/frenchcalendar.js"/>
         <h:outputScript name="js/courriersrecus.js"/>

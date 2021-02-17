@@ -16,23 +16,17 @@
 }
 .terminee {
     color: black !important;
-    font-weight: bold;
     font-size: 16px;
 }
 .en-retard {
     color: #ffffff !important;
     font-weight: bold;
-    background-color: #bb002c !important;
+    background-color: #fc7626 !important;
     font-size: 16px;
 }
 .en-traitement {
     color: black !important;
-    font-weight: bold;
     font-size: 16px;
-}
-.cellulevide{
-    background-color: gray;
-    color: gray;
 }
 .panelLogin{
     border-style: hidden !important;
