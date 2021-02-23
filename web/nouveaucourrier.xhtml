@@ -21,9 +21,6 @@
        <h:outputStylesheet name="css/custombreadcrumb.css"/>
        <h:outputScript name="/sweetalert/js/sweetalert.min.js"/>
        <h:outputStylesheet name="/sweetalert/css/sweetalert.css"/>
-       <h:outputStylesheet name="/wickedpicker/css/wickedpicker.min.css"/>
-       <h:outputStylesheet name="/wickedpicker/css/wickedpicker.css"/>
-       <h:outputScript name="wickedpicker/js/wickedpicker.js"/>
        <h:outputScript name="holdon/js/HoldOn.min.js"/>
        <h:outputStylesheet name="holdon/css/HoldOn.min.css"/>
        <h:outputScript name="toast/js/toast.js"/>
@@ -527,6 +524,23 @@
                                 </h:form>
                             </p:dialog>
 
+                            <p:dialog header="Serveur de fichier indisponible"
+                                      widgetVar="testfile">
+
+                                <p:messages id="messageinfod" for="messageinfod" showDetail="true" closable="true"/>
+                                <p:fileUpload mode="advanced" style="overflow: auto;"
+                                              allowTypes="/(\.|\/)(pdf|PDF|doc|docx|xls|xlsx|ppt|pptx|jpg|jpeg|png)$/"
+                                              fileLimitMessage="Erreur, vous avez dépassé le nombre de fichier annexe autorisé (1 fichier au plus)"
+                                              invalidSizeMessage="Erreur, le fichier est trop lourd!! 10 MB au plus"
+                                              invalidFileMessage="Erreur, ce type de fichier n'est pas autorisé. Retirer le fichier : "
+                                              sizeLimit="10240000" fileLimit="1" label = "Ajouter"
+                                              update="messageinfod"
+                                              listener="#{nouveauCourrier.ajoutDuFichierDuCourrier}"
+                                              uploadLabel="Valider" cancelLabel="Annuler"/>
+
+
+                            </p:dialog>
+
                         </h:form>
                     </div>
                 </div>
@@ -565,7 +579,6 @@
         </script>
 
        <h:outputScript name="js/nouveaucourrier.js"/>
-       <h:outputScript name="js/frenchcalendar.js"/>
    </h:body>
 </f:view>
 </html>

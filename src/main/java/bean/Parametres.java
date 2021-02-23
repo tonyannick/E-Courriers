@@ -11,7 +11,6 @@ import model.*;
 import org.primefaces.PrimeFaces;
 import org.primefaces.event.FileUploadEvent;
 import sessionManager.SessionUtils;
-import stringManager.StringUtils;
 import variables.EtatCompteUser;
 import variables.Ministere;
 import variables.TypeDEtablissement;
@@ -345,15 +344,15 @@ public class Parametres implements Serializable {
     }
 
     public void mettreNomEnMajuscule(){
-        setUserNomPourAjoutTemp(StringUtils.mettreMotEnMajuscule(userNomPourAjoutTemp));
+        setUserNomPourAjoutTemp(functions.StringUtils.mettreMotEnMajuscule(userNomPourAjoutTemp));
     }
 
     public void mettrePremiereLettreDuPrenomEnMajuscule(){
-        setUserPrenomPourAjoutTemp(StringUtils.mettrePremiereLettreDuMotEnMajuscule(userPrenomPourAjoutTemp));
+        setUserPrenomPourAjoutTemp(functions.StringUtils.mettrePremiereLettreDuMotEnMajuscule(userPrenomPourAjoutTemp));
     }
 
     public void mettrePremiereLettreEnMajuscule(){
-        setNomEntite(StringUtils.mettrePremiereLettreDuMotEnMajuscule(nomEntite));
+        setNomEntite(functions.StringUtils.mettrePremiereLettreDuMotEnMajuscule(nomEntite));
     }
 
     public void afficherDetailsDUnMinistereParSonId(){

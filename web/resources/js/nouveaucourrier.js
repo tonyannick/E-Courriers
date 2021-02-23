@@ -66,23 +66,6 @@ var emailParticulierEmetteurFormatCheck = false;
 var phoneValide = /^0[1-7][0-9]{7}$/;
 var emailValide = /^[a-z0-9._-]+@[a-z0-9._-]+\.[a-z]{2,8}$/;
 
-/*
- * TimePicker Pris sur le site https://github.com/ericjgagnon/wickedpicker et http://ericjgagnon.github.io/wickedpicker/
- */
-var options = {
-    twentyFour: true,
-    upArrow: 'wickedpicker__controls__control-up',
-    downArrow: 'wickedpicker__controls__control-down',
-    hoverState: 'hover-state',
-    minutesInterval: 1,
-    showSeconds: true,
-    title: 'Heure',
-    timeSeparator: ' : ',
-
-};
-$('.timepicker').wickedpicker(options);
-/***Fin********TimePicker********/
-
 
 /****checkbox confidentiel****/
 var isConfidentiel = false;
@@ -90,7 +73,6 @@ var isConfidentiel = false;
 function checkIfCourrierIsConfidentiel(){
     isConfidentiel = !isConfidentiel;
     if (isConfidentiel) {
-        console.log("oui");
 
         objetCourrier.disabled = true;
         motsCles.disabled = true;
@@ -111,7 +93,6 @@ function checkIfCourrierIsConfidentiel(){
         divFichierEtAnnnexe.style.display='none';
         titreSectionFichier.style.display='none';
     } else {
-        console.log("bad");
 
         objetCourrier.disabled = false;
         motsCles.disabled = false;
