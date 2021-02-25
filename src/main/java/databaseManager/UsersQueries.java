@@ -1,7 +1,9 @@
 package databaseManager;
 
 import fileManager.PropertiesFilesReader;
+import logsManager.LoggerCreator;
 import model.User;
+import org.apache.logging.log4j.Logger;
 import securityManager.Cryptage;
 import securityManager.Decryptage;
 import securityManager.GenerateurCleSecrete;
@@ -41,9 +43,11 @@ public class UsersQueries {
     public static boolean isSecretaire = false;
     public static Map<String, String> mapDetailsUser = new HashMap<>();
     public static List<String> listeDesPermissionsDUnUser = new ArrayList<>();
+    private static Logger userQueriesLogger = LoggerCreator.creerUnLog("UsersQueries");
 
     /***Fonction de verification de connexion d'un utilisateur***/
     public static boolean verifierUserLogin(String login, String motDePasse){
+
         String motCrypter = PropertiesFilesReader.lireLeFichierDuMotSecret("cledesecurite.properties");
         Cryptage.crypterUnMot(login,motCrypter);
         //System.out.println("motCrypter = " +  Cryptage.crypterUnMot(login,motCrypter));
@@ -76,6 +80,7 @@ public class UsersQueries {
                 connected = false;
             }
         } catch (SQLException e) {
+            LoggerCreator.definirMessageErreur(userQueriesLogger,"Erreur sql: "+ e);
             e.printStackTrace();
         }finally {
             if ( resultSet != null) {
@@ -117,6 +122,7 @@ public class UsersQueries {
             }
         } catch (SQLException e) {
             e.printStackTrace();
+            LoggerCreator.definirMessageErreur(userQueriesLogger,"Erreur sql: "+ e);
         }finally {
             if ( resultSet != null) {
                 try {
@@ -158,6 +164,7 @@ public class UsersQueries {
 
         } catch (SQLException e) {
             e.printStackTrace();
+            LoggerCreator.definirMessageErreur(userQueriesLogger,"Erreur sql: "+ e);
         }finally {
             if ( resultSet != null) {
                 try {
@@ -200,6 +207,7 @@ public class UsersQueries {
             }
         } catch (SQLException e) {
             e.printStackTrace();
+            LoggerCreator.definirMessageErreur(userQueriesLogger,"Erreur sql: "+ e);
         }finally {
             if ( resultSet != null) {
                 try {
@@ -294,6 +302,7 @@ public class UsersQueries {
 
         } catch (SQLException e) {
             e.printStackTrace();
+            LoggerCreator.definirMessageErreur(userQueriesLogger,"Erreur sql: "+ e);
         }finally {
             if ( resultSet != null) {
                 try {

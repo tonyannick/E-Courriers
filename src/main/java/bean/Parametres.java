@@ -232,7 +232,6 @@ public class Parametres implements Serializable {
             FacesContext.getCurrentInstance().addMessage("messageetatducompte", new FacesMessage(FacesMessage.SEVERITY_ERROR,"Erreur","Une erreur s'est produite"));
             e.printStackTrace();
         }
-
     }
 
     public void afficherLaListeDesUser(){

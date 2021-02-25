@@ -234,6 +234,7 @@ public class NouveauCourrier implements Serializable {
         if(courrier.getConfidentiel().equalsIgnoreCase("Oui")){
             FacesMessages.infoMessage("messageconfidentiel","Info","Le courrier à été marqué comme confidentiel");
             fichierCourrierAjoute = true;
+            PrimeFaces.current().executeScript("PF('testfile').show()");
         }else if(courrier.getConfidentiel().equalsIgnoreCase("Non")){
             FacesMessages.infoMessage("messageconfidentiel","Info","Le courrier à été marqué comme non confidentiel");
             fichierCourrierAjoute = false;
@@ -312,7 +313,7 @@ public class NouveauCourrier implements Serializable {
             idTypeDetablissement= EtablissementQueries.recupererIdTypeDEtablissementParTitre(TypeDEtablissement.entreprisePrivee);
             idFonctionEmetteur = DirectionQueries.recupererIdFonctionParSonTitreEtSonType(emetteur.getFonction(), TypeDeFonctions.interne);
             idFonctionDestinataire = DirectionQueries.recupererIdFonctionParSonTitreEtSonType(destinataire.getFonction(), TypeDeFonctions.interne);
-           
+
             String insertionCourrierSQL = null;
             String ajouterCorrespondanceEtapeCourrierSQL = null;
 

@@ -83,12 +83,12 @@ public class PropertiesFilesReader {
         mapTitreDesPages.put("mesDossiers",chargerUnFichierDeProprietes(nomFichier).getProperty("mesDossiers"));
     }
 
-    public static void lireLeFichierDesMessages(String nomFichier,String parametre){
-        mapMessageApplication.put(parametre,chargerUnFichierDeProprietes(nomFichier).getProperty("indicationSuppressionDossier"));
+    public static void lireFichierProprietesLog4J(String nomFichier){
+        chargerUnFichierDeProprietes(nomFichier).getProperty("mesDossiers");
     }
 
-    public static void lireFichierDesPermissions(String nomFichier){
-
+    public static void lireLeFichierDesMessages(String nomFichier,String parametre){
+        mapMessageApplication.put(parametre,chargerUnFichierDeProprietes(nomFichier).getProperty("indicationSuppressionDossier"));
     }
 
     private static Properties chargerUnFichierDeProprietes(String nomFichier){

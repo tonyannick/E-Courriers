@@ -9,11 +9,18 @@ import java.io.BufferedOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 
 public class FileManager {
 
     public static final String tempProperty = "java.io.tmpdir";
+    public static final String userHomeDirectory = System.getProperty("user.home");
     public static final String tempDirectoryOSPath = System.getProperty(tempProperty);
+    public static final String eCourrierDirectory = "E-courrier";
+    public static final String eCourrierLogFile = "e-courrier.log";
+    public static final String logFilePathOnSystem = userHomeDirectory+"\\"+eCourrierDirectory+"\\"+eCourrierLogFile;
 
     public static String recupererExtensionDUnFichierParSonNom(String nomFichier) {
         if(nomFichier.lastIndexOf(".") != -1 && nomFichier.lastIndexOf(".") != 0)
@@ -89,5 +96,32 @@ public class FileManager {
         return ajout;
     }
 
+    public static void creerDossierECourrier(){
+        Path path = Paths.get(userHomeDirectory+"\\"+eCourrierDirectory);
+        if(!Files.exists(path)){
+             try {
+                Files.createDirectories(path);
+                creerFichierLog();
+            } catch (IOException e) {
+                 e.printStackTrace();
+            }
+        }else{
+            creerFichierLog();
+        }
+    }
+
+    private static void creerFichierLog(){
+        File file = new File(logFilePathOnSystem);
+        boolean result;
+        try {
+            result = file.createNewFile();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public static void calculerLaTailleDuFichierLogEnCoursDUtilisation(){
+
+    }
 
 }

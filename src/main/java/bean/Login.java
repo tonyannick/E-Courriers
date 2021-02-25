@@ -2,9 +2,12 @@ package bean;
 
 import cookieManager.CookiesUtils;
 import databaseManager.UsersQueries;
+import fileManager.FileManager;
 import fileManager.PropertiesFilesReader;
+import logsManager.LoggerCreator;
 import messages.FacesMessages;
 import model.User;
+import org.apache.logging.log4j.Logger;
 import org.primefaces.PrimeFaces;
 import org.primefaces.model.DefaultStreamedContent;
 import org.primefaces.model.StreamedContent;
@@ -35,11 +38,14 @@ public class Login implements Serializable {
     private StreamedContent imageCaptcha;
     private String valeurCaptcha;
     private String captcha;
+    private static Logger loginLogger;
 
     @PostConstruct
     public void initialisation(){
         user = new User();
         user.setSeSouvenir(false);
+
+        loginLogger = LoggerCreator.creerUnLog("Login");
     }
 
     public void actualiserImageCaptcha(){
@@ -71,7 +77,7 @@ public class Login implements Serializable {
 
     /**Methode de clic sur le bouton valider**/
     public String cliquerSurValider(){
-
+        FileManager.creerDossierECourrier();
         if(verifierCaptcha()){
             if(UsersQueries.verifierUserLogin(user.getUserlogin(),user.getUserPassword())){
                 HttpSession session = SessionUtils.getSession();
@@ -82,16 +88,20 @@ public class Login implements Serializable {
                 session.setAttribute("fonctionUser", UsersQueries.mapDetailsUser.get("titre_fonction"));
                 session.setAttribute("profilUser", UsersQueries.mapDetailsUser.get("titre_profil"));
                 session.setAttribute("idDirectionUser",UsersQueries.mapDetailsUser.get("id_direction"));
+
                 if(user.isSeSouvenir()) {
                     CookiesUtils.creerUnCookie("cookieIdentifiant",user.getUserlogin());
                     CookiesUtils.creerUnCookie("cookieMotDePasse",user.getUserPassword());
                     CookiesUtils.creerUnCookie("seSouvenirDeMoi","oui");
                 }
+
                 UsersQueries.recupererInfosFonctionDuUser();
                 session.setAttribute("isResponsable", UsersQueries.isResponsable);
                 session.setAttribute("isSecretaire", UsersQueries.isSecretaire);
                 chargerLesTitresDesPages();
-               // UsersQueries.recupererLesDroitsDUnUtilisateurParSonId(UsersQueries.idPersonne);
+
+                LoggerCreator.definirMessageInfo(loginLogger,"Connexion reussie de : "+user.getUserlogin());
+
                 if(UsersQueries.isResponsable || UsersQueries.isSecretaire){
                     return "tableaudebord?faces-redirect=true";
                 }else{
@@ -104,6 +114,7 @@ public class Login implements Serializable {
                 return "login?faces-redirect=true";
             }
         }else{
+            LoggerCreator.definirMessageErreur(loginLogger,"Texte du captcha incorrect");
             FacesContext context = FacesContext.getCurrentInstance();
             context.getExternalContext().getFlash().setKeepMessages(true);
             FacesMessages.errorMessage("messagesLogin","Erreur!!!","Le texte du captcha n'est pas correct");
