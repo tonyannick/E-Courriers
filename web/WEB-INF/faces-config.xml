@@ -5,7 +5,7 @@
     http://xmlns.jcp.org/xml/ns/javaee/web-facesconfig_2_3.xsd">
 
     <lifecycle>
-        <phase-listener>erreurManager.SessionListener</phase-listener>
+        <phase-listener>dcsibudget.erreurManager.SessionListener</phase-listener>
     </lifecycle>
 
 </faces-config>

@@ -589,7 +589,7 @@
             return false;
         },
 
-        //public functions
+        //public dcsibudget.functions
         /*
          * Returns the requested input element's value
          */

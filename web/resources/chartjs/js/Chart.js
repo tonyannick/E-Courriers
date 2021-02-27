@@ -1058,9 +1058,9 @@ var conversions_14 = conversions.apple;
 var conversions_15 = conversions.gray;
 
 /*
-	this function routes a model to all other models.
+	this function routes a dcsibudget.model to all other models.
 
-	all functions that are routed have a property `.conversion` attached
+	all dcsibudget.functions that are routed have a property `.conversion` attached
 	to the returned synthetic function. This property is an array
 	of strings, each with the steps in between the 'from' and 'to'
 	color models (inclusive).
@@ -1142,7 +1142,7 @@ var route = function (fromModel) {
 		var node = graph[toModel];
 
 		if (node.parent === null) {
-			// no possible conversion, or this node is the source model.
+			// no possible conversion, or this node is the source dcsibudget.model.
 			continue;
 		}
 
@@ -1191,7 +1191,7 @@ function wrapRounded(fn) {
 
 		// we're assuming the result is an array here.
 		// see notice in conversions.js; don't use box types
-		// in conversion functions.
+		// in conversion dcsibudget.functions.
 		if (typeof result === 'object') {
 			for (var len = result.length, i = 0; i < len; i++) {
 				result[i] = Math.round(result[i]);
@@ -2387,7 +2387,7 @@ var helpers = {
 	},
 
 	/**
-	 * Basic javascript inheritance based on the model created in Backbone.js
+	 * Basic javascript inheritance based on the dcsibudget.model created in Backbone.js
 	 */
 	inherits: function(extensions) {
 		var me = this;
@@ -2463,7 +2463,7 @@ helpers.getValueOrDefault = helpers.valueOrDefault;
 helpers.getValueAtIndexOrDefault = helpers.valueAtIndexOrDefault;
 
 /**
- * Easing functions adapted from Robert Penner's easing equations.
+ * Easing dcsibudget.functions adapted from Robert Penner's easing equations.
  * @namespace Chart.helpers.easingEffects
  * @see http://www.robertpenner.com/easing/
  */
@@ -3277,7 +3277,7 @@ function interpolate(start, view, model, ease) {
 
 		target = model[key];
 
-		// if a value is added to the model after pivot() has been called, the view
+		// if a value is added to the dcsibudget.model after pivot() has been called, the view
 		// doesn't contain it, so let's initialize the view to the target value.
 		if (!view.hasOwnProperty(key)) {
 			view[key] = target;
@@ -6725,7 +6725,7 @@ function parseVisibleItems(chart, handler) {
 
 /**
  * Helper function to get the items that intersect the event position
- * @param {ChartElement[]} items - elements to filter
+ * @param {ChartElement[]} items - elements to dcsibudget.filter
  * @param {object} position - the point to be nearest to
  * @return {ChartElement[]} the nearest items
  */
@@ -6822,7 +6822,7 @@ function indexMode(chart, e, options) {
  */
 
 /**
- * Contains interaction related functions
+ * Contains interaction related dcsibudget.functions
  * @namespace Chart.Interaction
  */
 var core_interaction = {
@@ -8314,7 +8314,7 @@ function splitNewlines(str) {
 
 
 /**
- * Private helper to create a tooltip item model
+ * Private helper to create a tooltip item dcsibudget.model
  * @param element - the chart element (point, arc, bar) to create the tooltip item for
  * @return new tooltip item
  */
@@ -8340,7 +8340,7 @@ function createTooltipItem(element) {
 }
 
 /**
- * Helper to get the reset model for the tooltip
+ * Helper to get the reset dcsibudget.model for the tooltip
  * @param tooltipOpts {object} the tooltip options
  */
 function getBaseModel(tooltipOpts) {
@@ -8479,8 +8479,8 @@ function determineAlignment(tooltip, size) {
 		yAlign = 'bottom';
 	}
 
-	var lf, rf; // functions to determine left, right alignment
-	var olf, orf; // functions to determine if left/right alignment causes tooltip to go outside chart
+	var lf, rf; // dcsibudget.functions to determine left, right alignment
+	var olf, orf; // dcsibudget.functions to determine if left/right alignment causes tooltip to go outside chart
 	var yf; // function to get the y alignment if the tooltip goes outside of the left or right edges
 	var midX = (chartArea.left + chartArea.right) / 2;
 	var midY = (chartArea.top + chartArea.bottom) / 2;
@@ -8684,8 +8684,8 @@ var exports$4 = core_element.extend({
 		var me = this;
 		var opts = me._options;
 
-		// Need to regenerate the model because its faster than using extend and it is necessary due to the optimization in Chart.Element.transition
-		// that does _view = _model if ease === 1. This causes the 2nd tooltip update to set properties in both the view and model at the same time
+		// Need to regenerate the dcsibudget.model because its faster than using extend and it is necessary due to the optimization in Chart.Element.transition
+		// that does _view = _model if ease === 1. This causes the 2nd tooltip update to set properties in both the view and dcsibudget.model at the same time
 		// which breaks any animations.
 		var existingModel = me._model;
 		var model = me._model = getBaseModel(opts);
@@ -8725,7 +8725,7 @@ var exports$4 = core_element.extend({
 				tooltipItems.push(createTooltipItem(active[i]));
 			}
 
-			// If the user provided a filter function, use it to modify the tooltip items
+			// If the user provided a dcsibudget.filter function, use it to modify the tooltip items
 			if (opts.filter) {
 				tooltipItems = tooltipItems.filter(function(a) {
 					return opts.filter(a, data);
@@ -10656,7 +10656,7 @@ var core_helpers = function() {
 		var height = boundingRect.bottom - boundingRect.top - paddingTop - paddingBottom;
 
 		// We divide by the current device pixel ratio, because the canvas is scaled up by that amount in each direction. However
-		// the backend model is in unscaled coordinates. Since we are going to deal with our model coordinates, we go back here
+		// the backend dcsibudget.model is in unscaled coordinates. Since we are going to deal with our dcsibudget.model coordinates, we go back here
 		mouseX = Math.round((mouseX - boundingRect.left - paddingLeft) / (width) * canvas.width / chart.currentDevicePixelRatio);
 		mouseY = Math.round((mouseY - boundingRect.top - paddingTop) / (height) * canvas.height / chart.currentDevicePixelRatio);
 
@@ -11010,7 +11010,7 @@ var core_adapters = {
 };
 
 /**
- * Namespace to hold static tick generation functions
+ * Namespace to hold static tick generation dcsibudget.functions
  * @namespace Chart.Ticks
  */
 var core_ticks = {
@@ -14855,7 +14855,7 @@ function computeLinearBoundary(source) {
 	}
 
 	// Backward compatibility: until v3, we still need to support boundary values set on
-	// the model (scaleTop, scaleBottom and scaleZero) because some external plugins and
+	// the dcsibudget.model (scaleTop, scaleBottom and scaleZero) because some external plugins and
 	// controllers might still use it (e.g. the Smith chart).
 
 	if (fill === 'start') {

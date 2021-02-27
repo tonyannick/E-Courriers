@@ -487,7 +487,7 @@ function checkDesValeursDuTypeDeDestinataire(){
     return istypeDestinataireOk;
 }
 
-/***Toast d'ajout de fichier du courrier appelé depuis le bean***/
+/***Toast d'ajout de fichier du courrier appelé depuis le dcsibudget.bean***/
 function validerAjouterFichier(){
     new Toast({
         message: 'Le fichier du courrier à bien été ajouté....',
@@ -516,7 +516,7 @@ function rechargerLaPageDuFormulaire(){
 
 
 /***bloquage de l'UI lors de l'enregistrement du courrier
- *  méthode appelée directement dans le backing bean de la vue
+ *  méthode appelée directement dans le backing dcsibudget.bean de la vue
  * **/
 function debutBlocageUI(){
     HoldOn.open(options1);
