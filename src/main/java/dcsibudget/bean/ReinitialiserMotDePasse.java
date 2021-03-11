@@ -8,6 +8,7 @@ import dcsibudget.functions.paramsUtils;
 import dcsibudget.logsManager.LoggerCreator;
 import dcsibudget.messages.FacesMessages;
 import dcsibudget.model.User;
+import dcsibudget.securityManager.Cryptage;
 import dcsibudget.sessionManager.SessionUtils;
 import dcsibudget.variables.TypeDePersonne;
 import org.apache.logging.log4j.Logger;
@@ -46,7 +47,6 @@ public class ReinitialiserMotDePasse implements Serializable {
     }
 
     public void cliquerSurValider(){
-        System.out.println("motDePasse = " + motDePasse);
         if(motDePasse.isEmpty() || motDePasse == null){
             FacesMessages.errorMessage("reinitialisermotdepasse","Erreur","Vous devez renseigner votre mot de passe");
         }else{
@@ -55,7 +55,8 @@ public class ReinitialiserMotDePasse implements Serializable {
             }else{
                 try {
                     Thread.sleep(4 * 1000);
-                    UsersQueries.changerLeMotDePasseDUnUserParSonId(UsersQueries.mapDetailsToken.get("id_personne"),motDePasse.trim());
+                    String motDePasseCrypter = Cryptage.crypterUnMot(motDePasse.trim());
+                    UsersQueries.changerLeMotDePasseDUnUserParSonId(UsersQueries.mapDetailsToken.get("id_personne"),motDePasseCrypter);
                     PrimeFaces.current().executeScript("PF('dialogueSuccessMiseAJour').show()");
                     LoggerCreator.definirMessageInfo(reinitialiserMotDePasse,"Mot de passe de l'utilisateur  (d'id : "+UsersQueries.mapDetailsToken.get("id_personne")+") mise à jour");
                 } catch (InterruptedException e) {
