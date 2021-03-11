@@ -53,6 +53,9 @@
     <orderEntry type="library" name="rewrite-servlet-3.4.4.Final" level="project" />
     <orderEntry type="library" name="log4j-api-2.14.0" level="project" />
     <orderEntry type="library" name="log4j-core-2.14.0" level="project" />
+    <orderEntry type="library" name="jakarta.mail-1.6.3" level="project" />
+    <orderEntry type="library" name="commons-email-1.5" level="project" />
+    <orderEntry type="library" name="activation-1.1.1" level="project" />
   </component>
   <component name="sonarModuleSettings">
     <option name="alternativeWorkingDirPath" value="" />

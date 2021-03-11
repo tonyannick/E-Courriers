@@ -17,8 +17,6 @@ public class EtatCourrier {
     public static final String ajoutDUneReponseAuCourrier = "Réponse au courrier";
     public static final String actionSurCourrier = "Action sur le courrier";
     public static final String suppressionCourrier = "Un destinataire à été supprimé";
-    public static final String luCourrier = "1";
-    public static final String pasLuCourrier = "1";
     public static final String responsableCourrier = "1";
     public static final String pasResponsableCourrier = "0";
     public static final String favoris = "oui";

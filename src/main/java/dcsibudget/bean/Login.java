@@ -2,11 +2,13 @@ package dcsibudget.bean;
 
 import dcsibudget.cookieManager.CookiesUtils;
 import dcsibudget.databaseManager.UsersQueries;
+import dcsibudget.dateAndTime.DateUtils;
 import dcsibudget.fileManager.FileManager;
 import dcsibudget.fileManager.PropertiesFilesReader;
 import dcsibudget.logsManager.LoggerCreator;
 import dcsibudget.messages.FacesMessages;
 import dcsibudget.model.User;
+import dcsibudget.variables.TypeDePersonne;
 import org.apache.logging.log4j.Logger;
 import org.primefaces.model.DefaultStreamedContent;
 import org.primefaces.model.StreamedContent;
@@ -22,6 +24,7 @@ import javax.servlet.http.HttpSession;
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.*;
+import java.util.Calendar;
 
 @Named
 @SessionScoped
@@ -45,7 +48,7 @@ public class Login implements Serializable {
 
     public void checkDesFichiersLogs(){
         double value = FileManager.calculerLaTailleDUnFichierEnMegaBytes(new File(FileManager.logFilePathOnSystem));
-        if(value > 2){
+        if(value > 2){/**TODO a finir**/
             System.out.println("trop grand");
         }
     }
@@ -70,6 +73,7 @@ public class Login implements Serializable {
                 return new ByteArrayInputStream(os.toByteArray());
 
             } catch (IOException e) {
+                LoggerCreator.definirMessageErreur(loginLogger,"Probleme lors de la génération de l'image Captcha : "+e);
                 e.printStackTrace();
                 return null;
             }
@@ -138,11 +142,14 @@ public class Login implements Serializable {
     }
 
     public String clicSurVersMotDePasseOublie(){
+        HttpSession httpSession = SessionUtils.getSession();
+        httpSession.setAttribute("userName", TypeDePersonne.reinitilaisateurMotDePasse);
+        httpSession.setMaxInactiveInterval(60*10);
         return "motdepasseoublie?faces-redirect=true";
     }
 
     public String clic(){
-        return "sessionexpiree?faces-redirect=true";
+        return "reinitialisermotdepasse?faces-redirect=true";
     }
 
     /**Methode de click sur se souvenir**/

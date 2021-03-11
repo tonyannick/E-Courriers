@@ -22,6 +22,7 @@ public class PropertiesFilesReader {
     public static Map<String,String> mapDossiersDirectionDansAlfresco = new HashMap<>();
     public static Map<String,String> mapTitreDesPages = new HashMap<>();
     public static Map<String,String> mapMessageApplication = new HashMap<>();
+    public static Map<String,String> mapMailConfiguration= new HashMap<>();
 
     public static String lireLeFichierDuMotSecret(String nomFichier){
         return chargerUnFichierDeProprietes(nomFichier).getProperty("cle_cryptage_motdepasse");
@@ -68,6 +69,15 @@ public class PropertiesFilesReader {
         copyright = properties.getProperty("copyright");
     }
 
+    public static void lireLeFichierMailConfiguration(String nomFichier){
+        mapMailConfiguration.put("mail.smtp.host",chargerUnFichierDeProprietes(nomFichier).getProperty("mail.smtp.host"));
+        mapMailConfiguration.put("mail.smtp.port",chargerUnFichierDeProprietes(nomFichier).getProperty("mail.smtp.port"));
+        mapMailConfiguration.put("mail.smtp.auth",chargerUnFichierDeProprietes(nomFichier).getProperty("mail.smtp.auth"));
+        mapMailConfiguration.put("mail.smtp.starttls.enable",chargerUnFichierDeProprietes(nomFichier).getProperty("mail.smtp.starttls.enable"));
+        mapMailConfiguration.put("account",chargerUnFichierDeProprietes(nomFichier).getProperty("account"));
+        mapMailConfiguration.put("password",chargerUnFichierDeProprietes(nomFichier).getProperty("password"));
+    }
+
     public static void lireLeFichierDesTitresDesPages(String nomFichier){
         mapTitreDesPages.put("mesTaches",chargerUnFichierDeProprietes(nomFichier).getProperty("mesTaches"));
         mapTitreDesPages.put("tachesQueVousAvezCrees",chargerUnFichierDeProprietes(nomFichier).getProperty("tachesQueVousAvezCrees"));
@@ -93,7 +103,7 @@ public class PropertiesFilesReader {
     }
 
     public static void lireLeFichierDesMessages(String nomFichier,String parametre){
-        mapMessageApplication.put(parametre,chargerUnFichierDeProprietes(nomFichier).getProperty("indicationSuppressionDossier"));
+        mapMessageApplication.put(parametre,chargerUnFichierDeProprietesAvecEncodageDuSystem(nomFichier).getProperty(parametre));
     }
 
     public static void ajouterOuMettreAJourUneProprieteDansUnFichier(String nomFichier, String nomPropriete,String valeurPropriete){
@@ -117,6 +127,18 @@ public class PropertiesFilesReader {
         InputStream inputStream = PropertiesFilesReader.class.getClassLoader().getResourceAsStream(nomFichier);
         try {
             properties.load(new InputStreamReader(inputStream, Charset.forName("UTF-8")));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        return properties;
+    }
+
+    private static Properties chargerUnFichierDeProprietesAvecEncodageDuSystem(String nomFichier){
+        Properties properties = new Properties();
+        InputStream inputStream = PropertiesFilesReader.class.getClassLoader().getResourceAsStream(nomFichier);
+        try {
+            properties.load(new InputStreamReader(inputStream, Charset.forName(System.getProperty("file.encoding"))));
         } catch (IOException e) {
             e.printStackTrace();
         }

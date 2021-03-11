@@ -1,0 +1,148 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:pt="http://xmlns.jcp.org/jsf/passthrough">
+
+<f:view transient="true">
+    <f:metadata>
+        <f:viewParam name="token" value="#{reinitialiserMotDePasse.valeurTokenURL}" />
+        <f:viewAction action="#{reinitialiserMotDePasse.verifierLaValiditeDuTokenDeLURL}" onPostBack="true"/>
+    </f:metadata>
+    <h:head>
+        <title>Réinitialiser mot de passe</title>
+        <meta charset="utf-8" />
+        <h:outputScript name="bootstrap/js/bootstrap.js" />
+        <h:outputStylesheet name="bootstrap/css/bootstrap.css" />
+        <h:outputStylesheet name="css/login.css" />
+    </h:head>
+    <h:body>
+    <h:outputStylesheet>
+        .ui-dialog.ui-widget {
+            background-color: white;
+            color: #ffffff;
+            padding-right: 5px;
+        }
+
+        .ui-dialog .ui-dialog-title {
+            color: white;
+            margin-left: 10px;
+            font-size: 15px  !important;
+            font-weight: normal;
+        }
+
+        .ui-dialog .ui-dialog-titlebar {
+            background: #4c7ebd !important;
+            width: 100%;
+            position: relative;
+            margin: 2px 2px;
+            padding-right: 10px;
+            padding-top: 10px;
+        }
+    </h:outputStylesheet>
+        <div class="row">
+            <div id="divMessageTokenExpire" style="display: none">
+                <div class="alertetokenexpire" style="width: 50%; margin-top: 1%">
+                    <h:graphicImage value="./resources/images/alerteaccusedereception.png" style="margin-left:10px"/>
+                    <h:outputText style="font-size: 15px; color: white; margin-left: 15px" value="#{reinitialiserMotDePasse.messageTokenExpire}"/>
+                </div>
+            </div>
+            <div id="motDePasseOublieBlock" class="motdepasseoublieblock">
+                <h1 class="loginTitle"><h:graphicImage value="./resources/images/keys.png" style="margin-right: 5px"/>Réinitialiser votre mot de passe</h1>
+                <div id="divform" >
+                    <h:form id="reinitialisermotdepasseform">
+                        <h:panelGrid columns="1" style="border:none; text-align: center; width: 100%; margin-bottom:20px; margin-top: 20px;" styleClass="panelLogin">
+                            <h:outputText style="font-size: 14px; color: white" value="Nouveau mot de passe"/>
+                            <p:password autocomplete="off" pt:placeholder="mot de passe"
+                                         style="width: 70%; font-size: 13px" value="#{reinitialiserMotDePasse.motDePasse}"/>
+                        </h:panelGrid>
+                        <h:panelGrid columns="1" style="border:none; text-align: center; width: 100%; margin-bottom:20px; margin-top: 20px;" styleClass="panelLogin">
+                            <h:outputText style="font-size: 14px; color: white" value="Retaper le nouveau mot de passe"/>
+                            <p:password autocomplete="off" pt:placeholder="Retaper mot de passe"
+                                         style="width: 70%; font-size: 13px" value="#{reinitialiserMotDePasse.retaperMotDePasse}"/>
+                        </h:panelGrid>
+
+                        <p:messages id="reinitialisermotdepasse" for="reinitialisermotdepasse" showDetail="true" closable="true"/>
+
+                        <p:commandButton   value="Confirmer"
+                                           style="margin-bottom:10px;font-size: 14px;  padding: 5px 5px;
+                                           margin-left:70px;box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2);margin-top: 10px;
+                                           background-color: green; border-color: green;"
+                                           icon="fa fa-arrow-circle-right" iconPos="right"
+                                           update="reinitialisermotdepasse"
+                                           onclick="afficherloadingReinitialiserMotDePasse()"
+                                           oncomplete="retirerloadingReinitialiserMotDePasse()"
+                                           actionListener="#{reinitialiserMotDePasse.cliquerSurValider}"/>
+                        <p:spacer height="7px"/>
+                        <p:separator style="background-color: white; color: white"/>
+                    </h:form>
+                </div >
+                <div id="divloadingupdatepassword" style="display: none" class="ui-g">
+                    <div class="ui-g-2"></div>
+                        <div class="ui-g-8">
+                            <h:panelGrid columns="1" style="width: 100%;margin-left: 100px">
+                                <div class="loader"></div>
+                                <p:outputLabel value="Veuillez patienter..." style="font-size: 14px; color: white;
+                                   margin-top: 10px"/>
+                            </h:panelGrid>
+                        </div>
+                    <div class="ui-g-2"></div>
+                </div>
+                <p:dialog header="Mise à jour du mot de passe"
+                          widgetVar="dialogueSuccessMiseAJour"
+                          modal="true" hideEffect="clip"
+                          position="center" closable="false"
+                          showEffect="clip" resizable="false">
+                    <h:outputText style="font-size: 15px; color: black; font-weight: bold; text-align: center"
+                                  value= "#{reinitialiserMotDePasse.messageValidationMiseAJourMotDePasse}" />
+                    <p:separator style="background-color: #4c7ebd; color: #4c7ebd"/>
+                    <h:form>
+                        <p:commandButton value="Accueil"
+                                         style="margin-top: 5px; margin-right: 10px;float: right; box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2);
+                                         background-color: green; border-color: green;"
+                                         icon="fa fa-arrow-circle-right" ajax="false" iconPos="right"
+                                         action="#{reinitialiserMotDePasse.retourALaPageDeConnexion}"/>
+                    </h:form>
+                </p:dialog>
+            </div>
+        </div>
+
+        <ui:insert name="footer">
+            <ui:include src="footer.xhtml" />
+        </ui:insert>
+        <script>
+            var divform =  document.getElementById("divform");
+            var divloadingupdatepassword =  document.getElementById("divloadingupdatepassword");
+            var divMessageTokenExpire = document.getElementById("divMessageTokenExpire");
+            var reinitialisermotdepasseform = document.getElementById("reinitialisermotdepasseform");
+            var motDePasseOublieBlock = document.getElementById("motDePasseOublieBlock");
+
+            function afficherloadingReinitialiserMotDePasse(){
+                divloadingupdatepassword.style.display= "block";
+                divform.style.opacity="0.4";
+                divform.style.pointerEvents="none";
+            }
+
+            function retirerloadingReinitialiserMotDePasse(){
+                divloadingupdatepassword.style.display= "none";
+                divform.style.opacity="1";
+                divform.style.pointerEvents="auto";
+            }
+            function afficherMessageErreurToken() {
+                divMessageTokenExpire.style.display= "block";
+                divform.style.opacity="0.3";
+                reinitialisermotdepasseform.style.pointerEvents='none';
+                motDePasseOublieBlock.style.display="none";
+            }
+
+            window.oncontextmenu = function () {
+                return false;
+            }
+        </script>
+
+    </h:body>
+</f:view>
+</html>

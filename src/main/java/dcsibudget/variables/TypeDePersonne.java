@@ -9,4 +9,6 @@ public class TypeDePersonne {
     public static final String association = "Association";
     public final static String affecteurTache = "Affecteur de la tache";
     public final static String receveurTache = "Receveur de la tache";
+    public final static String reinitilaisateurMotDePasse = "MotDePasseReset";
+    public final static String sessionTemporaireReinitiliaserMotDePasse = "SessionMotDePasseReset";
 }

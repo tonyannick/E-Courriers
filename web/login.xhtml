@@ -43,7 +43,8 @@
                                 </div>
                                 <div class="ui-g-10">
                                     <p:password id="userPassword" redisplay="true" pt:placeholder="Mot de passe"
-                                                style="width: 90%;margin-top: 10px; margin-left: -30px" value="#{login.user.userPassword}"/>
+                                                style="width: 90%;margin-top: 10px; margin-left: -30px"
+                                                value="#{login.user.userPassword}"/>
                                 </div>
                             </div>
 
@@ -65,9 +66,13 @@
                                     </h:panelGrid>
                             </p:panel>
 
-                            <p:commandButton   value="Valider" ajax="false" style="margin-bottom: 10px; margin-left:60px; margin-top: 30px;
-                                               width: 100px; alignment: center; align-items: center; alignment-baseline: center;
-                                               background-color: green; border-color: green; padding: 3px 15px; font-size: 13px"
+                            <p:commandButton   value="Valider" ajax="false"
+                                               style="margin-bottom: 10px; margin-left:60px; margin-top: 30px;
+                                               background-color: green; border-color: green;
+                                               box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2);
+                                               padding: 3px 15px; font-size: 14px;"
+                                               icon="fa fa-arrow-circle-right"
+                                               iconPos="right"
                                                action="#{login.cliquerSurValider}" />
 
                             <p:messages id="messagesLogin" for="messagesLogin" showDetail="true" closable="true"/>
@@ -78,9 +83,11 @@
                                                style="color: white; font-weight: bold; font-size: 14px; margin-left: 10px; float: left">
                                     <h:outputText value="Mot de passe oublié ?" />
                                 </p:commandLink>
-                                <p:commandLink action="#{login.clic}" style="color: white; font-weight: bold; font-size: 11px; margin-right: 20px; float: right">
+                                <h:outputLink value="faces/reinitialisermotdepasse.xhtml"
+                                               style="color: white; font-weight: bold; font-size: 14px; margin-right: 20px;
+                                               float: right">
                                     Créer un compte
-                                </p:commandLink>
+                                </h:outputLink>
                             </h:panelGrid>
                         </h:form>
                     </div>

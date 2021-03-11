@@ -96,5 +96,14 @@
         <pattern value="/mesparametres"/>
         <view-id value="/faces/parametresagent.xhtml"/>
     </url-mapping>
+    <url-mapping id="motdepasseoublie">
+        <pattern value="/motdepasseoublie"/>
+        <view-id value="/faces/motdepasseoublie.xhtml"/>
+    </url-mapping>
+    <url-mapping id="reinitialisermotdepasse">
+        <pattern value="/reinitialisermotdepasse"/>
+        <view-id value="/faces/reinitialisermotdepasse.xhtml"/>
+    </url-mapping>
+
 
 </pretty-config>

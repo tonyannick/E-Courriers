@@ -196,6 +196,14 @@ public class DateUtils {
         return  formatDate.format(date);
     }
 
+    public static String convertirHeureEnCoursEnString(Date date){
+        Format formatDate = new SimpleDateFormat("HH:mm:ss");
+        return  formatDate.format(date);
+    }
+
+
+
+
     public static String convertirDateEnStringAuFormatfrancais(Date date){
         Format formatDate = new SimpleDateFormat("dd-MM-yyyy");
         return  formatDate.format(date);
@@ -219,6 +227,16 @@ public class DateUtils {
             e.printStackTrace();
         }
         return dateUS;
+    }
+
+    public static Date convertirStringEnHeure(String heureAConvertir){
+        Date heureConvertie = null;
+        try {
+            heureConvertie = new SimpleDateFormat("HH:mm:ss").parse(heureAConvertir);
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        return heureConvertie;
     }
 
 

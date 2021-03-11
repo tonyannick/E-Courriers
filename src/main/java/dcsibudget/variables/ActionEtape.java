@@ -12,7 +12,7 @@ public class ActionEtape {
     public final static String courrierEnArchive = "Courrier archivé";
     public final static String courrierRetirerDesArchives = "Courrier retirer des archives";
     public final static String courrierRetirerDesFavoris = "Courrier retirer des favoris";
-    public final static String transferParMail = "Courrier envoyé par mail";
+    public final static String transfertParMail = "Courrier envoyé par mail";
     public final static String courrierEnvoye = "Le courrier à été envoyé";
     public final static String courrierRecu = "Courrier reçu";
     public final static String miseAJourContenu = "Mise à jour du contenu du courrier";

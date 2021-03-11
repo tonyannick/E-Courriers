@@ -13,6 +13,7 @@ import javax.servlet.http.HttpSession;
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -40,15 +41,68 @@ public class UsersQueries {
     public static boolean responsableDirection = false;
     public static boolean isSecretaire = false;
     public static Map<String, String> mapDetailsUser = new HashMap<>();
+    public static Map<String, String> mapDetailsToken = new HashMap<>();
     public static List<String> listeDesPermissionsDUnUser = new ArrayList<>();
     private static Logger userQueriesLogger = LoggerCreator.creerUnLog("UsersQueries");
+
+    /***Fonction qui verifie si un user existe par son adresse mail***/
+    public static String verifierSiUnUserExisteParSonEmail(String emailUser){
+        String idPersonne = null;
+        Connection connection =  DatabaseConnection.getConnexion();
+        ResultSet resultSet = null;
+        String requeteSQL = "select id_personne from `personne` inner join direction on personne.id_direction = direction.id_direction inner join `fonction` on personne.id_fonction = fonction.id_fonction inner join profil on personne.id_profil = profil.id_profil where mail = '"+emailUser+"';";
+        try {
+            resultSet = connection.createStatement().executeQuery(requeteSQL);
+            if(resultSet.next()){
+                idPersonne = resultSet.getString("id_personne");
+            }
+        } catch (SQLException e) {
+            LoggerCreator.definirMessageErreur(userQueriesLogger,"Erreur sql: "+ e);
+            e.printStackTrace();
+        }finally {
+            if ( resultSet != null) {
+                try {
+                    resultSet.close();
+                } catch (SQLException e) { /* ignored */}
+            }
+            if ( connection != null) {
+                try {
+                    connection.close();
+                } catch (SQLException e) { /* ignored */}
+            }
+        }
+         return idPersonne;
+    }
+
+    /*public static boolean mettreAJourMotDePasse(String motDePasse){
+        String updateMotDePasseUserSQL = "update `personne` set `mot_de_passe` = '"+motDePasse+"' where id_personne  = '"+user.getUserId()+"' ;";
+
+    }*/
+
+    /***Fonction qui crée un token de reinitialisation de mot de passe pour un utilisateur***/
+    public static void creerUnTokenPourUnUserParSonId(String idUser,String token,String dateCreation,String heureCreation,
+                                                      String heureExpiration){
+        Connection connection = DatabaseConnection.getConnexion();
+        Statement statement = null;
+        String creerTokenSQL="INSERT INTO `token_reinitialisation_mot_de_passe` (`valeur_token`, `date_de_creation`, `heure_de_creation`, `heure_d_expiration`, `id_personne`) " +
+                "VALUES ('" + token+ "'," + "'" + dateCreation + "'," + "'" +heureCreation + "'," + "'" +  heureExpiration + "'," + "'" + idUser+ "')";
+        try {
+            connection.setAutoCommit(false);
+            statement = connection.createStatement();
+            statement.addBatch(creerTokenSQL);
+            statement.executeBatch();
+            connection.commit();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+    }
 
     /***Fonction de verification de connexion d'un utilisateur***/
     public static boolean verifierUserLogin(String login, String motDePasse){
 
         String motCrypter = PropertiesFilesReader.lireLeFichierDuMotSecret("cledesecurite.properties");
-        Cryptage.crypterUnMot(login,motCrypter);
-        //System.out.println("motCrypter = " +  Cryptage.crypterUnMot(login,motCrypter));
+        Cryptage.crypterUnMot(login,motCrypter);;
         Connection connection =  DatabaseConnection.getConnexion();
         ResultSet resultSet = null;
         boolean connected = false;
@@ -96,6 +150,40 @@ public class UsersQueries {
         return connected;
     }
 
+    /***Fonction de recuperation du dernier token d'un utilisateur***/
+    public static Map<String,String> recupererLeTokenDUnUserParLaValeurDuToken(String token){
+        mapDetailsToken.clear();
+        Connection connection =  DatabaseConnection.getConnexion();
+        ResultSet resultSet = null;
+        String requeteLoginSQL = "select * from `personne` inner join token_reinitialisation_mot_de_passe on personne.id_personne = token_reinitialisation_mot_de_passe.id_personne where valeur_token = '"+token+"';";
+        try {
+            resultSet = connection.createStatement().executeQuery(requeteLoginSQL);
+            if(resultSet.next()){
+                mapDetailsToken.put("valeur_token",resultSet.getString("valeur_token"));
+                mapDetailsToken.put("date_de_creation",resultSet.getString("date_de_creation"));
+                mapDetailsToken.put("heure_de_creation",resultSet.getString("heure_de_creation"));
+                mapDetailsToken.put("heure_d_expiration",resultSet.getString("heure_d_expiration"));
+                mapDetailsToken.put("id_personne",resultSet.getString("id_personne"));
+            }
+        } catch (SQLException e) {
+            LoggerCreator.definirMessageErreur(userQueriesLogger,"Erreur sql: "+ e);
+            e.printStackTrace();
+        }finally {
+            if ( resultSet != null) {
+                try {
+                    resultSet.close();
+                } catch (SQLException e) { /* ignored */}
+            }
+            if ( connection != null) {
+                try {
+                    connection.close();
+                } catch (SQLException e) { /* ignored */}
+            }
+        }
+
+        return mapDetailsToken;
+    }
+
     /***Fonction qui recupere les infos d'un utilisateur***/
     public static List<User> recupererLaListeDesUsers(){
         List<User> usersList = new ArrayList<>();
@@ -135,6 +223,37 @@ public class UsersQueries {
         }
 
         return usersList;
+    }
+
+    /***Fonction changer le mot  de passe***/
+    public static boolean changerLeMotDePasseDUnUserParSonId(String idPersonne,String motDePasse){
+        boolean isUpdateOk = false;
+        String updatePasswordSQL = "UPDATE `personne` SET `mot_de_passe` = '"+motDePasse+"' WHERE `personne`.`id_personne` = '"+idPersonne+"';";
+        Connection connection = DatabaseConnection.getConnexion();
+        Statement statement = null;
+        try {
+            connection.setAutoCommit(false);
+            statement = connection.createStatement();
+            statement.addBatch(updatePasswordSQL);
+            statement.executeBatch();
+            connection.commit();
+            isUpdateOk = true;
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }finally {
+            if ( statement != null) {
+                try {
+                    statement.close();
+                } catch (SQLException e) { /* ignored */}
+            }
+            if ( connection != null) {
+                try {
+                    connection.close();
+                } catch (SQLException e) { /* ignored */}
+            }
+        }
+
+        return isUpdateOk;
     }
 
     /***Fonction qui recupere les agents d'une direction***/

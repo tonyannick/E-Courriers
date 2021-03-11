@@ -8,6 +8,9 @@
       xmlns:pt="http://xmlns.jcp.org/jsf/passthrough">
 
 <f:view transient="true">
+    <f:metadata>
+        <f:viewAction action="#{motDePasseOublie.actualiserImageCaptcha}" onPostBack="true"/>
+    </f:metadata>
     <h:head>
         <title>Mot de passe oublié</title>
         <meta charset="utf-8" />
@@ -16,31 +19,144 @@
         <h:outputStylesheet name="css/login.css" />
     </h:head>
     <h:body>
+    <h:outputStylesheet>
+        .ui-dialog.ui-widget {
+            background-color: white;
+            color: #ffffff;
+            padding-right: 5px;
+        }
 
+        .ui-dialog .ui-dialog-title {
+            color: white;
+            margin-left: 10px;
+            font-size: 15px  !important;
+            font-weight: normal;
+        }
+
+        .ui-dialog .ui-dialog-titlebar {
+            background: #4c7ebd !important;
+            width: 100%;
+            position: relative;
+            margin: 2px 2px;
+            padding-right: 10px;
+            padding-top: 10px;
+        }
+    </h:outputStylesheet>
         <div class="row">
             <div class="motdepasseoublieblock">
                 <h1 class="loginTitle"><h:graphicImage value="./resources/images/forgot.png"/>Mot de passe oublié</h1>
-                <h:form id="login-form">
+                <div id="divform" >
+                    <h:form id="motdepasseoublie-form">
+                        <h:outputText style="font-size: 14px; color: white; font-weight: bold; text-align: center" value= "#{motDePasseOublie.indicationMessageMailPourMotDePasse}" />
 
-                    <h:outputText style="font-size: 14px; color: white; font-weight: bold; text-align: center" value="Renseignez votre adresse mail pour reinitialiser votre mot de passe" />
-                    <h:panelGrid columns="2" style="border:none; width: 100%; margin-bottom:20px; margin-top: 30px; " styleClass="panelLogin">
-                        <p:inputText id="userLogin" pt:placeholder="adresse mail"
-                                     style="width: 70%;" value="#{login.user.userlogin}"/>
-                    </h:panelGrid>
+                        <h:panelGrid columns="1" style="border:none; text-align: center; width: 100%; margin-bottom:20px; margin-top: 20px;" styleClass="panelLogin">
+                            <p:inputText autocomplete="off" pt:placeholder="adresse mail"
+                                         style="width: 70%; font-size: 13px" value="#{motDePasseOublie.adresseMail}"/>
+                        </h:panelGrid>
+                        <p:panel header="Captcha" style="width: 69%;margin-left:70px; margin-top: 10px">
+                            <h:panelGrid columns="1" columnClasses="ui-grid-col-2, ui-grid-col-7" style=" border:none; width: 100%; " styleClass="panelLogin">
+                                <h:panelGrid columns="2"  style=" border:none;margin-bottom: 10px" styleClass="panelLogin">
+                                    <p:graphicImage cache="false" id="captcha" value="#{motDePasseOublie.imageCaptcha}"/>
+                                    <p:commandButton style=" color: white; padding: 3px 3px; font-size:14px; margin-left:10px; background:#d19e34; border-color:#d1ac3f;"
+                                                     icon="fa fa-refresh"
+                                                     update="motdepasseoublie-form:captcha"
+                                                     actionListener="#{motDePasseOublie.actualiserImageCaptcha}"/>
+                                </h:panelGrid>
+                                <h:outputText value="Taper le code ci-dessus" style="color: #286090; font-size: 13px"/>
+                                <p:inputText autocomplete="off" id="valeurCaptcha" value="#{motDePasseOublie.valeurSaisieCaptcha}" pt:placeholder="Taper le code ici" size="20"/>
+                            </h:panelGrid>
+                        </p:panel>
+                        <p:messages id="messagesMotDePasseOublie" for="messagesMotDePasseOublie" showDetail="true" closable="true"/>
 
-                    <p:commandButton   value="Valider" ajax="false" style="margin-bottom:10px; margin-top: 20px;
-                                       background-color: #e79100; border-color: #e79100;
-                                       width: 100px; alignment: center; align-items: center; alignment-baseline: center"
-                                       action="#{login.cliquerSurValider}" />
-                    <p:messages id="messagesLogin" for="messagesLogin" showDetail="true" closable="true"/>
-                    <p:spacer height="7px"/>
-                </h:form>
+                        <p:commandButton   value="Reinitialiser"
+                                           style="margin-bottom:10px;font-size: 14px;  margin-left:70px;
+                                           box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2);margin-top: 10px;
+                                           background-color: #e76f03; border-color: #e76f03;" icon="fa fa-repeat"
+                                           update="messagesMotDePasseOublie"
+                                           iconPos="right"
+                                           onclick="afficherloadingEnvoyerMail()"
+                                           oncomplete="retirerloadingEnvoyerMail()"
+                                           actionListener="#{motDePasseOublie.envoyerMailPourReinitialiserLeMotDePasse}" />
+
+                        <p:spacer height="7px"/>
+                        <p:separator style="background-color: white; color: white"/>
+                        <h:panelGrid columns="2" style="border:none; color: white; margin-left: 5px; width: 100%">
+                            <p:commandLink action="#{motDePasseOublie.retourALaPageDeConnexion}"
+                                           style="color: white; font-weight: bold; font-size: 14px;float: left;">
+                                <h:outputText value="Retour à la  page de connexion" />
+                            </p:commandLink>
+                        </h:panelGrid>
+
+                    </h:form>
+                </div >
+                <div id="divloadingmail" style="display: none" class="ui-g">
+                    <div class="ui-g-2"></div>
+                        <div class="ui-g-8">
+                            <h:panelGrid columns="1" style="width: 100%;margin-left: 100px">
+                                <div class="loader"></div>
+                                <p:outputLabel value="Veuillez patienter..." style="font-size: 14px; color: white;
+                                   margin-top: 10px"/>
+                            </h:panelGrid>
+                        </div>
+                    <div class="ui-g-2"></div>
+                </div>
+                <div id="divsuccessmail" style="display: none" class="ui-g">
+                    <h:outputText style="font-size: 14px; color: white; font-weight: bold; text-align: center"
+                                  value= "#{motDePasseOublie.messageValidationReinitialisation}" />
+                </div>
+
+                <p:dialog header="Réinitialisation du mot de passe"
+                          widgetVar="dialogueSuccessReinitialisation"
+                          modal="true" hideEffect="clip"
+                          position="center"
+                          closable="false"
+                          showEffect="clip"
+                          resizable="false">
+                    <h:outputText style="font-size: 15px; color: black; font-weight: bold; text-align: center"
+                                  value= "#{motDePasseOublie.messageValidationReinitialisation}" />
+                    <p:separator style="background-color: #4c7ebd; color: #4c7ebd"/>
+                    <h:form>
+                        <p:commandButton value="Ok"
+                                         style="margin-top: 5px; margin-right: 10px;float: right; box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2);
+                                         background-color: green; border-color: green;"
+                                         icon="fa fa-check-circle" ajax="false" iconPos="right"
+                                         action="#{motDePasseOublie.retourALaPageDeConnexion}"/>
+                    </h:form>
+                </p:dialog>
             </div>
         </div>
 
         <ui:insert name="footer">
             <ui:include src="footer.xhtml" />
         </ui:insert>
+        <script>
+            var divform =  document.getElementById("divform");
+            var divloadingmail =  document.getElementById("divloadingmail");
+            var divsuccessmail = document.getElementById("divsuccessmail");
+
+            function afficherloadingEnvoyerMail(){
+                divloadingmail.style.display= "block";
+                divform.style.opacity="0.4";
+                divform.style.pointerEvents="none";
+            }
+
+            function retirerloadingEnvoyerMail(){
+                divloadingmail.style.display= "none";
+                divform.style.opacity="1";
+                divform.style.pointerEvents="auto";
+            }
+            function afficherMessageSuccessMail(){
+                divsuccessmail.style.display= "block";
+            }
+            function cacherloadingEnvoyerMail(){
+                divform.style.display="block";
+                divloadingmail.style.display= "none";
+            }
+            window.oncontextmenu = function () {
+                return false;
+            }
+        </script>
+
     </h:body>
 </f:view>
 </html>
